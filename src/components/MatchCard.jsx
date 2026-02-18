@@ -1,6 +1,9 @@
+import { useNavigate } from 'react-router-dom'
 import { Calendar, Tag, Download, Clock, CheckCircle, AlertCircle } from 'lucide-react'
 
 function MatchCard({ match }) {
+  const navigate = useNavigate()
+
   const getStatusBadge = () => {
     switch (match.status) {
       case 'completed':
@@ -106,7 +109,10 @@ function MatchCard({ match }) {
       <div className="flex items-center space-x-3">
         {match.status === 'completed' && (
           <>
-            <button className="flex-1 px-4 py-2.5 bg-primary text-black font-semibold rounded-lg hover:shadow-glow transition-all flex items-center justify-center space-x-2">
+            <button 
+              onClick={() => navigate(`/dashboard/matches/${match.id}`)}
+              className="flex-1 px-4 py-2.5 bg-primary text-black font-semibold rounded-lg hover:shadow-glow transition-all flex items-center justify-center space-x-2"
+            >
               <span>Voir le rapport</span>
             </button>
             <button className="p-2.5 border border-dark-border hover:border-primary hover:bg-primary/10 rounded-lg transition-all">

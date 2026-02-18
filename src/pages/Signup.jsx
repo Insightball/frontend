@@ -70,14 +70,23 @@ function Signup() {
     setLoading(true)
 
     try {
-      // TODO: Replace with real API call
-      await signup({
-        ...formData,
-        plan: selectedPlan
-      })
+      // Format data for API
+      const signupData = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        plan: selectedPlan  // 'coach' or 'club' (lowercase)
+      }
+      
+      // Add club_name only for CLUB plan
+      if (selectedPlan === 'club' && formData.clubName) {
+        signupData.club_name = formData.clubName
+      }
+      
+      await signup(signupData)
       navigate('/dashboard')
     } catch (err) {
-      setError('Une erreur est survenue. Veuillez réessayer.')
+      setError(err.message || 'Une erreur est survenue. Veuillez réessayer.')
     } finally {
       setLoading(false)
     }

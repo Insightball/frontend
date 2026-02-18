@@ -9,6 +9,7 @@ function DashboardLayout({ children }) {
 
   const navigation = [
     { name: 'Tableau de bord', href: '/dashboard', icon: Home },
+    { name: 'Joueurs', href: '/dashboard/players', icon: Users },
     { name: 'Matchs', href: '/dashboard/matches', icon: Film },
     { name: 'Statistiques', href: '/dashboard/stats', icon: BarChart3 },
   ]
@@ -52,10 +53,10 @@ function DashboardLayout({ children }) {
                 </div>
               )}
               
-              {user?.clubName && (
+              {user?.club_name && (
                 <div className="mt-2 pt-2 border-t border-dark-border">
                   <span className="text-xs text-gray-500">Club</span>
-                  <p className="text-sm font-medium mt-1">{user.clubName}</p>
+                  <p className="text-sm font-medium mt-1">{user.club_name}</p>
                 </div>
               )}
             </div>

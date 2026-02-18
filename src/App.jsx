@@ -7,6 +7,9 @@ import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Dashboard from './pages/Dashboard'
 import DashboardMatches from './pages/DashboardMatches'
+import PlayerManagement from './pages/PlayerManagement'
+import ClubSettings from './pages/ClubSettings'
+import MatchDetail from './pages/MatchDetail'
 
 function App() {
   return (
@@ -39,6 +42,21 @@ function App() {
             <Route path="/dashboard/matches" element={
               <ProtectedRoute>
                 <DashboardMatches />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/matches/:matchId" element={
+              <ProtectedRoute>
+                <MatchDetail />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/players" element={
+              <ProtectedRoute>
+                <PlayerManagement />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/settings" element={
+              <ProtectedRoute>
+                <ClubSettings />
               </ProtectedRoute>
             } />
           </Routes>
