@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import authService from '../services/authService'
 
 const AuthContext = createContext()
 
@@ -16,61 +17,48 @@ export function AuthProvider({ children }) {
 
   // Check if user is logged in on mount
   useEffect(() => {
-    const token = localStorage.getItem('insightball_token')
-    const userData = localStorage.getItem('insightball_user')
-    
-    if (token && userData) {
-      setUser(JSON.parse(userData))
+    const initAuth = async () => {
+      try {
+        const token = localStorage.getItem('insightball_token')
+        
+        if (token) {
+          // Verify token is still valid by fetching user
+          const userData = await authService.getCurrentUser()
+          setUser(userData)
+        }
+      } catch (error) {
+        // Token invalid or expired
+        authService.logout()
+      } finally {
+        setLoading(false)
+      }
     }
     
-    setLoading(false)
+    initAuth()
   }, [])
 
   const login = async (email, password) => {
-    // TODO: Replace with real API call
-    // For now, mock authentication
-    const mockUser = {
-      id: '1',
-      name: 'Tchitcha',
-      email: email,
-      plan: 'club',
-      clubName: 'Gazelec FC'
+    try {
+      const userData = await authService.login(email, password)
+      setUser(userData)
+      return userData
+    } catch (error) {
+      throw new Error(error.response?.data?.detail || 'Login failed')
     }
-    
-    const mockToken = 'mock-jwt-token-' + Date.now()
-    
-    // Save to localStorage
-    localStorage.setItem('insightball_token', mockToken)
-    localStorage.setItem('insightball_user', JSON.stringify(mockUser))
-    
-    setUser(mockUser)
-    
-    return mockUser
   }
 
   const signup = async (data) => {
-    // TODO: Replace with real API call
-    const mockUser = {
-      id: Date.now().toString(),
-      name: data.name,
-      email: data.email,
-      plan: data.plan,
-      clubName: data.clubName || null
+    try {
+      const userData = await authService.signup(data)
+      setUser(userData)
+      return userData
+    } catch (error) {
+      throw new Error(error.response?.data?.detail || 'Signup failed')
     }
-    
-    const mockToken = 'mock-jwt-token-' + Date.now()
-    
-    localStorage.setItem('insightball_token', mockToken)
-    localStorage.setItem('insightball_user', JSON.stringify(mockUser))
-    
-    setUser(mockUser)
-    
-    return mockUser
   }
 
   const logout = () => {
-    localStorage.removeItem('insightball_token')
-    localStorage.removeItem('insightball_user')
+    authService.logout()
     setUser(null)
   }
 
