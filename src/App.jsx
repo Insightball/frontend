@@ -1,20 +1,50 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { AuthProvider } from './context/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
 import Header from './components/Header'
 import Home from './pages/Home'
+import Login from './pages/Login'
+import Signup from './pages/Signup'
 import Dashboard from './pages/Dashboard'
+import DashboardMatches from './pages/DashboardMatches'
 
 function App() {
   return (
-    <Router>
-      <div className="min-h-screen bg-black text-white">
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/demo" element={<Dashboard />} />
-        </Routes>
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <div className="min-h-screen bg-black text-white">
+          <Routes>
+            {/* Public routes */}
+            <Route path="/" element={
+              <>
+                <Header />
+                <Home />
+              </>
+            } />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/demo" element={
+              <>
+                <Header />
+                <Dashboard />
+              </>
+            } />
+            
+            {/* Protected routes */}
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <DashboardMatches />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/matches" element={
+              <ProtectedRoute>
+                <DashboardMatches />
+              </ProtectedRoute>
+            } />
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
   )
 }
 
