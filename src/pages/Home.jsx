@@ -1,143 +1,189 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Play, BarChart3, Users, Zap, CheckCircle, ArrowRight, Sparkles, TrendingUp, Shield, Clock, Mail, MessageSquare, Send, Heart } from 'lucide-react'
+import { Play, BarChart3, Users, TrendingUp, CheckCircle2, ArrowRight, Sparkles, Zap, Target } from 'lucide-react'
 
-function Home() {
-  const [contactForm, setContactForm] = useState({
-    name: '',
-    email: '',
-    message: ''
-  })
-  const [sending, setSending] = useState(false)
-  const [sent, setSent] = useState(false)
+function LandingPage() {
+  const [scrollY, setScrollY] = useState(0)
 
-  const handleContactChange = (e) => {
-    setContactForm({
-      ...contactForm,
-      [e.target.name]: e.target.value
-    })
-  }
-
-  const handleContactSubmit = async (e) => {
-    e.preventDefault()
-    setSending(true)
-    
-    // Simulate sending
-    setTimeout(() => {
-      setSending(false)
-      setSent(true)
-      setTimeout(() => {
-        setSent(false)
-        setContactForm({ name: '', email: '', message: '' })
-      }, 3000)
-    }, 1000)
-  }
-
-  const features = [
-    {
-      icon: <BarChart3 className="w-8 h-8" />,
-      title: "Statistiques automatiques",
-      description: "Possession, passes, tirs, distance parcourue... Toutes les stats générées instantanément par l'IA."
-    },
-    {
-      icon: <Users className="w-8 h-8" />,
-      title: "Analyse individuelle",
-      description: "Suivi détaillé de chaque joueur avec notes, heatmaps et évolution dans le temps."
-    },
-    {
-      icon: <Zap className="w-8 h-8" />,
-      title: "Rapports PDF instantanés",
-      description: "Recevez un rapport complet automatiquement après chaque match analysé."
-    }
-  ]
-
-  const stats = [
-    { value: "2h", label: "Gagnées par match", description: "vs analyse manuelle" },
-    { value: "50+", label: "Statistiques", description: "Générées automatiquement" },
-    { value: "24h", label: "Délai d'analyse", description: "Upload → Rapport PDF" }
-  ]
-
-  const benefits = [
-    "Upload vidéo simple et rapide",
-    "Analyse IA en moins de 24h",
-    "Stats collectives et individuelles",
-    "Heatmaps et zones d'activité",
-    "Timeline événements du match",
-    "Comparaison entre matchs",
-    "Suivi progression joueurs",
-    "Export PDF professionnel"
-  ]
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
-    <div className="min-h-screen bg-black">
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-6 overflow-hidden">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent"></div>
-        
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-16">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/30 rounded-full mb-8">
-              <Sparkles className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium text-primary">Analyse vidéo propulsée par l'IA</span>
-            </div>
+    <div className="min-h-screen bg-black text-white overflow-hidden">
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full z-50 transition-all duration-300" 
+           style={{
+             backgroundColor: scrollY > 50 ? 'rgba(0, 0, 0, 0.95)' : 'transparent',
+             backdropFilter: scrollY > 50 ? 'blur(20px)' : 'none',
+             borderBottom: scrollY > 50 ? '1px solid rgba(16, 185, 129, 0.1)' : 'none'
+           }}>
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <Link to="/" className="flex items-center space-x-3 group">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl blur opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                <div className="relative w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center">
+                  <svg className="w-7 h-7 text-black" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+              <span className="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                INSIGHTBALL
+              </span>
+            </Link>
 
-            {/* Title */}
-            <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
-              Transformez vos matchs
-              <br />
-              en <span className="text-primary">données exploitables</span>
-            </h1>
-
-            {/* Subtitle */}
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-12">
-              La plateforme d'analyse vidéo qui génère automatiquement toutes les statistiques dont vous avez besoin pour progresser.
-            </p>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link 
-                to="/signup"
-                className="group px-8 py-4 bg-primary text-black font-bold text-lg rounded-lg hover:shadow-glow transition-all flex items-center gap-2"
-              >
+            {/* Desktop Menu */}
+            <div className="hidden md:flex items-center space-x-8">
+              <a href="#features" className="text-gray-300 hover:text-white transition-colors">Fonctionnalités</a>
+              <a href="#pricing" className="text-gray-300 hover:text-white transition-colors">Tarifs</a>
+              <a href="#demo" className="text-gray-300 hover:text-white transition-colors">Démo</a>
+              <Link to="/login" className="text-gray-300 hover:text-white transition-colors">Connexion</Link>
+              <Link to="/signup" className="px-6 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-semibold rounded-lg hover:shadow-lg hover:shadow-emerald-500/50 transition-all">
                 Essayer gratuitement
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link 
-                to="/demo"
-                className="px-8 py-4 border-2 border-primary text-primary font-bold text-lg rounded-lg hover:bg-primary/10 transition-all flex items-center gap-2"
-              >
-                <Play className="w-5 h-5" />
-                Voir la démo
               </Link>
             </div>
           </div>
+        </div>
+      </nav>
 
-          {/* Hero Image/Video Placeholder - VERSION COMPACTE */}
-          <div className="relative max-w-5xl mx-auto">
-            <div className="relative rounded-2xl overflow-hidden border-2 border-primary/30 shadow-2xl aspect-video">
-              <img 
-                src="https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=1200&q=80" 
-                alt="Dashboard preview"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-              
-              {/* Floating stats cards */}
-              <div className="absolute bottom-4 left-4 right-4 grid grid-cols-3 gap-3">
-                <div className="bg-black/80 backdrop-blur-sm border border-primary/30 rounded-lg p-3">
-                  <div className="text-2xl font-bold text-primary">58%</div>
-                  <div className="text-xs text-gray-400">Possession</div>
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 px-6 overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-1/4 -left-1/4 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 -right-1/4 w-96 h-96 bg-teal-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+          
+          {/* Grid Pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0" style={{
+              backgroundImage: 'linear-gradient(rgba(16, 185, 129, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(16, 185, 129, 0.3) 1px, transparent 1px)',
+              backgroundSize: '50px 50px'
+            }}></div>
+          </div>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto">
+          <div className="text-center max-w-4xl mx-auto">
+            {/* Badge */}
+            <div className="inline-flex items-center space-x-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/30 rounded-full mb-8 animate-fade-in">
+              <Sparkles className="w-4 h-4 text-emerald-400" />
+              <span className="text-sm text-emerald-400 font-medium">L'analyse vidéo nouvelle génération</span>
+            </div>
+
+            {/* Title */}
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight animate-fade-in-up">
+              <span className="bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
+                Transformez vos
+              </span>
+              <br />
+              <span className="bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent">
+                matchs en insights
+              </span>
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-xl md:text-2xl text-gray-400 mb-12 max-w-3xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+              L'IA qui analyse vos vidéos de match et génère automatiquement des rapports tactiques professionnels.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+              <Link 
+                to="/signup" 
+                className="group px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-semibold rounded-xl hover:shadow-2xl hover:shadow-emerald-500/50 transition-all flex items-center space-x-2"
+              >
+                <span>Commencer gratuitement</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <a 
+                href="#demo" 
+                className="group px-8 py-4 bg-white/5 border border-white/10 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-white/10 transition-all flex items-center space-x-2"
+              >
+                <Play className="w-5 h-5" />
+                <span>Voir la démo</span>
+              </a>
+            </div>
+
+            {/* Trust Badge */}
+            <div className="mt-16 flex items-center justify-center space-x-8 text-gray-500 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+              <div className="flex items-center space-x-2">
+                <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                <span className="text-sm">Essai gratuit 14 jours</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                <span className="text-sm">Sans carte bancaire</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section id="features" className="py-20 px-6 relative">
+        <div className="max-w-7xl mx-auto">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center space-x-2 px-4 py-2 bg-teal-500/10 border border-teal-500/30 rounded-full mb-6">
+              <Zap className="w-4 h-4 text-teal-400" />
+              <span className="text-sm text-teal-400 font-medium">Fonctionnalités</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Tout ce dont vous avez besoin
+            </h2>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              Une plateforme complète pour analyser, comprendre et améliorer vos performances
+            </p>
+          </div>
+
+          {/* Features Grid */}
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Feature 1 */}
+            <div className="group relative p-8 bg-gradient-to-b from-white/5 to-transparent border border-white/10 rounded-2xl hover:border-emerald-500/50 transition-all duration-300">
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <div className="relative">
+                <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mb-6">
+                  <Play className="w-7 h-7 text-black" />
                 </div>
-                <div className="bg-black/80 backdrop-blur-sm border border-primary/30 rounded-lg p-3">
-                  <div className="text-2xl font-bold text-primary">482</div>
-                  <div className="text-xs text-gray-400">Passes</div>
+                <h3 className="text-2xl font-bold mb-3">Analyse vidéo automatique</h3>
+                <p className="text-gray-400 leading-relaxed">
+                  Uploadez votre vidéo de match et laissez notre IA extraire automatiquement les données tactiques et statistiques.
+                </p>
+              </div>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="group relative p-8 bg-gradient-to-b from-white/5 to-transparent border border-white/10 rounded-2xl hover:border-emerald-500/50 transition-all duration-300">
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <div className="relative">
+                <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mb-6">
+                  <BarChart3 className="w-7 h-7 text-black" />
                 </div>
-                <div className="bg-black/80 backdrop-blur-sm border border-primary/30 rounded-lg p-3">
-                  <div className="text-2xl font-bold text-primary">18</div>
-                  <div className="text-xs text-gray-400">Tirs</div>
+                <h3 className="text-2xl font-bold mb-3">Rapports professionnels</h3>
+                <p className="text-gray-400 leading-relaxed">
+                  Recevez des rapports PDF complets avec analyses tactiques, heatmaps et recommandations personnalisées.
+                </p>
+              </div>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="group relative p-8 bg-gradient-to-b from-white/5 to-transparent border border-white/10 rounded-2xl hover:border-emerald-500/50 transition-all duration-300">
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <div className="relative">
+                <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mb-6">
+                  <Users className="w-7 h-7 text-black" />
                 </div>
+                <h3 className="text-2xl font-bold mb-3">Gestion d'effectif</h3>
+                <p className="text-gray-400 leading-relaxed">
+                  Suivez les performances individuelles, gérez vos compositions et optimisez votre stratégie d'équipe.
+                </p>
               </div>
             </div>
           </div>
@@ -145,576 +191,104 @@ function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-20 px-6 bg-gradient-to-b from-black to-dark-card">
+      <section className="py-20 px-6 relative">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-3 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-6xl font-bold text-primary mb-3">{stat.value}</div>
-                <div className="text-xl font-semibold text-white mb-2">{stat.label}</div>
-                <div className="text-gray-400">{stat.description}</div>
+            <div className="text-center p-8 bg-gradient-to-b from-emerald-500/10 to-transparent border border-emerald-500/20 rounded-2xl">
+              <div className="text-5xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent mb-2">
+                95%
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Tout ce dont un coach a besoin
-            </h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              De l'upload vidéo jusqu'au rapport PDF, tout est automatisé
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
-            {features.map((feature, index) => (
-              <div 
-                key={index}
-                className="group bg-dark-card border border-dark-border rounded-2xl p-8 hover:border-primary/50 transition-all"
-              >
-                <div className="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
-                  {feature.icon}
-                </div>
-                <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
-                <p className="text-gray-400 leading-relaxed">{feature.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Benefits Section */}
-      <section className="py-20 px-6 bg-dark-card">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                Analysez, comprenez, progressez
-              </h2>
-              <p className="text-xl text-gray-400 mb-8">
-                INSIGHTBALL automatise l'analyse vidéo pour que vous puissiez vous concentrer sur l'essentiel : faire progresser vos joueurs.
-              </p>
-              
-              <div className="grid grid-cols-1 gap-4">
-                {benefits.map((benefit, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <CheckCircle className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
-                    <span className="text-lg text-gray-300">{benefit}</span>
-                  </div>
-                ))}
-              </div>
+              <div className="text-gray-400">Précision de l'analyse</div>
             </div>
-
-            <div className="relative">
-              <div className="relative rounded-2xl overflow-hidden border-2 border-primary/30">
-                <img 
-                  src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&q=80" 
-                  alt="Analysis preview"
-                  className="w-full h-auto"
-                />
+            <div className="text-center p-8 bg-gradient-to-b from-emerald-500/10 to-transparent border border-emerald-500/20 rounded-2xl">
+              <div className="text-5xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent mb-2">
+                &lt;5min
               </div>
-              
-              {/* Floating elements */}
-              <div className="absolute -top-6 -right-6 bg-primary text-black font-bold p-6 rounded-2xl shadow-2xl">
-                <TrendingUp className="w-8 h-8 mb-2" />
-                <div className="text-3xl">+32%</div>
-                <div className="text-sm">Progression</div>
-              </div>
+              <div className="text-gray-400">Temps de traitement</div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Dashboard Features Showcase */}
-      <section className="py-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Un dashboard complet pour vos analyses
-            </h2>
-            <p className="text-xl text-gray-400">
-              Toutes les fonctionnalités dont vous avez besoin au même endroit
-            </p>
-          </div>
-
-          {/* Feature 1: Stats Overview */}
-          <div className="grid md:grid-cols-2 gap-12 items-center mb-20">
-            <div className="order-2 md:order-1">
-              <div className="relative rounded-xl overflow-hidden border-2 border-primary/30 shadow-2xl">
-                {/* Dashboard Stats Mock */}
-                <div className="bg-gradient-to-br from-dark-card to-black p-8">
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="bg-black/50 border border-primary/20 rounded-lg p-4">
-                      <div className="text-3xl font-bold text-primary mb-1">12</div>
-                      <div className="text-sm text-gray-400">Matchs analysés</div>
-                    </div>
-                    <div className="bg-black/50 border border-primary/20 rounded-lg p-4">
-                      <div className="text-3xl font-bold text-primary mb-1">58%</div>
-                      <div className="text-sm text-gray-400">Possession moy.</div>
-                    </div>
-                  </div>
-                  <div className="bg-black/50 border border-primary/20 rounded-lg p-4">
-                    <div className="text-xs text-gray-500 uppercase mb-2">Top joueur</div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-primary/20 rounded-full"></div>
-                      <div>
-                        <div className="font-semibold">Joueur #10</div>
-                        <div className="text-sm text-primary">Note: 8.5/10</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            <div className="text-center p-8 bg-gradient-to-b from-emerald-500/10 to-transparent border border-emerald-500/20 rounded-2xl">
+              <div className="text-5xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent mb-2">
+                24/7
               </div>
-            </div>
-
-            <div className="order-1 md:order-2">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/30 rounded-full mb-6">
-                <BarChart3 className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium text-primary">Vue d'ensemble</span>
-              </div>
-              <h3 className="text-3xl md:text-4xl font-bold mb-4">
-                Dashboard intuitif
-              </h3>
-              <p className="text-lg text-gray-400 mb-6">
-                Accédez à toutes vos statistiques en un coup d'œil. Matchs analysés, performances d'équipe, et classement des joueurs.
-              </p>
-              <ul className="space-y-3">
-                <li className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-primary" />
-                  <span className="text-gray-300">Stats en temps réel</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-primary" />
-                  <span className="text-gray-300">Top performers du mois</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-primary" />
-                  <span className="text-gray-300">Alertes importantes</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Feature 2: Player Analysis */}
-          <div className="grid md:grid-cols-2 gap-12 items-center mb-20">
-            <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/30 rounded-full mb-6">
-                <Users className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium text-primary">Analyse joueurs</span>
-              </div>
-              <h3 className="text-3xl md:text-4xl font-bold mb-4">
-                Suivi individuel détaillé
-              </h3>
-              <p className="text-lg text-gray-400 mb-6">
-                Heatmaps, statistiques avancées, et évolution dans le temps pour chaque joueur de votre effectif.
-              </p>
-              <ul className="space-y-3">
-                <li className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-primary" />
-                  <span className="text-gray-300">Heatmap de déplacements</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-primary" />
-                  <span className="text-gray-300">Timeline des actions</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-primary" />
-                  <span className="text-gray-300">Comparaison entre matchs</span>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <div className="relative rounded-xl overflow-hidden border-2 border-primary/30 shadow-2xl">
-                {/* Heatmap Mock */}
-                <div className="bg-gradient-to-br from-green-900/20 to-dark-card p-8 aspect-[3/4]">
-                  <div className="bg-black/50 border border-primary/20 rounded-lg p-4 mb-4">
-                    <div className="text-xs text-gray-500 uppercase mb-2">Joueur #7</div>
-                    <div className="grid grid-cols-3 gap-4">
-                      <div>
-                        <div className="text-2xl font-bold text-primary">12</div>
-                        <div className="text-xs text-gray-400">Passes</div>
-                      </div>
-                      <div>
-                        <div className="text-2xl font-bold text-primary">3</div>
-                        <div className="text-xs text-gray-400">Tirs</div>
-                      </div>
-                      <div>
-                        <div className="text-2xl font-bold text-primary">6.2</div>
-                        <div className="text-xs text-gray-400">km</div>
-                      </div>
-                    </div>
-                  </div>
-                  {/* Simple field visualization */}
-                  <div className="border-2 border-green-700/30 rounded-lg aspect-[2/3] relative">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      {/* Dots simulant heatmap */}
-                      <div className="grid grid-cols-3 gap-8">
-                        {[...Array(9)].map((_, i) => (
-                          <div 
-                            key={i} 
-                            className="w-3 h-3 bg-primary rounded-full"
-                            style={{ opacity: Math.random() * 0.5 + 0.3 }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Feature 3: Tactical Board */}
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="order-2 md:order-1">
-              <div className="relative rounded-xl overflow-hidden border-2 border-primary/30 shadow-2xl">
-                {/* Tactical board mock */}
-                <div className="bg-gradient-to-b from-green-900/20 to-dark-card p-8 aspect-[3/4]">
-                  <div className="bg-black/50 border border-primary/20 rounded-lg p-3 mb-4">
-                    <div className="text-xs text-gray-400 uppercase mb-1">Formation</div>
-                    <div className="text-lg font-bold text-primary">4-3-3</div>
-                  </div>
-                  <div className="border-2 border-green-700/30 rounded-lg aspect-[2/3] relative">
-                    {/* Field with positioned players */}
-                    <svg className="w-full h-full" viewBox="0 0 100 150">
-                      <rect width="100" height="150" fill="none" stroke="#166534" strokeWidth="1" />
-                      <line x1="0" y1="75" x2="100" y2="75" stroke="#166534" strokeWidth="1" />
-                      {/* Player dots */}
-                      {[
-                        {x: 50, y: 140}, // GK
-                        {x: 20, y: 110}, {x: 40, y: 115}, {x: 60, y: 115}, {x: 80, y: 110}, // DEF
-                        {x: 30, y: 80}, {x: 50, y: 75}, {x: 70, y: 80}, // MID
-                        {x: 20, y: 40}, {x: 50, y: 35}, {x: 80, y: 40} // ATT
-                      ].map((pos, i) => (
-                        <circle key={i} cx={pos.x} cy={pos.y} r="3" fill="#5EEAD4" />
-                      ))}
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="order-1 md:order-2">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/30 rounded-full mb-6">
-                <Zap className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium text-primary">Compositions tactiques</span>
-              </div>
-              <h3 className="text-3xl md:text-4xl font-bold mb-4">
-                Créez vos compositions
-              </h3>
-              <p className="text-lg text-gray-400 mb-6">
-                Testez différentes formations tactiques et organisez votre effectif par catégorie. Titulaires et remplaçants en un clin d'œil.
-              </p>
-              <ul className="space-y-3">
-                <li className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-primary" />
-                  <span className="text-gray-300">6 formations disponibles</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-primary" />
-                  <span className="text-gray-300">Drag & drop joueurs</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-primary" />
-                  <span className="text-gray-300">Sauvegarde automatique</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How it works */}
-      <section className="py-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Simple, rapide, efficace
-            </h2>
-            <p className="text-xl text-gray-400">En 3 étapes seulement</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                step: "01",
-                title: "Uploadez votre vidéo",
-                description: "Déposez simplement votre vidéo de match depuis votre ordinateur ou smartphone."
-              },
-              {
-                step: "02",
-                title: "L'IA analyse automatiquement",
-                description: "Notre intelligence artificielle détecte et analyse toutes les actions du match en moins de 24h."
-              },
-              {
-                step: "03",
-                title: "Recevez votre rapport",
-                description: "Consultez vos stats, heatmaps et téléchargez votre rapport PDF professionnel."
-              }
-            ].map((item, index) => (
-              <div key={index} className="relative">
-                <div className="text-8xl font-bold text-primary/10 mb-4">{item.step}</div>
-                <h3 className="text-2xl font-bold mb-4">{item.title}</h3>
-                <p className="text-gray-400 leading-relaxed">{item.description}</p>
-                
-                {index < 2 && (
-                  <ArrowRight className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2 w-8 h-8 text-primary/30" />
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section className="py-20 px-6 bg-gradient-to-b from-black to-dark-card">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Choisissez votre plan
-            </h2>
-            <p className="text-xl text-gray-400">Aucun engagement, annulation à tout moment</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {/* Plan Coach */}
-            <div className="bg-dark-card border-2 border-dark-border rounded-2xl p-8 hover:border-primary/50 transition-all">
-              <div className="mb-6">
-                <h3 className="text-2xl font-bold mb-2">Coach</h3>
-                <p className="text-gray-400">Pour les coachs individuels</p>
-              </div>
-              
-              <div className="mb-6">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-5xl font-bold">29€</span>
-                  <span className="text-gray-400">/mois</span>
-                </div>
-              </div>
-
-              <ul className="space-y-4 mb-8">
-                {[
-                  "5 matchs analysés / mois",
-                  "Stats collectives complètes",
-                  "Stats individuelles joueurs",
-                  "Rapports PDF",
-                  "Heatmaps & zones",
-                  "Support email"
-                ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-primary" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <Link 
-                to="/signup"
-                className="block w-full py-4 text-center bg-dark-border hover:bg-primary hover:text-black font-bold rounded-lg transition-all"
-              >
-                Commencer
-              </Link>
-            </div>
-
-            {/* Plan Club */}
-            <div className="relative bg-gradient-to-b from-primary/10 to-dark-card border-2 border-primary rounded-2xl p-8">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-1 bg-primary text-black text-sm font-bold rounded-full">
-                POPULAIRE
-              </div>
-
-              <div className="mb-6">
-                <h3 className="text-2xl font-bold mb-2">Club</h3>
-                <p className="text-gray-400">Pour les clubs multi-catégories</p>
-              </div>
-              
-              <div className="mb-6">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-5xl font-bold">89€</span>
-                  <span className="text-gray-400">/mois</span>
-                </div>
-              </div>
-
-              <ul className="space-y-4 mb-8">
-                {[
-                  "15 matchs analysés / mois",
-                  "Multi-catégories (N3, U19, U17...)",
-                  "Gestion effectif illimitée",
-                  "Comparaisons équipes",
-                  "Dashboard club complet",
-                  "Support prioritaire"
-                ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-primary" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <Link 
-                to="/signup"
-                className="block w-full py-4 text-center bg-primary text-black font-bold rounded-lg hover:shadow-glow transition-all"
-              >
-                Commencer
-              </Link>
+              <div className="text-gray-400">Support disponible</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-6">
+      <section className="py-20 px-6 relative">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 border-2 border-primary/30 rounded-3xl p-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Prêt à transformer votre analyse vidéo ?
-            </h2>
-            <p className="text-xl text-gray-400 mb-8">
-              Rejoignez les coachs qui utilisent déjà INSIGHTBALL
-            </p>
-            <Link 
-              to="/signup"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-black font-bold text-lg rounded-lg hover:shadow-glow transition-all"
-            >
-              Essayer gratuitement
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Trust badges */}
-      <section className="py-12 px-6 border-t border-dark-border">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {[
-              { icon: <Shield className="w-8 h-8" />, text: "Paiement sécurisé" },
-              { icon: <Clock className="w-8 h-8" />, text: "Support 24/7" },
-              { icon: <CheckCircle className="w-8 h-8" />, text: "Satisfait ou remboursé" },
-              { icon: <Users className="w-8 h-8" />, text: "100+ clubs" }
-            ].map((item, i) => (
-              <div key={i} className="flex flex-col items-center gap-3 text-gray-400">
-                {item.icon}
-                <span className="text-sm">{item.text}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Footer avec Contact */}
-      <footer className="border-t border-dark-border bg-dark-card">
-        <div className="max-w-7xl mx-auto px-6 py-16">
-          {/* Contact Section */}
-          <div className="grid md:grid-cols-2 gap-12 mb-16">
-            {/* Email Direct */}
-            <div>
-              <h3 className="text-2xl font-bold mb-6">Nous contacter</h3>
-              <a
-                href="mailto:contact@insightball.com"
-                className="flex items-center gap-4 p-6 bg-black border border-dark-border rounded-xl hover:border-primary/50 transition-all group"
+          <div className="relative p-12 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/30 rounded-3xl overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent"></div>
+            <div className="relative">
+              <Target className="w-16 h-16 text-emerald-400 mx-auto mb-6" />
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                Prêt à améliorer vos performances ?
+              </h2>
+              <p className="text-xl text-gray-400 mb-8">
+                Rejoignez les clubs qui utilisent déjà INSIGHTBALL pour progresser
+              </p>
+              <Link 
+                to="/signup" 
+                className="inline-flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-semibold rounded-xl hover:shadow-2xl hover:shadow-emerald-500/50 transition-all"
               >
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                  <Mail className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <div className="font-semibold text-lg mb-1">Email direct</div>
-                  <div className="text-primary">contact@insightball.com</div>
-                </div>
-                <ArrowRight className="w-5 h-5 ml-auto text-gray-600 group-hover:text-primary group-hover:translate-x-1 transition-all" />
-              </a>
-            </div>
-
-            {/* Contact Form */}
-            <div>
-              <h3 className="text-2xl font-bold mb-6">Envoyez-nous un message</h3>
-              {sent ? (
-                <div className="flex items-center gap-4 p-6 bg-green-500/10 border border-green-500/30 rounded-xl">
-                  <div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center">
-                    <Send className="w-6 h-6 text-green-500" />
-                  </div>
-                  <div>
-                    <div className="font-semibold text-green-500 mb-1">Message envoyé !</div>
-                    <div className="text-sm text-gray-400">Nous vous répondrons rapidement.</div>
-                  </div>
-                </div>
-              ) : (
-                <form onSubmit={handleContactSubmit} className="space-y-4">
-                  <input
-                    type="text"
-                    name="name"
-                    value={contactForm.name}
-                    onChange={handleContactChange}
-                    placeholder="Votre nom"
-                    className="w-full bg-black border border-dark-border rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-primary focus:outline-none transition-colors"
-                    required
-                  />
-                  <input
-                    type="email"
-                    name="email"
-                    value={contactForm.email}
-                    onChange={handleContactChange}
-                    placeholder="votre@email.com"
-                    className="w-full bg-black border border-dark-border rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-primary focus:outline-none transition-colors"
-                    required
-                  />
-                  <textarea
-                    name="message"
-                    value={contactForm.message}
-                    onChange={handleContactChange}
-                    rows={4}
-                    placeholder="Votre message..."
-                    className="w-full bg-black border border-dark-border rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-primary focus:outline-none transition-colors resize-none"
-                    required
-                  />
-                  <button
-                    type="submit"
-                    disabled={sending}
-                    className="w-full px-6 py-3 bg-primary text-black font-semibold rounded-lg hover:shadow-glow transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                  >
-                    {sending ? (
-                      <>
-                        <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
-                        Envoi...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-5 h-5" />
-                        Envoyer
-                      </>
-                    )}
-                  </button>
-                </form>
-              )}
+                <span>Commencer gratuitement</span>
+                <ArrowRight className="w-5 h-5" />
+              </Link>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Made in Chocolatine */}
-          <div className="text-center py-8 border-t border-dark-border">
-            <p className="text-gray-400 flex items-center justify-center gap-2 text-lg">
-              Made in <span className="text-primary font-semibold">Chocolatine</span> with <Heart className="w-5 h-5 text-primary fill-primary animate-pulse" />
-            </p>
-          </div>
-
-          {/* Footer Links */}
-          <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-500 mt-8">
-            <Link to="/demo" className="hover:text-primary transition-colors">Démo</Link>
-            <Link to="/subscription/plans" className="hover:text-primary transition-colors">Tarifs</Link>
-            <Link to="/login" className="hover:text-primary transition-colors">Connexion</Link>
-          </div>
-
-          {/* Copyright */}
-          <div className="text-center mt-8 text-sm text-gray-600">
-            Copyright © INSIGHTBALL 2026
+      {/* Footer */}
+      <footer className="py-12 px-6 border-t border-white/10">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row items-center justify-between">
+            <div className="flex items-center space-x-3 mb-6 md:mb-0">
+              <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-lg flex items-center justify-center">
+                <svg className="w-6 h-6 text-black" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <span className="text-xl font-bold">INSIGHTBALL</span>
+            </div>
+            <div className="text-gray-400 text-sm">
+              © 2026 INSIGHTBALL. Tous droits réservés.
+            </div>
           </div>
         </div>
       </footer>
+
+      <style jsx>{`
+        @keyframes fade-in {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        
+        @keyframes fade-in-up {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .animate-fade-in {
+          animation: fade-in 0.8s ease-out;
+        }
+        
+        .animate-fade-in-up {
+          animation: fade-in-up 0.8s ease-out;
+        }
+      `}</style>
     </div>
   )
 }
 
-export default Home
+export default LandingPage
