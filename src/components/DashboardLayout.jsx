@@ -1,24 +1,19 @@
-import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Home, Video, Users, BarChart3, Settings, LogOut, Menu, X, Bell } from 'lucide-react'
+import { Home, Film, Users, Settings, LogOut, BarChart3, User } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
-import ClubBadge from './ClubBadge'
-import NotificationBell from './NotificationBell'
 
 function DashboardLayout({ children }) {
   const location = useLocation()
   const navigate = useNavigate()
   const { user, logout } = useAuth()
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const navigation = [
     { name: 'Accueil', href: '/dashboard', icon: Home },
-    { name: 'Matchs', href: '/dashboard/matches', icon: Video },
+    { name: 'Matchs', href: '/dashboard/matches', icon: Film },
     { name: 'Effectif', href: '/dashboard/players', icon: Users },
-    { name: 'Statistiques', href: '/dashboard/stats', icon: BarChart3 }
+    { name: 'Statistiques', href: '/dashboard/stats', icon: BarChart3 },
   ]
 
-  // Add Team management only for CLUB plan
   if (user?.plan === 'club') {
     navigation.push({ name: 'Équipe', href: '/dashboard/team', icon: Users })
   }
@@ -31,137 +26,90 @@ function DashboardLayout({ children }) {
   }
 
   return (
-    <div className="min-h-screen bg-black flex">
-      {/* Sidebar Desktop */}
-      <aside className="hidden md:flex md:flex-col md:w-64 bg-dark-card border-r border-dark-border">
-        {/* Logo */}
-        <div className="p-6 border-b border-dark-border">
-          <Link to="/dashboard" className="flex items-center gap-3">
+    <div className="min-h-screen bg-black">
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 h-20 bg-black border-b border-white/10 z-50">
+        <div className="h-full px-6 flex items-center">
+          <Link to="/" className="flex items-center space-x-3">
             <img src="/logo.svg" alt="INSIGHTBALL" className="w-10 h-10" />
-            <span className="text-xl font-bold">INSIGHTBALL</span>
+            <span className="text-xl font-bold">
+              INSIGHT<span className="text-violet-400">BALL</span>
+            </span>
           </Link>
         </div>
+      </header>
 
-        {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-2">
-          {navigation.map((item) => {
-            const isActive = location.pathname === item.href
-            return (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-                  isActive
-                    ? 'bg-primary text-black font-semibold'
-                    : 'text-gray-300 hover:bg-dark-border hover:text-white'
-                }`}
-              >
-                <item.icon className="w-5 h-5" />
-                <span>{item.name}</span>
-              </Link>
-            )
-          })}
-        </nav>
-
-        {/* User section */}
-        <div className="p-4 border-t border-dark-border">
-          <div className="bg-black rounded-lg p-4 mb-3">
-            <div className="flex items-center gap-3 mb-3">
-              {user?.club?.logo_url ? (
-                <ClubBadge club={user.club} size="md" />
-              ) : (
-                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <Users className="w-5 h-5 text-primary" />
+      <div className="flex pt-20">
+        {/* Sidebar - VIOLET THEME */}
+        <aside className="fixed left-0 top-20 bottom-0 w-64 bg-black border-r border-white/10 overflow-y-auto">
+          <div className="p-6">
+            {/* User Info */}
+            <div className="mb-8 p-4 bg-white/[0.02] border border-white/10 rounded-lg">
+              <div className="flex items-center space-x-3 mb-3">
+                <div className="w-10 h-10 bg-violet-500/10 rounded-full flex items-center justify-center">
+                  <User className="w-5 h-5 text-violet-400" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium truncate text-white">{user?.name}</p>
+                  <p className="text-xs text-gray-400 truncate">{user?.email}</p>
+                </div>
+              </div>
+              
+              {user?.plan && (
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-500">Plan</span>
+                  <span className="px-2 py-1 bg-violet-500/10 border border-violet-500/30 text-violet-400 text-xs font-medium rounded uppercase">
+                    {user.plan}
+                  </span>
                 </div>
               )}
-              <div className="flex-1 min-w-0">
-                <div className="font-semibold truncate">{user?.name}</div>
-                <div className="text-xs text-gray-400 truncate">{user?.email}</div>
-              </div>
-              <NotificationBell />
             </div>
-            <div className="text-xs">
-              <span className={`px-2 py-1 rounded ${
-                user?.plan === 'club' 
-                  ? 'bg-primary/10 text-primary' 
-                  : 'bg-blue-500/10 text-blue-500'
-              }`}>
-                {user?.plan === 'club' ? 'CLUB' : 'COACH'}
-              </span>
-            </div>
-          </div>
-          
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-dark-border hover:text-white rounded-lg transition-all"
-          >
-            <LogOut className="w-5 h-5" />
-            <span>Déconnexion</span>
-          </button>
-        </div>
-      </aside>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col min-h-screen">
-        {/* Mobile Header */}
-        <header className="md:hidden sticky top-0 z-40 bg-dark-card border-b border-dark-border">
-          <div className="flex items-center justify-between p-4">
-            <Link to="/dashboard" className="flex items-center gap-2">
-              <img src="/logo.svg" alt="INSIGHTBALL" className="w-8 h-8" />
-              <span className="font-bold">INSIGHTBALL</span>
-            </Link>
-            
-            <div className="flex items-center gap-3">
-              <NotificationBell />
+            {/* Navigation - VIOLET ACTIVE STATE */}
+            <nav className="space-y-2">
+              {navigation.map((item) => {
+                const isActive = location.pathname === item.href
+                return (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all ${
+                      isActive
+                        ? 'bg-violet-500/10 text-violet-400 border border-violet-500/30'
+                        : 'text-gray-400 hover:bg-white/[0.02] hover:text-white border border-transparent'
+                    }`}
+                  >
+                    <item.icon className="w-5 h-5" />
+                    <span className="font-medium">{item.name}</span>
+                  </Link>
+                )
+              })}
+
+              {/* Logout */}
               <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="p-2 hover:bg-dark-border rounded-lg transition-colors"
+                onClick={handleLogout}
+                className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-white/[0.02] hover:text-white transition-all border border-transparent"
               >
-                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                <LogOut className="w-5 h-5" />
+                <span className="font-medium">Déconnexion</span>
               </button>
-            </div>
+            </nav>
           </div>
 
-          {/* Mobile Menu */}
-          {isMobileMenuOpen && (
-            <div className="border-t border-dark-border">
-              <nav className="p-4 space-y-2">
-                {navigation.map((item) => {
-                  const isActive = location.pathname === item.href
-                  return (
-                    <Link
-                      key={item.name}
-                      to={item.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-                        isActive
-                          ? 'bg-primary text-black font-semibold'
-                          : 'text-gray-300 hover:bg-dark-border hover:text-white'
-                      }`}
-                    >
-                      <item.icon className="w-5 h-5" />
-                      <span>{item.name}</span>
-                    </Link>
-                  )
-                })}
-                
-                <button
-                  onClick={() => {
-                    handleLogout()
-                    setIsMobileMenuOpen(false)
-                  }}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-dark-border hover:text-white rounded-lg transition-all"
-                >
-                  <LogOut className="w-5 h-5" />
-                  <span>Déconnexion</span>
-                </button>
-              </nav>
+          {/* Club Info */}
+          {user?.club_name && (
+            <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-white/10 bg-black">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-violet-500 rounded-full animate-pulse"></div>
+                <span className="text-xs text-gray-500 uppercase tracking-wider">CLUB</span>
+              </div>
+              <p className="text-sm font-medium text-white mt-1">{user.club_name}</p>
             </div>
           )}
-        </header>
+        </aside>
 
-        {/* Page Content */}
-        <main className="flex-1 p-6 md:p-8">
+        {/* Main Content */}
+        <main className="flex-1 ml-64 p-8">
           {children}
         </main>
       </div>
