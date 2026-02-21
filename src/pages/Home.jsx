@@ -42,16 +42,11 @@ function LandingPage() {
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-3 group shrink-0">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-violet-500 to-purple-500 rounded-xl blur opacity-50 group-hover:opacity-75 transition-opacity"></div>
-                <div className="relative w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-br from-violet-500 to-purple-500 rounded-xl flex items-center justify-center shrink-0">
-                  <svg className="w-6 sm:w-7 h-6 sm:h-7 text-white" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-              </div>
+              <img 
+                src="/logo.svg" 
+                alt="INSIGHTBALL" 
+                className="w-10 sm:w-12 h-10 sm:h-12 group-hover:scale-110 transition-transform"
+              />
               <span className="text-lg sm:text-xl md:text-2xl font-bold whitespace-nowrap">
                 INSIGHTBALL
               </span>
