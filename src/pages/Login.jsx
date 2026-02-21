@@ -19,7 +19,6 @@ function Login() {
     setLoading(true)
 
     try {
-      // TODO: Replace with real API call
       await login(formData.email, formData.password)
       navigate('/dashboard')
     } catch (err) {
@@ -38,23 +37,27 @@ function Login() {
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-6 py-12">
-      <div className="w-full max-w-md">
+      {/* Background Effects */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/4 -left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 -right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="w-full max-w-md relative">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-3 group">
-            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-all">
-              <svg className="w-7 h-7 text-primary" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
+            <img 
+              src="/logo.svg" 
+              alt="INSIGHTBALL" 
+              className="w-12 h-12 group-hover:scale-110 transition-transform"
+            />
             <span className="text-2xl font-bold">INSIGHTBALL</span>
           </Link>
         </div>
 
         {/* Card */}
-        <div className="bg-dark-card border border-dark-border rounded-xl p-8">
+        <div className="bg-gradient-to-b from-white/5 to-transparent border border-white/10 rounded-2xl p-8 backdrop-blur-sm">
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">Connexion</h1>
             <p className="text-gray-400">Accédez à votre tableau de bord</p>
@@ -81,7 +84,7 @@ function Login() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full bg-black border border-dark-border rounded-lg pl-12 pr-4 py-3 text-white placeholder-gray-500 focus:border-primary focus:outline-none transition-colors"
+                  className="w-full bg-black border border-white/10 rounded-lg pl-12 pr-4 py-3 text-white placeholder-gray-500 focus:border-violet-500 focus:outline-none transition-colors"
                   placeholder="votre@email.com"
                   required
                 />
@@ -100,7 +103,7 @@ function Login() {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full bg-black border border-dark-border rounded-lg pl-12 pr-4 py-3 text-white placeholder-gray-500 focus:border-primary focus:outline-none transition-colors"
+                  className="w-full bg-black border border-white/10 rounded-lg pl-12 pr-4 py-3 text-white placeholder-gray-500 focus:border-violet-500 focus:outline-none transition-colors"
                   placeholder="••••••••"
                   required
                 />
@@ -112,11 +115,11 @@ function Login() {
               <label className="flex items-center space-x-2">
                 <input
                   type="checkbox"
-                  className="w-4 h-4 bg-black border-dark-border rounded focus:ring-primary"
+                  className="w-4 h-4 bg-black border-white/10 rounded focus:ring-violet-500"
                 />
                 <span className="text-sm text-gray-400">Se souvenir de moi</span>
               </label>
-              <Link to="/forgot-password" className="text-sm text-primary hover:underline">
+              <Link to="/forgot-password" className="text-sm text-violet-400 hover:text-violet-300 transition-colors">
                 Mot de passe oublié ?
               </Link>
             </div>
@@ -125,7 +128,7 @@ function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full group px-8 py-4 bg-primary text-black font-semibold rounded-lg hover:shadow-glow transition-all flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full group px-8 py-4 bg-gradient-to-r from-violet-500 to-purple-500 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-violet-500/50 transition-all flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <span>{loading ? 'Connexion...' : 'Se connecter'}</span>
               {!loading && <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
@@ -133,10 +136,10 @@ function Login() {
           </form>
 
           {/* Sign Up Link */}
-          <div className="mt-8 pt-6 border-t border-dark-border text-center">
+          <div className="mt-8 pt-6 border-t border-white/10 text-center">
             <p className="text-gray-400">
               Pas encore de compte ?{' '}
-              <Link to="/signup" className="text-primary hover:underline font-medium">
+              <Link to="/signup" className="text-violet-400 hover:text-violet-300 transition-colors font-medium">
                 Créer un compte
               </Link>
             </p>
@@ -147,7 +150,7 @@ function Login() {
         <div className="mt-8 text-center">
           <p className="text-sm text-gray-600">
             En vous connectant, vous acceptez nos{' '}
-            <Link to="/terms" className="text-gray-400 hover:text-primary">
+            <Link to="/terms" className="text-gray-400 hover:text-violet-400 transition-colors">
               Conditions d'utilisation
             </Link>
           </p>

@@ -97,7 +97,7 @@ function LandingPage() {
             {/* Badge */}
             <div className="inline-flex items-center space-x-2 px-4 py-2 bg-violet-500/10 border border-violet-500/30 rounded-full mb-6 sm:mb-8 animate-fade-in">
               <Sparkles className="w-4 h-4 text-violet-400 animate-pulse" />
-              <span className="text-xs sm:text-sm text-violet-400 font-medium">Pour les coachs & éducateurs</span>
+              <span className="text-xs sm:text-sm text-violet-400 font-medium">Analyse vidéo intelligente</span>
             </div>
 
             {/* Title */}
@@ -107,13 +107,13 @@ function LandingPage() {
               </span>
               <br />
               <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
-                en 24 heures
+                comme les pros
               </span>
             </h1>
 
             {/* Subtitle */}
             <p className="text-lg sm:text-xl md:text-2xl text-gray-400 mb-8 sm:mb-12 max-w-3xl mx-auto animate-fade-in-up px-4" style={{ animationDelay: '0.2s' }}>
-              L'IA qui transforme vos vidéos en rapports tactiques professionnels. 98% de précision.
+              La plateforme d'analyse vidéo qui transforme vos matchs en rapports tactiques professionnels. Rapide, précis, accessible.
             </p>
 
             {/* CTA Buttons */}
@@ -184,10 +184,10 @@ function LandingPage() {
               <span className="text-xs sm:text-sm text-purple-400 font-medium">Fonctionnalités</span>
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 px-4">
-              Conçu pour les entraîneurs
+              Tout ce dont vous avez besoin
             </h2>
             <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto px-4">
-              Gagnez du temps et concentrez-vous sur l'essentiel : faire progresser vos joueurs
+              Une plateforme complète d'analyse vidéo pour votre staff technique
             </p>
           </div>
 
@@ -320,11 +320,11 @@ function LandingPage() {
               <h3 className="text-xl sm:text-2xl font-bold mb-2">Plan COACH</h3>
               <div className="flex items-baseline gap-3 mb-2">
                 <span className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">29€</span>
-                <span className="text-base sm:text-lg text-gray-400 line-through">49€</span>
+                <span className="text-base sm:text-lg text-gray-400 line-through">39€</span>
                 <span className="text-xs sm:text-sm text-gray-400">/mois</span>
               </div>
               <div className="inline-block px-3 py-1 bg-violet-500/10 border border-violet-500/30 text-violet-400 text-xs font-medium rounded-full mb-6">
-                -41% - Offre limitée
+                -26% - Offre limitée
               </div>
               <ul className="space-y-3 sm:space-y-4 mb-8">
                 <li className="flex items-start space-x-3">
@@ -504,10 +504,10 @@ function LandingPage() {
             <div className="relative">
               <Target className="w-12 sm:w-16 h-12 sm:h-16 text-violet-400 mx-auto mb-4 sm:mb-6 animate-bounce" />
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 px-4">
-                Rejoignez les coachs visionnaires
+                Prêt à passer au niveau supérieur ?
               </h2>
               <p className="text-lg sm:text-xl text-gray-400 mb-6 sm:mb-8 px-4">
-                Offre de lancement valable à vie · Sans engagement
+                Rejoignez les clubs qui analysent leurs matchs avec INSIGHTBALL
               </p>
               <Link 
                 to="/signup" 
@@ -527,17 +527,15 @@ function LandingPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-8">
             <div className="col-span-2 md:col-span-1">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="w-8 sm:w-10 h-8 sm:h-10 bg-gradient-to-br from-violet-500 to-purple-500 rounded-lg flex items-center justify-center">
-                  <svg className="w-5 sm:w-6 h-5 sm:h-6 text-white" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
+                <img 
+                  src="/logo.svg" 
+                  alt="INSIGHTBALL" 
+                  className="w-8 sm:w-10 h-8 sm:h-10"
+                />
                 <span className="text-lg sm:text-xl font-bold">INSIGHTBALL</span>
               </div>
               <p className="text-sm text-gray-400">
-                L'analyse vidéo intelligente pour entraîneurs passionnés.
+                La plateforme d'analyse vidéo pour le football moderne.
               </p>
             </div>
 
