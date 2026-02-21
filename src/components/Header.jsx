@@ -1,49 +1,136 @@
 import { Link } from 'react-router-dom'
+import { Menu, X } from 'lucide-react'
+import { useState } from 'react'
+import { useAuth } from '../context/AuthContext'
+import NotificationBell from './NotificationBell'
 
 function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { user, logout } = useAuth()
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-dark-border">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-sm border-b border-dark-border">
       <nav className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 group">
-            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-all">
-              <svg className="w-6 h-6 text-primary" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-            <span className="text-xl font-bold tracking-tight">INSIGHTBALL</span>
+          <Link to="/" className="flex items-center space-x-3">
+            <img 
+              src="/logo.svg" 
+              alt="INSIGHTBALL" 
+              className="w-10 h-10"
+            />
+            <span className="text-xl font-bold">INSIGHTBALL</span>
           </Link>
 
-          {/* Navigation */}
+          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/problematique" className="text-sm text-gray-400 hover:text-white transition-colors uppercase tracking-wider">
-              Problématique
-            </Link>
-            <Link to="/solution" className="text-sm text-gray-400 hover:text-white transition-colors uppercase tracking-wider">
-              Solution
-            </Link>
-            <Link to="/fonctionnement" className="text-sm text-gray-400 hover:text-white transition-colors uppercase tracking-wider">
-              Fonctionnement
-            </Link>
-            
-            <Link 
-              to="/pre-inscription" 
-              className="px-6 py-2.5 border border-primary/30 text-primary hover:bg-primary/10 transition-all uppercase tracking-wider text-sm font-medium rounded"
-            >
-              Pré-inscription
-            </Link>
+            {user ? (
+              <>
+                <Link to="/dashboard" className="text-gray-300 hover:text-primary transition-colors">
+                  Dashboard
+                </Link>
+                <NotificationBell />
+                <button
+                  onClick={logout}
+                  className="px-6 py-2 bg-dark-border hover:bg-dark-border/70 rounded-lg transition-colors"
+                >
+                  Déconnexion
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/demo" className="text-gray-300 hover:text-primary transition-colors">
+                  Démo
+                </Link>
+                <Link to="/#pricing" className="text-gray-300 hover:text-primary transition-colors">
+                  Tarifs
+                </Link>
+                <Link to="/login" className="text-gray-300 hover:text-primary transition-colors">
+                  Connexion
+                </Link>
+                <Link 
+                  to="/signup"
+                  className="px-6 py-2 bg-primary text-black font-semibold rounded-lg hover:shadow-glow transition-all"
+                >
+                  Essayer gratuitement
+                </Link>
+              </>
+            )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button className="md:hidden text-gray-400 hover:text-white">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+          {/* Mobile menu button */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden p-2 hover:bg-dark-border rounded-lg transition-colors"
+          >
+            {isMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
         </div>
+
+        {/* Mobile Navigation */}
+        {isMenuOpen && (
+          <div className="md:hidden mt-4 pb-4 border-t border-dark-border pt-4 space-y-4">
+            {user ? (
+              <>
+                <Link
+                  to="/dashboard"
+                  className="block text-gray-300 hover:text-primary transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Dashboard
+                </Link>
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-300">Notifications</span>
+                  <NotificationBell />
+                </div>
+                <button
+                  onClick={() => {
+                    logout()
+                    setIsMenuOpen(false)
+                  }}
+                  className="block w-full text-left px-6 py-2 bg-dark-border hover:bg-dark-border/70 rounded-lg transition-colors"
+                >
+                  Déconnexion
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/demo"
+                  className="block text-gray-300 hover:text-primary transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Démo
+                </Link>
+                <Link
+                  to="/#pricing"
+                  className="block text-gray-300 hover:text-primary transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Tarifs
+                </Link>
+                <Link
+                  to="/login"
+                  className="block text-gray-300 hover:text-primary transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Connexion
+                </Link>
+                <Link
+                  to="/signup"
+                  className="block px-6 py-2 bg-primary text-black font-semibold rounded-lg hover:shadow-glow transition-all text-center"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Essayer gratuitement
+                </Link>
+              </>
+            )}
+          </div>
+        )}
       </nav>
     </header>
   )

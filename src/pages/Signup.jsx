@@ -70,23 +70,14 @@ function Signup() {
     setLoading(true)
 
     try {
-      // Format data for API
-      const signupData = {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        plan: selectedPlan  // 'coach' or 'club' (lowercase)
-      }
-      
-      // Add club_name only for CLUB plan
-      if (selectedPlan === 'club' && formData.clubName) {
-        signupData.club_name = formData.clubName
-      }
-      
-      await signup(signupData)
+      // TODO: Replace with real API call
+      await signup({
+        ...formData,
+        plan: selectedPlan
+      })
       navigate('/dashboard')
     } catch (err) {
-      setError(err.message || 'Une erreur est survenue. Veuillez réessayer.')
+      setError('Une erreur est survenue. Veuillez réessayer.')
     } finally {
       setLoading(false)
     }
@@ -100,22 +91,8 @@ function Signup() {
   }
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center px-6 py-12">
+    <div className="min-h-screen bg-black flex items-center justify-center px-6 py-12 pt-32">
       <div className="w-full max-w-4xl">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center space-x-3 group">
-            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-all">
-              <svg className="w-7 h-7 text-primary" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-            <span className="text-2xl font-bold">INSIGHTBALL</span>
-          </Link>
-        </div>
-
         {/* Step Indicator */}
         <div className="flex items-center justify-center mb-8">
           <div className="flex items-center space-x-4">

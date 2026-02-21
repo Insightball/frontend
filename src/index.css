@@ -66,3 +66,4 @@ body {
     border-image: linear-gradient(to right, #5EEAD4, #2DD4BF) 1;
   }
 }
+@import './animations.css';

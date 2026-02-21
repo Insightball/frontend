@@ -6,10 +6,15 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Dashboard from './pages/Dashboard'
+import DashboardHome from './pages/DashboardHome'
 import DashboardMatches from './pages/DashboardMatches'
 import PlayerManagement from './pages/PlayerManagement'
 import ClubSettings from './pages/ClubSettings'
 import MatchDetail from './pages/MatchDetail'
+import Statistics from './pages/Statistics'
+import TeamManagement from './pages/TeamManagement'
+import SubscriptionPlans from './pages/SubscriptionPlans'
+import UploadMatch from './pages/UploadMatch'
 
 function App() {
   return (
@@ -24,24 +29,45 @@ function App() {
                 <Home />
               </>
             } />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={
+              <>
+                <Header />
+                <Login />
+              </>
+            } />
+            <Route path="/signup" element={
+              <>
+                <Header />
+                <Signup />
+              </>
+            } />
             <Route path="/demo" element={
               <>
                 <Header />
                 <Dashboard />
               </>
             } />
+            <Route path="/subscription/plans" element={
+              <>
+                <Header />
+                <SubscriptionPlans />
+              </>
+            } />
             
             {/* Protected routes */}
             <Route path="/dashboard" element={
               <ProtectedRoute>
-                <DashboardMatches />
+                <DashboardHome />
               </ProtectedRoute>
             } />
             <Route path="/dashboard/matches" element={
               <ProtectedRoute>
                 <DashboardMatches />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/matches/upload" element={
+              <ProtectedRoute>
+                <UploadMatch />
               </ProtectedRoute>
             } />
             <Route path="/dashboard/matches/:matchId" element={
@@ -52,6 +78,16 @@ function App() {
             <Route path="/dashboard/players" element={
               <ProtectedRoute>
                 <PlayerManagement />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/stats" element={
+              <ProtectedRoute>
+                <Statistics />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/team" element={
+              <ProtectedRoute>
+                <TeamManagement />
               </ProtectedRoute>
             } />
             <Route path="/dashboard/settings" element={
