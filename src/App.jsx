@@ -23,12 +23,8 @@ function App() {
         <div className="min-h-screen bg-black text-white">
           <Routes>
             {/* Public routes */}
-            <Route path="/" element={
-              <>
-                <Header />
-                <Home />
-              </>
-            } />
+            <Route path="/" element={<Home />} /> {/* REMOVED HEADER - Landing has its own navbar */}
+            
             <Route path="/login" element={
               <>
                 <Header />
