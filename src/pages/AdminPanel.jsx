@@ -19,7 +19,7 @@ function useAdminFetch(endpoint) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token"); // adapte selon ton auth
+    const token = localStorage.getItem("insightball_token"); // adapte selon ton auth
     fetch(`${API}${endpoint}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -75,7 +75,7 @@ function UsersList() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("insightball_token");
     const params = new URLSearchParams();
     if (search) params.append("search", search);
     if (plan) params.append("plan", plan);
@@ -90,7 +90,7 @@ function UsersList() {
   }, [search, plan]);
 
   const toggleActive = async (userId, currentState) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("insightball_token");
     await fetch(`${API}/users/${userId}/toggle-active`, {
       method: "PATCH",
       headers: { Authorization: `Bearer ${token}` },
@@ -286,7 +286,7 @@ export default function AdminPanel() {
 
   // Vérifie que l'utilisateur est bien superadmin
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("insightball_token");
     if (!token) { setAuthorized(false); return; }
 
     fetch(`${API}/dashboard`, {
