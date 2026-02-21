@@ -15,6 +15,7 @@ import Statistics from './pages/Statistics'
 import TeamManagement from './pages/TeamManagement'
 import SubscriptionPlans from './pages/SubscriptionPlans'
 import UploadMatch from './pages/UploadMatch'
+import AdminPanel from './pages/AdminPanel'
 
 function App() {
   return (
@@ -91,6 +92,9 @@ function App() {
                 <ClubSettings />
               </ProtectedRoute>
             } />
+
+            {/* Route admin cachée — ne pas partager cette URL */}
+            <Route path="/admin" element={<AdminPanel />} />
           </Routes>
         </div>
       </Router>
