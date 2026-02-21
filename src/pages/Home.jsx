@@ -64,9 +64,14 @@ function LandingPage() {
             </div>
 
             {/* Mobile CTA */}
-            <Link to="/signup" className="lg:hidden px-4 py-2 bg-gradient-to-r from-violet-500 to-purple-500 text-white font-semibold rounded-lg text-sm whitespace-nowrap">
-              Essayer
-            </Link>
+            <div className="lg:hidden flex items-center gap-3">
+              <Link to="/login" className="text-gray-300 hover:text-white transition-colors text-sm font-medium whitespace-nowrap">
+                Connexion
+              </Link>
+              <Link to="/signup" className="px-4 py-2 bg-gradient-to-r from-violet-500 to-purple-500 text-white font-semibold rounded-lg text-sm whitespace-nowrap">
+                Essayer
+              </Link>
+            </div>
           </div>
         </div>
       </nav>
