@@ -10,7 +10,7 @@
 
 import { useState, useEffect } from "react";
 
-const API = "/api/x-admin";
+const API = "https://backend-pued.onrender.com/api/x-admin";
 
 // ─── Hook pour les appels API admin ────────────────────────────────────────
 function useAdminFetch(endpoint) {
