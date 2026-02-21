@@ -3,42 +3,65 @@ import api from './api'
 const authService = {
   // Sign up
   async signup(userData) {
-    const response = await api.post('/auth/signup', userData)
-    
-    if (response.data.access_token) {
-      localStorage.setItem('insightball_token', response.data.access_token)
+    try {
+      console.log('Signup attempt:', { email: userData.email })
+      const response = await api.post('/auth/signup', userData)
+      console.log('Signup response:', response.data)
       
-      // Get user info
-      const userInfo = await this.getCurrentUser()
-      localStorage.setItem('insightball_user', JSON.stringify(userInfo))
+      if (response.data.access_token) {
+        localStorage.setItem('insightball_token', response.data.access_token)
+        
+        // Get user info
+        const userInfo = await this.getCurrentUser()
+        localStorage.setItem('insightball_user', JSON.stringify(userInfo))
+        
+        return userInfo
+      }
       
-      return userInfo
+      throw new Error('No token received')
+    } catch (error) {
+      console.error('Signup error:', error)
+      console.error('Error response:', error.response?.data)
+      throw error
     }
-    
-    throw new Error('No token received')
   },
 
   // Login
   async login(email, password) {
-    const response = await api.post('/auth/login', { email, password })
-    
-    if (response.data.access_token) {
-      localStorage.setItem('insightball_token', response.data.access_token)
+    try {
+      console.log('Login attempt:', { email })
+      const response = await api.post('/auth/login', { email, password })
+      console.log('Login response received:', response.data)
       
-      // Get user info
-      const userInfo = await this.getCurrentUser()
-      localStorage.setItem('insightball_user', JSON.stringify(userInfo))
+      if (response.data.access_token) {
+        localStorage.setItem('insightball_token', response.data.access_token)
+        
+        // Get user info
+        console.log('Fetching user info...')
+        const userInfo = await this.getCurrentUser()
+        console.log('User info received:', userInfo)
+        localStorage.setItem('insightball_user', JSON.stringify(userInfo))
+        
+        return userInfo
+      }
       
-      return userInfo
+      throw new Error('No token received')
+    } catch (error) {
+      console.error('Login error:', error)
+      console.error('Error response:', error.response?.data)
+      throw error
     }
-    
-    throw new Error('No token received')
   },
 
   // Get current user
   async getCurrentUser() {
-    const response = await api.get('/auth/me')
-    return response.data
+    try {
+      const response = await api.get('/auth/me')
+      return response.data
+    } catch (error) {
+      console.error('Get current user error:', error)
+      throw error
+    }
   },
 
   // Logout
