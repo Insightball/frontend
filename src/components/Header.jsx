@@ -12,7 +12,9 @@ function Header() {
               alt="INSIGHTBALL" 
               className="w-10 h-10 group-hover:scale-110 transition-transform"
             />
-            <span className="text-xl font-bold tracking-tight">INSIGHTBALL</span>
+            <span className="text-xl font-bold tracking-tight">
+              INSIGHT<span className="text-violet-400">BALL</span>
+            </span>
           </Link>
 
           {/* Navigation */}

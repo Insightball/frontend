@@ -48,7 +48,7 @@ function LandingPage() {
                 className="w-10 sm:w-12 h-10 sm:h-12 group-hover:scale-110 transition-transform"
               />
               <span className="text-lg sm:text-xl md:text-2xl font-bold whitespace-nowrap">
-                INSIGHTBALL
+                INSIGHT<span className="text-violet-400">BALL</span>
               </span>
             </Link>
 
@@ -532,7 +532,9 @@ function LandingPage() {
                   alt="INSIGHTBALL" 
                   className="w-8 sm:w-10 h-8 sm:h-10"
                 />
-                <span className="text-lg sm:text-xl font-bold">INSIGHTBALL</span>
+                <span className="text-lg sm:text-xl font-bold">
+                  INSIGHT<span className="text-violet-400">BALL</span>
+                </span>
               </div>
               <p className="text-sm text-gray-400">
                 La plateforme d'analyse vidéo pour le football moderne.

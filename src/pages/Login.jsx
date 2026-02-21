@@ -36,26 +36,14 @@ function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center px-6 py-12">
+    <div className="min-h-screen bg-black flex items-center justify-center px-6 py-12 relative">
       {/* Background Effects */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 -left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 -right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
       </div>
 
-      <div className="w-full max-w-md relative">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center space-x-3 group">
-            <img 
-              src="/logo.svg" 
-              alt="INSIGHTBALL" 
-              className="w-12 h-12 group-hover:scale-110 transition-transform"
-            />
-            <span className="text-2xl font-bold">INSIGHTBALL</span>
-          </Link>
-        </div>
-
+      <div className="w-full max-w-md relative z-10">
         {/* Card */}
         <div className="bg-gradient-to-b from-white/5 to-transparent border border-white/10 rounded-2xl p-8 backdrop-blur-sm">
           <div className="mb-8">
