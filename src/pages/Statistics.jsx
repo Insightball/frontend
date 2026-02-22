@@ -227,6 +227,7 @@ function ProgressionView({ matches }) {
   )
 }
 
+const TEAM_HEAT = [
   { x: 25, y: 50, intensity: 0.9 }, { x: 50, y: 30, intensity: 0.8 },
   { x: 50, y: 70, intensity: 0.7 }, { x: 70, y: 50, intensity: 0.95 },
   { x: 60, y: 25, intensity: 0.6 }, { x: 60, y: 75, intensity: 0.65 },
