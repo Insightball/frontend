@@ -574,10 +574,7 @@ function LandingPage() {
         {/* Gauche — texte */}
         <div style={{ padding:'80px 56px 72px',display:'flex',flexDirection:'column',justifyContent:'space-between',borderRight:`1px solid ${G.rule}` }}>
           <div>
-            <div className="anim-1" style={{ display:'inline-flex',alignItems:'center',gap:10,fontFamily:G.mono,fontSize:10,letterSpacing:'.18em',textTransform:'uppercase',color:G.gold,marginBottom:36 }}>
-              <span style={{ width:6,height:6,background:G.gold,borderRadius:'50%',display:'inline-block' }}/>
-              Régional 1 · National 3 · Amateur
-            </div>
+
             <h1 className="anim-2" style={{ fontFamily:G.display,fontSize:'clamp(60px,8vw,108px)',lineHeight:.88,letterSpacing:'.01em',textTransform:'uppercase',color:G.ink,marginBottom:32 }}>
               Vos matchs.<br/>
               Vos données.<br/>
@@ -621,37 +618,11 @@ function LandingPage() {
             style={{ width:'100%',height:'100%',objectFit:'cover',objectPosition:'center 20%',opacity:.65,mixBlendMode:'luminosity',display:'block' }}
           />
           <div style={{ position:'absolute',inset:0,background:'linear-gradient(135deg,rgba(15,15,13,.5) 0%,transparent 60%)' }}/>
-          {/* Stats strip */}
-          <div style={{
-            position:'absolute',bottom:0,left:0,right:0,
-            background:'rgba(15,15,13,.88)', backdropFilter:'blur(8px)',
-            display:'grid',gridTemplateColumns:'repeat(3,1fr)',
-            borderTop:`2px solid ${G.gold}`,
-          }}>
-            {[{num:'200+',lbl:'Clubs'},{num:'5h',lbl:'Rapport prêt'},{num:'40+',lbl:'Métriques'}].map((s,i) => (
-              <div key={s.lbl} style={{ padding:'16px 20px',textAlign:'center',borderRight:i<2?'1px solid rgba(255,255,255,0.05)':'none' }}>
-                <div style={{ fontFamily:G.display,fontSize:32,letterSpacing:'.02em',lineHeight:1,color:'#fff',marginBottom:4 }}>{s.num}</div>
-                <div style={{ fontFamily:G.mono,fontSize:8,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(255,255,255,.28)' }}>{s.lbl}</div>
-              </div>
-            ))}
-          </div>
+
         </div>
       </section>
 
-      {/* ── TICKER ── */}
-      <div style={{ background:G.ink,borderTop:`2px solid ${G.gold}`,padding:'8px 0',overflow:'hidden',whiteSpace:'nowrap' }}>
-        <div style={{ display:'inline-flex',animation:'ticker 32s linear infinite' }}>
-          {[...Array(2)].map((_,rep) => (
-            <span key={rep} style={{ display:'inline-flex' }}>
-              {['Heatmaps individuelles','Stats collectives','Rapports PDF','Zones de récupération','Tactique · Pressing · Possession','N3 · R1 · Amateur'].map(t => (
-                <span key={t} style={{ fontFamily:G.mono,fontSize:10,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(255,255,255,.35)',padding:'0 28px',display:'flex',alignItems:'center',gap:14 }}>
-                  <span style={{ color:G.gold }}>·</span>{t}
-                </span>
-              ))}
-            </span>
-          ))}
-        </div>
-      </div>
+
 
       {/* ── POUR QUI ── */}
       <section style={{ padding:'96px 40px',borderBottom:`1px solid ${G.rule}`,display:'grid',gridTemplateColumns:'220px 1fr 1fr',gap:56,alignItems:'start' }}>
@@ -662,27 +633,21 @@ function LandingPage() {
         </div>
         <div>
           <h2 style={{ fontFamily:G.display,fontSize:'clamp(38px,4.5vw,60px)',textTransform:'uppercase',lineHeight:.9,letterSpacing:'.01em',marginBottom:24 }}>
-            Les outils<br/>des pros.<br/><span style={{ color:G.gold }}>Pour tous.</span>
+            L'analyse pro.<br/>Accessible à<br/><span style={{ color:G.gold }}>tous les clubs.</span>
           </h2>
           <p style={{ fontSize:15,lineHeight:1.8,color:G.ink2,marginBottom:28 }}>
-            Hudl, Veo, StatsPerform coûtent plusieurs milliers d'euros par an.
-            <strong> InsightBall donne accès au même niveau d'analyse</strong> à partir de 29€/mois, sans équipement spécial.
+            InsightBall transforme n'importe quelle vidéo de match en rapport tactique professionnel.
+            <strong> Ce que seules les grandes structures pouvaient se payer, vous y avez accès dès aujourd'hui</strong> — à partir de 29€/mois, sans équipement spécial.
           </p>
-          <div style={{ display:'flex',flexWrap:'wrap',gap:6 }}>
-            {['National 3','Régional 1','Régional 2','U19 · U17','Amateur','Futsal'].map(l => (
-              <span key={l} style={{ fontFamily:G.mono,fontSize:9,letterSpacing:'.12em',textTransform:'uppercase',padding:'5px 12px',border:`1px solid ${G.goldBdr}`,color:G.gold,background:G.goldBg,borderRadius:2 }}>{l}</span>
-            ))}
-          </div>
         </div>
         <div style={{ display:'flex',flexDirection:'column',gap:0,border:`1px solid ${G.rule}` }}>
           {[
             {val:'29€',lbl:'Dès 29€/mois sans engagement'},
             {val:'5h', lbl:'Rapport livré en 5 heures'},
-            {val:'40+',lbl:'Métriques par match analysé'},
             {val:'0',  lbl:'Équipement requis'},
           ].map((n,i) => (
             <div key={i}
-              style={{ padding:'20px 24px',borderBottom:i<3?`1px solid ${G.rule}`:'none',display:'flex',alignItems:'center',justifyContent:'space-between',transition:'background .15s',cursor:'default' }}
+              style={{ padding:'20px 24px',borderBottom:i<2?`1px solid ${G.rule}`:'none',display:'flex',alignItems:'center',justifyContent:'space-between',transition:'background .15s',cursor:'default' }}
               onMouseEnter={e=>e.currentTarget.style.background=G.goldBg}
               onMouseLeave={e=>e.currentTarget.style.background='transparent'}
             >
@@ -763,7 +728,7 @@ function LandingPage() {
           <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:1,background:G.rule }}>
             {[
               {n:'01',title:'Importez votre vidéo',    desc:'MP4, MOV, AVI. Depuis votre téléphone ou ordinateur. Aucun logiciel à installer.'},
-              {n:'02',title:"L'IA s'en charge",         desc:"Détection des joueurs, du ballon, des zones de jeu. 40+ métriques calculées automatiquement."},
+              {n:'02',title:"Notre IA analyse",          desc:"Une intelligence artificielle développée en interne, entraînée spécifiquement sur le football. Elle lit le jeu comme un œil expert — les zones, les mouvements, les schémas."},
               {n:'03',title:'Exploitez vos données',    desc:'Rapport PDF + dashboard interactif en 5h. Heatmaps, stats individuelles et collectives.'},
             ].map((s,i) => (
               <div key={i}
@@ -793,7 +758,7 @@ function LandingPage() {
                 Tarifs simples,<br/><span style={{ color:G.gold }}>sans surprise.</span>
               </h2>
             </div>
-            <p style={{ fontSize:13,color:G.muted,textAlign:'right',lineHeight:1.7 }}>Sans engagement.<br/>Annulez à tout moment.</p>
+            <p style={{ fontSize:13,color:G.muted,textAlign:'right',lineHeight:1.7 }}>Sans engagement.</p>
           </div>
           <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:G.rule }}>
             {/* Coach */}
@@ -851,7 +816,7 @@ function LandingPage() {
               >Choisir Club</Link>
             </div>
           </div>
-          <p style={{ textAlign:'center',fontFamily:G.mono,fontSize:10,letterSpacing:'.1em',textTransform:'uppercase',color:G.muted,marginTop:20 }}>Sans engagement · Annulez à tout moment</p>
+          <p style={{ textAlign:'center',fontFamily:G.mono,fontSize:10,letterSpacing:'.1em',textTransform:'uppercase',color:G.muted,marginTop:20 }}>Sans engagement</p>
         </div>
       </section>
 
@@ -863,10 +828,10 @@ function LandingPage() {
               <span style={{ width:16,height:1,background:G.gold,display:'inline-block' }}/>Contact
             </div>
             <h2 style={{ fontFamily:G.display,fontSize:'clamp(42px,5vw,68px)',textTransform:'uppercase',lineHeight:.9,letterSpacing:'.01em',marginBottom:24 }}>
-              Une question ?<br/><span style={{ color:G.gold }}>Parlons-en.</span>
+              Contactez-<br/><span style={{ color:G.gold }}>nous.</span>
             </h2>
             <p style={{ fontSize:14,lineHeight:1.8,color:G.ink2,maxWidth:340,marginBottom:36 }}>
-              On est une équipe passionnée de football et de technologie. On répond vite, en français, sans jargon.
+              Smart Video Analysis
             </p>
           </div>
           <a href="mailto:contact@insightball.com" style={{ fontFamily:G.serif,fontStyle:'italic',fontSize:18,color:G.gold,textDecoration:'none',borderBottom:`1px solid rgba(201,162,39,0.25)`,paddingBottom:3,display:'inline-block',transition:'border-color .15s' }}
@@ -911,20 +876,37 @@ function LandingPage() {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer style={{ background:G.ink,padding:'28px 40px',display:'flex',justifyContent:'space-between',alignItems:'center' }}>
-        <div style={{ fontFamily:G.display,fontSize:16,letterSpacing:'.06em',color:'rgba(255,255,255,.2)' }}>
-          INSIGHT<span style={{ color:`rgba(201,162,39,0.4)` }}>BALL</span>
+      <footer style={{ background:G.ink,borderTop:`2px solid ${G.gold}`,padding:'40px 40px 32px' }}>
+        <div style={{ display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:32,paddingBottom:28,borderBottom:`1px solid rgba(255,255,255,0.06)` }}>
+          {/* Logo + tagline */}
+          <div style={{ display:'flex',alignItems:'center',gap:14 }}>
+            <img src="/logo.svg" alt="InsightBall" style={{ width:36,height:36 }}/>
+            <div>
+              <div style={{ fontFamily:G.display,fontSize:20,letterSpacing:'.06em',color:'#fff',lineHeight:1 }}>
+                INSIGHT<span style={{ color:G.gold }}>BALL</span>
+              </div>
+              <div style={{ fontFamily:G.mono,fontSize:9,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(255,255,255,.3)',marginTop:4 }}>
+                Smart Video Analysis
+              </div>
+            </div>
+          </div>
+          {/* Nav links */}
+          <div style={{ display:'flex',gap:32,paddingTop:4 }}>
+            {[['#demo','Démo'],['#features','Fonctionnalités'],['#pricing','Tarifs'],['#contact','Contact']].map(([h,l]) => (
+              <a key={h} href={h} style={{ fontFamily:G.mono,fontSize:9,letterSpacing:'.12em',textTransform:'uppercase',color:'rgba(255,255,255,.35)',textDecoration:'none',transition:'color .15s' }}
+                onMouseEnter={e=>e.target.style.color='rgba(255,255,255,.7)'}
+                onMouseLeave={e=>e.target.style.color='rgba(255,255,255,.35)'}
+              >{l}</a>
+            ))}
+          </div>
         </div>
-        <div style={{ display:'flex',gap:32 }}>
-          {[['#features','Fonctionnalités'],['#pricing','Tarifs'],['#contact','Contact']].map(([h,l]) => (
-            <a key={h} href={h} style={{ fontFamily:G.mono,fontSize:9,letterSpacing:'.12em',textTransform:'uppercase',color:'rgba(255,255,255,.2)',textDecoration:'none',transition:'color .15s' }}
-              onMouseEnter={e=>e.target.style.color='rgba(255,255,255,.5)'}
-              onMouseLeave={e=>e.target.style.color='rgba(255,255,255,.2)'}
-            >{l}</a>
-          ))}
-        </div>
-        <div style={{ fontFamily:G.mono,fontSize:9,letterSpacing:'.1em',textTransform:'uppercase',color:'rgba(255,255,255,.15)' }}>
-          © 2026 InsightBall
+        <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center' }}>
+          <div style={{ fontFamily:G.mono,fontSize:9,letterSpacing:'.1em',textTransform:'uppercase',color:'rgba(255,255,255,.2)' }}>
+            © 2026 InsightBall · Tous droits réservés
+          </div>
+          <div style={{ fontFamily:G.mono,fontSize:9,letterSpacing:'.08em',color:'rgba(255,255,255,.15)',display:'flex',alignItems:'center',gap:6 }}>
+            We live football <span style={{ color:'rgba(201,162,39,0.5)' }}>♥</span>
+          </div>
         </div>
       </footer>
     </div>
