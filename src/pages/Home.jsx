@@ -533,33 +533,59 @@ function LandingPage() {
           }} />
         </div>
         <div className="relative max-w-7xl mx-auto">
-          <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center space-x-2 px-4 py-2 bg-violet-500/10 border border-violet-500/30 rounded-full mb-6 sm:mb-8">
-              <Sparkles className="w-4 h-4 text-violet-400 animate-pulse" />
-              <span className="text-xs sm:text-sm text-violet-400 font-medium">Analyse vidéo intelligente</span>
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+            {/* Colonne gauche — texte */}
+            <div className="flex flex-col justify-center">
+              <div className="inline-flex items-center space-x-2 px-4 py-2 bg-violet-500/10 border border-violet-500/30 rounded-full mb-6 w-fit">
+                <Sparkles className="w-4 h-4 text-violet-400 animate-pulse" />
+                <span className="text-xs sm:text-sm text-violet-400 font-medium">Analyse vidéo intelligente</span>
+              </div>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight">
+                <span className="bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
+                  Votre match, vos statistiques
+                </span>
+                <br />
+                <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
+                  en 1 clic
+                </span>
+              </h1>
+              <p className="text-lg sm:text-xl text-gray-400 mb-8 max-w-xl">
+                Importez votre vidéo de match et recevez un rapport clair avec statistiques collectives et individuelles, prêt à être exploité.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link to="/signup" className="group px-8 py-4 bg-gradient-to-r from-violet-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-2xl hover:shadow-violet-500/50 transition-all flex items-center justify-center space-x-2">
+                  <span>Créer un compte</span>
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <a href="#demo" className="group px-8 py-4 bg-white/5 border border-white/10 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-white/10 transition-all flex items-center justify-center space-x-2">
+                  <Play className="w-5 h-5" />
+                  <span>Voir la démo</span>
+                </a>
+              </div>
             </div>
-            <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold mb-4 sm:mb-6 leading-tight px-4">
-              <span className="bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
-                Votre match, vos statistiques
-              </span>
-              <br />
-              <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
-                en 1 clic
-              </span>
-            </h1>
-            <p className="text-lg sm:text-xl md:text-2xl text-gray-400 mb-8 sm:mb-12 max-w-3xl mx-auto px-4">
-              Importez votre vidéo de match et recevez un rapport clair avec statistiques collectives et individuelles, prêt à être exploité.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 px-4">
-              <Link to="/signup" className="group w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-violet-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-2xl hover:shadow-violet-500/50 transition-all flex items-center justify-center space-x-2">
-                <span className="text-sm sm:text-base">Créer un compte</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <a href="#demo" className="group w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-white/5 border border-white/10 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-white/10 transition-all flex items-center justify-center space-x-2">
-                <Play className="w-5 h-5" />
-                <span className="text-sm sm:text-base">Voir la démo</span>
-              </a>
+
+            {/* Colonne droite — photo */}
+            <div className="relative flex items-center justify-center">
+              {/* Glow derrière la photo */}
+              <div className="absolute inset-0 bg-violet-500/10 rounded-3xl blur-2xl scale-95" />
+              <div className="relative rounded-2xl overflow-hidden border border-violet-500/20 shadow-2xl shadow-violet-500/10 w-full max-w-lg lg:max-w-none">
+                <img
+                  src="/Coach_analyse_Insightball.png"
+                  alt="Coach analysant les statistiques sur tablette"
+                  className="w-full h-full object-cover"
+                  style={{ aspectRatio: '4/5', objectPosition: 'center' }}
+                />
+                {/* Overlay dégradé bas */}
+                <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/60 to-transparent" />
+                {/* Badge flottant */}
+                <div className="absolute bottom-5 left-5 right-5 bg-black/60 backdrop-blur-md border border-white/10 rounded-xl px-4 py-3 flex items-center gap-3">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse flex-shrink-0" />
+                  <span className="text-sm text-white font-medium">Analyse en temps réel · Rapport prêt en 5h</span>
+                </div>
+              </div>
             </div>
+
           </div>
         </div>
       </section>
