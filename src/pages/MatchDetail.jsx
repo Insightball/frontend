@@ -6,48 +6,31 @@ import PlayerStatsCard from '../components/PlayerStatsCard'
 import HeatmapPlayer from '../components/HeatmapPlayer'
 import MatchTimeline from '../components/MatchTimeline'
 
+const G = {
+  gold: '#c9a227', goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.25)',
+  mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
+  border: 'rgba(255,255,255,0.06)', muted: 'rgba(245,242,235,0.35)',
+}
+
 function MatchDetail() {
   const { matchId } = useParams()
   const [activeTab, setActiveTab] = useState('overview')
 
-  // Mock data - sera remplacé par vraies données API
   const match = {
-    id: matchId,
-    opponent: 'FC Lyon',
-    date: '2026-02-10',
-    category: 'N3',
-    score_home: 3,
-    score_away: 1,
-    is_home: true,
-    status: 'completed',
-    stats: {
-      possession: 58,
-      passes: 482,
-      shots: 18,
-      shotsOnTarget: 9,
-      corners: 6,
-      fouls: 12
-    },
-    player_stats: [
-      {
-        player: { id: '1', name: 'Kylian Mbappé', number: 10, position: 'Attaquant', photo_url: null },
-        rating: 8.5,
-        passes: 45,
-        distance: 10.2,
-        duels: 12,
-        trend: 1
-      }
-    ],
+    id: matchId, opponent: 'FC Lyon', date: '2026-02-10',
+    category: 'N3', score_home: 3, score_away: 1,
+    is_home: true, status: 'completed',
+    stats: { possession: 58, passes: 482, shots: 18, shotsOnTarget: 9, corners: 6, fouls: 12 },
+    player_stats: [{
+      player: { id: '1', name: 'Kylian Mbappé', number: 10, position: 'Attaquant', photo_url: null },
+      rating: 8.5, passes: 45, distance: 10.2, duels: 12, trend: 1
+    }],
     events: [
       { time: 15, type: 'goal', player: 'Mbappé', description: 'But suite à un centre', half: 1 },
       { time: 34, type: 'card_yellow', player: 'Dupont', description: 'Carton jaune pour faute', half: 1 },
       { time: 67, type: 'substitution', player: 'Martin → Lefebvre', description: 'Changement tactique', half: 2 }
     ],
-    heatmap_data: [
-      { x: 70, y: 30, intensity: 0.9 },
-      { x: 75, y: 35, intensity: 0.8 },
-      { x: 65, y: 25, intensity: 0.7 }
-    ]
+    heatmap_data: [{ x: 70, y: 30, intensity: 0.9 }, { x: 75, y: 35, intensity: 0.8 }, { x: 65, y: 25, intensity: 0.7 }]
   }
 
   const tabs = [
@@ -56,158 +39,129 @@ function MatchDetail() {
     { id: 'phases', label: 'Phases de jeu' },
     { id: 'comparison', label: 'Comparaison' },
     { id: 'video', label: 'Vidéo' },
-    { id: 'report', label: 'Rapport PDF' }
+    { id: 'report', label: 'Rapport PDF' },
   ]
+
+  const resultColor = match.score_home > match.score_away ? '#22c55e' : match.score_home < match.score_away ? '#ef4444' : G.gold
+  const resultLabel = match.score_home > match.score_away ? 'Victoire' : match.score_home < match.score_away ? 'Défaite' : 'Nul'
 
   return (
     <DashboardLayout>
       {/* Header */}
-      <div className="mb-8">
-        <button 
+      <div style={{ marginBottom: 28 }}>
+        <button
           onClick={() => window.history.back()}
-          className="flex items-center gap-2 text-gray-400 hover:text-primary mb-4 transition-colors"
+          style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', cursor: 'pointer', fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted, marginBottom: 20, padding: 0, transition: 'color .15s' }}
+          onMouseEnter={e => e.currentTarget.style.color = G.gold}
+          onMouseLeave={e => e.currentTarget.style.color = G.muted}
         >
-          <ArrowLeft className="w-5 h-5" />
-          Retour aux matchs
+          <ArrowLeft size={14} /> Retour aux matchs
         </button>
 
-        <div className="flex items-start justify-between">
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
           <div>
-            <h1 className="text-3xl font-bold mb-2">
-              {match.category} - {match.opponent}
+            <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+              <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />
+              {match.category} · {new Date(match.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+            </div>
+            <h1 style={{ fontFamily: G.display, fontSize: 44, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: '#f5f2eb', margin: 0 }}>
+              vs {match.opponent}
             </h1>
-            <p className="text-gray-400">
-              {new Date(match.date).toLocaleDateString('fr-FR', { 
-                day: 'numeric', 
-                month: 'long', 
-                year: 'numeric' 
-              })}
-            </p>
           </div>
-
-          <div className="flex items-center gap-3">
-            <button className="px-4 py-2 border border-dark-border hover:border-primary hover:bg-primary/10 rounded-lg transition-all flex items-center gap-2">
-              <Share2 className="w-4 h-4" />
-              Partager
+          <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+            <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 18px', background: 'transparent', border: `1px solid ${G.border}`, color: G.muted, fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .15s' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = G.goldBdr; e.currentTarget.style.color = G.gold }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = G.border; e.currentTarget.style.color = G.muted }}>
+              <Share2 size={12} /> Partager
             </button>
-            <button className="px-4 py-2 bg-primary text-black font-semibold rounded-lg hover:shadow-glow transition-all flex items-center gap-2">
-              <Download className="w-4 h-4" />
-              Télécharger PDF
+            <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 18px', background: G.gold, color: '#0f0f0d', fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', fontWeight: 700, border: 'none', cursor: 'pointer', transition: 'background .15s' }}
+              onMouseEnter={e => e.currentTarget.style.background = '#a8861f'}
+              onMouseLeave={e => e.currentTarget.style.background = G.gold}>
+              <Download size={12} /> PDF
             </button>
           </div>
         </div>
 
-        {/* Score */}
-        <div className="mt-6 bg-dark-card border border-dark-border rounded-lg p-6">
-          <div className="flex items-center justify-center gap-8">
-            <div className="text-center">
-              <div className="text-lg font-medium text-gray-400 mb-2">
-                {match.is_home ? 'Nous' : match.opponent}
-              </div>
-              <div className="text-6xl font-bold text-white">{match.score_home}</div>
+        {/* Score card */}
+        <div style={{ marginTop: 24, background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}`, borderTop: `2px solid ${resultColor}`, padding: '28px 36px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 32 }}>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted, marginBottom: 6 }}>
+              {match.is_home ? 'Nous' : match.opponent}
             </div>
-            <div className="text-3xl font-bold text-gray-600">-</div>
-            <div className="text-center">
-              <div className="text-lg font-medium text-gray-400 mb-2">
-                {match.is_home ? match.opponent : 'Nous'}
-              </div>
-              <div className="text-6xl font-bold text-white">{match.score_away}</div>
+            <div style={{ fontFamily: G.display, fontSize: 72, lineHeight: 1, color: '#f5f2eb' }}>{match.score_home}</div>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontFamily: G.display, fontSize: 28, color: 'rgba(245,242,235,.2)' }}>—</span>
+            <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', padding: '4px 14px', background: resultColor + '12', color: resultColor, border: `1px solid ${resultColor}25` }}>{resultLabel}</span>
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted, marginBottom: 6 }}>
+              {match.is_home ? match.opponent : 'Nous'}
             </div>
+            <div style={{ fontFamily: G.display, fontSize: 72, lineHeight: 1, color: '#f5f2eb' }}>{match.score_away}</div>
           </div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="mb-8">
-        <div className="flex items-center gap-2 border-b border-dark-border overflow-x-auto">
-          {tabs.map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-6 py-3 font-medium whitespace-nowrap transition-all ${
-                activeTab === tab.id
-                  ? 'text-primary border-b-2 border-primary'
-                  : 'text-gray-400 hover:text-white'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+      <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid ${G.border}`, marginBottom: 28, overflowX: 'auto' }}>
+        {tabs.map(tab => (
+          <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
+            padding: '12px 20px', fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase',
+            background: 'transparent', border: 'none',
+            borderBottom: activeTab === tab.id ? `2px solid ${G.gold}` : '2px solid transparent',
+            color: activeTab === tab.id ? G.gold : G.muted,
+            cursor: 'pointer', transition: 'all .15s', whiteSpace: 'nowrap',
+          }}>
+            {tab.label}
+          </button>
+        ))}
       </div>
 
-      {/* Tab Content */}
+      {/* Tab content */}
       <div>
         {activeTab === 'overview' && (
-          <div className="space-y-6">
-            {/* Quick stats */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6,1fr)', gap: 1, background: G.border }}>
               {[
-                { label: 'Possession', value: `${match.stats.possession}%` },
-                { label: 'Passes', value: match.stats.passes },
-                { label: 'Tirs', value: match.stats.shots },
-                { label: 'Tirs cadrés', value: match.stats.shotsOnTarget },
-                { label: 'Corners', value: match.stats.corners },
-                { label: 'Fautes', value: match.stats.fouls }
+                { label: 'Possession',    value: `${match.stats.possession}%` },
+                { label: 'Passes',        value: match.stats.passes },
+                { label: 'Tirs',          value: match.stats.shots },
+                { label: 'Tirs cadrés',   value: match.stats.shotsOnTarget },
+                { label: 'Corners',       value: match.stats.corners },
+                { label: 'Fautes',        value: match.stats.fouls },
               ].map((stat, i) => (
-                <div key={i} className="bg-dark-card border border-dark-border rounded-lg p-4">
-                  <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
-                  <div className="text-sm text-gray-400">{stat.label}</div>
+                <div key={i} style={{ background: '#0a0a08', padding: '16px 14px' }}>
+                  <div style={{ fontFamily: G.display, fontSize: 32, color: '#f5f2eb', lineHeight: 1, marginBottom: 6 }}>{stat.value}</div>
+                  <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>{stat.label}</div>
                 </div>
               ))}
             </div>
-
-            {/* Timeline */}
             <MatchTimeline events={match.events} />
-
-            {/* Heatmap collective */}
             <HeatmapPlayer data={match.heatmap_data} playerName="Équipe" />
           </div>
         )}
 
         {activeTab === 'players' && (
           <div>
-            <h2 className="text-2xl font-bold mb-6">Stats individuelles</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {match.player_stats.map((playerStat, i) => (
-                <PlayerStatsCard 
-                  key={i}
-                  player={playerStat.player}
-                  stats={playerStat}
-                  onClick={(player) => console.log('Player clicked:', player)}
-                />
-              ))}
+            <h2 style={{ fontFamily: G.display, fontSize: 28, textTransform: 'uppercase', letterSpacing: '.03em', color: '#f5f2eb', marginBottom: 20 }}>Stats individuelles</h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
+              {match.player_stats.map((ps, i) => <PlayerStatsCard key={i} player={ps.player} stats={ps} onClick={p => console.log(p)} />)}
             </div>
           </div>
         )}
 
-        {activeTab === 'phases' && (
-          <div className="text-center py-16 bg-dark-card border border-dark-border rounded-lg">
-            <h3 className="text-lg font-medium text-gray-300 mb-2">Phases de jeu</h3>
-            <p className="text-gray-500">Analyse détaillée des phases de jeu à venir</p>
+        {['phases', 'comparison', 'video', 'report'].map(tabId => activeTab === tabId && (
+          <div key={tabId} style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}`, padding: '64px 24px', textAlign: 'center' }}>
+            <div style={{ width: 44, height: 44, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+              <span style={{ fontFamily: G.mono, fontSize: 14, color: G.gold }}>⏳</span>
+            </div>
+            <h3 style={{ fontFamily: G.display, fontSize: 22, textTransform: 'uppercase', letterSpacing: '.04em', color: '#f5f2eb', marginBottom: 8 }}>
+              {tabs.find(t => t.id === tabId)?.label}
+            </h3>
+            <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.08em', color: G.muted }}>Disponible prochainement</p>
           </div>
-        )}
-
-        {activeTab === 'comparison' && (
-          <div className="text-center py-16 bg-dark-card border border-dark-border rounded-lg">
-            <h3 className="text-lg font-medium text-gray-300 mb-2">Comparaison</h3>
-            <p className="text-gray-500">Comparaison avec les matchs précédents à venir</p>
-          </div>
-        )}
-
-        {activeTab === 'video' && (
-          <div className="text-center py-16 bg-dark-card border border-dark-border rounded-lg">
-            <h3 className="text-lg font-medium text-gray-300 mb-2">Vidéo</h3>
-            <p className="text-gray-500">Player vidéo avec timeline synchronisée à venir</p>
-          </div>
-        )}
-
-        {activeTab === 'report' && (
-          <div className="text-center py-16 bg-dark-card border border-dark-border rounded-lg">
-            <h3 className="text-lg font-medium text-gray-300 mb-2">Rapport PDF</h3>
-            <p className="text-gray-500">Preview et téléchargement du rapport PDF à venir</p>
-          </div>
-        )}
+        ))}
       </div>
     </DashboardLayout>
   )

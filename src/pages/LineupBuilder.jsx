@@ -7,264 +7,161 @@ import PlayerSelector from '../components/PlayerSelector'
 import { FORMATIONS, FORMATION_LIST } from '../utils/formations'
 import playerService from '../services/playerService'
 
+const G = {
+  gold: '#c9a227', goldD: '#a8861f',
+  goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.25)',
+  mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
+  border: 'rgba(255,255,255,0.06)', muted: 'rgba(245,242,235,0.35)',
+}
+
 function LineupBuilder() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const matchId = searchParams.get('matchId')
-  
+
   const [selectedFormation, setSelectedFormation] = useState('4-4-2')
   const [selectedCategory, setSelectedCategory] = useState('N3')
   const [players, setPlayers] = useState([])
-  const [lineup, setLineup] = useState({
-    starters: [],
-    substitutes: []
-  })
-  const [draggedPlayer, setDraggedPlayer] = useState(null)
+  const [lineup, setLineup] = useState({ starters: [], substitutes: [] })
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    loadPlayers()
-  }, [])
+  useEffect(() => { loadPlayers() }, [])
 
   const loadPlayers = async () => {
-    try {
-      setLoading(true)
-      const data = await playerService.getPlayers()
-      setPlayers(data.filter(p => p.status === 'actif'))
-    } catch (error) {
-      console.error('Error loading players:', error)
-    } finally {
-      setLoading(false)
-    }
+    try { setLoading(true); const data = await playerService.getPlayers(); setPlayers(data.filter(p => p.status === 'actif')) }
+    catch (e) { console.error(e) } finally { setLoading(false) }
   }
 
-  const handleFormationChange = (formationKey) => {
-    setSelectedFormation(formationKey)
-    // Clear lineup when changing formation
-    setLineup({ starters: [], substitutes: [] })
-  }
+  const handleFormationChange = (k) => { setSelectedFormation(k); setLineup({ starters: [], substitutes: [] }) }
 
   const handlePlayerPlace = (player, positionId) => {
-    // Check if position is already occupied
-    const existingPlayerIndex = lineup.starters.findIndex(p => p.positionId === positionId)
-    
-    if (existingPlayerIndex >= 0) {
-      // Replace existing player - send them to substitutes
-      const replacedPlayer = lineup.starters[existingPlayerIndex]
+    const existingIdx = lineup.starters.findIndex(p => p.positionId === positionId)
+    if (existingIdx >= 0) {
+      const replaced = lineup.starters[existingIdx]
       setLineup(prev => ({
-        starters: prev.starters.map(p => 
-          p.positionId === positionId 
-            ? { ...player, positionId } 
-            : p
-        ),
-        substitutes: [...prev.substitutes, replacedPlayer]
+        starters: prev.starters.map(p => p.positionId === positionId ? { ...player, positionId } : p),
+        substitutes: [...prev.substitutes, replaced],
       }))
     } else {
-      // Add new player to position
-      setLineup(prev => ({
-        ...prev,
-        starters: [...prev.starters, { ...player, positionId }]
-      }))
+      setLineup(prev => ({ ...prev, starters: [...prev.starters, { ...player, positionId }] }))
     }
   }
 
   const handlePlayerRemove = (playerId) => {
     const player = lineup.starters.find(p => p.id === playerId)
-    setLineup(prev => ({
-      starters: prev.starters.filter(p => p.id !== playerId),
-      substitutes: player ? [...prev.substitutes, player] : prev.substitutes
-    }))
-  }
-
-  const handleAddSubstitute = (player) => {
-    setLineup(prev => ({
-      ...prev,
-      substitutes: [...prev.substitutes, player]
-    }))
-  }
-
-  const handleRemoveSubstitute = (playerId) => {
-    setLineup(prev => ({
-      ...prev,
-      substitutes: prev.substitutes.filter(p => p.id !== playerId)
-    }))
+    setLineup(prev => ({ starters: prev.starters.filter(p => p.id !== playerId), substitutes: player ? [...prev.substitutes, player] : prev.substitutes }))
   }
 
   const handleSave = async () => {
     try {
-      const lineupData = {
-        formation: selectedFormation,
-        category: selectedCategory,
-        starters: lineup.starters.map(p => ({
-          player_id: p.id,
-          position_id: p.positionId,
-          number: p.number,
-          name: p.name
-        })),
-        substitutes: lineup.substitutes.map(p => ({
-          player_id: p.id,
-          number: p.number,
-          name: p.name
-        }))
+      const data = {
+        formation: selectedFormation, category: selectedCategory,
+        starters: lineup.starters.map(p => ({ player_id: p.id, position_id: p.positionId, number: p.number, name: p.name })),
+        substitutes: lineup.substitutes.map(p => ({ player_id: p.id, number: p.number, name: p.name })),
       }
-
-      // TODO: Save to backend
-      console.log('Saving lineup:', lineupData)
-
-      if (matchId) {
-        // If called from match context, save to match and return
-        navigate(`/dashboard/matches/${matchId}`)
-      } else {
-        // Otherwise save as template
-        alert('Composition sauvegardée !')
-      }
-    } catch (error) {
-      console.error('Error saving lineup:', error)
-      alert('Erreur lors de la sauvegarde')
-    }
+      if (matchId) navigate(`/dashboard/matches/${matchId}`)
+      else alert('Composition sauvegardée !')
+    } catch (e) { console.error(e); alert('Erreur') }
   }
 
-  const handleReset = () => {
-    if (confirm('Êtes-vous sûr de vouloir réinitialiser la composition ?')) {
-      setLineup({ starters: [], substitutes: [] })
-    }
-  }
-
-  const formation = FORMATIONS[selectedFormation]
   const isComplete = lineup.starters.length === 11
+  const categories = ['N3', 'R1', 'R2', 'U19', 'U17', 'U15', 'Seniors']
 
-  const categories = ['N3', 'U19', 'U17', 'U15', 'Seniors']
-
-  if (loading) {
-    return (
-      <DashboardLayout>
-        <div className="flex items-center justify-center h-96">
-          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-        </div>
-      </DashboardLayout>
-    )
+  const selectStyle = {
+    background: '#0a0a08', border: `1px solid ${G.border}`,
+    padding: '12px 14px', color: '#f5f2eb',
+    fontFamily: G.mono, fontSize: 12, outline: 'none', cursor: 'pointer', width: '100%',
   }
+
+  if (loading) return (
+    <DashboardLayout>
+      <div style={{ textAlign: 'center', padding: '80px 0', fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.12em' }}>Chargement...</div>
+    </DashboardLayout>
+  )
 
   return (
     <DashboardLayout>
       {/* Header */}
-      <div className="mb-8">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-gray-400 hover:text-primary mb-4 transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          Retour
+      <div style={{ marginBottom: 24 }}>
+        <button onClick={() => navigate(-1)}
+          style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted, cursor: 'pointer', marginBottom: 20, padding: 0, transition: 'color .15s' }}
+          onMouseEnter={e => e.currentTarget.style.color = G.gold}
+          onMouseLeave={e => e.currentTarget.style.color = G.muted}>
+          <ArrowLeft size={13} /> Retour
         </button>
 
-        <div className="flex items-center justify-between">
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
           <div>
-            <h1 className="text-3xl font-bold mb-2">Composition tactique</h1>
-            <p className="text-gray-400">
+            <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+              <span style={{ width: 16, height: 1, background: G.gold }} />Composition tactique
+            </div>
+            <h1 style={{ fontFamily: G.display, fontSize: 40, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: '#f5f2eb', margin: 0 }}>
+              Aligner<br /><span style={{ color: G.gold }}>votre équipe.</span>
+            </h1>
+            <p style={{ fontFamily: G.mono, fontSize: 10, color: isComplete ? '#22c55e' : G.muted, marginTop: 10, letterSpacing: '.08em' }}>
               {isComplete ? '✓ Composition complète (11/11)' : `${lineup.starters.length}/11 joueurs placés`}
             </p>
           </div>
-
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleReset}
-              className="px-4 py-2 border border-dark-border hover:border-primary hover:bg-primary/10 rounded-lg transition-all flex items-center gap-2"
-            >
-              <RefreshCw className="w-4 h-4" />
-              Réinitialiser
+          <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+            <button onClick={() => { if (confirm('Réinitialiser ?')) setLineup({ starters: [], substitutes: [] }) }}
+              style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 18px', background: 'transparent', border: `1px solid ${G.border}`, color: G.muted, fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .15s' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = G.goldBdr; e.currentTarget.style.color = G.gold }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = G.border; e.currentTarget.style.color = G.muted }}>
+              <RefreshCw size={12} /> Reset
             </button>
-            <button
-              onClick={handleSave}
-              disabled={!isComplete}
-              className="px-6 py-2 bg-primary text-black font-semibold rounded-lg hover:shadow-glow transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-            >
-              <Save className="w-4 h-4" />
-              Sauvegarder
+            <button onClick={handleSave} disabled={!isComplete}
+              style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 20px', background: isComplete ? G.gold : 'rgba(201,162,39,0.15)', color: isComplete ? '#0f0f0d' : G.muted, fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', fontWeight: 700, border: 'none', cursor: isComplete ? 'pointer' : 'not-allowed', transition: 'background .15s' }}>
+              <Save size={12} /> Sauvegarder
             </button>
           </div>
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-8">
-        {/* Left: Tactical Board */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Formation & Category selectors */}
-          <div className="flex items-center gap-4">
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Dispositif tactique
-              </label>
-              <select
-                value={selectedFormation}
-                onChange={(e) => handleFormationChange(e.target.value)}
-                className="w-full bg-dark-card border border-dark-border rounded-lg px-4 py-3 text-white focus:border-primary focus:outline-none transition-colors"
-              >
-                {FORMATION_LIST.map((formation) => (
-                  <option key={formation.value} value={formation.value}>
-                    {formation.label}
-                  </option>
-                ))}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 1, background: G.border }}>
+        {/* Left - Board */}
+        <div style={{ background: '#0a0a08', padding: '24px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {/* Selectors */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div>
+              <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.18em', textTransform: 'uppercase', color: G.muted, marginBottom: 8 }}>Dispositif</div>
+              <select value={selectedFormation} onChange={e => handleFormationChange(e.target.value)} style={selectStyle}>
+                {FORMATION_LIST.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
               </select>
             </div>
-
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Catégorie
-              </label>
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full bg-dark-card border border-dark-border rounded-lg px-4 py-3 text-white focus:border-primary focus:outline-none transition-colors"
-              >
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
+            <div>
+              <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.18em', textTransform: 'uppercase', color: G.muted, marginBottom: 8 }}>Catégorie</div>
+              <select value={selectedCategory} onChange={e => setSelectedCategory(e.target.value)} style={selectStyle}>
+                {categories.map(c => <option key={c}>{c}</option>)}
               </select>
             </div>
           </div>
 
-          {/* Tactical Board */}
-          <div className="aspect-[2/3]">
-            <TacticalBoard
-              formation={formation}
-              lineup={lineup}
-              onPlayerPlace={handlePlayerPlace}
-              onPlayerRemove={handlePlayerRemove}
-            />
+          {/* Tactical board */}
+          <div style={{ aspectRatio: '2/3' }}>
+            <TacticalBoard formation={FORMATIONS[selectedFormation]} lineup={lineup} onPlayerPlace={handlePlayerPlace} onPlayerRemove={handlePlayerRemove} />
           </div>
 
           {/* Substitutes */}
-          <div className="bg-dark-card border border-dark-border rounded-lg p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold">Remplaçants ({lineup.substitutes.length})</h3>
+          <div style={{ border: `1px solid ${G.border}`, padding: '20px' }}>
+            <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+              <span style={{ width: 12, height: 1, background: G.gold }} />
+              Remplaçants ({lineup.substitutes.length})
             </div>
-
             {lineup.substitutes.length === 0 ? (
-              <div className="text-center py-8 text-gray-400">
-                Aucun remplaçant
-              </div>
+              <div style={{ textAlign: 'center', padding: '20px 0', fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.06em' }}>Aucun remplaçant</div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {lineup.substitutes.map((player) => (
-                  <div
-                    key={player.id}
-                    className="flex items-center gap-2 p-3 bg-black/50 border border-dark-border rounded-lg"
-                  >
-                    <div className="w-8 h-8 bg-primary text-black rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8 }}>
+                {lineup.substitutes.map(player => (
+                  <div key={player.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 12px', background: '#0f0f0d', border: `1px solid ${G.border}` }}>
+                    <div style={{ width: 28, height: 28, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: G.display, fontSize: 14, color: G.gold, flexShrink: 0 }}>
                       {player.number}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium truncate">{player.name}</div>
-                      <div className="text-xs text-gray-500">{player.position}</div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontFamily: G.mono, fontSize: 10, color: '#f5f2eb', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '.04em' }}>{player.name}</div>
+                      <div style={{ fontFamily: G.mono, fontSize: 8, color: G.muted, letterSpacing: '.06em' }}>{player.position}</div>
                     </div>
-                    <button
-                      onClick={() => handleRemoveSubstitute(player.id)}
-                      className="text-red-400 hover:text-red-300 transition-colors"
-                    >
-                      ×
-                    </button>
+                    <button onClick={() => setLineup(prev => ({ ...prev, substitutes: prev.substitutes.filter(p => p.id !== player.id) }))}
+                      style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: 14, padding: 0 }}>×</button>
                   </div>
                 ))}
               </div>
@@ -272,20 +169,16 @@ function LineupBuilder() {
           </div>
         </div>
 
-        {/* Right: Player Selector */}
-        <div className="bg-dark-card border border-dark-border rounded-lg p-6">
-          <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-            <UsersIcon className="w-5 h-5" />
+        {/* Right - Player selector */}
+        <div style={{ background: 'rgba(255,255,255,0.01)', border: `1px solid ${G.border}`, padding: '24px' }}>
+          <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+            <UsersIcon size={12} color={G.gold} />
             Joueurs disponibles
-          </h3>
-          <PlayerSelector
-            players={players}
-            lineup={lineup}
-            onDragStart={setDraggedPlayer}
-            selectedCategory={selectedCategory}
-          />
+          </div>
+          <PlayerSelector players={players} lineup={lineup} onDragStart={() => {}} selectedCategory={selectedCategory} />
         </div>
       </div>
+      <style>{`select option { background: #0a0a08; }`}</style>
     </DashboardLayout>
   )
 }

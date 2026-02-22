@@ -1,330 +1,209 @@
 import { useState, useEffect } from 'react'
-import { Upload, Save, Palette, Image as ImageIcon, X } from 'lucide-react'
+import { Upload, Save, X } from 'lucide-react'
 import DashboardLayout from '../components/DashboardLayout'
 import ClubBadge from '../components/ClubBadge'
 import SubscriptionManagement from '../components/SubscriptionManagement'
 import clubService from '../services/clubService'
 import uploadService from '../services/uploadService'
 
+const G = {
+  gold: '#c9a227', goldD: '#a8861f',
+  goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.25)',
+  mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
+  border: 'rgba(255,255,255,0.06)', muted: 'rgba(245,242,235,0.35)',
+}
+
+const inputStyle = {
+  width: '100%', background: '#0a0a08',
+  border: '1px solid rgba(255,255,255,0.07)',
+  padding: '12px 16px', color: '#f5f2eb',
+  fontFamily: "'JetBrains Mono', monospace", fontSize: 13,
+  outline: 'none', boxSizing: 'border-box', transition: 'border-color .15s',
+}
+
+function Section({ title, children, accent }) {
+  return (
+    <div style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}`, borderTop: `2px solid ${accent || G.border}`, padding: '28px' }}>
+      <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
+        <span style={{ width: 12, height: 1, background: G.gold, display: 'inline-block' }} />{title}
+      </div>
+      {children}
+    </div>
+  )
+}
+
 function ClubSettings() {
   const [club, setClub] = useState(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [formData, setFormData] = useState({
-    name: '',
-    logo_url: '',
-    primary_color: '#5EEAD4',
-    secondary_color: '#2DD4BF'
+    name: '', logo_url: '', primary_color: '#c9a227', secondary_color: '#0f0f0d'
   })
   const [logoFile, setLogoFile] = useState(null)
   const [logoPreview, setLogoPreview] = useState(null)
 
-  useEffect(() => {
-    loadClub()
-  }, [])
+  useEffect(() => { loadClub() }, [])
 
   const loadClub = async () => {
     try {
-      setLoading(true)
-      const data = await clubService.getMyClub()
-      setClub(data)
-      setFormData({
-        name: data.name || '',
-        logo_url: data.logo_url || '',
-        primary_color: data.primary_color || '#5EEAD4',
-        secondary_color: data.secondary_color || '#2DD4BF'
-      })
-    } catch (error) {
-      console.error('Error loading club:', error)
-    } finally {
-      setLoading(false)
-    }
+      setLoading(true); const data = await clubService.getMyClub(); setClub(data)
+      setFormData({ name: data.name || '', logo_url: data.logo_url || '', primary_color: data.primary_color || '#c9a227', secondary_color: data.secondary_color || '#0f0f0d' })
+    } catch (e) { console.error(e) } finally { setLoading(false) }
   }
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
+  const handleChange = (e) => setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
+
+  const handleLogoFile = (e) => {
+    const file = e.target.files?.[0]; if (!file) return
+    if (!file.type.startsWith('image/')) { alert('Sélectionnez une image'); return }
+    if (file.size > 2 * 1024 * 1024) { alert('Fichier trop volumineux (max 2MB)'); return }
+    setLogoFile(file)
+    const reader = new FileReader(); reader.onloadend = () => setLogoPreview(reader.result); reader.readAsDataURL(file)
   }
 
-  const handleLogoFileChange = (e) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      if (!file.type.startsWith('image/')) {
-        alert('Veuillez sélectionner une image')
-        return
-      }
-      if (file.size > 2 * 1024 * 1024) {
-        alert('Le fichier est trop volumineux (max 2MB)')
-        return
-      }
-      setLogoFile(file)
-      
-      // Create preview
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setLogoPreview(reader.result)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
-  const handleRemoveLogo = () => {
-    setFormData(prev => ({ ...prev, logo_url: '' }))
-    setLogoFile(null)
-    setLogoPreview(null)
-  }
+  const handleRemoveLogo = () => { setFormData(prev => ({ ...prev, logo_url: '' })); setLogoFile(null); setLogoPreview(null) }
 
   const handleSave = async () => {
     try {
       setSaving(true)
-
-      let finalLogoUrl = formData.logo_url
-
-      // Upload logo if file selected
-      if (logoFile) {
-        try {
-          const uploadedUrl = await uploadService.uploadFile(logoFile)
-          finalLogoUrl = uploadedUrl
-        } catch (error) {
-          console.error('Error uploading logo:', error)
-          alert('Erreur lors de l\'upload du logo, mais autres modifications sauvegardées')
-        }
-      }
-
-      // Update club
-      await clubService.updateClub({
-        name: formData.name,
-        logo_url: finalLogoUrl,
-        primary_color: formData.primary_color,
-        secondary_color: formData.secondary_color
-      })
-
+      let finalLogo = formData.logo_url
+      if (logoFile) { try { finalLogo = await uploadService.uploadFile(logoFile) } catch { alert('Erreur logo, autres modifs sauvegardées') } }
+      await clubService.updateClub({ name: formData.name, logo_url: finalLogo, primary_color: formData.primary_color, secondary_color: formData.secondary_color })
       alert('Paramètres sauvegardés !')
-      await loadClub()
-      setLogoFile(null)
-      setLogoPreview(null)
-
-    } catch (error) {
-      console.error('Error saving settings:', error)
-      alert('Erreur lors de la sauvegarde')
-    } finally {
-      setSaving(false)
-    }
+      await loadClub(); setLogoFile(null); setLogoPreview(null)
+    } catch (e) { console.error(e); alert('Erreur lors de la sauvegarde') }
+    finally { setSaving(false) }
   }
 
-  if (loading) {
-    return (
-      <DashboardLayout>
-        <div className="flex items-center justify-center h-96">
-          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-        </div>
-      </DashboardLayout>
-    )
-  }
+  if (loading) return (
+    <DashboardLayout>
+      <div style={{ textAlign: 'center', padding: '80px 0', fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted }}>
+        Chargement...
+      </div>
+    </DashboardLayout>
+  )
 
   return (
     <DashboardLayout>
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Paramètres du club</h1>
-          <p className="text-gray-400">Gérez l'identité visuelle de votre club</p>
+      {/* Header */}
+      <div style={{ marginBottom: 28 }}>
+        <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+          <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />Paramètres du club
+        </div>
+        <h1 style={{ fontFamily: G.display, fontSize: 44, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: '#f5f2eb', margin: 0 }}>
+          Identité<br /><span style={{ color: G.gold }}>du club.</span>
+        </h1>
+      </div>
+
+      <div style={{ maxWidth: 680, display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
+
+        {/* Aperçu */}
+        <Section title="Aperçu" accent={G.gold}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '28px', background: '#0a0a08', border: `1px solid ${G.border}` }}>
+            <ClubBadge club={{ ...formData, logo_url: logoPreview || formData.logo_url }} size="xl" showName />
+          </div>
+        </Section>
+
+        {/* Nom */}
+        <Section title="Nom du club">
+          <input type="text" name="name" value={formData.name} onChange={handleChange}
+            placeholder="Mon Club FC" style={inputStyle}
+            onFocus={e => e.target.style.borderColor = G.gold}
+            onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.07)'}
+          />
+        </Section>
+
+        {/* Logo */}
+        <Section title="Logo">
+          {(logoPreview || formData.logo_url) && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20, padding: '14px 16px', background: '#0a0a08', border: `1px solid ${G.border}` }}>
+              <img src={logoPreview || formData.logo_url} alt="Logo" style={{ width: 56, height: 56, objectFit: 'contain', background: 'transparent' }} />
+              <div style={{ flex: 1 }}>
+                <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, marginBottom: 6 }}>Logo actuel</div>
+                <button onClick={handleRemoveLogo} style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <X size={11} /> Supprimer
+                </button>
+              </div>
+            </div>
+          )}
+          <input type="file" accept="image/*" onChange={handleLogoFile} id="logo-upload" style={{ display: 'none' }} />
+          <label htmlFor="logo-upload" style={{
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            padding: '28px', border: `1px dashed rgba(201,162,39,0.2)`, cursor: 'pointer', transition: 'all .15s', marginBottom: 16,
+          }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = G.gold; e.currentTarget.style.background = G.goldBg }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(201,162,39,0.2)'; e.currentTarget.style.background = 'transparent' }}>
+            <div style={{ width: 36, height: 36, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}>
+              <Upload size={16} color={G.gold} />
+            </div>
+            <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', color: '#f5f2eb', marginBottom: 4 }}>Uploader un logo</p>
+            <p style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em' }}>PNG, JPG — max 2MB</p>
+          </label>
+          <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, marginBottom: 8 }}>ou URL</div>
+          <input type="url" name="logo_url" value={formData.logo_url} onChange={handleChange}
+            placeholder="https://example.com/logo.png" style={inputStyle}
+            onFocus={e => e.target.style.borderColor = G.gold}
+            onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.07)'}
+          />
+        </Section>
+
+        {/* Couleurs */}
+        <Section title="Couleurs du club">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+            {[
+              { label: 'Couleur principale',  name: 'primary_color' },
+              { label: 'Couleur secondaire',  name: 'secondary_color' },
+            ].map(({ label, name }) => (
+              <div key={name}>
+                <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.18em', textTransform: 'uppercase', color: G.muted, marginBottom: 10 }}>{label}</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <input type="color" name={name} value={formData[name]} onChange={handleChange}
+                    style={{ width: 44, height: 44, border: `1px solid ${G.border}`, background: 'transparent', cursor: 'pointer', padding: 2 }} />
+                  <input type="text" name={name} value={formData[name]} onChange={handleChange}
+                    style={{ ...inputStyle, fontFamily: "'JetBrains Mono', monospace", flex: 1 }}
+                    onFocus={e => e.target.style.borderColor = G.gold}
+                    onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.07)'}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        {/* Subscription */}
+        <div style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}`, padding: '28px' }}>
+          <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
+            <span style={{ width: 12, height: 1, background: G.gold }} />Abonnement
+          </div>
+          <SubscriptionManagement />
         </div>
 
-        <div className="space-y-8">
-          {/* Preview */}
-          <div className="bg-dark-card border border-dark-border rounded-lg p-6">
-            <h2 className="text-xl font-bold mb-4">Aperçu</h2>
-            <div className="flex items-center justify-center p-8 bg-black rounded-lg">
-              <ClubBadge 
-                club={{
-                  ...formData,
-                  logo_url: logoPreview || formData.logo_url
-                }} 
-                size="xl" 
-                showName={true}
-              />
-            </div>
-          </div>
-
-          {/* Club Name */}
-          <div className="bg-dark-card border border-dark-border rounded-lg p-6">
-            <h2 className="text-xl font-bold mb-4">Nom du club</h2>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full bg-black border border-dark-border rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-primary focus:outline-none transition-colors"
-              placeholder="Nom du club"
-            />
-          </div>
-
-          {/* Logo */}
-          <div className="bg-dark-card border border-dark-border rounded-lg p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <ImageIcon className="w-6 h-6 text-primary" />
-              <h2 className="text-xl font-bold">Logo du club</h2>
-            </div>
-
-            {/* Current logo or preview */}
-            {(logoPreview || formData.logo_url) && (
-              <div className="mb-4">
-                <div className="flex items-center gap-4">
-                  <img
-                    src={logoPreview || formData.logo_url}
-                    alt="Logo"
-                    className="w-24 h-24 object-contain bg-black rounded-lg border border-dark-border p-2"
-                  />
-                  <div className="flex-1">
-                    <p className="text-sm text-gray-400 mb-2">Logo actuel</p>
-                    <button
-                      onClick={handleRemoveLogo}
-                      className="text-sm text-red-400 hover:text-red-300 transition-colors flex items-center gap-1"
-                    >
-                      <X className="w-4 h-4" />
-                      Supprimer
-                    </button>
-                  </div>
-                </div>
-              </div>
+        {/* Save */}
+        <div style={{ background: '#0a0a08', border: `1px solid ${G.border}`, padding: '20px 28px', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 12 }}>
+          <button onClick={loadClub} disabled={saving}
+            style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted, background: 'none', border: 'none', cursor: 'pointer', transition: 'color .15s' }}
+            onMouseEnter={e => e.currentTarget.style.color = '#f5f2eb'}
+            onMouseLeave={e => e.currentTarget.style.color = G.muted}>
+            Annuler
+          </button>
+          <button onClick={handleSave} disabled={saving}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 8, padding: '12px 24px',
+              background: saving ? 'rgba(201,162,39,0.4)' : G.gold,
+              color: '#0f0f0d', fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700,
+              border: 'none', cursor: saving ? 'not-allowed' : 'pointer', transition: 'background .15s',
+            }}
+            onMouseEnter={e => { if (!saving) e.currentTarget.style.background = G.goldD }}
+            onMouseLeave={e => { if (!saving) e.currentTarget.style.background = G.gold }}>
+            {saving ? (
+              <><div style={{ width: 12, height: 12, border: '2px solid rgba(15,15,13,0.3)', borderTopColor: '#0f0f0d', borderRadius: '50%', animation: 'spin .7s linear infinite' }} />Sauvegarde...</>
+            ) : (
+              <><Save size={13} /> Sauvegarder</>
             )}
-
-            {/* Upload */}
-            <div className="space-y-4">
-              <div>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleLogoFileChange}
-                  className="hidden"
-                  id="logo-upload"
-                />
-                <label
-                  htmlFor="logo-upload"
-                  className="flex items-center justify-center w-full px-6 py-4 border-2 border-dashed border-dark-border hover:border-primary/50 rounded-lg transition-colors cursor-pointer group"
-                >
-                  <div className="text-center">
-                    <Upload className="w-8 h-8 mx-auto mb-2 text-gray-500 group-hover:text-primary transition-colors" />
-                    <p className="text-sm text-gray-400">
-                      Cliquez pour uploader un logo
-                    </p>
-                    <p className="text-xs text-gray-600 mt-1">
-                      PNG, JPG (max 2MB)
-                    </p>
-                  </div>
-                </label>
-              </div>
-
-              <div className="text-sm text-gray-500">ou</div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">
-                  Ou URL du logo
-                </label>
-                <input
-                  type="url"
-                  name="logo_url"
-                  value={formData.logo_url}
-                  onChange={handleChange}
-                  className="w-full bg-black border border-dark-border rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-primary focus:outline-none transition-colors"
-                  placeholder="https://example.com/logo.png"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Colors */}
-          <div className="bg-dark-card border border-dark-border rounded-lg p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <Palette className="w-6 h-6 text-primary" />
-              <h2 className="text-xl font-bold">Couleurs du club</h2>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">
-                  Couleur principale
-                </label>
-                <div className="flex items-center gap-3">
-                  <input
-                    type="color"
-                    name="primary_color"
-                    value={formData.primary_color}
-                    onChange={handleChange}
-                    className="w-16 h-16 rounded-lg cursor-pointer border-2 border-dark-border"
-                  />
-                  <input
-                    type="text"
-                    name="primary_color"
-                    value={formData.primary_color}
-                    onChange={handleChange}
-                    className="flex-1 bg-black border border-dark-border rounded-lg px-4 py-3 text-white font-mono focus:border-primary focus:outline-none transition-colors"
-                    placeholder="#5EEAD4"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">
-                  Couleur secondaire
-                </label>
-                <div className="flex items-center gap-3">
-                  <input
-                    type="color"
-                    name="secondary_color"
-                    value={formData.secondary_color}
-                    onChange={handleChange}
-                    className="w-16 h-16 rounded-lg cursor-pointer border-2 border-dark-border"
-                  />
-                  <input
-                    type="text"
-                    name="secondary_color"
-                    value={formData.secondary_color}
-                    onChange={handleChange}
-                    className="flex-1 bg-black border border-dark-border rounded-lg px-4 py-3 text-white font-mono focus:border-primary focus:outline-none transition-colors"
-                    placeholder="#2DD4BF"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Subscription Management */}
-          <SubscriptionManagement />
-
-          {/* Save Button */}
-          <div className="flex items-center justify-end gap-4">
-            <button
-              onClick={loadClub}
-              className="px-6 py-3 text-gray-400 hover:text-white transition-colors"
-              disabled={saving}
-            >
-              Annuler
-            </button>
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className="px-8 py-3 bg-primary text-black font-semibold rounded-lg hover:shadow-glow transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-            >
-              {saving ? (
-                <>
-                  <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
-                  Sauvegarde...
-                </>
-              ) : (
-                <>
-                  <Save className="w-5 h-5" />
-                  Sauvegarder
-                </>
-              )}
-            </button>
-          </div>
+          </button>
         </div>
       </div>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </DashboardLayout>
   )
 }

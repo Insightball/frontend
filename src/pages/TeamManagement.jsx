@@ -3,346 +3,231 @@ import { Users, UserPlus, Calendar, Bell, MessageSquare, ChevronRight, TrendingU
 import DashboardLayout from '../components/DashboardLayout'
 import playerService from '../services/playerService'
 
+const G = {
+  gold: '#c9a227', goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.25)',
+  mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
+  border: 'rgba(255,255,255,0.06)', muted: 'rgba(245,242,235,0.35)',
+}
+
 function TeamManagement() {
   const [players, setPlayers] = useState([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    loadPlayers()
-  }, [])
-
+  useEffect(() => { loadPlayers() }, [])
   const loadPlayers = async () => {
-    try {
-      setLoading(true)
-      const data = await playerService.getPlayers()
-      setPlayers(data)
-    } catch (error) {
-      console.error('Error loading players:', error)
-    } finally {
-      setLoading(false)
-    }
+    try { setLoading(true); const data = await playerService.getPlayers(); setPlayers(data) }
+    catch (e) { console.error(e) } finally { setLoading(false) }
   }
 
-  // Group players by category
-  const playersByCategory = players.reduce((acc, player) => {
-    const cat = player.category || 'Autres'
-    if (!acc[cat]) acc[cat] = []
-    acc[cat].push(player)
-    return acc
+  const playersByCategory = players.reduce((acc, p) => {
+    const cat = p.category || 'Autres'; if (!acc[cat]) acc[cat] = []; acc[cat].push(p); return acc
   }, {})
 
-  // Mock staff data
   const staff = [
-    { id: '1', name: 'Jean Dupont', role: 'Entraîneur Principal', category: 'N3', photo: null },
-    { id: '2', name: 'Marie Martin', role: 'Entraîneur Adjoint', category: 'N3', photo: null },
-    { id: '3', name: 'Pierre Lefebvre', role: 'Préparateur Physique', category: 'Tous', photo: null },
-    { id: '4', name: 'Sophie Bernard', role: 'Entraîneur U19', category: 'U19', photo: null }
+    { id: '1', name: 'Jean Dupont',     role: 'Entraîneur Principal', category: 'N3' },
+    { id: '2', name: 'Marie Martin',    role: 'Entraîneur Adjoint',   category: 'N3' },
+    { id: '3', name: 'Pierre Lefebvre', role: 'Préparateur Physique',  category: 'Tous' },
+    { id: '4', name: 'Sophie Bernard',  role: 'Entraîneur U19',        category: 'U19' },
   ]
 
-  // Mock training schedule
   const trainingSchedule = [
-    { day: 'Lundi', time: '18h00 - 20h00', category: 'N3', location: 'Terrain A' },
-    { day: 'Mardi', time: '17h00 - 19h00', category: 'U19', location: 'Terrain B' },
-    { day: 'Mercredi', time: '18h00 - 20h00', category: 'N3', location: 'Terrain A' },
-    { day: 'Jeudi', time: '17h00 - 19h00', category: 'U19', location: 'Terrain B' },
-    { day: 'Vendredi', time: '18h00 - 20h00', category: 'N3', location: 'Terrain A' }
+    { day: 'Lundi',    time: '18h00 – 20h00', category: 'N3',  location: 'Terrain A' },
+    { day: 'Mardi',    time: '17h00 – 19h00', category: 'U19', location: 'Terrain B' },
+    { day: 'Mercredi', time: '18h00 – 20h00', category: 'N3',  location: 'Terrain A' },
+    { day: 'Jeudi',    time: '17h00 – 19h00', category: 'U19', location: 'Terrain B' },
+    { day: 'Vendredi', time: '18h00 – 20h00', category: 'N3',  location: 'Terrain A' },
   ]
 
-  // Mock upcoming matches
   const upcomingMatches = [
-    { date: '2026-02-22', category: 'N3', opponent: 'FC Marseille', players: 18 },
-    { date: '2026-02-23', category: 'U19', opponent: 'AS Monaco', players: 16 }
+    { date: '2026-02-22', category: 'N3',  opponent: 'FC Marseille', players: 18 },
+    { date: '2026-02-23', category: 'U19', opponent: 'AS Monaco',    players: 16 },
   ]
 
-  const getPositionStats = (categoryPlayers) => {
-    const positions = categoryPlayers.reduce((acc, p) => {
-      acc[p.position] = (acc[p.position] || 0) + 1
-      return acc
-    }, {})
-    return positions
-  }
-
-  if (loading) {
-    return (
-      <DashboardLayout>
-        <div className="flex items-center justify-center h-96">
-          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-        </div>
-      </DashboardLayout>
-    )
-  }
+  const cardStyle = { background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}`, padding: '24px' }
+  const sectionTitle = { fontFamily: G.mono, fontSize: 10, letterSpacing: '.16em', textTransform: 'uppercase', color: '#f5f2eb', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 10 }
 
   return (
     <DashboardLayout>
       {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Gestion d'équipe</h1>
-            <p className="text-gray-400">Vue d'ensemble et organisation du club</p>
-          </div>
+      <div style={{ marginBottom: 28 }}>
+        <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+          <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />Gestion équipe
+        </div>
+        <h1 style={{ fontFamily: G.display, fontSize: 44, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: '#f5f2eb', margin: 0 }}>
+          Mon<br /><span style={{ color: G.gold }}>club.</span>
+        </h1>
+      </div>
 
-          <div className="flex items-center gap-3">
-            <button className="px-4 py-2 border border-dark-border hover:border-primary hover:bg-primary/10 rounded-lg transition-all flex items-center gap-2">
-              <Bell className="w-4 h-4" />
-              Convoquer
+      {/* Effectif par catégorie */}
+      <div style={{ ...cardStyle, marginBottom: 1 }}>
+        <div style={sectionTitle}>
+          <div style={{ width: 3, height: 16, background: G.gold }} />
+          Effectif par catégorie
+        </div>
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '32px 0', fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.1em' }}>Chargement...</div>
+        ) : Object.keys(playersByCategory).length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '32px 0', fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.08em' }}>Aucun joueur enregistré</div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {Object.entries(playersByCategory).map(([cat, catPlayers]) => (
+              <div key={cat} style={{ background: '#0a0a08', border: `1px solid ${G.border}`, padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <span style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', padding: '3px 10px', background: G.goldBg, border: `1px solid ${G.goldBdr}`, color: G.gold }}>{cat}</span>
+                  <span style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.06em' }}>{catPlayers.length} joueurs</span>
+                </div>
+                <div style={{ display: 'flex', gap: 8, fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em' }}>
+                  {['Gardien','Défenseur','Milieu','Attaquant'].map(pos => {
+                    const n = catPlayers.filter(p => p.position === pos).length
+                    return n > 0 ? <span key={pos} style={{ padding: '2px 8px', border: `1px solid ${G.border}` }}>{pos.charAt(0)} {n}</span> : null
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: G.border, marginBottom: 1 }}>
+        {/* Entraînements */}
+        <div style={{ ...cardStyle, background: '#0a0a08' }}>
+          <div style={sectionTitle}>
+            <div style={{ width: 3, height: 16, background: G.gold }} />
+            Planning entraînements
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
+            {trainingSchedule.map((t, i) => (
+              <div key={i} style={{ background: '#0a0a08', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, transition: 'background .15s' }}
+                onMouseEnter={e => e.currentTarget.style.background = G.goldBg}
+                onMouseLeave={e => e.currentTarget.style.background = '#0a0a08'}>
+                <div style={{ width: 56, flexShrink: 0 }}>
+                  <div style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.08em', color: '#f5f2eb' }}>{t.day}</div>
+                  <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em' }}>{t.time}</div>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.08em', color: '#f5f2eb' }}>{t.category}</div>
+                  <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em' }}>{t.location}</div>
+                </div>
+                <Calendar size={12} color={G.muted} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Prochains matchs */}
+        <div style={{ ...cardStyle, background: '#0a0a08' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
+            <div style={sectionTitle}>
+              <div style={{ width: 3, height: 16, background: G.gold }} />
+              Prochaines convocations
+            </div>
+            <button style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.gold, background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+              Créer <Bell size={10} />
             </button>
-            <button className="px-4 py-2 bg-primary text-black font-semibold rounded-lg hover:shadow-glow transition-all flex items-center gap-2">
-              <UserPlus className="w-4 h-4" />
-              Ajouter staff
-            </button>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
+            {upcomingMatches.map((match, i) => (
+              <div key={i}
+                style={{ background: '#0a0a08', padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer', transition: 'background .15s' }}
+                onMouseEnter={e => e.currentTarget.style.background = G.goldBg}
+                onMouseLeave={e => e.currentTarget.style.background = '#0a0a08'}>
+                <div style={{ width: 40, height: 40, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <div style={{ fontFamily: G.mono, fontSize: 13, fontWeight: 700, color: G.gold, lineHeight: 1 }}>
+                    {new Date(match.date).toLocaleDateString('fr-FR', { day: 'numeric' })}
+                  </div>
+                  <div style={{ fontFamily: G.mono, fontSize: 8, color: G.muted, letterSpacing: '.08em' }}>
+                    {new Date(match.date).toLocaleDateString('fr-FR', { month: 'short' })}
+                  </div>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 700, color: '#f5f2eb', letterSpacing: '.06em', marginBottom: 4 }}>vs {match.opponent}</div>
+                  <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em', display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ padding: '1px 8px', border: `1px solid ${G.goldBdr}`, color: G.gold }}>{match.category}</span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Users size={9} />{match.players} joueurs</span>
+                  </div>
+                </div>
+                <ChevronRight size={14} color={G.muted} />
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-dark-card border border-dark-border rounded-lg p-6 card-hover">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center">
-              <Users className="w-6 h-6 text-blue-500" />
-            </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: G.border }}>
+        {/* Staff */}
+        <div style={{ ...cardStyle, background: '#0a0a08' }}>
+          <div style={sectionTitle}>
+            <div style={{ width: 3, height: 16, background: G.gold }} />
+            Staff technique
           </div>
-          <div className="text-3xl font-bold text-white mb-1">{players.length}</div>
-          <div className="text-sm text-gray-400">Joueurs totaux</div>
-        </div>
-
-        <div className="bg-dark-card border border-dark-border rounded-lg p-6 card-hover">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center">
-              <Users className="w-6 h-6 text-green-500" />
-            </div>
-          </div>
-          <div className="text-3xl font-bold text-white mb-1">{Object.keys(playersByCategory).length}</div>
-          <div className="text-sm text-gray-400">Catégories</div>
-        </div>
-
-        <div className="bg-dark-card border border-dark-border rounded-lg p-6 card-hover">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-              <UserPlus className="w-6 h-6 text-primary" />
-            </div>
-          </div>
-          <div className="text-3xl font-bold text-white mb-1">{staff.length}</div>
-          <div className="text-sm text-gray-400">Staff technique</div>
-        </div>
-
-        <div className="bg-dark-card border border-dark-border rounded-lg p-6 card-hover">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-orange-500/10 rounded-lg flex items-center justify-center">
-              <Calendar className="w-6 h-6 text-orange-500" />
-            </div>
-          </div>
-          <div className="text-3xl font-bold text-white mb-1">{trainingSchedule.length}</div>
-          <div className="text-sm text-gray-400">Entraînements / sem.</div>
-        </div>
-      </div>
-
-      <div className="grid lg:grid-cols-3 gap-8">
-        {/* Left Column - Categories */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Categories Overview */}
-          <div>
-            <h2 className="text-xl font-bold mb-4">Effectif par catégorie</h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              {Object.entries(playersByCategory).map(([category, categoryPlayers]) => {
-                const positions = getPositionStats(categoryPlayers)
-                const activeCount = categoryPlayers.filter(p => p.status === 'actif').length
-                
-                return (
-                  <div
-                    key={category}
-                    className="bg-dark-card border border-dark-border rounded-lg p-6 hover:border-primary/50 transition-all group cursor-pointer"
-                  >
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-bold group-hover:text-primary transition-colors">
-                        {category}
-                      </h3>
-                      <ChevronRight className="w-5 h-5 text-gray-600 group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                    </div>
-
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-400">Total joueurs</span>
-                        <span className="text-2xl font-bold text-white">{categoryPlayers.length}</span>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-400">Actifs</span>
-                        <span className="text-sm font-semibold text-green-500">{activeCount}</span>
-                      </div>
-
-                      {/* Position breakdown */}
-                      <div className="pt-3 border-t border-dark-border">
-                        <div className="text-xs text-gray-500 mb-2">Répartition</div>
-                        <div className="flex items-center gap-2 flex-wrap">
-                          {Object.entries(positions).map(([pos, count]) => (
-                            <span
-                              key={pos}
-                              className="px-2 py-1 bg-dark-border text-xs rounded"
-                            >
-                              {pos}: {count}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-
-          {/* Training Schedule */}
-          <div className="bg-dark-card border border-dark-border rounded-lg p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold">Planning des entraînements</h2>
-              <button className="text-sm text-primary hover:underline flex items-center gap-1">
-                Modifier
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              {trainingSchedule.map((training, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-4 p-4 bg-black/50 border border-dark-border rounded-lg hover:border-primary/30 transition-all"
-                >
-                  <div className="w-20 flex-shrink-0">
-                    <div className="text-sm font-semibold">{training.day}</div>
-                    <div className="text-xs text-gray-500">{training.time}</div>
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-medium">{training.category}</div>
-                    <div className="text-sm text-gray-400">{training.location}</div>
-                  </div>
-                  <Calendar className="w-5 h-5 text-gray-600" />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: G.border, marginBottom: 12 }}>
+            {staff.map(member => (
+              <div key={member.id} style={{ background: '#0a0a08', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, transition: 'background .15s' }}
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.02)'}
+                onMouseLeave={e => e.currentTarget.style.background = '#0a0a08'}>
+                <div style={{ width: 36, height: 36, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Users size={14} color={G.gold} />
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Upcoming Matches */}
-          <div className="bg-dark-card border border-dark-border rounded-lg p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold">Prochaines convocations</h2>
-              <button className="text-sm text-primary hover:underline flex items-center gap-1">
-                Créer convocation
-                <Bell className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              {upcomingMatches.map((match, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-4 p-4 bg-black/50 border border-dark-border rounded-lg hover:border-primary/30 transition-all group cursor-pointer"
-                >
-                  <div className="flex-shrink-0">
-                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex flex-col items-center justify-center">
-                      <div className="text-xs text-primary font-medium">
-                        {new Date(match.date).toLocaleDateString('fr-FR', { day: 'numeric' })}
-                      </div>
-                      <div className="text-[10px] text-gray-500">
-                        {new Date(match.date).toLocaleDateString('fr-FR', { month: 'short' })}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex-1">
-                    <div className="font-semibold mb-1">{match.opponent}</div>
-                    <div className="flex items-center gap-3 text-sm text-gray-400">
-                      <span>{match.category}</span>
-                      <span>•</span>
-                      <span className="flex items-center gap-1">
-                        <Users className="w-4 h-4" />
-                        {match.players} joueurs
-                      </span>
-                    </div>
-                  </div>
-
-                  <ChevronRight className="w-5 h-5 text-gray-600 group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontFamily: G.mono, fontSize: 11, color: '#f5f2eb', letterSpacing: '.04em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{member.name}</div>
+                  <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em', marginTop: 2 }}>{member.role}</div>
                 </div>
-              ))}
-            </div>
+                <span style={{ fontFamily: G.mono, fontSize: 8, padding: '2px 8px', border: `1px solid ${G.border}`, color: G.muted, letterSpacing: '.08em' }}>{member.category}</span>
+              </div>
+            ))}
           </div>
+          <button style={{ width: '100%', padding: '11px', background: 'transparent', border: `1px solid ${G.border}`, fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'all .15s' }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = G.goldBdr; e.currentTarget.style.color = G.gold }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = G.border; e.currentTarget.style.color = G.muted }}>
+            <UserPlus size={12} /> Ajouter un membre
+          </button>
         </div>
 
-        {/* Right Column - Staff */}
-        <div className="space-y-6">
-          {/* Staff List */}
-          <div className="bg-dark-card border border-dark-border rounded-lg p-6">
-            <h2 className="text-xl font-bold mb-6">Staff technique</h2>
-
-            <div className="space-y-3">
-              {staff.map((member) => (
-                <div
-                  key={member.id}
-                  className="flex items-center gap-3 p-3 bg-black/50 border border-dark-border rounded-lg hover:border-primary/30 transition-all"
-                >
-                  {member.photo ? (
-                    <img
-                      src={member.photo}
-                      alt={member.name}
-                      className="w-12 h-12 rounded-lg object-cover"
-                    />
-                  ) : (
-                    <div className="w-12 h-12 bg-dark-border rounded-lg flex items-center justify-center">
-                      <Users className="w-6 h-6 text-gray-600" />
-                    </div>
-                  )}
-
-                  <div className="flex-1 min-w-0">
-                    <div className="font-semibold truncate">{member.name}</div>
-                    <div className="text-sm text-gray-400">{member.role}</div>
-                    <div className="text-xs text-gray-500 mt-1">{member.category}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <button className="w-full mt-4 px-4 py-2 border border-dark-border hover:border-primary hover:bg-primary/10 rounded-lg transition-all text-sm flex items-center justify-center gap-2">
-              <UserPlus className="w-4 h-4" />
-              Ajouter un membre
-            </button>
-          </div>
-
+        {/* Actions + Stats */}
+        <div style={{ background: '#0a0a08', padding: '24px', display: 'flex', flexDirection: 'column', gap: 24 }}>
           {/* Quick Actions */}
-          <div className="bg-dark-card border border-dark-border rounded-lg p-6">
-            <h3 className="text-lg font-bold mb-4">Actions rapides</h3>
-            <div className="space-y-2">
-              <button className="w-full px-4 py-3 bg-primary/10 border border-primary/30 text-primary hover:bg-primary/20 rounded-lg transition-all text-sm font-medium flex items-center gap-2">
-                <Bell className="w-4 h-4" />
-                Créer convocation
-              </button>
-              <button className="w-full px-4 py-3 bg-dark-border hover:bg-dark-border/70 rounded-lg transition-all text-sm font-medium flex items-center gap-2">
-                <MessageSquare className="w-4 h-4" />
-                Message groupe
-              </button>
-              <button className="w-full px-4 py-3 bg-dark-border hover:bg-dark-border/70 rounded-lg transition-all text-sm font-medium flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
-                Planifier entraînement
-              </button>
+          <div>
+            <div style={sectionTitle}>
+              <div style={{ width: 3, height: 16, background: G.gold }} />
+              Actions rapides
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
+              {[
+                { label: 'Créer convocation', icon: Bell, primary: true },
+                { label: 'Message groupe',     icon: MessageSquare },
+                { label: 'Planifier entraînement', icon: Calendar },
+              ].map(({ label, icon: Icon, primary }) => (
+                <button key={label} style={{
+                  padding: '12px 16px', background: primary ? G.goldBg : '#0a0a08',
+                  border: 'none', display: 'flex', alignItems: 'center', gap: 10,
+                  fontFamily: G.mono, fontSize: 10, letterSpacing: '.08em', textTransform: 'uppercase',
+                  color: primary ? G.gold : G.muted, cursor: 'pointer', transition: 'background .15s', textAlign: 'left',
+                }}
+                  onMouseEnter={e => e.currentTarget.style.background = primary ? 'rgba(201,162,39,0.12)' : 'rgba(255,255,255,0.02)'}
+                  onMouseLeave={e => e.currentTarget.style.background = primary ? G.goldBg : '#0a0a08'}>
+                  <Icon size={13} />{label}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Performance Summary */}
-          <div className="bg-dark-card border border-dark-border rounded-lg p-6">
-            <h3 className="text-lg font-bold mb-4">Performance globale</h3>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-400">Taux de présence</span>
-                <span className="text-lg font-bold text-green-500">92%</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-400">Matchs gagnés</span>
-                <span className="text-lg font-bold text-primary">75%</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-400">Joueurs blessés</span>
-                <span className="text-lg font-bold text-red-500">3</span>
-              </div>
+          {/* Performance */}
+          <div>
+            <div style={sectionTitle}>
+              <div style={{ width: 3, height: 16, background: G.gold }} />
+              Performance globale
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
+              {[
+                { label: 'Taux de présence', value: '92%', color: '#22c55e' },
+                { label: 'Matchs gagnés',    value: '75%', color: G.gold },
+                { label: 'Joueurs blessés',  value: '3',   color: '#ef4444' },
+              ].map(({ label, value, color }) => (
+                <div key={label} style={{ background: '#0a0a08', padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.06em' }}>{label}</span>
+                  <span style={{ fontFamily: G.display, fontSize: 22, color, letterSpacing: '.02em' }}>{value}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>

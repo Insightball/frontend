@@ -1,92 +1,63 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Video, Calendar, TrendingUp, Clock, MapPin, Plus, ChevronRight } from 'lucide-react'
+import { Video, Calendar, Clock, TrendingUp, MapPin, Plus, ChevronRight } from 'lucide-react'
 import DashboardLayout from '../components/DashboardLayout'
 import matchService from '../services/matchService'
 
-// Hook pour animer les chiffres
-function useCountUp(target, duration = 1000) {
+const G = {
+  gold: '#c9a227', goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.25)',
+  mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
+  border: 'rgba(255,255,255,0.06)', muted: 'rgba(245,242,235,0.35)',
+}
+
+function useCountUp(target, duration = 800) {
   const [count, setCount] = useState(0)
   useEffect(() => {
     if (target === 0) return
-    let start = 0
-    const step = target / (duration / 16)
+    let start = 0; const step = target / (duration / 16)
     const timer = setInterval(() => {
       start += step
-      if (start >= target) { setCount(target); clearInterval(timer) }
-      else setCount(Math.floor(start))
+      if (start >= target) { setCount(target); clearInterval(timer) } else setCount(Math.floor(start))
     }, 16)
     return () => clearInterval(timer)
   }, [target])
   return count
 }
 
-function StatCard({ label, value, icon: Icon, color, gradient, delay = 0 }) {
-  const count = useCountUp(value, 800)
+function StatCard({ label, value, icon: Icon, color, delay = 0 }) {
+  const count = useCountUp(value, 700)
   const [visible, setVisible] = useState(false)
-
-  useEffect(() => {
-    const t = setTimeout(() => setVisible(true), delay)
-    return () => clearTimeout(t)
-  }, [delay])
-
+  useEffect(() => { const t = setTimeout(() => setVisible(true), delay); return () => clearTimeout(t) }, [delay])
   return (
-    <div
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0)' : 'translateY(20px)',
-        transition: 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-        background: '#0d0f18',
-        border: '1px solid rgba(255,255,255,0.06)',
-        borderRadius: 16,
-        padding: '24px',
-        position: 'relative',
-        overflow: 'hidden',
-        cursor: 'default',
-      }}
-      onMouseEnter={e => {
-        e.currentTarget.style.transform = 'translateY(-4px)'
-        e.currentTarget.style.borderColor = color + '40'
-        e.currentTarget.style.boxShadow = `0 20px 40px ${color}15`
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.transform = 'translateY(0)'
-        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'
-        e.currentTarget.style.boxShadow = 'none'
-      }}
-    >
-      {/* Gradient glow en fond */}
-      <div style={{
-        position: 'absolute', top: -40, right: -40,
-        width: 120, height: 120, borderRadius: '50%',
-        background: gradient,
-        filter: 'blur(40px)',
-        opacity: 0.4,
-        pointerEvents: 'none',
-      }} />
-
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
-        <span style={{ fontSize: 13, color: '#6b7280', fontWeight: 500, letterSpacing: '0.03em' }}>{label}</span>
-        <div style={{
-          width: 36, height: 36, borderRadius: 10,
-          background: color + '15',
-          border: `1px solid ${color}30`,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>
-          <Icon size={16} color={color} />
+    <div style={{
+      opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(14px)',
+      transition: 'all .45s cubic-bezier(.34,1.56,.64,1)',
+      background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}`,
+      borderTop: `2px solid ${color}`, padding: '20px 18px', position: 'relative', overflow: 'hidden',
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+        <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted }}>{label}</span>
+        <div style={{ width: 28, height: 28, background: color + '15', border: `1px solid ${color}25`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Icon size={13} color={color} />
         </div>
       </div>
-
-      <div style={{ fontSize: 42, fontWeight: 800, color: '#f1f5f9', lineHeight: 1, letterSpacing: '-0.03em' }}>
-        {count}
-      </div>
-
-      {/* Barre décorative en bas */}
-      <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0,
-        height: 2, background: gradient, opacity: 0.5,
-      }} />
+      <div style={{ fontFamily: G.display, fontSize: 42, lineHeight: 1, color: '#f5f2eb', letterSpacing: '.01em' }}>{count}</div>
     </div>
+  )
+}
+
+function StatusBadge({ status }) {
+  const map = {
+    pending:    { label: 'En attente', color: '#f59e0b' },
+    processing: { label: 'En cours',   color: '#3b82f6' },
+    completed:  { label: 'Terminé',    color: '#22c55e' },
+    error:      { label: 'Erreur',     color: '#ef4444' },
+  }
+  const { label, color } = map[status] || map.pending
+  return (
+    <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', padding: '4px 10px', background: color + '12', color, border: `1px solid ${color}25` }}>
+      {label}
+    </span>
   )
 }
 
@@ -98,274 +69,146 @@ function DashboardMatches() {
   useEffect(() => { loadMatches() }, [])
 
   const loadMatches = async () => {
-    try {
-      setLoading(true)
-      const data = await matchService.getMatches()
-      setMatches(data)
-    } catch (error) {
-      console.error('Error loading matches:', error)
-    } finally {
-      setLoading(false)
-    }
+    try { setLoading(true); const data = await matchService.getMatches(); setMatches(data) }
+    catch (error) { console.error('Error:', error) }
+    finally { setLoading(false) }
   }
 
-  const getStatusBadge = (status) => {
-    const badges = {
-      pending: { label: 'En attente', class: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30' },
-      processing: { label: 'En cours', class: 'bg-blue-500/10 text-blue-500 border-blue-500/30' },
-      completed: { label: 'Terminé', class: 'bg-green-500/10 text-green-500 border-green-500/30' },
-      error: { label: 'Erreur', class: 'bg-red-500/10 text-red-500 border-red-500/30' }
-    }
-    const badge = badges[status] || badges.pending
-    return (
-      <span className={`px-3 py-1 rounded-full text-xs font-medium border ${badge.class}`}>
-        {badge.label}
-      </span>
-    )
-  }
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('fr-FR', {
-      day: 'numeric', month: 'long', year: 'numeric'
-    })
-  }
-
-  const filteredMatches = matches.filter(match => {
-    if (filter === 'all') return true
-    return match.status === filter
-  })
+  const formatDate = (d) => new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+  const filteredMatches = matches.filter(m => filter === 'all' || m.status === filter)
 
   const stats = [
-    {
-      label: 'Total matchs',
-      value: matches.length,
-      icon: Video,
-      color: '#6366f1',
-      gradient: 'radial-gradient(circle, #6366f1, #8b5cf6)',
-      delay: 0,
-    },
-    {
-      label: 'En attente',
-      value: matches.filter(m => m.status === 'pending').length,
-      icon: Clock,
-      color: '#f59e0b',
-      gradient: 'radial-gradient(circle, #f59e0b, #f97316)',
-      delay: 80,
-    },
-    {
-      label: 'En cours',
-      value: matches.filter(m => m.status === 'processing').length,
-      icon: TrendingUp,
-      color: '#3b82f6',
-      gradient: 'radial-gradient(circle, #3b82f6, #06b6d4)',
-      delay: 160,
-    },
-    {
-      label: 'Terminés',
-      value: matches.filter(m => m.status === 'completed').length,
-      icon: TrendingUp,
-      color: '#10b981',
-      gradient: 'radial-gradient(circle, #10b981, #22c55e)',
-      delay: 240,
-    },
+    { label: 'Total matchs',  value: matches.length,                                             icon: Video,      color: G.gold,    delay: 0 },
+    { label: 'En attente',    value: matches.filter(m => m.status === 'pending').length,          icon: Clock,      color: '#f59e0b', delay: 70 },
+    { label: 'En cours',      value: matches.filter(m => m.status === 'processing').length,       icon: TrendingUp, color: '#3b82f6', delay: 140 },
+    { label: 'Terminés',      value: matches.filter(m => m.status === 'completed').length,        icon: TrendingUp, color: '#22c55e', delay: 210 },
   ]
 
-  const filterButtons = [
-    { key: 'all', label: 'Tous', activeColor: '#6366f1' },
-    { key: 'pending', label: 'En attente', activeColor: '#f59e0b' },
-    { key: 'processing', label: 'En cours', activeColor: '#3b82f6' },
-    { key: 'completed', label: 'Terminés', activeColor: '#10b981' },
+  const filters = [
+    { key: 'all',        label: 'Tous' },
+    { key: 'pending',    label: 'En attente', color: '#f59e0b' },
+    { key: 'processing', label: 'En cours',   color: '#3b82f6' },
+    { key: 'completed',  label: 'Terminés',   color: '#22c55e' },
   ]
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Mes Matchs</h1>
-            <p className="text-gray-400">Gérez vos matchs et consultez les analyses</p>
+      <style>{`@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }`}</style>
+
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28 }}>
+        <div>
+          <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+            <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />Mes matchs
           </div>
-          <Link
-            to="/dashboard/matches/upload"
-            className="px-6 py-3 bg-primary text-black font-semibold rounded-lg hover:shadow-glow transition-all flex items-center gap-2"
-          >
-            <Plus className="w-5 h-5" />
-            Nouveau match
-          </Link>
+          <h1 style={{ fontFamily: G.display, fontSize: 44, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: '#f5f2eb', margin: 0 }}>
+            Historique<br /><span style={{ color: G.gold }}>& analyses.</span>
+          </h1>
         </div>
-
-        {/* Stats Cards animées */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
-          {stats.map((s) => (
-            <StatCard key={s.label} {...s} />
-          ))}
-        </div>
-
-        {/* Filters */}
-        <div style={{ display: 'flex', gap: 8 }}>
-          {filterButtons.map(({ key, label, activeColor }) => (
-            <button
-              key={key}
-              onClick={() => setFilter(key)}
-              style={{
-                padding: '8px 18px',
-                borderRadius: 10,
-                fontWeight: 600,
-                fontSize: 14,
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-                border: filter === key ? 'none' : '1px solid rgba(255,255,255,0.08)',
-                background: filter === key ? activeColor : 'transparent',
-                color: filter === key ? '#fff' : '#9ca3af',
-                boxShadow: filter === key ? `0 4px 15px ${activeColor}40` : 'none',
-              }}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        {/* Matches List */}
-        {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-          </div>
-        ) : filteredMatches.length === 0 ? (
-          <div style={{
-            background: '#0d0f18',
-            border: '1px dashed rgba(255,255,255,0.08)',
-            borderRadius: 16,
-            padding: '64px 24px',
-            textAlign: 'center',
-          }}>
-            <div style={{
-              width: 64, height: 64, borderRadius: '50%',
-              background: 'rgba(99,102,241,0.1)',
-              border: '1px solid rgba(99,102,241,0.2)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              margin: '0 auto 16px',
-            }}>
-              <Video size={28} color="#6366f1" />
-            </div>
-            <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8, color: '#f1f5f9' }}>Aucun match</h3>
-            <p style={{ color: '#6b7280', marginBottom: 24, fontSize: 14 }}>
-              {filter === 'all' ? 'Commencez par uploader votre premier match' : `Aucun match dans cette catégorie`}
-            </p>
-            <Link
-              to="/dashboard/matches/upload"
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: 8,
-                padding: '12px 24px',
-                background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-                color: '#fff', fontWeight: 600, borderRadius: 10,
-                textDecoration: 'none',
-                boxShadow: '0 8px 24px rgba(99,102,241,0.3)',
-              }}
-            >
-              <Plus size={18} />
-              Ajouter un match
-            </Link>
-          </div>
-        ) : (
-          <div style={{ display: 'grid', gap: 12 }}>
-            {filteredMatches.map((match, i) => (
-              <Link
-                key={match.id}
-                to={`/dashboard/matches/${match.id}`}
-                style={{
-                  display: 'block',
-                  background: '#0d0f18',
-                  border: '1px solid rgba(255,255,255,0.06)',
-                  borderRadius: 14,
-                  padding: '20px 24px',
-                  textDecoration: 'none',
-                  color: 'inherit',
-                  transition: 'all 0.2s',
-                  animation: `fadeIn 0.4s ease ${i * 60}ms both`,
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.borderColor = 'rgba(99,102,241,0.3)'
-                  e.currentTarget.style.transform = 'translateX(4px)'
-                  e.currentTarget.style.background = '#111320'
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'
-                  e.currentTarget.style.transform = 'translateX(0)'
-                  e.currentTarget.style.background = '#0d0f18'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-                      <h3 style={{ fontSize: 17, fontWeight: 700, color: '#f1f5f9' }}>vs {match.opponent}</h3>
-                      {getStatusBadge(match.status)}
-                    </div>
-
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, fontSize: 13, color: '#6b7280' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                        <Calendar size={13} />
-                        {formatDate(match.date)}
-                      </div>
-                      {match.category && (
-                        <span style={{ padding: '2px 8px', background: 'rgba(255,255,255,0.05)', borderRadius: 6, fontSize: 12 }}>
-                          {match.category}
-                        </span>
-                      )}
-                      {match.location && (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                          <MapPin size={13} />
-                          {match.location}
-                        </div>
-                      )}
-                    </div>
-
-                    {match.score_home !== null && match.score_away !== null && (
-                      <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <span style={{ fontSize: 24, fontWeight: 800, color: '#f1f5f9' }}>{match.score_home}</span>
-                        <span style={{ color: '#374151', fontWeight: 700 }}>—</span>
-                        <span style={{ fontSize: 24, fontWeight: 800, color: '#f1f5f9' }}>{match.score_away}</span>
-                        <span style={{
-                          marginLeft: 8, padding: '2px 10px', borderRadius: 20, fontSize: 12, fontWeight: 600,
-                          background: match.score_home > match.score_away ? 'rgba(16,185,129,0.1)' : match.score_home < match.score_away ? 'rgba(239,68,68,0.1)' : 'rgba(107,114,128,0.1)',
-                          color: match.score_home > match.score_away ? '#10b981' : match.score_home < match.score_away ? '#ef4444' : '#6b7280',
-                        }}>
-                          {match.score_home > match.score_away ? 'Victoire' : match.score_home < match.score_away ? 'Défaite' : 'Nul'}
-                        </span>
-                      </div>
-                    )}
-
-                    {match.status === 'processing' && match.progress > 0 && (
-                      <div style={{ marginTop: 12 }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: '#6b7280', marginBottom: 6 }}>
-                          <span>Analyse en cours...</span>
-                          <span>{match.progress}%</span>
-                        </div>
-                        <div style={{ height: 4, background: 'rgba(255,255,255,0.06)', borderRadius: 99, overflow: 'hidden' }}>
-                          <div style={{
-                            height: '100%', width: `${match.progress}%`,
-                            background: 'linear-gradient(90deg, #6366f1, #8b5cf6)',
-                            borderRadius: 99, transition: 'width 0.3s',
-                          }} />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <ChevronRight size={18} color="#374151" style={{ marginLeft: 16, flexShrink: 0 }} />
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
+        <Link to="/dashboard/matches/upload" style={{
+          display: 'inline-flex', alignItems: 'center', gap: 8,
+          padding: '12px 24px', background: G.gold, color: '#0f0f0d',
+          fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700,
+          textDecoration: 'none', borderRadius: 2, transition: 'background .15s', marginTop: 8,
+        }}>
+          <Plus size={14} /> Nouveau match
+        </Link>
       </div>
 
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
+      {/* Stats */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 1, background: G.border, marginBottom: 28 }}>
+        {stats.map(s => <StatCard key={s.label} {...s} />)}
+      </div>
+
+      {/* Filters */}
+      <div style={{ display: 'flex', gap: 4, marginBottom: 20 }}>
+        {filters.map(({ key, label, color }) => (
+          <button key={key} onClick={() => setFilter(key)} style={{
+            padding: '8px 18px', fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase',
+            background: filter === key ? (color || G.gold) : 'transparent',
+            color: filter === key ? '#0f0f0d' : G.muted,
+            border: filter === key ? 'none' : `1px solid ${G.border}`,
+            cursor: 'pointer', transition: 'all .15s',
+          }}>{label}</button>
+        ))}
+      </div>
+
+      {/* List */}
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: '60px 0' }}>
+          <div style={{ width: 28, height: 28, border: `2px solid ${G.goldBdr}`, borderTopColor: G.gold, borderRadius: '50%', animation: 'spin .7s linear infinite', margin: '0 auto 12px' }} />
+          <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>Chargement...</p>
+        </div>
+      ) : filteredMatches.length === 0 ? (
+        <div style={{ background: 'rgba(255,255,255,0.01)', border: `1px dashed ${G.goldBdr}`, padding: '64px 24px', textAlign: 'center' }}>
+          <div style={{ width: 52, height: 52, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+            <Video size={24} color={G.gold} />
+          </div>
+          <h3 style={{ fontFamily: G.display, fontSize: 24, textTransform: 'uppercase', letterSpacing: '.03em', marginBottom: 8, color: '#f5f2eb' }}>Aucun match</h3>
+          <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, marginBottom: 24, letterSpacing: '.06em' }}>
+            {filter === 'all' ? 'Uploadez votre premier match pour le faire analyser' : 'Aucun match dans cette catégorie'}
+          </p>
+          <Link to="/dashboard/matches/upload" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '11px 24px', background: G.gold, color: '#0f0f0d', fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700, textDecoration: 'none' }}>
+            <Plus size={14} /> Ajouter un match
+          </Link>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
+          {filteredMatches.map((match, i) => (
+            <Link key={match.id} to={`/dashboard/matches/${match.id}`}
+              style={{ display: 'block', background: '#0a0a08', padding: '20px 24px', textDecoration: 'none', color: 'inherit', transition: 'background .15s', animation: `fadeIn .35s ease ${i * 50}ms both` }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(201,162,39,0.04)'; e.currentTarget.style.borderLeft = `3px solid ${G.gold}` }}
+              onMouseLeave={e => { e.currentTarget.style.background = '#0a0a08'; e.currentTarget.style.borderLeft = 'none' }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+                    <h3 style={{ fontFamily: G.display, fontSize: 20, textTransform: 'uppercase', letterSpacing: '.03em', color: '#f5f2eb', margin: 0 }}>vs {match.opponent}</h3>
+                    <StatusBadge status={match.status} />
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.06em' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                      <Calendar size={11} />{formatDate(match.date)}
+                    </div>
+                    {match.category && <span style={{ padding: '2px 8px', border: `1px solid ${G.border}`, color: G.muted }}>{match.category}</span>}
+                    {match.location && <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}><MapPin size={11} />{match.location}</div>}
+                  </div>
+
+                  {match.score_home !== null && match.score_away !== null && (
+                    <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span style={{ fontFamily: G.display, fontSize: 28, lineHeight: 1, color: '#f5f2eb' }}>{match.score_home}</span>
+                      <span style={{ fontFamily: G.mono, fontSize: 12, color: G.muted }}>—</span>
+                      <span style={{ fontFamily: G.display, fontSize: 28, lineHeight: 1, color: '#f5f2eb' }}>{match.score_away}</span>
+                      <span style={{
+                        fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase',
+                        marginLeft: 8, padding: '3px 10px',
+                        background: match.score_home > match.score_away ? 'rgba(34,197,94,0.08)' : match.score_home < match.score_away ? 'rgba(239,68,68,0.08)' : 'rgba(245,242,235,0.05)',
+                        color: match.score_home > match.score_away ? '#22c55e' : match.score_home < match.score_away ? '#ef4444' : G.muted,
+                        border: `1px solid ${match.score_home > match.score_away ? 'rgba(34,197,94,0.2)' : match.score_home < match.score_away ? 'rgba(239,68,68,0.2)' : G.border}`,
+                      }}>
+                        {match.score_home > match.score_away ? 'Victoire' : match.score_home < match.score_away ? 'Défaite' : 'Nul'}
+                      </span>
+                    </div>
+                  )}
+
+                  {match.status === 'processing' && match.progress > 0 && (
+                    <div style={{ marginTop: 10 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: G.mono, fontSize: 9, color: G.muted, marginBottom: 5, letterSpacing: '.08em' }}>
+                        <span>Analyse en cours...</span><span>{match.progress}%</span>
+                      </div>
+                      <div style={{ height: 2, background: G.border, overflow: 'hidden' }}>
+                        <div style={{ height: '100%', width: `${match.progress}%`, background: G.gold, transition: 'width .3s' }} />
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <ChevronRight size={16} color={G.muted} style={{ marginLeft: 16, flexShrink: 0 }} />
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </DashboardLayout>
   )
 }

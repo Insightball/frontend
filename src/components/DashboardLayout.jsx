@@ -1,6 +1,16 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Home, Film, Users, Settings, LogOut, BarChart3, User } from 'lucide-react'
+import { Home, Film, Users, Settings, LogOut, BarChart3, User, Trophy } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+
+const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');`
+
+const G = {
+  ink: '#0f0f0d', gold: '#c9a227',
+  goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.25)',
+  muted: 'rgba(245,242,235,0.28)',
+  mono: "'JetBrains Mono', monospace",
+  display: "'Anton', sans-serif",
+}
 
 function DashboardLayout({ children }) {
   const location = useLocation()
@@ -15,202 +25,130 @@ function DashboardLayout({ children }) {
   ]
 
   if (user?.plan === 'club') {
-    navigation.push({ name: 'Équipe', href: '/dashboard/team', icon: Users })
+    navigation.push({ name: 'Équipe', href: '/dashboard/team', icon: Trophy })
   }
-
   navigation.push({ name: 'Paramètres', href: '/dashboard/settings', icon: Settings })
 
-  const handleLogout = () => {
-    logout()
-    navigate('/login')
-  }
+  const handleLogout = () => { logout(); navigate('/login') }
 
   return (
-    <div className="min-h-screen" style={{ background: '#faf8f4', color: '#0f0f0d' }}>
+    <div style={{ minHeight: '100vh', background: '#0a0a08', color: '#f5f2eb', display: 'flex' }}>
+      <style>{`
+        ${FONTS}
+        * { box-sizing: border-box; }
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-thumb { background: rgba(201,162,39,0.2); }
+        select option { background: #0f0f0d; color: #f5f2eb; }
+      `}</style>
 
-      {/* ── HEADER ── */}
-      <header
-        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6"
-        style={{
-          height: 56,
-          background: '#0f0f0d',
-          borderBottom: '1px solid rgba(255,255,255,0.06)',
-        }}
-      >
-        <Link to="/" className="flex items-center gap-3">
-          <img src="/logo.svg" alt="InsightBall" className="w-8 h-8" />
-          <span
-            style={{
-              fontFamily: "'Anton', sans-serif",
-              fontSize: 18,
-              letterSpacing: '.06em',
-              color: '#fff',
-            }}
-          >
-            INSIGHT<span style={{ color: '#c9a227' }}>BALL</span>
+      {/* ── SIDEBAR ── */}
+      <aside style={{
+        position: 'fixed', top: 0, left: 0, bottom: 0, width: 220,
+        background: G.ink, borderRight: '1px solid rgba(255,255,255,0.05)',
+        display: 'flex', flexDirection: 'column', zIndex: 100,
+      }}>
+        {/* Logo */}
+        <Link to="/" style={{
+          display: 'flex', alignItems: 'center', gap: 10,
+          padding: '18px 20px', borderBottom: '1px solid rgba(255,255,255,0.05)',
+          textDecoration: 'none', flexShrink: 0,
+        }}>
+          <img src="/logo.svg" alt="InsightBall" style={{ width: 28, height: 28 }} />
+          <span style={{ fontFamily: G.display, fontSize: 16, letterSpacing: '.06em', color: '#fff' }}>
+            INSIGHT<span style={{ color: G.gold }}>BALL</span>
           </span>
         </Link>
 
-        {/* Pill plan */}
-        {user?.plan && (
-          <span
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 9,
-              letterSpacing: '.16em',
-              textTransform: 'uppercase',
-              color: '#c9a227',
-              border: '1px solid rgba(201,162,39,0.3)',
-              padding: '4px 12px',
-              borderRadius: 2,
-              background: 'rgba(201,162,39,0.06)',
-            }}
-          >
-            Plan {user.plan}
-          </span>
-        )}
-      </header>
-
-      <div className="flex" style={{ paddingTop: 56 }}>
-
-        {/* ── SIDEBAR ── */}
-        <aside
-          className="fixed left-0 bottom-0 overflow-y-auto flex flex-col"
-          style={{
-            top: 56,
-            width: 220,
-            background: '#0f0f0d',
-            borderRight: '1px solid rgba(255,255,255,0.06)',
-          }}
-        >
-          {/* User block */}
-          <div style={{ padding: '24px 20px 0' }}>
-            <div
-              style={{
-                padding: '14px 16px',
-                border: '1px solid rgba(255,255,255,0.06)',
-                marginBottom: 24,
-                background: 'rgba(255,255,255,0.02)',
-              }}
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <div
-                  className="flex items-center justify-center"
-                  style={{
-                    width: 36, height: 36,
-                    background: 'rgba(201,162,39,0.1)',
-                    border: '1px solid rgba(201,162,39,0.2)',
-                    borderRadius: 2,
-                    flexShrink: 0,
-                  }}
-                >
-                  <User style={{ width: 16, height: 16, color: '#c9a227' }} />
-                </div>
-                <div className="min-w-0">
-                  <p className="truncate text-white font-medium" style={{ fontSize: 13 }}>
-                    {user?.name}
-                  </p>
-                  <p className="truncate" style={{ fontSize: 11, color: 'rgba(255,255,255,.3)' }}>
-                    {user?.email}
-                  </p>
-                </div>
+        {/* User card */}
+        <div style={{ padding: '14px 16px', borderBottom: '1px solid rgba(255,255,255,0.04)', flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{
+              width: 34, height: 34, borderRadius: '50%',
+              background: G.goldBg, border: `1px solid ${G.goldBdr}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+            }}>
+              <User size={14} color={G.gold} />
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontFamily: G.mono, fontSize: 11, color: '#f5f2eb', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {user?.name}
+              </div>
+              <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginTop: 2, textTransform: 'uppercase', letterSpacing: '.08em' }}>
+                {user?.email}
               </div>
             </div>
-
-            {/* Nav links */}
-            <nav className="flex flex-col gap-1">
-              {navigation.map((item) => {
-                const active = location.pathname === item.href
-                return (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    className="flex items-center gap-3 transition-all"
-                    style={{
-                      padding: '10px 14px',
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 11,
-                      letterSpacing: '.08em',
-                      textTransform: 'uppercase',
-                      color: active ? '#c9a227' : 'rgba(255,255,255,.38)',
-                      background: active ? 'rgba(201,162,39,0.08)' : 'transparent',
-                      borderLeft: active ? '2px solid #c9a227' : '2px solid transparent',
-                      textDecoration: 'none',
-                    }}
-                  >
-                    <item.icon style={{ width: 14, height: 14, flexShrink: 0 }} />
-                    {item.name}
-                  </Link>
-                )
-              })}
-            </nav>
           </div>
+          {user?.plan && (
+            <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted }}>Plan</span>
+              <span style={{
+                fontFamily: G.mono, fontSize: 8, letterSpacing: '.12em', textTransform: 'uppercase',
+                padding: '3px 10px', background: G.goldBg, border: `1px solid ${G.goldBdr}`, color: G.gold,
+              }}>{user.plan}</span>
+            </div>
+          )}
+        </div>
 
-          {/* Bottom: club + logout */}
-          <div style={{ marginTop: 'auto', borderTop: '1px solid rgba(255,255,255,.06)' }}>
-            {user?.club_name && (
-              <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,.06)' }}>
-                <div className="flex items-center gap-2" style={{ marginBottom: 4 }}>
-                  <div
-                    style={{
-                      width: 6, height: 6,
-                      background: '#c9a227',
-                      borderRadius: '50%',
-                    }}
-                  />
-                  <span
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 9,
-                      letterSpacing: '.16em',
-                      textTransform: 'uppercase',
-                      color: 'rgba(255,255,255,.25)',
-                    }}
-                  >
-                    Club
-                  </span>
-                </div>
-                <p style={{ fontSize: 13, color: '#fff', fontWeight: 500 }}>
-                  {user.club_name}
-                </p>
+        {/* Nav */}
+        <nav style={{ flex: 1, padding: '10px 10px', display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'auto' }}>
+          {navigation.map((item) => {
+            const isActive = location.pathname === item.href
+            return (
+              <Link
+                key={item.name}
+                to={item.href}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 10,
+                  padding: '10px 12px',
+                  fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase',
+                  color: isActive ? G.gold : G.muted,
+                  background: isActive ? G.goldBg : 'transparent',
+                  borderLeft: `2px solid ${isActive ? G.gold : 'transparent'}`,
+                  textDecoration: 'none',
+                  transition: 'all .15s',
+                }}
+                onMouseEnter={e => { if (!isActive) { e.currentTarget.style.color = '#f5f2eb'; e.currentTarget.style.background = 'rgba(255,255,255,0.02)' } }}
+                onMouseLeave={e => { if (!isActive) { e.currentTarget.style.color = G.muted; e.currentTarget.style.background = 'transparent' } }}
+              >
+                <item.icon size={14} />
+                {item.name}
+              </Link>
+            )
+          })}
+        </nav>
+
+        {/* Club + Logout */}
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)', padding: '10px 10px', flexShrink: 0 }}>
+          {user?.club_name && (
+            <div style={{ padding: '8px 12px', marginBottom: 4 }}>
+              <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted, marginBottom: 4 }}>Club</div>
+              <div style={{ fontFamily: G.mono, fontSize: 10, color: '#f5f2eb', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: G.gold, display: 'inline-block', flexShrink: 0 }} />
+                {user.club_name}
               </div>
-            )}
-            <button
-              onClick={handleLogout}
-              className="w-full flex items-center gap-3 transition-all"
-              style={{
-                padding: '14px 20px',
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 11,
-                letterSpacing: '.08em',
-                textTransform: 'uppercase',
-                color: 'rgba(255,255,255,.25)',
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                textAlign: 'left',
-              }}
-              onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,.6)'}
-              onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,.25)'}
-            >
-              <LogOut style={{ width: 14, height: 14 }} />
-              Déconnexion
-            </button>
-          </div>
-        </aside>
+            </div>
+          )}
+          <button
+            onClick={handleLogout}
+            style={{
+              width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+              padding: '10px 12px', background: 'transparent', border: 'none',
+              fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase',
+              color: G.muted, cursor: 'pointer', transition: 'color .15s', borderRadius: 0,
+            }}
+            onMouseEnter={e => e.currentTarget.style.color = '#ef4444'}
+            onMouseLeave={e => e.currentTarget.style.color = G.muted}
+          >
+            <LogOut size={14} />
+            Déconnexion
+          </button>
+        </div>
+      </aside>
 
-        {/* ── MAIN ── */}
-        <main
-          className="flex-1"
-          style={{
-            marginLeft: 220,
-            minHeight: 'calc(100vh - 56px)',
-            background: '#f5f2eb',
-          }}
-        >
-          {children}
-        </main>
-      </div>
+      {/* ── MAIN CONTENT ── */}
+      <main style={{ marginLeft: 220, flex: 1, minWidth: 0, padding: '32px 36px' }}>
+        {children}
+      </main>
     </div>
   )
 }

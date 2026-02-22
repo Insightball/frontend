@@ -1,8 +1,16 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Check, Zap, Users as UsersIcon, ArrowRight } from 'lucide-react'
+import { Check, ArrowRight } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
+
+const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');`
+const G = {
+  ink: '#0f0f0d', gold: '#c9a227', goldD: '#a8861f',
+  goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.25)',
+  mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
+  border: 'rgba(255,255,255,0.06)', muted: 'rgba(245,242,235,0.35)',
+}
 
 function SubscriptionPlans() {
   const navigate = useNavigate()
@@ -12,188 +20,153 @@ function SubscriptionPlans() {
 
   const plans = [
     {
-      id: 'coach',
-      name: 'Coach',
-      price: 29,
-      description: 'Pour les coachs individuels',
-      icon: <Zap className="w-8 h-8" />,
-      features: [
-        '5 matchs analysés / mois',
-        'Stats collectives complètes',
-        'Stats individuelles joueurs',
-        'Rapports PDF automatiques',
-        'Heatmaps & zones activité',
-        'Compositions tactiques',
-        'Support email'
-      ],
-      color: 'border-blue-500',
-      bgColor: 'bg-blue-500/10'
+      id: 'coach', name: 'COACH', price: 29, oldPrice: 39,
+      tag: 'Pour les coachs',
+      features: ['3 matchs analysés / mois', '1 équipe', 'Rapports collectifs et individuels', 'Suivi progression match après match', 'Tableau de bord complet', 'Support dédié', 'Accessible sur tous supports'],
     },
     {
-      id: 'club',
-      name: 'Club',
-      price: 89,
-      description: 'Pour les clubs multi-catégories',
-      icon: <UsersIcon className="w-8 h-8" />,
-      popular: true,
-      features: [
-        '15 matchs analysés / mois',
-        'Multi-catégories (N3, U19, U17...)',
-        'Gestion effectif illimitée',
-        'Tous les joueurs du club',
-        'Staff technique',
-        'Comparaisons entre équipes',
-        'Dashboard club complet',
-        'Support prioritaire'
-      ],
-      color: 'border-primary',
-      bgColor: 'bg-primary/10'
-    }
+      id: 'club', name: 'CLUB', price: 99, oldPrice: 139,
+      tag: '⚡ Recommandé', popular: true,
+      features: ['10 matchs analysés / mois', 'Multi-équipes', 'Gestion effectif illimitée', 'Vue globale club', 'Multi-utilisateurs', 'Dashboard club avancé', 'Support prioritaire dédié'],
+    },
   ]
 
   const handleSelectPlan = async (planId) => {
-    if (!user) {
-      navigate('/signup')
-      return
-    }
-
+    if (!user) { navigate('/signup'); return }
     try {
-      setLoading(true)
-      setSelectedPlan(planId)
-
+      setLoading(true); setSelectedPlan(planId)
       const response = await api.post('/subscription/create-checkout-session', {
         plan: planId,
         success_url: `${window.location.origin}/dashboard?payment=success`,
-        cancel_url: `${window.location.origin}/subscription/plans?payment=cancelled`
+        cancel_url: `${window.location.origin}/subscription/plans?payment=cancelled`,
       })
-
-      // Redirect to Stripe Checkout
       window.location.href = response.data.url
-      
     } catch (error) {
-      console.error('Error creating checkout session:', error)
+      console.error('Error:', error)
       alert('Erreur lors de la création de la session de paiement')
-      setLoading(false)
-      setSelectedPlan(null)
+      setLoading(false); setSelectedPlan(null)
     }
   }
 
   return (
-    <div className="min-h-screen bg-black text-white pt-32 pb-20 px-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold mb-4">
-            Choisissez votre plan
+    <div style={{ minHeight: '100vh', background: G.ink, color: '#f5f2eb', padding: '0 40px 80px' }}>
+      <style>{`${FONTS} * { box-sizing: border-box; }`}</style>
+
+      {/* Nav */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 0 60px', maxWidth: 880, margin: '0 auto' }}>
+        <button onClick={() => navigate('/')} style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none', cursor: 'pointer' }}>
+          <img src="/logo.svg" alt="" style={{ width: 28, height: 28 }} />
+          <span style={{ fontFamily: G.display, fontSize: 16, letterSpacing: '.06em', color: '#fff' }}>
+            INSIGHT<span style={{ color: G.gold }}>BALL</span>
+          </span>
+        </button>
+        {user && (
+          <button onClick={() => navigate('/dashboard')} style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted, background: 'none', border: 'none', cursor: 'pointer' }}>
+            Tableau de bord →
+          </button>
+        )}
+      </div>
+
+      <div style={{ maxWidth: 880, margin: '0 auto' }}>
+        {/* Title */}
+        <div style={{ textAlign: 'center', marginBottom: 56 }}>
+          <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center', marginBottom: 16 }}>
+            <span style={{ width: 16, height: 1, background: G.gold }} />
+            Tarifs
+          </div>
+          <h1 style={{ fontFamily: G.display, fontSize: 'clamp(52px,7vw,88px)', textTransform: 'uppercase', lineHeight: .85, letterSpacing: '.01em', margin: 0 }}>
+            Choisissez<br /><span style={{ color: G.gold }}>votre offre.</span>
           </h1>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Sélectionnez l'offre adaptée à vos besoins
-          </p>
         </div>
 
         {/* Plans */}
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: G.border, marginBottom: 1 }}>
           {plans.map((plan) => (
-            <div
-              key={plan.id}
-              className={`relative bg-dark-card border-2 ${plan.color} rounded-2xl p-8 hover:scale-105 transition-all duration-300`}
+            <div key={plan.id}
+              style={{
+                background: plan.popular ? 'rgba(201,162,39,0.03)' : '#0d0d0b',
+                padding: '44px 40px', position: 'relative',
+                borderTop: plan.popular ? `2px solid ${G.gold}` : '2px solid transparent',
+              }}
             >
-              {/* Popular badge */}
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-1 bg-primary text-black text-sm font-bold rounded-full">
-                  POPULAIRE
+                <div style={{ position: 'absolute', top: 20, right: 20, fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, border: `1px solid ${G.goldBdr}`, padding: '4px 10px', background: G.goldBg }}>
+                  ⚡ Recommandé
                 </div>
               )}
-
-              {/* Icon */}
-              <div className={`w-16 h-16 ${plan.bgColor} rounded-xl flex items-center justify-center mb-6 text-${plan.id === 'coach' ? 'blue' : 'primary'}-500`}>
-                {plan.icon}
-              </div>
-
-              {/* Name & Description */}
-              <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-              <p className="text-gray-400 mb-6">{plan.description}</p>
-
-              {/* Price */}
-              <div className="mb-8">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-5xl font-bold">{plan.price}€</span>
-                  <span className="text-gray-400">/mois</span>
+              <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, display: 'block', marginBottom: 12 }}>{plan.tag}</span>
+              <div style={{ fontFamily: G.display, fontSize: 32, textTransform: 'uppercase', letterSpacing: '.03em', color: '#f5f2eb', marginBottom: 20 }}>{plan.name}</div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 36 }}>
+                <span style={{ fontFamily: G.display, fontSize: 80, lineHeight: 1, letterSpacing: '-.02em', color: '#f5f2eb' }}>{plan.price}</span>
+                <div>
+                  <span style={{ fontFamily: G.mono, fontSize: 16, color: 'rgba(245,242,235,0.25)', textDecoration: 'line-through', display: 'block' }}>{plan.oldPrice}€</span>
+                  <span style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.08em' }}>€/mois</span>
                 </div>
-                <p className="text-sm text-gray-500 mt-2">Sans engagement</p>
               </div>
-
-              {/* Features */}
-              <ul className="space-y-4 mb-8">
-                {plan.features.map((feature, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <Check className={`w-5 h-5 flex-shrink-0 mt-0.5 ${plan.id === 'club' ? 'text-primary' : 'text-blue-500'}`} />
-                    <span className="text-gray-300">{feature}</span>
+              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 36px', display: 'flex', flexDirection: 'column', gap: 9 }}>
+                {plan.features.map(f => (
+                  <li key={f} style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(245,242,235,0.6)', display: 'flex', alignItems: 'flex-start', gap: 8, letterSpacing: '.04em' }}>
+                    <span style={{ color: G.gold, flexShrink: 0, marginTop: 1 }}>✓</span>{f}
                   </li>
                 ))}
               </ul>
-
-              {/* CTA Button */}
               <button
                 onClick={() => handleSelectPlan(plan.id)}
                 disabled={loading && selectedPlan === plan.id}
-                className={`w-full py-4 ${
-                  plan.popular
-                    ? 'bg-primary text-black hover:shadow-glow'
-                    : 'bg-blue-500 text-white hover:bg-blue-600'
-                } font-bold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2`}
+                style={{
+                  width: '100%', padding: '14px',
+                  background: plan.popular ? G.gold : 'transparent',
+                  color: plan.popular ? G.ink : '#f5f2eb',
+                  border: plan.popular ? 'none' : `1px solid rgba(255,255,255,0.15)`,
+                  fontFamily: G.mono, fontSize: 11, letterSpacing: '.14em', textTransform: 'uppercase', fontWeight: 700,
+                  cursor: loading && selectedPlan === plan.id ? 'not-allowed' : 'pointer',
+                  opacity: loading && selectedPlan === plan.id ? .6 : 1,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                  transition: 'background .15s',
+                }}
+                onMouseEnter={e => { if (plan.popular) e.currentTarget.style.background = G.goldD }}
+                onMouseLeave={e => { if (plan.popular) e.currentTarget.style.background = G.gold }}
               >
                 {loading && selectedPlan === plan.id ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-                    Chargement...
-                  </>
+                  <><div style={{ width: 12, height: 12, border: '2px solid currentColor', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin .7s linear infinite' }} />Chargement...</>
                 ) : (
-                  <>
-                    Choisir {plan.name.toUpperCase()}
-                    <ArrowRight className="w-5 h-5" />
-                  </>
+                  <>Choisir {plan.name} <ArrowRight size={13} /></>
                 )}
               </button>
             </div>
           ))}
         </div>
 
-        {/* FAQ / Info */}
-        <div className="bg-dark-card border border-dark-border rounded-xl p-8 text-center">
-          <h3 className="text-xl font-bold mb-4">Questions fréquentes</h3>
-          <div className="grid md:grid-cols-3 gap-6 text-left">
-            <div>
-              <h4 className="font-semibold mb-2">Puis-je annuler ?</h4>
-              <p className="text-sm text-gray-400">
-                Oui, à tout moment. Aucun engagement.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-2">Comment ça marche ?</h4>
-              <p className="text-sm text-gray-400">
-                Uploadez votre vidéo, on analyse, vous recevez le rapport PDF.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-2">Paiement sécurisé ?</h4>
-              <p className="text-sm text-gray-400">
-                100% sécurisé via Stripe. Vos données sont protégées.
-              </p>
-            </div>
+        <p style={{ textAlign: 'center', fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.2)', marginTop: 16 }}>Sans engagement</p>
+
+        {/* FAQ */}
+        <div style={{ marginTop: 56, background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}`, borderTop: `2px solid ${G.border}`, padding: '40px' }}>
+          <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 28 }}>
+            <span style={{ width: 16, height: 1, background: G.gold }} />Questions fréquentes
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 28 }}>
+            {[
+              { q: 'Puis-je annuler ?', a: 'Oui, à tout moment. Aucun engagement, aucune pénalité.' },
+              { q: 'Comment ça marche ?', a: 'Uploadez votre vidéo, notre IA l\'analyse, vous recevez un rapport tactique complet.' },
+              { q: 'Paiement sécurisé ?', a: '100% sécurisé via Stripe. Vos données sont chiffrées et protégées.' },
+            ].map(({ q, a }) => (
+              <div key={q}>
+                <div style={{ fontFamily: G.mono, fontSize: 10, fontWeight: 700, letterSpacing: '.08em', color: '#f5f2eb', marginBottom: 8 }}>{q}</div>
+                <div style={{ fontFamily: "'Literata', Georgia, serif", fontSize: 14, color: G.muted, lineHeight: 1.7 }}>{a}</div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Back link */}
-        <div className="text-center mt-8">
-          <button
-            onClick={() => navigate('/')}
-            className="text-gray-400 hover:text-primary transition-colors"
-          >
+        <div style={{ textAlign: 'center', marginTop: 28 }}>
+          <button onClick={() => navigate('/')} style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted, background: 'none', border: 'none', cursor: 'pointer', transition: 'color .15s' }}
+            onMouseEnter={e => e.currentTarget.style.color = G.gold}
+            onMouseLeave={e => e.currentTarget.style.color = G.muted}>
             ← Retour à l'accueil
           </button>
         </div>
       </div>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   )
 }

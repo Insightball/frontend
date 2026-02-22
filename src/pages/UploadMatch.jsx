@@ -5,42 +5,36 @@ import DashboardLayout from '../components/DashboardLayout'
 import matchService from '../services/matchService'
 import playerService from '../services/playerService'
 
+const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');`
+const G = {
+  ink: '#0f0f0d', gold: '#c9a227', goldD: '#a8861f',
+  goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.25)',
+  mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
+  muted: 'rgba(245,242,235,0.35)', border: 'rgba(255,255,255,0.06)',
+  card: 'rgba(255,255,255,0.02)',
+}
+
 const S = {
-  card: {
-    background: '#0d0f18',
-    border: '1px solid rgba(255,255,255,0.07)',
-    borderRadius: 16,
-    padding: '28px',
-  },
-  label: {
-    display: 'block', fontSize: 13, fontWeight: 600,
-    color: '#94a3b8', marginBottom: 8, letterSpacing: '0.04em', textTransform: 'uppercase',
-  },
+  card: { background: G.card, border: `1px solid ${G.border}`, padding: 28 },
+  label: { display: 'block', fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.muted, marginBottom: 8 },
   input: {
-    width: '100%', background: '#080a10',
-    border: '1px solid rgba(255,255,255,0.08)',
-    borderRadius: 10, padding: '12px 16px',
-    color: '#f1f5f9', fontSize: 15, outline: 'none',
-    transition: 'border-color 0.2s',
-    boxSizing: 'border-box',
+    width: '100%', background: '#0a0a08',
+    border: '1px solid rgba(255,255,255,0.07)',
+    padding: '12px 16px', color: '#f5f2eb',
+    fontFamily: "'JetBrains Mono', monospace", fontSize: 13,
+    outline: 'none', transition: 'border-color .15s', boxSizing: 'border-box',
   },
   select: {
-    width: '100%', background: '#080a10',
-    border: '1px solid rgba(255,255,255,0.08)',
-    borderRadius: 10, padding: '12px 16px',
-    color: '#f1f5f9', fontSize: 15, outline: 'none',
-    transition: 'border-color 0.2s', cursor: 'pointer',
-    boxSizing: 'border-box',
+    width: '100%', background: '#0a0a08',
+    border: '1px solid rgba(255,255,255,0.07)',
+    padding: '12px 16px', color: '#f5f2eb',
+    fontFamily: "'JetBrains Mono', monospace", fontSize: 13,
+    outline: 'none', cursor: 'pointer', boxSizing: 'border-box',
   },
 }
 
 function Field({ label, children }) {
-  return (
-    <div>
-      <label style={S.label}>{label}</label>
-      {children}
-    </div>
-  )
+  return <div><label style={S.label}>{label}</label>{children}</div>
 }
 
 function UploadMatch() {
@@ -53,284 +47,220 @@ function UploadMatch() {
   const [matchData, setMatchData] = useState({
     date: '', opponent: '', competition: '', location: '',
     score_home: '', score_away: '', category: 'N3',
-    weather: 'Ensoleillé', pitch_type: 'Naturel'
+    weather: 'Ensoleillé', pitch_type: 'Naturel',
   })
-
   const [lineup, setLineup] = useState({ starters: [], substitutes: [] })
   const [videoFile, setVideoFile] = useState(null)
 
   useEffect(() => { loadPlayers() }, [])
-
   const loadPlayers = async () => {
     try {
       const data = await playerService.getPlayers()
       setPlayers(data.filter(p => p.status === 'actif'))
-    } catch (error) { console.error('Error loading players:', error) }
+    } catch (error) { console.error('Error:', error) }
   }
 
   const handleMatchChange = (e) => setMatchData({ ...matchData, [e.target.name]: e.target.value })
+
+  const positions = ['GB', 'DD', 'DC', 'DG', 'MDC', 'MIL', 'MOF', 'AD', 'AG', 'AVT']
 
   const addStarter = () => {
     if (lineup.starters.length >= 11) return
     setLineup({ ...lineup, starters: [...lineup.starters, { player_id: '', player_name: '', number: '', position: 'MIL' }] })
   }
-
-  const removeStarter = (index) => setLineup({ ...lineup, starters: lineup.starters.filter((_, i) => i !== index) })
-
-  const updateStarter = (index, field, value) => {
-    const newStarters = [...lineup.starters]
-    newStarters[index][field] = value
+  const removeStarter = (i) => setLineup({ ...lineup, starters: lineup.starters.filter((_, idx) => idx !== i) })
+  const updateStarter = (i, field, value) => {
+    const updated = [...lineup.starters]
+    updated[i] = { ...updated[i], [field]: value }
     if (field === 'player_id' && value) {
-      const player = players.find(p => p.id === value)
-      if (player) newStarters[index].player_name = player.name
+      const p = players.find(p => p.id === value)
+      if (p) { updated[i].player_name = p.name; updated[i].number = p.number; updated[i].position = p.position || 'MIL' }
     }
-    setLineup({ ...lineup, starters: newStarters })
+    setLineup({ ...lineup, starters: updated })
   }
 
   const addSubstitute = () => {
     if (lineup.substitutes.length >= 5) return
     setLineup({ ...lineup, substitutes: [...lineup.substitutes, { player_id: '', player_name: '', number: '' }] })
   }
-
-  const removeSubstitute = (index) => setLineup({ ...lineup, substitutes: lineup.substitutes.filter((_, i) => i !== index) })
-
-  const updateSubstitute = (index, field, value) => {
-    const newSubs = [...lineup.substitutes]
-    newSubs[index][field] = value
+  const removeSubstitute = (i) => setLineup({ ...lineup, substitutes: lineup.substitutes.filter((_, idx) => idx !== i) })
+  const updateSubstitute = (i, field, value) => {
+    const updated = [...lineup.substitutes]
+    updated[i] = { ...updated[i], [field]: value }
     if (field === 'player_id' && value) {
-      const player = players.find(p => p.id === value)
-      if (player) newSubs[index].player_name = player.name
+      const p = players.find(p => p.id === value)
+      if (p) { updated[i].player_name = p.name; updated[i].number = p.number }
     }
-    setLineup({ ...lineup, substitutes: newSubs })
+    setLineup({ ...lineup, substitutes: updated })
   }
 
-  const handleVideoChange = (e) => {
-    const file = e.target.files?.[0]
-    if (file && file.type.startsWith('video/')) setVideoFile(file)
+  const getAvailablePlayers = (currentId) => {
+    const usedIds = [
+      ...lineup.starters.map(s => s.player_id),
+      ...lineup.substitutes.map(s => s.player_id),
+    ].filter(id => id && id !== currentId)
+    return players.filter(p => !usedIds.includes(p.id))
   }
 
+  const handleVideoChange = (e) => { if (e.target.files[0]) setVideoFile(e.target.files[0]) }
   const handleDrop = (e) => {
-    e.preventDefault()
-    setDragOver(false)
-    const file = e.dataTransfer.files?.[0]
-    if (file && file.type.startsWith('video/')) setVideoFile(file)
+    e.preventDefault(); setDragOver(false)
+    const file = e.dataTransfer.files[0]
+    if (file?.type.startsWith('video/')) setVideoFile(file)
   }
 
-  const validateStep = () => {
-    if (step === 1 && (!matchData.date || !matchData.opponent)) { alert('Date et adversaire obligatoires'); return false }
-    if (step === 2) {
-      if (lineup.starters.length !== 11) { alert('11 titulaires requis'); return false }
-      for (let s of lineup.starters) if (!s.player_id || !s.number) { alert('Tous les titulaires doivent avoir joueur + numéro'); return false }
-      const numbers = [...lineup.starters.map(s => s.number), ...lineup.substitutes.map(s => s.number)].filter(Boolean)
-      if (new Set(numbers).size !== numbers.length) { alert('Numéros en double'); return false }
-    }
-    if (step === 3) for (let sub of lineup.substitutes) if ((sub.player_id && !sub.number) || (!sub.player_id && sub.number)) { alert('Remplaçant incomplet'); return false }
-    if (step === 4 && !videoFile) { alert('Sélectionnez une vidéo'); return false }
-    return true
+  const nextStep = () => {
+    if (step === 1 && (!matchData.date || !matchData.opponent)) { alert('Remplissez la date et l\'adversaire'); return }
+    setStep(s => Math.min(s + 1, 4))
   }
-
-  const nextStep = () => { if (validateStep()) setStep(step + 1) }
-  const prevStep = () => setStep(step - 1)
+  const prevStep = () => setStep(s => Math.max(s - 1, 1))
 
   const handleSubmit = async () => {
-    if (!validateStep()) return
+    if (!videoFile) { alert('Ajoutez une vidéo'); return }
+    setUploading(true)
     try {
-      setUploading(true)
-      const match = await matchService.createMatch({
-        ...matchData,
-        lineup: { starters: lineup.starters.filter(s => s.player_id), substitutes: lineup.substitutes.filter(s => s.player_id) }
-      })
-      if (videoFile) await matchService.uploadVideo(match.id, videoFile)
-      alert('Match uploadé ! L\'analyse IA démarrera sous peu.')
+      await matchService.uploadMatch({ matchData, lineup, videoFile })
       navigate('/dashboard/matches')
-    } catch (error) {
-      console.error(error)
-      alert('Erreur lors de l\'upload')
-    } finally { setUploading(false) }
+    } catch (error) { console.error('Error:', error); alert('Erreur lors de l\'upload') }
+    finally { setUploading(false) }
   }
-
-  const getAvailablePlayers = (currentPlayerId) => {
-    const selectedIds = [...lineup.starters.map(s => s.player_id), ...lineup.substitutes.map(s => s.player_id)].filter(id => id && id !== currentPlayerId)
-    return players.filter(p => !selectedIds.includes(p.id))
-  }
-
-  const positions = ['GK', 'DEF', 'MIL', 'ATT']
 
   const steps = [
-    { num: 1, label: 'Infos match', icon: Calendar },
-    { num: 2, label: 'Titulaires', icon: Users },
-    { num: 3, label: 'Remplaçants', icon: Users },
-    { num: 4, label: 'Vidéo', icon: Video },
+    { n: '01', label: 'Match' },
+    { n: '02', label: 'Titulaires' },
+    { n: '03', label: 'Remplaçants' },
+    { n: '04', label: 'Vidéo' },
   ]
 
   return (
     <DashboardLayout>
-      <div style={{ maxWidth: 860, margin: '0 auto' }}>
+      <style>{`${FONTS} * { box-sizing: border-box; } @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } } @keyframes spin { to { transform: rotate(360deg); } } select option { background: #0a0a08; }`}</style>
 
-        {/* Header */}
-        <div style={{ marginBottom: 32 }}>
-          <h1 style={{ fontSize: 28, fontWeight: 800, color: '#f1f5f9', marginBottom: 6 }}>Ajouter un match</h1>
-          <p style={{ color: '#6b7280', fontSize: 15 }}>Uploadez votre vidéo et indiquez la composition</p>
+      {/* Header */}
+      <div style={{ marginBottom: 32 }}>
+        <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+          <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />
+          Nouveau match
         </div>
+        <h1 style={{ fontFamily: "'Anton', sans-serif", fontSize: 44, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: '#f5f2eb', margin: 0 }}>
+          Analyser<br /><span style={{ color: G.gold }}>un match.</span>
+        </h1>
+      </div>
 
-        {/* Progress Steps */}
-        <div style={{ marginBottom: 36 }}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            {steps.map((s, i) => {
-              const done = step > s.num
-              const active = step === s.num
-              return (
-                <div key={s.num} style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-                    <div style={{
-                      width: 40, height: 40, borderRadius: '50%',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontWeight: 700, fontSize: 15, transition: 'all 0.3s',
-                      background: done ? '#10b981' : active ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'rgba(255,255,255,0.05)',
-                      color: done || active ? '#fff' : '#4b5563',
-                      border: active ? 'none' : done ? 'none' : '1px solid rgba(255,255,255,0.08)',
-                      boxShadow: active ? '0 0 20px rgba(99,102,241,0.4)' : done ? '0 0 12px rgba(16,185,129,0.3)' : 'none',
-                    }}>
-                      {done ? <Check size={16} /> : s.num}
-                    </div>
-                    <span style={{
-                      fontSize: 12, marginTop: 8, fontWeight: 600,
-                      color: active ? '#818cf8' : done ? '#10b981' : '#4b5563',
-                    }}>
-                      {s.label}
-                    </span>
-                  </div>
-                  {i < 3 && (
-                    <div style={{
-                      height: 2, flex: 1, maxWidth: 80, margin: '0 4px',
-                      background: step > s.num ? 'linear-gradient(90deg, #10b981, #6366f1)' : 'rgba(255,255,255,0.06)',
-                      borderRadius: 2, transition: 'background 0.4s',
-                      marginBottom: 22,
-                    }} />
-                  )}
-                </div>
-              )
-            })}
+      {/* Step indicator */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 0, marginBottom: 32 }}>
+        {steps.map((s, i) => (
+          <div key={s.n} style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{
+                width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                border: `1px solid ${step > i ? G.gold : G.border}`,
+                background: step === i + 1 ? G.goldBg : 'transparent',
+              }}>
+                {step > i + 1
+                  ? <Check size={11} color={G.gold} />
+                  : <span style={{ fontFamily: G.mono, fontSize: 9, color: step > i ? G.gold : 'rgba(245,242,235,.25)', letterSpacing: '.1em' }}>{s.n}</span>
+                }
+              </div>
+              <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: step === i + 1 ? G.gold : 'rgba(245,242,235,.25)' }}>{s.label}</span>
+            </div>
+            {i < 3 && <div style={{ width: 32, height: 1, background: step > i + 1 ? G.gold : G.border, margin: '0 12px' }} />}
           </div>
-        </div>
+        ))}
+      </div>
 
-        {/* Step 1: Match Info */}
+      <div style={{ maxWidth: 680 }}>
+
+        {/* ── STEP 1 ── */}
         {step === 1 && (
-          <div style={{ ...S.card, animation: 'fadeIn 0.3s ease' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-              <Field label="Date du match *">
-                <input type="date" name="date" value={matchData.date} onChange={handleMatchChange}
-                  style={S.input} onFocus={e => e.target.style.borderColor = '#6366f1'} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'} />
+          <div style={{ ...S.card, animation: 'fadeIn .3s ease', borderTop: `2px solid ${G.gold}` }}>
+            <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 24 }}>— Informations du match</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
+              <Field label="Date *">
+                <input type="date" name="date" value={matchData.date} onChange={handleMatchChange} style={S.input}
+                  onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.07)'}/>
               </Field>
               <Field label="Adversaire *">
                 <input type="text" name="opponent" value={matchData.opponent} onChange={handleMatchChange}
-                  style={S.input} placeholder="FC Marseille"
-                  onFocus={e => e.target.style.borderColor = '#6366f1'} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'} />
+                  placeholder="FC Marseille" style={S.input}
+                  onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.07)'}/>
               </Field>
               <Field label="Compétition">
                 <input type="text" name="competition" value={matchData.competition} onChange={handleMatchChange}
-                  style={S.input} placeholder="Championnat"
-                  onFocus={e => e.target.style.borderColor = '#6366f1'} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'} />
-              </Field>
-              <Field label="Catégorie">
-                <select name="category" value={matchData.category} onChange={handleMatchChange} style={S.select}>
-                  {['N3','U19','U17','U15','Seniors'].map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
+                  placeholder="Championnat N3" style={S.input}
+                  onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.07)'}/>
               </Field>
               <Field label="Lieu">
                 <input type="text" name="location" value={matchData.location} onChange={handleMatchChange}
-                  style={S.input} placeholder="Stade Municipal"
-                  onFocus={e => e.target.style.borderColor = '#6366f1'} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'} />
+                  placeholder="Domicile / Extérieur" style={S.input}
+                  onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.07)'}/>
               </Field>
-              <Field label="Score">
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <Field label="Catégorie">
+                <select name="category" value={matchData.category} onChange={handleMatchChange} style={S.select}>
+                  {['N3','R1','R2','U19','U17','U15','Seniors'].map(c => <option key={c}>{c}</option>)}
+                </select>
+              </Field>
+              <Field label="Score (optionnel)">
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                   <input type="number" name="score_home" value={matchData.score_home} onChange={handleMatchChange}
-                    style={{ ...S.input, width: 80, textAlign: 'center', padding: '12px 8px' }} placeholder="0" min="0"
-                    onFocus={e => e.target.style.borderColor = '#6366f1'} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'} />
-                  <span style={{ color: '#374151', fontWeight: 700, fontSize: 18 }}>—</span>
+                    placeholder="0" style={{ ...S.input, textAlign: 'center', width: '40%' }} min="0" max="20"/>
+                  <span style={{ fontFamily: G.mono, fontSize: 14, color: G.muted }}>—</span>
                   <input type="number" name="score_away" value={matchData.score_away} onChange={handleMatchChange}
-                    style={{ ...S.input, width: 80, textAlign: 'center', padding: '12px 8px' }} placeholder="0" min="0"
-                    onFocus={e => e.target.style.borderColor = '#6366f1'} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'} />
+                    placeholder="0" style={{ ...S.input, textAlign: 'center', width: '40%' }} min="0" max="20"/>
                 </div>
               </Field>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
               <Field label="Météo">
                 <select name="weather" value={matchData.weather} onChange={handleMatchChange} style={S.select}>
-                  <option value="Ensoleillé">☀️ Ensoleillé</option>
-                  <option value="Nuageux">☁️ Nuageux</option>
-                  <option value="Pluvieux">🌧️ Pluvieux</option>
-                  <option value="Venteux">💨 Venteux</option>
+                  {['Ensoleillé','Nuageux','Pluvieux','Venteux','Neige'].map(w => <option key={w}>{w}</option>)}
                 </select>
               </Field>
               <Field label="Type de terrain">
                 <select name="pitch_type" value={matchData.pitch_type} onChange={handleMatchChange} style={S.select}>
-                  <option value="Naturel">🌱 Naturel</option>
-                  <option value="Synthétique">⚡ Synthétique</option>
-                  <option value="Hybride">🔄 Hybride</option>
+                  {['Naturel','Synthétique','Dur'].map(t => <option key={t}>{t}</option>)}
                 </select>
               </Field>
             </div>
           </div>
         )}
 
-        {/* Step 2: Starters */}
+        {/* ── STEP 2: Titulaires ── */}
         {step === 2 && (
-          <div style={{ ...S.card, animation: 'fadeIn 0.3s ease' }}>
+          <div style={{ ...S.card, animation: 'fadeIn .3s ease', borderTop: `2px solid ${G.gold}` }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
               <div>
-                <h2 style={{ fontSize: 18, fontWeight: 700, color: '#f1f5f9' }}>Titulaires</h2>
-                <p style={{ fontSize: 13, color: '#6b7280', marginTop: 2 }}>{lineup.starters.length}/11 joueurs sélectionnés</p>
+                <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 6 }}>— Titulaires</div>
+                <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.08em' }}>{lineup.starters.length}/11</p>
               </div>
               {lineup.starters.length < 11 && (
-                <button onClick={addStarter} style={{
-                  padding: '8px 18px', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-                  color: '#fff', fontWeight: 600, borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: 14,
-                  boxShadow: '0 4px 15px rgba(99,102,241,0.3)',
-                }}>+ Ajouter</button>
+                <button onClick={addStarter} style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', padding: '9px 18px', background: G.goldBg, color: G.gold, border: `1px solid ${G.goldBdr}`, cursor: 'pointer' }}>
+                  + Ajouter
+                </button>
               )}
             </div>
-
-            {/* Progress bar */}
-            <div style={{ height: 4, background: 'rgba(255,255,255,0.05)', borderRadius: 99, marginBottom: 20, overflow: 'hidden' }}>
-              <div style={{
-                height: '100%', borderRadius: 99, transition: 'width 0.3s',
-                width: `${(lineup.starters.length / 11) * 100}%`,
-                background: lineup.starters.length === 11 ? 'linear-gradient(90deg, #10b981, #22c55e)' : 'linear-gradient(90deg, #6366f1, #8b5cf6)',
-              }} />
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {lineup.starters.map((starter, index) => (
-                <div key={index} style={{
-                  display: 'flex', alignItems: 'center', gap: 10,
-                  padding: '12px 16px', background: '#080a10',
-                  border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10,
-                  animation: 'fadeIn 0.2s ease',
-                }}>
-                  <div style={{
-                    width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
-                    background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 13, fontWeight: 700, color: '#818cf8',
-                  }}>{index + 1}</div>
+                <div key={index} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', background: '#0a0a08', border: `1px solid ${G.border}`, animation: 'fadeIn .2s ease' }}>
+                  <div style={{ fontFamily: "'Anton', sans-serif", fontSize: 16, color: G.gold, width: 28, textAlign: 'center', flexShrink: 0 }}>{index + 1}</div>
                   <select value={starter.player_id} onChange={e => updateStarter(index, 'player_id', e.target.value)}
                     style={{ ...S.select, flex: 1 }}>
                     <option value="">Sélectionner joueur</option>
                     {getAvailablePlayers(starter.player_id).map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                   </select>
                   <input type="number" value={starter.number} onChange={e => updateStarter(index, 'number', e.target.value)}
-                    style={{ ...S.input, width: 70, textAlign: 'center', padding: '10px 8px' }} placeholder="N°" min="1" max="99" />
+                    style={{ ...S.input, width: 64, textAlign: 'center', padding: '10px 8px' }} placeholder="N°" min="1" max="99"/>
                   <select value={starter.position} onChange={e => updateStarter(index, 'position', e.target.value)}
-                    style={{ ...S.select, width: 90 }}>
-                    {positions.map(pos => <option key={pos} value={pos}>{pos}</option>)}
+                    style={{ ...S.select, width: 80 }}>
+                    {positions.map(pos => <option key={pos}>{pos}</option>)}
                   </select>
-                  <button onClick={() => removeStarter(index)} style={{
-                    padding: 6, background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)',
-                    borderRadius: 8, cursor: 'pointer', color: '#ef4444', display: 'flex',
-                  }}><X size={15} /></button>
+                  <button onClick={() => removeStarter(index)} style={{ padding: 6, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', cursor: 'pointer', color: '#ef4444', display: 'flex' }}>
+                    <X size={14} />
+                  </button>
                 </div>
               ))}
               {lineup.starters.length === 0 && (
-                <div style={{ textAlign: 'center', padding: '40px 0', color: '#4b5563', fontSize: 14 }}>
+                <div style={{ textAlign: 'center', padding: '40px 0', fontFamily: G.mono, fontSize: 11, color: 'rgba(245,242,235,.2)', letterSpacing: '.06em' }}>
                   Cliquez sur "+ Ajouter" pour sélectionner vos 11 titulaires
                 </div>
               )}
@@ -338,51 +268,37 @@ function UploadMatch() {
           </div>
         )}
 
-        {/* Step 3: Substitutes */}
+        {/* ── STEP 3: Remplaçants ── */}
         {step === 3 && (
-          <div style={{ ...S.card, animation: 'fadeIn 0.3s ease' }}>
+          <div style={{ ...S.card, animation: 'fadeIn .3s ease', borderTop: `2px solid ${G.gold}` }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
               <div>
-                <h2 style={{ fontSize: 18, fontWeight: 700, color: '#f1f5f9' }}>Remplaçants</h2>
-                <p style={{ fontSize: 13, color: '#6b7280', marginTop: 2 }}>{lineup.substitutes.length}/5 — optionnels</p>
+                <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 6 }}>— Remplaçants</div>
+                <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.08em' }}>{lineup.substitutes.length}/5 — optionnels</p>
               </div>
               {lineup.substitutes.length < 5 && (
-                <button onClick={addSubstitute} style={{
-                  padding: '8px 18px', background: 'rgba(249,115,22,0.15)',
-                  color: '#f97316', fontWeight: 600, borderRadius: 10,
-                  border: '1px solid rgba(249,115,22,0.3)', cursor: 'pointer', fontSize: 14,
-                }}>+ Ajouter</button>
+                <button onClick={addSubstitute} style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', padding: '9px 18px', background: 'rgba(201,162,39,0.06)', color: G.gold, border: `1px solid ${G.goldBdr}`, cursor: 'pointer' }}>
+                  + Ajouter
+                </button>
               )}
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {lineup.substitutes.map((sub, index) => (
-                <div key={index} style={{
-                  display: 'flex', alignItems: 'center', gap: 10,
-                  padding: '12px 16px', background: '#080a10',
-                  border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10,
-                  animation: 'fadeIn 0.2s ease',
-                }}>
-                  <div style={{
-                    width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
-                    background: 'rgba(249,115,22,0.1)', border: '1px solid rgba(249,115,22,0.3)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 12, fontWeight: 700, color: '#f97316',
-                  }}>R{index + 1}</div>
-                  <select value={sub.player_id} onChange={e => updateSubstitute(index, 'player_id', e.target.value)}
-                    style={{ ...S.select, flex: 1 }}>
+                <div key={index} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', background: '#0a0a08', border: `1px solid ${G.border}`, animation: 'fadeIn .2s ease' }}>
+                  <div style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, width: 28, textAlign: 'center', flexShrink: 0, letterSpacing: '.08em' }}>R{index + 1}</div>
+                  <select value={sub.player_id} onChange={e => updateSubstitute(index, 'player_id', e.target.value)} style={{ ...S.select, flex: 1 }}>
                     <option value="">Sélectionner joueur</option>
                     {getAvailablePlayers(sub.player_id).map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                   </select>
                   <input type="number" value={sub.number} onChange={e => updateSubstitute(index, 'number', e.target.value)}
-                    style={{ ...S.input, width: 70, textAlign: 'center', padding: '10px 8px' }} placeholder="N°" min="1" max="99" />
-                  <button onClick={() => removeSubstitute(index)} style={{
-                    padding: 6, background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)',
-                    borderRadius: 8, cursor: 'pointer', color: '#ef4444', display: 'flex',
-                  }}><X size={15} /></button>
+                    style={{ ...S.input, width: 64, textAlign: 'center', padding: '10px 8px' }} placeholder="N°" min="1" max="99"/>
+                  <button onClick={() => removeSubstitute(index)} style={{ padding: 6, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', cursor: 'pointer', color: '#ef4444', display: 'flex' }}>
+                    <X size={14} />
+                  </button>
                 </div>
               ))}
               {lineup.substitutes.length === 0 && (
-                <div style={{ textAlign: 'center', padding: '40px 0', color: '#4b5563', fontSize: 14 }}>
+                <div style={{ textAlign: 'center', padding: '40px 0', fontFamily: G.mono, fontSize: 11, color: 'rgba(245,242,235,.2)', letterSpacing: '.06em' }}>
                   Les remplaçants sont optionnels (max 5)
                 </div>
               )}
@@ -390,10 +306,10 @@ function UploadMatch() {
           </div>
         )}
 
-        {/* Step 4: Video */}
+        {/* ── STEP 4: Vidéo ── */}
         {step === 4 && (
-          <div style={{ ...S.card, animation: 'fadeIn 0.3s ease' }}>
-            <h2 style={{ fontSize: 18, fontWeight: 700, color: '#f1f5f9', marginBottom: 20 }}>Vidéo du match</h2>
+          <div style={{ ...S.card, animation: 'fadeIn .3s ease', borderTop: `2px solid ${G.gold}` }}>
+            <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 24 }}>— Vidéo du match</div>
             <input type="file" accept="video/*" onChange={handleVideoChange} id="video-upload" style={{ display: 'none' }} />
             <label
               htmlFor="video-upload"
@@ -402,103 +318,60 @@ function UploadMatch() {
               onDrop={handleDrop}
               style={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                minHeight: 220, borderRadius: 14, cursor: 'pointer', transition: 'all 0.2s',
-                border: dragOver ? '2px solid #6366f1' : videoFile ? '2px solid rgba(16,185,129,0.4)' : '2px dashed rgba(255,255,255,0.08)',
-                background: dragOver ? 'rgba(99,102,241,0.05)' : videoFile ? 'rgba(16,185,129,0.04)' : 'rgba(255,255,255,0.02)',
+                minHeight: 200, cursor: 'pointer', transition: 'all .2s',
+                border: dragOver ? `2px dashed ${G.gold}` : videoFile ? `2px solid rgba(34,197,94,0.4)` : `2px dashed rgba(255,255,255,0.08)`,
+                background: dragOver ? G.goldBg : videoFile ? 'rgba(34,197,94,0.04)' : 'rgba(255,255,255,0.01)',
               }}
             >
               {videoFile ? (
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{
-                    width: 56, height: 56, borderRadius: '50%', margin: '0 auto 16px',
-                    background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}>
-                    <Check size={24} color="#10b981" />
+                  <div style={{ width: 48, height: 48, margin: '0 auto 14px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Check size={20} color="#22c55e" />
                   </div>
-                  <p style={{ fontWeight: 700, color: '#f1f5f9', marginBottom: 6 }}>{videoFile.name}</p>
-                  <p style={{ fontSize: 13, color: '#10b981' }}>{(videoFile.size / 1024 / 1024).toFixed(2)} MB</p>
-                  <p style={{ fontSize: 12, color: '#4b5563', marginTop: 8 }}>Cliquez pour changer</p>
+                  <p style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 700, color: '#f5f2eb', marginBottom: 4, letterSpacing: '.04em' }}>{videoFile.name}</p>
+                  <p style={{ fontFamily: G.mono, fontSize: 10, color: '#22c55e', letterSpacing: '.08em' }}>{(videoFile.size / 1024 / 1024).toFixed(2)} MB</p>
+                  <p style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, marginTop: 6, letterSpacing: '.06em' }}>Cliquez pour changer</p>
                 </div>
               ) : (
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{
-                    width: 56, height: 56, borderRadius: '50%', margin: '0 auto 16px',
-                    background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.2)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}>
-                    <Upload size={22} color="#6366f1" />
+                  <div style={{ width: 48, height: 48, margin: '0 auto 14px', background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Upload size={20} color={G.gold} />
                   </div>
-                  <p style={{ fontWeight: 600, color: '#e2e8f0', marginBottom: 6 }}>Glissez votre vidéo ici</p>
-                  <p style={{ fontSize: 13, color: '#4b5563' }}>ou cliquez pour sélectionner</p>
-                  <p style={{ fontSize: 12, color: '#374151', marginTop: 8 }}>MP4, MOV, AVI — max 2GB</p>
+                  <p style={{ fontFamily: G.mono, fontSize: 12, fontWeight: 700, color: '#f5f2eb', marginBottom: 4, letterSpacing: '.06em', textTransform: 'uppercase' }}>Déposez votre vidéo</p>
+                  <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.06em' }}>ou cliquez pour sélectionner</p>
+                  <p style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,.2)', marginTop: 6, letterSpacing: '.06em' }}>MP4, MOV, AVI — max 2GB</p>
                 </div>
               )}
             </label>
-
             {videoFile && (
-              <div style={{
-                marginTop: 16, padding: '14px 18px',
-                background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.2)',
-                borderRadius: 10, fontSize: 13, color: '#818cf8',
-              }}>
-                ℹ️ L'analyse IA démarrera automatiquement après l'upload. Vous recevrez une notification quand ce sera terminé (24-48h).
+              <div style={{ marginTop: 16, padding: '14px 18px', background: G.goldBg, border: `1px solid ${G.goldBdr}`, fontFamily: G.mono, fontSize: 10, color: G.gold, letterSpacing: '.06em', lineHeight: 1.6 }}>
+                L'analyse démarrera après l'upload. Vous serez notifié(e) dès que le rapport sera prêt.
               </div>
             )}
           </div>
         )}
 
         {/* Navigation */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 28 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 24 }}>
           {step > 1 ? (
-            <button onClick={prevStep} style={{
-              display: 'flex', alignItems: 'center', gap: 8,
-              padding: '12px 22px', background: 'transparent',
-              border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10,
-              color: '#94a3b8', cursor: 'pointer', fontWeight: 600, fontSize: 15,
-            }}>
-              <ChevronLeft size={18} /> Précédent
+            <button onClick={prevStep} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 22px', background: 'transparent', border: `1px solid ${G.border}`, color: G.muted, cursor: 'pointer', fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase' }}>
+              <ChevronLeft size={16} /> Précédent
             </button>
           ) : (
-            <button onClick={() => navigate('/dashboard/matches')} style={{
-              padding: '12px 22px', background: 'transparent', border: 'none',
-              color: '#4b5563', cursor: 'pointer', fontWeight: 600, fontSize: 15,
-            }}>Annuler</button>
+            <button onClick={() => navigate('/dashboard/matches')} style={{ padding: '12px 22px', background: 'transparent', border: 'none', color: 'rgba(245,242,235,.2)', cursor: 'pointer', fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase' }}>Annuler</button>
           )}
 
           {step < 4 ? (
-            <button onClick={nextStep} style={{
-              display: 'flex', alignItems: 'center', gap: 8,
-              padding: '12px 24px', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-              color: '#fff', fontWeight: 700, borderRadius: 10, border: 'none',
-              cursor: 'pointer', fontSize: 15, boxShadow: '0 6px 20px rgba(99,102,241,0.35)',
-            }}>
-              Suivant <ChevronRight size={18} />
+            <button onClick={nextStep} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 24px', background: G.gold, color: G.ink, fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
+              Suivant <ChevronRight size={16} />
             </button>
           ) : (
-            <button onClick={handleSubmit} disabled={uploading} style={{
-              display: 'flex', alignItems: 'center', gap: 8,
-              padding: '12px 28px',
-              background: uploading ? 'rgba(99,102,241,0.4)' : 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-              color: '#fff', fontWeight: 700, borderRadius: 10, border: 'none',
-              cursor: uploading ? 'not-allowed' : 'pointer', fontSize: 15,
-              boxShadow: uploading ? 'none' : '0 6px 20px rgba(99,102,241,0.35)',
-            }}>
-              {uploading ? (
-                <><div style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,0.3)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} />Upload en cours...</>
-              ) : (
-                <><Check size={18} /> Terminer</>
-              )}
+            <button onClick={handleSubmit} disabled={uploading} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 28px', background: uploading ? 'rgba(201,162,39,0.4)' : G.gold, color: G.ink, fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700, border: 'none', cursor: uploading ? 'not-allowed' : 'pointer' }}>
+              {uploading ? <><div style={{ width: 14, height: 14, border: '2px solid rgba(15,15,13,0.3)', borderTopColor: G.ink, borderRadius: '50%', animation: 'spin .7s linear infinite' }} />Upload...</> : <><Check size={16} /> Lancer l'analyse</>}
             </button>
           )}
         </div>
       </div>
-
-      <style>{`
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        select option { background: #0d0f18; color: #f1f5f9; }
-      `}</style>
     </DashboardLayout>
   )
 }
