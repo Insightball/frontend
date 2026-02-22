@@ -1,24 +1,23 @@
-import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Home, Film, Users, Settings, LogOut, BarChart3, User, Menu, X } from 'lucide-react'
+import { Home, Film, Users, Settings, LogOut, BarChart3, User } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
 function DashboardLayout({ children }) {
   const location = useLocation()
   const navigate = useNavigate()
   const { user, logout } = useAuth()
-  const [mobileOpen, setMobileOpen] = useState(false)
 
   const navigation = [
-    { name: 'Accueil', href: '/dashboard', icon: Home },
-    { name: 'Matchs', href: '/dashboard/matches', icon: Film },
-    { name: 'Effectif', href: '/dashboard/players', icon: Users },
-    { name: 'Statistiques', href: '/dashboard/stats', icon: BarChart3 },
+    { name: 'Accueil',      href: '/dashboard',         icon: Home },
+    { name: 'Matchs',       href: '/dashboard/matches', icon: Film },
+    { name: 'Effectif',     href: '/dashboard/players', icon: Users },
+    { name: 'Statistiques', href: '/dashboard/stats',   icon: BarChart3 },
   ]
 
   if (user?.plan === 'club') {
     navigation.push({ name: 'Équipe', href: '/dashboard/team', icon: Users })
   }
+
   navigation.push({ name: 'Paramètres', href: '/dashboard/settings', icon: Settings })
 
   const handleLogout = () => {
@@ -26,116 +25,189 @@ function DashboardLayout({ children }) {
     navigate('/login')
   }
 
-  const NavContent = ({ onClose }) => (
-    <div className="p-6">
-      {/* User Info */}
-      <div className="mb-8 p-4 bg-white/[0.02] border border-white/10 rounded-lg">
-        <div className="flex items-center space-x-3 mb-3">
-          <div className="w-10 h-10 bg-violet-500/10 rounded-full flex items-center justify-center shrink-0">
-            <User className="w-5 h-5 text-violet-400" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="font-medium truncate text-white">{user?.name}</p>
-            <p className="text-xs text-gray-400 truncate">{user?.email}</p>
-          </div>
-        </div>
-        {user?.plan && (
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-500">Plan</span>
-            <span className="px-2 py-1 bg-violet-500/10 border border-violet-500/30 text-violet-400 text-xs font-medium rounded uppercase">
-              {user.plan}
-            </span>
-          </div>
-        )}
-      </div>
-
-      {/* Navigation */}
-      <nav className="space-y-2">
-        {navigation.map((item) => {
-          const isActive = location.pathname === item.href
-          return (
-            <Link
-              key={item.name}
-              to={item.href}
-              onClick={onClose}
-              className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all ${
-                isActive
-                  ? 'bg-violet-500/10 text-violet-400 border border-violet-500/30'
-                  : 'text-gray-400 hover:bg-white/[0.02] hover:text-white border border-transparent'
-              }`}
-            >
-              <item.icon className="w-5 h-5" />
-              <span className="font-medium">{item.name}</span>
-            </Link>
-          )
-        })}
-        <button
-          onClick={() => { handleLogout(); onClose?.() }}
-          className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-white/[0.02] hover:text-white transition-all border border-transparent"
-        >
-          <LogOut className="w-5 h-5" />
-          <span className="font-medium">Déconnexion</span>
-        </button>
-      </nav>
-    </div>
-  )
-
   return (
-    <div className="min-h-screen bg-black">
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 h-16 bg-black border-b border-white/10 z-50">
-        <div className="h-full px-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center space-x-3">
-            <img src="/logo.svg" alt="INSIGHTBALL" className="w-8 h-8" />
-            <span className="text-lg font-bold">
-              INSIGHT<span className="text-violet-400">BALL</span>
-            </span>
-          </Link>
+    <div className="min-h-screen" style={{ background: '#faf8f4', color: '#0f0f0d' }}>
 
-          {/* Hamburger button - mobile only */}
-          <button
-            className="lg:hidden p-2 text-gray-400 hover:text-white transition-colors"
-            onClick={() => setMobileOpen(!mobileOpen)}
+      {/* ── HEADER ── */}
+      <header
+        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6"
+        style={{
+          height: 56,
+          background: '#0f0f0d',
+          borderBottom: '1px solid rgba(255,255,255,0.06)',
+        }}
+      >
+        <Link to="/" className="flex items-center gap-3">
+          <img src="/logo.svg" alt="InsightBall" className="w-8 h-8" />
+          <span
+            style={{
+              fontFamily: "'Anton', sans-serif",
+              fontSize: 18,
+              letterSpacing: '.06em',
+              color: '#fff',
+            }}
           >
-            {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
+            INSIGHT<span style={{ color: '#c9a227' }}>BALL</span>
+          </span>
+        </Link>
+
+        {/* Pill plan */}
+        {user?.plan && (
+          <span
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 9,
+              letterSpacing: '.16em',
+              textTransform: 'uppercase',
+              color: '#c9a227',
+              border: '1px solid rgba(201,162,39,0.3)',
+              padding: '4px 12px',
+              borderRadius: 2,
+              background: 'rgba(201,162,39,0.06)',
+            }}
+          >
+            Plan {user.plan}
+          </span>
+        )}
       </header>
 
-      <div className="flex pt-16">
-        {/* Sidebar - desktop */}
-        <aside className="hidden lg:block fixed left-0 top-16 bottom-0 w-64 bg-black border-r border-white/10 overflow-y-auto">
-          <NavContent />
-          {user?.club_name && (
-            <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-white/10 bg-black">
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-violet-500 rounded-full animate-pulse"></div>
-                <span className="text-xs text-gray-500 uppercase tracking-wider">CLUB</span>
-              </div>
-              <p className="text-sm font-medium text-white mt-1">{user.club_name}</p>
-            </div>
-          )}
-        </aside>
+      <div className="flex" style={{ paddingTop: 56 }}>
 
-        {/* Mobile overlay */}
-        {mobileOpen && (
-          <div
-            className="lg:hidden fixed inset-0 bg-black/70 z-40 backdrop-blur-sm"
-            onClick={() => setMobileOpen(false)}
-          />
-        )}
-
-        {/* Mobile drawer */}
+        {/* ── SIDEBAR ── */}
         <aside
-          className={`lg:hidden fixed left-0 top-16 bottom-0 w-72 bg-black border-r border-white/10 overflow-y-auto z-50 transition-transform duration-300 ${
-            mobileOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
+          className="fixed left-0 bottom-0 overflow-y-auto flex flex-col"
+          style={{
+            top: 56,
+            width: 220,
+            background: '#0f0f0d',
+            borderRight: '1px solid rgba(255,255,255,0.06)',
+          }}
         >
-          <NavContent onClose={() => setMobileOpen(false)} />
+          {/* User block */}
+          <div style={{ padding: '24px 20px 0' }}>
+            <div
+              style={{
+                padding: '14px 16px',
+                border: '1px solid rgba(255,255,255,0.06)',
+                marginBottom: 24,
+                background: 'rgba(255,255,255,0.02)',
+              }}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div
+                  className="flex items-center justify-center"
+                  style={{
+                    width: 36, height: 36,
+                    background: 'rgba(201,162,39,0.1)',
+                    border: '1px solid rgba(201,162,39,0.2)',
+                    borderRadius: 2,
+                    flexShrink: 0,
+                  }}
+                >
+                  <User style={{ width: 16, height: 16, color: '#c9a227' }} />
+                </div>
+                <div className="min-w-0">
+                  <p className="truncate text-white font-medium" style={{ fontSize: 13 }}>
+                    {user?.name}
+                  </p>
+                  <p className="truncate" style={{ fontSize: 11, color: 'rgba(255,255,255,.3)' }}>
+                    {user?.email}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Nav links */}
+            <nav className="flex flex-col gap-1">
+              {navigation.map((item) => {
+                const active = location.pathname === item.href
+                return (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className="flex items-center gap-3 transition-all"
+                    style={{
+                      padding: '10px 14px',
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 11,
+                      letterSpacing: '.08em',
+                      textTransform: 'uppercase',
+                      color: active ? '#c9a227' : 'rgba(255,255,255,.38)',
+                      background: active ? 'rgba(201,162,39,0.08)' : 'transparent',
+                      borderLeft: active ? '2px solid #c9a227' : '2px solid transparent',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    <item.icon style={{ width: 14, height: 14, flexShrink: 0 }} />
+                    {item.name}
+                  </Link>
+                )
+              })}
+            </nav>
+          </div>
+
+          {/* Bottom: club + logout */}
+          <div style={{ marginTop: 'auto', borderTop: '1px solid rgba(255,255,255,.06)' }}>
+            {user?.club_name && (
+              <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,.06)' }}>
+                <div className="flex items-center gap-2" style={{ marginBottom: 4 }}>
+                  <div
+                    style={{
+                      width: 6, height: 6,
+                      background: '#c9a227',
+                      borderRadius: '50%',
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 9,
+                      letterSpacing: '.16em',
+                      textTransform: 'uppercase',
+                      color: 'rgba(255,255,255,.25)',
+                    }}
+                  >
+                    Club
+                  </span>
+                </div>
+                <p style={{ fontSize: 13, color: '#fff', fontWeight: 500 }}>
+                  {user.club_name}
+                </p>
+              </div>
+            )}
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 transition-all"
+              style={{
+                padding: '14px 20px',
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 11,
+                letterSpacing: '.08em',
+                textTransform: 'uppercase',
+                color: 'rgba(255,255,255,.25)',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                textAlign: 'left',
+              }}
+              onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,.6)'}
+              onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,.25)'}
+            >
+              <LogOut style={{ width: 14, height: 14 }} />
+              Déconnexion
+            </button>
+          </div>
         </aside>
 
-        {/* Main Content */}
-        <main className="flex-1 lg:ml-64 p-4 lg:p-8 min-w-0">
+        {/* ── MAIN ── */}
+        <main
+          className="flex-1"
+          style={{
+            marginLeft: 220,
+            minHeight: 'calc(100vh - 56px)',
+            background: '#f5f2eb',
+          }}
+        >
           {children}
         </main>
       </div>
