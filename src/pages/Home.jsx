@@ -4,187 +4,77 @@ import { Play, BarChart3, Users, TrendingUp, CheckCircle2, ArrowRight, Sparkles,
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 // ─── Terrain SVG passes entre joueurs ─────────────────────────────────────
-function PassMap() {
-  const W = 620, H = 310
-  const PAD = { l: 18, r: 18, t: 14, b: 14 }
-  const fw = W - PAD.l - PAD.r
-  const fh = H - PAD.t - PAD.b
-
-  // volume total de passes par joueur → taille du nœud
-  const nodes = [
-    { id: 1,  label: 'G',  sub: 'Fogacci',   x: 0.07, y: 0.50, color: '#f59e0b', vol: 90 },
-    { id: 3,  label: 'DG', sub: 'Mersni',    x: 0.22, y: 0.20, color: '#60a5fa', vol: 130 },
-    { id: 4,  label: 'DC', sub: 'Bonalair',  x: 0.22, y: 0.50, color: '#60a5fa', vol: 145 },
-    { id: 5,  label: 'DD', sub: 'Bilendo',   x: 0.22, y: 0.80, color: '#60a5fa', vol: 125 },
-    { id: 7,  label: 'MG', sub: 'Fogacci L', x: 0.50, y: 0.22, color: '#34d399', vol: 160 },
-    { id: 8,  label: 'MC', sub: 'Kheroua',   x: 0.50, y: 0.50, color: '#34d399', vol: 185 },
-    { id: 10, label: 'MD', sub: 'Finidori',  x: 0.50, y: 0.78, color: '#34d399', vol: 170 },
-    { id: 9,  label: 'AG', sub: 'Randazzo',  x: 0.76, y: 0.28, color: '#f87171', vol: 115 },
-    { id: 11, label: 'AD', sub: 'Dangoumau', x: 0.76, y: 0.72, color: '#f87171', vol: 120 },
-  ]
-  const edges = [
-    { from: 1, to: 4,  n: 48 }, { from: 1, to: 3,  n: 22 }, { from: 1, to: 5,  n: 20 },
-    { from: 4, to: 8,  n: 61 }, { from: 3, to: 7,  n: 44 }, { from: 5, to: 10, n: 38 },
-    { from: 3, to: 4,  n: 35 }, { from: 4, to: 5,  n: 31 }, { from: 7, to: 8,  n: 55 },
-    { from: 8, to: 10, n: 42 }, { from: 8, to: 9,  n: 47 }, { from: 8, to: 11, n: 33 },
-    { from: 7, to: 9,  n: 28 }, { from: 10, to: 11, n: 25 }, { from: 7, to: 10, n: 18 },
-  ]
-  const maxN = Math.max(...edges.map(e => e.n))
-  const maxVol = Math.max(...nodes.map(n => n.vol))
-  const byId = {}
-  nodes.forEach(n => {
-    byId[n.id] = {
-      ...n,
-      px: PAD.l + n.x * fw,
-      py: PAD.t + n.y * fh,
-      r: 13 + (n.vol / maxVol) * 8,
-    }
-  })
-
+// ─── Heatmap terrain unifiée ──────────────────────────────────────────────
+function Heatmap({ zones, mode = 'presence' }) {
+  // mode: 'presence' | 'events'
+  // zones: [{ x, y, i, type? }]  type: 'won'|'lost'|'shot' pour mode events
+  const W = 300, H = 190
+  const colorFor = (z) => {
+    if (mode === 'presence') return `rgba(99,102,241,${0.1 + z.i * 0.5})`
+    if (z.type === 'won')  return `rgba(16,185,129,${0.15 + z.i * 0.55})`
+    if (z.type === 'lost') return `rgba(239,68,68,${0.15 + z.i * 0.55})`
+    if (z.type === 'shot') return `rgba(245,158,11,${0.15 + z.i * 0.55})`
+    return `rgba(99,102,241,${0.1 + z.i * 0.4})`
+  }
+  const blurFor = (z) => {
+    if (mode === 'presence') return 9 + z.i * 7
+    return 7 + z.i * 5
+  }
   return (
-    <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ borderRadius: 10, display: 'block' }}>
+    <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ borderRadius: 8, display: 'block' }}>
       <defs>
-        <linearGradient id="pitch" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#0d2a0d"/>
-          <stop offset="50%" stopColor="#112e11"/>
-          <stop offset="100%" stopColor="#0d2a0d"/>
+        <linearGradient id="pitchGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#0d2b0d"/>
+          <stop offset="100%" stopColor="#0a200a"/>
         </linearGradient>
-        {/* Stripes */}
-        <pattern id="stripe" width="40" height={fh} patternUnits="userSpaceOnUse" x={PAD.l} y={PAD.t}>
-          <rect width="20" height={fh} fill="rgba(255,255,255,0.018)"/>
+        <pattern id="pitchStripe" width="30" height={H} patternUnits="userSpaceOnUse">
+          <rect width="15" height={H} fill="rgba(255,255,255,0.015)"/>
         </pattern>
-        {/* Glow filter for nodes */}
-        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="3" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-        {/* Arrow markers per alpha level */}
-        {[0.3,0.5,0.7,0.9].map(a => (
-          <marker key={a} id={`arr${a}`} markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
-            <path d="M0,0 L0,7 L7,3.5 z" fill={`rgba(148,163,255,${a})`}/>
-          </marker>
-        ))}
       </defs>
-
-      {/* Pitch background */}
-      <rect width={W} height={H} fill="url(#pitch)" rx="10"/>
-      <rect x={PAD.l} y={PAD.t} width={fw} height={fh} fill="url(#stripe)"/>
-
-      {/* Pitch lines */}
-      <g stroke="rgba(255,255,255,0.12)" strokeWidth="1" fill="none">
-        {/* Border */}
-        <rect x={PAD.l} y={PAD.t} width={fw} height={fh} rx="2"/>
-        {/* Halfway line */}
-        <line x1={PAD.l+fw/2} y1={PAD.t} x2={PAD.l+fw/2} y2={PAD.t+fh}/>
-        {/* Centre circle */}
-        <circle cx={PAD.l+fw/2} cy={PAD.t+fh/2} r={fh*0.18}/>
-        <circle cx={PAD.l+fw/2} cy={PAD.t+fh/2} r={2} fill="rgba(255,255,255,0.2)" stroke="none"/>
-        {/* Left penalty area */}
-        <rect x={PAD.l} y={PAD.t+fh*0.25} width={fw*0.13} height={fh*0.50}/>
-        <rect x={PAD.l} y={PAD.t+fh*0.37} width={fw*0.055} height={fh*0.26}/>
-        {/* Right penalty area */}
-        <rect x={PAD.l+fw*0.87} y={PAD.t+fh*0.25} width={fw*0.13} height={fh*0.50}/>
-        <rect x={PAD.l+fw*0.945} y={PAD.t+fh*0.37} width={fw*0.055} height={fh*0.26}/>
-        {/* Penalty spots */}
-        <circle cx={PAD.l+fw*0.09} cy={PAD.t+fh/2} r={2} fill="rgba(255,255,255,0.2)" stroke="none"/>
-        <circle cx={PAD.l+fw*0.91} cy={PAD.t+fh/2} r={2} fill="rgba(255,255,255,0.2)" stroke="none"/>
+      {/* Fond */}
+      <rect width={W} height={H} fill="url(#pitchGrad)" rx="7"/>
+      <rect width={W} height={H} fill="url(#pitchStripe)" rx="7"/>
+      {/* Lignes terrain */}
+      <g stroke="rgba(255,255,255,0.13)" strokeWidth="1" fill="none">
+        <rect x={8} y={7} width={W-16} height={H-14} rx="2"/>
+        <line x1={W/2} y1={7} x2={W/2} y2={H-7}/>
+        <circle cx={W/2} cy={H/2} r={26}/>
+        <circle cx={W/2} cy={H/2} r={2} fill="rgba(255,255,255,0.25)" stroke="none"/>
+        {/* Surface gauche */}
+        <rect x={8} y={H/2-32} width={46} height={64}/>
+        <rect x={8} y={H/2-16} width={20} height={32}/>
+        {/* Surface droite */}
+        <rect x={W-54} y={H/2-32} width={46} height={64}/>
+        <rect x={W-28} y={H/2-16} width={20} height={32}/>
+        {/* Spots */}
+        <circle cx={40} cy={H/2} r={2} fill="rgba(255,255,255,0.2)" stroke="none"/>
+        <circle cx={W-40} cy={H/2} r={2} fill="rgba(255,255,255,0.2)" stroke="none"/>
       </g>
-
-      {/* Edges */}
-      {edges.map((e, i) => {
-        const a = byId[e.from], b = byId[e.to]
-        const ratio = e.n / maxN
-        const thick = 0.8 + ratio * 5
-        const alpha = 0.2 + ratio * 0.75
-        const markerA = alpha < 0.4 ? 0.3 : alpha < 0.6 ? 0.5 : alpha < 0.8 ? 0.7 : 0.9
-        // Courbe quadratique : point de contrôle décalé perpendiculairement
-        const mx = (a.px + b.px) / 2
-        const my = (a.py + b.py) / 2
-        const dx = b.px - a.px, dy = b.py - a.py
-        const len = Math.sqrt(dx*dx + dy*dy)
-        // Décalage perpendiculaire (15% de la longueur, alternance selon index)
-        const perp = (i % 2 === 0 ? 1 : -1) * len * 0.10
-        const cx1 = mx - (dy/len)*perp, cy1 = my + (dx/len)*perp
-        // Point d'arrivée recule de r+2 vers le centre de la courbe
-        const ang = Math.atan2(b.py - cy1, b.px - cx1)
-        const ex = b.px - Math.cos(ang) * (b.r + 2)
-        const ey = b.py - Math.sin(ang) * (b.r + 2)
-        return (
-          <path key={i}
-            d={`M ${a.px} ${a.py} Q ${cx1} ${cy1} ${ex} ${ey}`}
-            stroke={`rgba(148,163,255,${alpha})`} strokeWidth={thick}
-            fill="none" strokeLinecap="round"
-            markerEnd={`url(#arr${markerA})`}
-          />
-        )
-      })}
-
-      {/* Nodes */}
-      {Object.values(byId).map(n => (
-        <g key={n.id} filter="url(#glow)">
-          {/* Outer glow ring */}
-          <circle cx={n.px} cy={n.py} r={n.r+4} fill={n.color} fillOpacity={0.08}/>
-          {/* Main circle */}
-          <circle cx={n.px} cy={n.py} r={n.r} fill={n.color} fillOpacity={0.22} stroke={n.color} strokeWidth={1.8}/>
-          {/* Label */}
-          <text x={n.px} y={n.py+1} textAnchor="middle" dominantBaseline="middle"
-            fontSize={n.r > 18 ? "11" : "10"} fontWeight="800" fill={n.color} letterSpacing="0">{n.label}</text>
-          {/* Sous-nom */}
-          <text x={n.px} y={n.py+n.r+9} textAnchor="middle"
-            fontSize="7.5" fill="rgba(255,255,255,0.45)" fontWeight="500">{n.sub}</text>
-        </g>
+      {/* Zones heatmap */}
+      {zones.map((z, i) => (
+        <circle key={i}
+          cx={8 + (z.x / 100) * (W - 16)}
+          cy={7 + (z.y / 100) * (H - 14)}
+          r={18 + z.i * 14}
+          fill={colorFor(z)}
+          style={{ filter: `blur(${blurFor(z)}px)` }}
+        />
+      ))}
+      {/* Points nets par-dessus pour mode events */}
+      {mode === 'events' && zones.map((z, i) => (
+        <circle key={'d'+i}
+          cx={8 + (z.x / 100) * (W - 16)}
+          cy={7 + (z.y / 100) * (H - 14)}
+          r={4}
+          fill={z.type === 'won' ? '#10b981' : z.type === 'shot' ? '#f59e0b' : '#ef4444'}
+          fillOpacity={0.85}
+          stroke="rgba(0,0,0,0.4)" strokeWidth="1"
+        />
       ))}
     </svg>
   )
 }
 
-// ─── Heatmap ballons gagnés/perdus ─────────────────────────────────────────
-function BallEventMap({ won, lost }) {
-  const W = 280, H = 175
-  return (
-    <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ borderRadius: 8 }}>
-      <rect width={W} height={H} fill="#0a1a0a" rx="6"/>
-      <rect x={6} y={6} width={W-12} height={H-12} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1.2" rx="3"/>
-      <line x1={W/2} y1={6} x2={W/2} y2={H-6} stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-      <circle cx={W/2} cy={H/2} r={22} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-      {/* Won = green blobs */}
-      {won.map((pt, i) => (
-        <circle key={"w"+i} cx={6+(pt.x/100)*(W-12)} cy={6+(pt.y/100)*(H-12)}
-          r={10+pt.i*8} fill={`rgba(16,185,129,${0.12+pt.i*0.35})`} style={{filter:"blur(6px)"}}/>
-      ))}
-      {/* Lost = red blobs */}
-      {lost.map((pt, i) => (
-        <circle key={"l"+i} cx={6+(pt.x/100)*(W-12)} cy={6+(pt.y/100)*(H-12)}
-          r={10+pt.i*8} fill={`rgba(239,68,68,${0.12+pt.i*0.35})`} style={{filter:"blur(6px)"}}/>
-      ))}
-      {/* Légende */}
-      <circle cx={14} cy={H-10} r={5} fill="rgba(16,185,129,0.7)"/>
-      <text x={22} y={H-7} fontSize="8" fill="#10b981">Gagnés</text>
-      <circle cx={68} cy={H-10} r={5} fill="rgba(239,68,68,0.7)"/>
-      <text x={76} y={H-7} fontSize="8" fill="#ef4444">Perdus</text>
-    </svg>
-  )
-}
-
-// ─── Mini Heatmap SVG ─────────────────────────────────────────────────────
-function MiniHeatmap({ data }) {
-  const W = 280, H = 175
-  return (
-    <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ borderRadius: 8 }}>
-      <rect width={W} height={H} fill="#0a1a0a" rx="6"/>
-      <rect x={6} y={6} width={W-12} height={H-12} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1.2" rx="3"/>
-      <line x1={W/2} y1={6} x2={W/2} y2={H-6} stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-      <circle cx={W/2} cy={H/2} r={22} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-      <rect x={6} y={H/2-22} width={36} height={44} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-      <rect x={W-42} y={H/2-22} width={36} height={44} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-      {data.map((pt, i) => (
-        <circle key={i} cx={6+(pt.x/100)*(W-12)} cy={6+(pt.y/100)*(H-12)}
-          r={14+pt.i*10} fill={`rgba(99,102,241,${0.1+pt.i*0.45})`}
-          style={{filter:`blur(${7+pt.i*5}px)`}}/>
-      ))}
-    </svg>
-  )
-}
 
 function StatBar({ label, value, max, color }) {
   return (
@@ -208,41 +98,32 @@ const TT = {
 // Effectif GFCA N3 2025/2026
 const PLAYERS = [
   { name: 'Cyril Fogacci',       pos: 'Gardien',    num: 1,  goals: 0, assists: 0, shots: 0, shotsOn: 0, touches: 24, passes: 16, km: 4.1, won: 5,  lost: 1,
-    heat: [{ x:8, y:50, i:0.95 }, { x:15, y:32, i:0.55 }, { x:15, y:68, i:0.55 }],
-    wonZones: [{ x:12, y:50, i:0.9 }, { x:18, y:35, i:0.6 }],
-    lostZones: [{ x:15, y:55, i:0.5 }] },
+    heat:  [{ x:8,  y:50, i:0.95 }, { x:15, y:32, i:0.55 }, { x:15, y:68, i:0.55 }],
+    events:[{ x:12, y:50, i:0.9, type:'won' }, { x:18, y:35, i:0.6, type:'won' }, { x:15, y:62, i:0.5, type:'lost' }] },
   { name: 'Hassein Mersni',      pos: 'Défenseur',  num: 3,  goals: 0, assists: 1, shots: 1, shotsOn: 0, touches: 51, passes: 38, km: 9.1, won: 13, lost: 3,
-    heat: [{ x:20, y:28, i:0.85 }, { x:28, y:50, i:0.65 }, { x:20, y:72, i:0.7 }],
-    wonZones: [{ x:22, y:30, i:0.8 }, { x:30, y:50, i:0.6 }, { x:22, y:70, i:0.75 }],
-    lostZones: [{ x:38, y:35, i:0.6 }, { x:42, y:55, i:0.5 }] },
+    heat:  [{ x:20, y:28, i:0.85 }, { x:28, y:50, i:0.65 }, { x:20, y:72, i:0.7 }],
+    events:[{ x:22, y:30, i:0.8, type:'won' }, { x:30, y:50, i:0.6, type:'won' }, { x:22, y:70, i:0.75, type:'won' }, { x:38, y:35, i:0.6, type:'lost' }, { x:42, y:55, i:0.5, type:'lost' }] },
   { name: 'Max Bonalair',        pos: 'Défenseur',  num: 4,  goals: 1, assists: 2, shots: 3, shotsOn: 1, touches: 54, passes: 41, km: 9.4, won: 14, lost: 2,
-    heat: [{ x:18, y:38, i:0.8 }, { x:25, y:55, i:0.7 }, { x:35, y:40, i:0.5 }],
-    wonZones: [{ x:20, y:40, i:0.85 }, { x:28, y:58, i:0.65 }],
-    lostZones: [{ x:40, y:38, i:0.55 }, { x:35, y:60, i:0.45 }] },
+    heat:  [{ x:18, y:38, i:0.8 }, { x:25, y:55, i:0.7 }, { x:35, y:40, i:0.5 }],
+    events:[{ x:20, y:40, i:0.85, type:'won' }, { x:28, y:58, i:0.65, type:'won' }, { x:40, y:38, i:0.55, type:'lost' }, { x:35, y:60, i:0.45, type:'lost' }, { x:55, y:30, i:0.7, type:'shot' }] },
   { name: 'Naïl Kheroua',        pos: 'Milieu',     num: 8,  goals: 3, assists: 4, shots: 8, shotsOn: 5, touches: 74, passes: 61, km: 10.8, won: 13, lost: 3,
-    heat: [{ x:50, y:50, i:0.9 }, { x:62, y:38, i:0.75 }, { x:62, y:62, i:0.7 }, { x:70, y:50, i:0.55 }],
-    wonZones: [{ x:50, y:48, i:0.85 }, { x:62, y:35, i:0.7 }, { x:58, y:65, i:0.65 }],
-    lostZones: [{ x:68, y:42, i:0.6 }, { x:72, y:60, i:0.5 }] },
+    heat:  [{ x:50, y:50, i:0.9 }, { x:62, y:38, i:0.75 }, { x:62, y:62, i:0.7 }, { x:70, y:50, i:0.55 }],
+    events:[{ x:50, y:48, i:0.85, type:'won' }, { x:62, y:35, i:0.7, type:'won' }, { x:58, y:65, i:0.65, type:'won' }, { x:68, y:42, i:0.6, type:'lost' }, { x:72, y:60, i:0.5, type:'lost' }, { x:78, y:45, i:0.8, type:'shot' }, { x:82, y:55, i:0.75, type:'shot' }] },
   { name: 'Paul-Antoine Finidori', pos: 'Milieu',   num: 10, goals: 2, assists: 5, shots: 5, shotsOn: 3, touches: 71, passes: 60, km: 11.1, won: 12, lost: 3,
-    heat: [{ x:48, y:48, i:0.85 }, { x:60, y:33, i:0.7 }, { x:60, y:63, i:0.7 }],
-    wonZones: [{ x:48, y:45, i:0.8 }, { x:60, y:32, i:0.65 }, { x:62, y:62, i:0.6 }],
-    lostZones: [{ x:70, y:50, i:0.55 }, { x:65, y:38, i:0.45 }] },
+    heat:  [{ x:48, y:48, i:0.85 }, { x:60, y:33, i:0.7 }, { x:60, y:63, i:0.7 }],
+    events:[{ x:48, y:45, i:0.8, type:'won' }, { x:60, y:32, i:0.65, type:'won' }, { x:62, y:62, i:0.6, type:'won' }, { x:70, y:50, i:0.55, type:'lost' }, { x:65, y:38, i:0.45, type:'lost' }, { x:75, y:42, i:0.7, type:'shot' }] },
   { name: 'Nolan Dangoumau',     pos: 'Attaquant',  num: 11, goals: 5, assists: 2, shots: 14, shotsOn: 8, touches: 55, passes: 39, km: 9.5, won: 9,  lost: 4,
-    heat: [{ x:78, y:50, i:0.9 }, { x:85, y:35, i:0.8 }, { x:85, y:65, i:0.75 }],
-    wonZones: [{ x:75, y:48, i:0.7 }, { x:82, y:35, i:0.6 }],
-    lostZones: [{ x:35, y:50, i:0.55 }, { x:45, y:38, i:0.5 }, { x:45, y:62, i:0.45 }] },
+    heat:  [{ x:78, y:50, i:0.9 }, { x:85, y:35, i:0.8 }, { x:85, y:65, i:0.75 }],
+    events:[{ x:75, y:48, i:0.7, type:'won' }, { x:82, y:35, i:0.6, type:'won' }, { x:35, y:50, i:0.55, type:'lost' }, { x:45, y:38, i:0.5, type:'lost' }, { x:82, y:42, i:0.9, type:'shot' }, { x:78, y:55, i:0.85, type:'shot' }, { x:86, y:48, i:0.8, type:'shot' }] },
   { name: 'Noah Randazzo',       pos: 'Attaquant',  num: 9,  goals: 4, assists: 3, shots: 11, shotsOn: 6, touches: 58, passes: 43, km: 9.8, won: 10, lost: 3,
-    heat: [{ x:80, y:42, i:0.85 }, { x:88, y:52, i:0.8 }, { x:74, y:58, i:0.6 }],
-    wonZones: [{ x:78, y:42, i:0.7 }, { x:85, y:55, i:0.65 }],
-    lostZones: [{ x:40, y:52, i:0.5 }, { x:50, y:42, i:0.45 }] },
+    heat:  [{ x:80, y:42, i:0.85 }, { x:88, y:52, i:0.8 }, { x:74, y:58, i:0.6 }],
+    events:[{ x:78, y:42, i:0.7, type:'won' }, { x:85, y:55, i:0.65, type:'won' }, { x:40, y:52, i:0.5, type:'lost' }, { x:50, y:42, i:0.45, type:'lost' }, { x:83, y:45, i:0.85, type:'shot' }, { x:88, y:55, i:0.8, type:'shot' }] },
   { name: 'Laurent Fogacci',     pos: 'Milieu',     num: 6,  goals: 2, assists: 3, shots: 4, shotsOn: 2, touches: 68, passes: 54, km: 10.3, won: 11, lost: 4,
-    heat: [{ x:42, y:50, i:0.9 }, { x:55, y:35, i:0.7 }, { x:55, y:65, i:0.65 }],
-    wonZones: [{ x:42, y:48, i:0.8 }, { x:55, y:34, i:0.65 }],
-    lostZones: [{ x:62, y:50, i:0.55 }, { x:58, y:65, i:0.45 }] },
+    heat:  [{ x:42, y:50, i:0.9 }, { x:55, y:35, i:0.7 }, { x:55, y:65, i:0.65 }],
+    events:[{ x:42, y:48, i:0.8, type:'won' }, { x:55, y:34, i:0.65, type:'won' }, { x:62, y:50, i:0.55, type:'lost' }, { x:58, y:65, i:0.45, type:'lost' }, { x:68, y:40, i:0.65, type:'shot' }] },
   { name: 'Kaïs Djellal',        pos: 'Milieu',     num: 7,  goals: 2, assists: 3, shots: 5, shotsOn: 3, touches: 62, passes: 50, km: 10.5, won: 11, lost: 3,
-    heat: [{ x:55, y:50, i:0.85 }, { x:65, y:35, i:0.7 }, { x:68, y:62, i:0.6 }],
-    wonZones: [{ x:55, y:48, i:0.8 }, { x:65, y:34, i:0.65 }, { x:68, y:60, i:0.55 }],
-    lostZones: [{ x:72, y:48, i:0.5 }, { x:68, y:65, i:0.4 }] },
+    heat:  [{ x:55, y:50, i:0.85 }, { x:65, y:35, i:0.7 }, { x:68, y:62, i:0.6 }],
+    events:[{ x:55, y:48, i:0.8, type:'won' }, { x:65, y:34, i:0.65, type:'won' }, { x:68, y:60, i:0.55, type:'won' }, { x:72, y:48, i:0.5, type:'lost' }, { x:68, y:65, i:0.4, type:'lost' }, { x:76, y:42, i:0.7, type:'shot' }] },
 ]
 
 const avgKm = (PLAYERS.reduce((s, p) => s + p.km, 0) / PLAYERS.length).toFixed(1)
@@ -374,21 +255,6 @@ function DashboardDemo() {
               </div>
             </div>
 
-            {/* Passes entre joueurs */}
-            <div style={{ background: '#0d0f18', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 12, padding: 14, marginBottom: 10 }}>
-              <p style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', marginBottom: 10 }}>🔗 Réseau de passes — 7 matchs</p>
-              <PassMap/>
-              <div style={{ display: 'flex', gap: 16, marginTop: 8, flexWrap: 'wrap' }}>
-                {[{label:'G',color:'#f59e0b',desc:'Gardien'},{label:'D',color:'#3b82f6',desc:'Défenseurs'},{label:'M',color:'#10b981',desc:'Milieux'},{label:'ATT',color:'#ef4444',desc:'Attaquants'}].map(l=>(
-                  <div key={l.label} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                    <div style={{ width: 10, height: 10, borderRadius: '50%', background: l.color, opacity: 0.8 }}/>
-                    <span style={{ fontSize: 10, color: '#6b7280' }}>{l.desc}</span>
-                  </div>
-                ))}
-                <span style={{ fontSize: 10, color: '#4b5563', marginLeft: 'auto' }}>Épaisseur = fréquence des passes</span>
-              </div>
-            </div>
-
             {/* Suivi progression */}
             <div style={{ background: '#0d0f18', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 12, padding: 14 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
@@ -437,21 +303,21 @@ function DashboardDemo() {
                 const isSel = selectedPlayer.name === p.name
                 const isCmp = CP && CP.name === p.name
                 return (
-                  <div key={p.name} style={{ padding: '8px 10px', borderRadius: 8, cursor: 'pointer', marginBottom: 3,
-                    background: isSel ? 'rgba(99,102,241,0.14)' : isCmp ? 'rgba(236,72,153,0.1)' : 'rgba(255,255,255,0.02)',
-                    border: isSel ? '1px solid rgba(99,102,241,0.35)' : isCmp ? '1px solid rgba(236,72,153,0.3)' : '1px solid rgba(255,255,255,0.04)',
-                    transition: 'all 0.15s' }}>
+                  <div key={p.name}
+                    onClick={() => { if (!isCmp) { setSelectedPlayer(p); if (CP?.name === p.name) setComparePlayer(null) } }}
+                    style={{ padding: '8px 10px', borderRadius: 8, cursor: 'pointer', marginBottom: 3,
+                      background: isSel ? 'rgba(99,102,241,0.14)' : isCmp ? 'rgba(236,72,153,0.1)' : 'rgba(255,255,255,0.02)',
+                      border: isSel ? '1px solid rgba(99,102,241,0.35)' : isCmp ? '1px solid rgba(236,72,153,0.3)' : '1px solid rgba(255,255,255,0.04)',
+                      transition: 'all 0.15s' }}>
                     <div style={{ fontSize: 11, fontWeight: 600, color: isSel ? '#818cf8' : isCmp ? '#f472b6' : '#e2e8f0' }}>#{p.num} {p.name.split(' ')[0]}</div>
                     <div style={{ fontSize: 9, color: '#4b5563', marginTop: 1 }}>{p.pos}</div>
-                    {indivView==='compare' && !isSel && (
-                      <button onClick={e=>{e.stopPropagation();setComparePlayer(CP?.name===p.name?null:p)}}
+                    {indivView === 'compare' && !isSel && (
+                      <button onClick={e => { e.stopPropagation(); setComparePlayer(isCmp ? null : p) }}
                         style={{ marginTop: 4, fontSize: 9, padding: '2px 6px', borderRadius: 4, border: 'none', cursor: 'pointer',
                           background: isCmp ? 'rgba(236,72,153,0.2)' : 'rgba(255,255,255,0.06)', color: isCmp ? '#f472b6' : '#6b7280' }}>
                         {isCmp ? '✕ Retirer' : '+ Comparer'}
                       </button>
                     )}
-                    {!isCmp && <div onClick={()=>{setSelectedPlayer(p); if(CP?.name===p.name) setComparePlayer(null)}} style={{ position:'absolute', inset:0 }}/>}
-                    {isSel && <div onClick={()=>setSelectedPlayer(p)} style={{ position:'absolute', inset:0 }}/>}
                   </div>
                 )
               })}
@@ -483,8 +349,7 @@ function DashboardDemo() {
                 </div>
               </div>
 
-              {/* ─ Vue Stats ─ */}
-              {indivView==='stats' && (
+              {indivView === 'stats' && (
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                   <div style={{ background: '#0d0f18', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 12, padding: 12 }}>
                     <p style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', marginBottom: 10 }}>Stats saison</p>
@@ -494,31 +359,40 @@ function DashboardDemo() {
                     <StatBar label="Tirs cadrés" value={selectedPlayer.shotsOn || 0} max={10} color="#10b981"/>
                     <StatBar label="Ballons gagnés" value={selectedPlayer.won} max={18} color="#10b981"/>
                     <StatBar label="Ballons perdus" value={selectedPlayer.lost} max={10} color="#ef4444"/>
-                    <StatBar label={`Km/match (moy. équipe: ${avgKm})`} value={selectedPlayer.km} max={12} color="#22c55e"/>
+                    <StatBar label={`Km/match (moy: ${avgKm})`} value={selectedPlayer.km} max={12} color="#22c55e"/>
                   </div>
                   <div style={{ background: '#0d0f18', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 12, padding: 12 }}>
                     <p style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', marginBottom: 8 }}>Zones de présence</p>
-                    <MiniHeatmap data={selectedPlayer.heat}/>
+                    <Heatmap zones={selectedPlayer.heat} mode="presence"/>
                   </div>
                 </div>
               )}
 
-              {/* ─ Vue Terrain ballons ─ */}
-              {indivView==='ballmap' && (
-                <div>
-                  <div style={{ background: '#0d0f18', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 12, padding: 12 }}>
-                    <p style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', marginBottom: 8 }}>Ballons gagnés & perdus sur le terrain</p>
-                    <BallEventMap won={selectedPlayer.wonZones} lost={selectedPlayer.lostZones}/>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 10 }}>
-                      <div style={{ background: 'rgba(16,185,129,0.07)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 8, padding: '10px 12px', textAlign: 'center' }}>
-                        <div style={{ fontSize: 24, fontWeight: 800, color: '#10b981' }}>{selectedPlayer.won}</div>
-                        <div style={{ fontSize: 10, color: '#6b7280' }}>Ballons gagnés</div>
+              {/* ─ Vue Terrain ─ */}
+              {indivView === 'ballmap' && (
+                <div style={{ background: '#0d0f18', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 12, padding: 12 }}>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', marginBottom: 8 }}>Ballons gagnés, perdus & tirs sur le terrain</p>
+                  <Heatmap zones={selectedPlayer.events} mode="events"/>
+                  {/* Légende */}
+                  <div style={{ display: 'flex', gap: 14, marginTop: 8 }}>
+                    {[{color:'#10b981', label:'Ballons gagnés'}, {color:'#ef4444', label:'Ballons perdus'}, {color:'#f59e0b', label:'Tirs'}].map(l => (
+                      <div key={l.label} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                        <div style={{ width: 8, height: 8, borderRadius: '50%', background: l.color }}/>
+                        <span style={{ fontSize: 10, color: '#6b7280' }}>{l.label}</span>
                       </div>
-                      <div style={{ background: 'rgba(239,68,68,0.07)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 8, padding: '10px 12px', textAlign: 'center' }}>
-                        <div style={{ fontSize: 24, fontWeight: 800, color: '#ef4444' }}>{selectedPlayer.lost}</div>
-                        <div style={{ fontSize: 10, color: '#6b7280' }}>Ballons perdus</div>
+                    ))}
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginTop: 10 }}>
+                    {[
+                      { val: selectedPlayer.won,     label: 'Ballons gagnés', color: '#10b981', bg: 'rgba(16,185,129,0.07)',  border: 'rgba(16,185,129,0.2)' },
+                      { val: selectedPlayer.lost,    label: 'Ballons perdus', color: '#ef4444', bg: 'rgba(239,68,68,0.07)',   border: 'rgba(239,68,68,0.2)' },
+                      { val: selectedPlayer.shots||0, label: 'Tirs',          color: '#f59e0b', bg: 'rgba(245,158,11,0.07)',  border: 'rgba(245,158,11,0.2)' },
+                    ].map(s => (
+                      <div key={s.label} style={{ background: s.bg, border: `1px solid ${s.border}`, borderRadius: 8, padding: '10px 12px', textAlign: 'center' }}>
+                        <div style={{ fontSize: 22, fontWeight: 800, color: s.color }}>{s.val}</div>
+                        <div style={{ fontSize: 10, color: '#6b7280' }}>{s.label}</div>
                       </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
               )}
