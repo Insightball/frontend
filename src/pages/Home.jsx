@@ -466,7 +466,7 @@ function DashboardDemo() {
                       {/* Headers comparaison */}
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: 8, marginBottom: 10 }}>
                         {[selectedPlayer, CP].map((p, i) => (
-                          <div key={p.name} style={{ background: i===0 ? 'rgba(99,102,241,0.08)' : 'rgba(236,72,153,0.08)', border: `1px solid ${i===0?'rgba(99,102,241,0.25)":'rgba(236,72,153,0.25)'}`, borderRadius: 10, padding: '10px 12px', textAlign: i===0?'left':'right' }}>
+                          <div key={p.name} style={{ background: i===0 ? 'rgba(99,102,241,0.08)' : 'rgba(236,72,153,0.08)', border: i===0 ? '1px solid rgba(99,102,241,0.25)' : '1px solid rgba(236,72,153,0.25)', borderRadius: 10, padding: '10px 12px', textAlign: i===0?'left':'right' }}>
                             <div style={{ fontSize: 12, fontWeight: 800, color: i===0?'#818cf8':'#f472b6' }}>#{p.num} {p.name.split(' ')[0]}</div>
                             <div style={{ fontSize: 10, color: '#6b7280' }}>{p.pos}</div>
                           </div>
