@@ -158,21 +158,70 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* Dashboard Preview - NEW */}
+      {/* Dashboard Preview */}
       <section className="py-12 sm:py-20 px-4 sm:px-6 relative">
         <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-8 sm:mb-12">
+            <div className="inline-flex items-center space-x-2 px-4 py-2 bg-violet-500/10 border border-violet-500/30 rounded-full mb-4">
+              <BarChart3 className="w-4 h-4 text-violet-400" />
+              <span className="text-xs sm:text-sm text-violet-400 font-medium">Aperçu de la plateforme</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3">
+              Des données claires, actionnables
+            </h2>
+            <p className="text-gray-400 max-w-xl mx-auto text-sm sm:text-base">
+              Analyse collective et individuelle réunies dans un tableau de bord professionnel
+            </p>
+          </div>
+
           <div className="relative">
-            {/* Glow effect */}
-            <div className="absolute -inset-4 bg-gradient-to-r from-violet-500/20 to-purple-500/20 rounded-3xl blur-3xl"></div>
-            
-            {/* Dashboard mockup placeholder */}
-            <div className="relative bg-gradient-to-br from-gray-900 to-black border-2 border-violet-500/30 rounded-2xl overflow-hidden shadow-2xl">
-              <div className="aspect-video bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
-                <div className="text-center p-6 sm:p-8">
-                  <BarChart3 className="w-12 sm:w-16 h-12 sm:h-16 mx-auto mb-4 text-violet-500" />
-                  <h3 className="text-lg sm:text-2xl font-bold mb-2">Tableau de bord intuitif</h3>
-                  <p className="text-sm sm:text-base text-gray-400">Visualisez toutes vos statistiques en un coup d'œil</p>
+            <div className="absolute -inset-4 bg-gradient-to-r from-violet-500/15 to-purple-500/15 rounded-3xl blur-3xl pointer-events-none"></div>
+
+            {/* Main screenshot - collective */}
+            <div className="relative mb-4 rounded-2xl overflow-hidden border border-violet-500/20 shadow-2xl shadow-violet-500/10">
+              <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-black/70 to-transparent z-10 flex items-center px-4 gap-2">
+                <div className="w-3 h-3 rounded-full bg-red-500/70"></div>
+                <div className="w-3 h-3 rounded-full bg-yellow-500/70"></div>
+                <div className="w-3 h-3 rounded-full bg-green-500/70"></div>
+                <span className="text-xs text-gray-500 ml-2">Statistiques collectives</span>
+              </div>
+              <img
+                src="/screenshots/stats-collective.png"
+                alt="Statistiques collectives InsightBall"
+                className="w-full block"
+              />
+            </div>
+
+            {/* Two columns */}
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="relative rounded-xl overflow-hidden border border-violet-500/20 shadow-xl">
+                <div className="absolute top-0 left-0 right-0 h-7 bg-gradient-to-b from-black/70 to-transparent z-10 flex items-center px-3">
+                  <span className="text-xs text-gray-500">Statistiques individuelles</span>
                 </div>
+                <img
+                  src="/screenshots/stats-individual.png"
+                  alt="Statistiques individuelles InsightBall"
+                  className="w-full block"
+                />
+              </div>
+
+              <div className="rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent p-6 sm:p-8 flex flex-col justify-center gap-5">
+                {[
+                  { icon: '📊', title: 'Heatmaps temps réel', desc: 'Visualisez les zones de présence de chaque joueur sur le terrain' },
+                  { icon: '⚡', title: 'Stats individuelles', desc: 'Ballons touchés, passes, km parcourus, buts — pour chaque joueur' },
+                  { icon: '🎯', title: 'Performance collective', desc: 'Possession, tirs cadrés, radar de performance de votre équipe' },
+                  { icon: '📈', title: 'Évolution saison', desc: 'Suivez la progression de vos joueurs match après match' },
+                ].map((f, i) => (
+                  <div key={i} className="flex items-start gap-4">
+                    <div className="w-10 h-10 bg-violet-500/10 border border-violet-500/20 rounded-xl flex items-center justify-center text-lg shrink-0">
+                      {f.icon}
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-white mb-1">{f.title}</h4>
+                      <p className="text-xs text-gray-400 leading-relaxed">{f.desc}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -300,37 +349,13 @@ function LandingPage() {
           </div>
 
           <div className="grid sm:grid-cols-3 gap-6 sm:gap-8 relative">
-            {/* Connector line desktop */}
             <div className="hidden sm:block absolute top-10 left-1/3 right-1/3 h-0.5 bg-gradient-to-r from-violet-500/30 via-purple-500/50 to-violet-500/30 z-0"></div>
-
             {[
-              {
-                step: '01',
-                icon: '🎬',
-                title: 'Uploadez votre vidéo',
-                desc: 'Importez votre fichier vidéo directement depuis votre téléphone ou ordinateur. Tous formats acceptés — MP4, MOV, AVI.',
-                color: 'from-violet-500/20 to-violet-500/5',
-                border: 'border-violet-500/30',
-              },
-              {
-                step: '02',
-                icon: '🤖',
-                title: "L'IA analyse le match",
-                desc: "Notre intelligence artificielle détecte chaque action, déplacement et événement tactique. Résultat sous 24h.",
-                color: 'from-purple-500/20 to-purple-500/5',
-                border: 'border-purple-500/30',
-                highlight: true,
-              },
-              {
-                step: '03',
-                icon: '📊',
-                title: 'Recevez votre rapport',
-                desc: 'Accédez à vos statistiques collectives, heatmaps individuelles et recommandations tactiques prêts à partager.',
-                color: 'from-fuchsia-500/20 to-fuchsia-500/5',
-                border: 'border-fuchsia-500/30',
-              },
+              { step: '01', icon: '🎬', title: 'Uploadez votre vidéo', desc: 'Importez votre fichier vidéo depuis votre téléphone ou ordinateur. Tous formats acceptés — MP4, MOV, AVI.', color: 'from-violet-500/20 to-violet-500/5', border: 'border-violet-500/30' },
+              { step: '02', icon: '🤖', title: "L'IA analyse le match", desc: "Notre intelligence artificielle détecte chaque action, déplacement et événement tactique. Résultat sous 24h.", color: 'from-purple-500/20 to-purple-500/5', border: 'border-purple-500/30', highlight: true },
+              { step: '03', icon: '📊', title: 'Recevez votre rapport', desc: 'Accédez à vos statistiques collectives, heatmaps individuelles et recommandations tactiques prêts à partager.', color: 'from-fuchsia-500/20 to-fuchsia-500/5', border: 'border-fuchsia-500/30' },
             ].map((s, i) => (
-              <div key={i} className={`relative z-10 p-6 sm:p-8 bg-gradient-to-b ${s.color} border ${s.border} rounded-2xl transition-all hover:scale-105 ${s.highlight ? 'shadow-lg shadow-purple-500/10' : ''}`}>
+              <div key={i} className={`relative z-10 p-6 sm:p-8 bg-gradient-to-b ${s.color} border ${s.border} rounded-2xl transition-all hover:scale-105`}>
                 <div className="flex items-start justify-between mb-5">
                   <div className="text-3xl">{s.icon}</div>
                   <span className="text-xs font-bold text-gray-600 tracking-widest">{s.step}</span>
