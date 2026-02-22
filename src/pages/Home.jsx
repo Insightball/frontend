@@ -285,28 +285,66 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* How it works */}
       <section className="py-12 sm:py-20 px-4 sm:px-6 relative">
         <div className="max-w-7xl mx-auto">
-          <div className="grid sm:grid-cols-3 gap-6 sm:gap-8">
-            <div className="text-center p-6 sm:p-8 bg-gradient-to-b from-violet-500/10 to-transparent border border-violet-500/20 rounded-2xl hover:transform hover:scale-105 transition-all">
-              <div className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent mb-2 animate-pulse">
-                98%
-              </div>
-              <div className="text-sm sm:text-base text-gray-400">Précision de l'analyse</div>
+          <div className="text-center mb-10 sm:mb-14">
+            <div className="inline-flex items-center space-x-2 px-4 py-2 bg-violet-500/10 border border-violet-500/30 rounded-full mb-4">
+              <Zap className="w-4 h-4 text-violet-400" />
+              <span className="text-xs sm:text-sm text-violet-400 font-medium">Comment ça marche</span>
             </div>
-            <div className="text-center p-6 sm:p-8 bg-gradient-to-b from-violet-500/10 to-transparent border border-violet-500/20 rounded-2xl hover:transform hover:scale-105 transition-all">
-              <div className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent mb-2 animate-pulse" style={{ animationDelay: '0.5s' }}>
-                &lt;24h
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3">Simple comme 1, 2, 3</h2>
+            <p className="text-gray-400 max-w-xl mx-auto text-sm sm:text-base">
+              De la vidéo brute au rapport tactique professionnel en 3 étapes
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-3 gap-6 sm:gap-8 relative">
+            {/* Connector line desktop */}
+            <div className="hidden sm:block absolute top-10 left-1/3 right-1/3 h-0.5 bg-gradient-to-r from-violet-500/30 via-purple-500/50 to-violet-500/30 z-0"></div>
+
+            {[
+              {
+                step: '01',
+                icon: '🎬',
+                title: 'Uploadez votre vidéo',
+                desc: 'Importez votre fichier vidéo directement depuis votre téléphone ou ordinateur. Tous formats acceptés — MP4, MOV, AVI.',
+                color: 'from-violet-500/20 to-violet-500/5',
+                border: 'border-violet-500/30',
+              },
+              {
+                step: '02',
+                icon: '🤖',
+                title: "L'IA analyse le match",
+                desc: "Notre intelligence artificielle détecte chaque action, déplacement et événement tactique. Résultat sous 24h.",
+                color: 'from-purple-500/20 to-purple-500/5',
+                border: 'border-purple-500/30',
+                highlight: true,
+              },
+              {
+                step: '03',
+                icon: '📊',
+                title: 'Recevez votre rapport',
+                desc: 'Accédez à vos statistiques collectives, heatmaps individuelles et recommandations tactiques prêts à partager.',
+                color: 'from-fuchsia-500/20 to-fuchsia-500/5',
+                border: 'border-fuchsia-500/30',
+              },
+            ].map((s, i) => (
+              <div key={i} className={`relative z-10 p-6 sm:p-8 bg-gradient-to-b ${s.color} border ${s.border} rounded-2xl transition-all hover:scale-105 ${s.highlight ? 'shadow-lg shadow-purple-500/10' : ''}`}>
+                <div className="flex items-start justify-between mb-5">
+                  <div className="text-3xl">{s.icon}</div>
+                  <span className="text-xs font-bold text-gray-600 tracking-widest">{s.step}</span>
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold mb-3 text-white">{s.title}</h3>
+                <p className="text-sm sm:text-base text-gray-400 leading-relaxed">{s.desc}</p>
+                {s.highlight && (
+                  <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 border border-purple-500/20 rounded-full">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                    <span className="text-xs text-purple-400 font-medium">Sous 24h</span>
+                  </div>
+                )}
               </div>
-              <div className="text-sm sm:text-base text-gray-400">Temps d'analyse</div>
-            </div>
-            <div className="text-center p-6 sm:p-8 bg-gradient-to-b from-violet-500/10 to-transparent border border-violet-500/20 rounded-2xl hover:transform hover:scale-105 transition-all">
-              <div className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent mb-2 animate-pulse" style={{ animationDelay: '1s' }}>
-                100%
-              </div>
-              <div className="text-sm sm:text-base text-gray-400">Satisfaction garantie</div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
