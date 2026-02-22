@@ -139,71 +139,26 @@ function LandingPage() {
               </a>
             </div>
 
-            {/* Trust Badge */}
-            <div className="mt-12 sm:mt-16 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-gray-500 animate-fade-in-up px-4" style={{ animationDelay: '0.6s' }}>
-              <div className="flex items-center space-x-2">
-                <CheckCircle2 className="w-4 sm:w-5 h-4 sm:h-5 text-violet-500" />
-                <span className="text-xs sm:text-sm">Essai gratuit 14 jours</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <CheckCircle2 className="w-4 sm:w-5 h-4 sm:h-5 text-violet-500" />
-                <span className="text-xs sm:text-sm">Sans carte bancaire</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <CheckCircle2 className="w-4 sm:w-5 h-4 sm:h-5 text-violet-500" />
-                <span className="text-xs sm:text-sm">Rapport en 5 heures</span>
-              </div>
-            </div>
+
           </div>
         </div>
       </section>
 
-      {/* Dashboard Preview */}
+      {/* Dashboard Preview - NEW */}
       <section className="py-12 sm:py-20 px-4 sm:px-6 relative">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-8 sm:mb-12">
-            <div className="inline-flex items-center space-x-2 px-4 py-2 bg-violet-500/10 border border-violet-500/30 rounded-full mb-4">
-              <BarChart3 className="w-4 h-4 text-violet-400" />
-              <span className="text-xs sm:text-sm text-violet-400 font-medium">Aperçu de la plateforme</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3">Des données claires, actionnables</h2>
-            <p className="text-gray-400 max-w-xl mx-auto text-sm sm:text-base">
-              Analyse collective et individuelle réunies dans un tableau de bord professionnel
-            </p>
-          </div>
           <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-r from-violet-500/15 to-purple-500/15 rounded-3xl blur-3xl pointer-events-none"></div>
-            <div className="relative mb-4 rounded-2xl overflow-hidden border border-violet-500/20 shadow-2xl shadow-violet-500/10">
-              <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-black/70 to-transparent z-10 flex items-center px-4 gap-2">
-                <div className="w-3 h-3 rounded-full bg-red-500/70"></div>
-                <div className="w-3 h-3 rounded-full bg-yellow-500/70"></div>
-                <div className="w-3 h-3 rounded-full bg-green-500/70"></div>
-                <span className="text-xs text-gray-500 ml-2">Statistiques collectives</span>
-              </div>
-              <img src="/screenshots/stats-collective.png" alt="Statistiques collectives InsightBall" className="w-full block" />
-            </div>
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div className="relative rounded-xl overflow-hidden border border-violet-500/20 shadow-xl">
-                <div className="absolute top-0 left-0 right-0 h-7 bg-gradient-to-b from-black/70 to-transparent z-10 flex items-center px-3">
-                  <span className="text-xs text-gray-500">Statistiques individuelles</span>
+            {/* Glow effect */}
+            <div className="absolute -inset-4 bg-gradient-to-r from-violet-500/20 to-purple-500/20 rounded-3xl blur-3xl"></div>
+            
+            {/* Dashboard mockup placeholder */}
+            <div className="relative bg-gradient-to-br from-gray-900 to-black border-2 border-violet-500/30 rounded-2xl overflow-hidden shadow-2xl">
+              <div className="aspect-video bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                <div className="text-center p-6 sm:p-8">
+                  <BarChart3 className="w-12 sm:w-16 h-12 sm:h-16 mx-auto mb-4 text-violet-500" />
+                  <h3 className="text-lg sm:text-2xl font-bold mb-2">Tableau de bord intuitif</h3>
+                  <p className="text-sm sm:text-base text-gray-400">Visualisez toutes vos statistiques en un coup d'œil</p>
                 </div>
-                <img src="/screenshots/stats-individual.png" alt="Statistiques individuelles InsightBall" className="w-full block" />
-              </div>
-              <div className="rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent p-6 sm:p-8 flex flex-col justify-center gap-5">
-                {[
-                  { icon: '📊', title: 'Heatmaps temps réel', desc: 'Visualisez les zones de présence de chaque joueur sur le terrain' },
-                  { icon: '⚡', title: 'Stats individuelles', desc: 'Ballons touchés, passes, km parcourus, buts — pour chaque joueur' },
-                  { icon: '🎯', title: 'Performance collective', desc: 'Possession, tirs cadrés, radar de performance de votre équipe' },
-                  { icon: '📈', title: 'Évolution saison', desc: 'Suivez la progression de vos joueurs match après match' },
-                ].map((f, i) => (
-                  <div key={i} className="flex items-start gap-4">
-                    <div className="w-10 h-10 bg-violet-500/10 border border-violet-500/20 rounded-xl flex items-center justify-center text-lg shrink-0">{f.icon}</div>
-                    <div>
-                      <h4 className="font-semibold text-white mb-1">{f.title}</h4>
-                      <p className="text-xs text-gray-400 leading-relaxed">{f.desc}</p>
-                    </div>
-                  </div>
-                ))}
               </div>
             </div>
           </div>
@@ -250,9 +205,9 @@ function LandingPage() {
                 <div className="w-12 sm:w-14 h-12 sm:h-14 bg-gradient-to-br from-violet-500 to-purple-500 rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform">
                   <Clock className="w-6 sm:w-7 h-6 sm:h-7 text-white" />
                 </div>
-                <h3 className="text-xl sm:text-2xl font-bold mb-3">Rapport en 5 heures</h3>
+                <h3 className="text-xl sm:text-2xl font-bold mb-3">Analyse en 24h</h3>
                 <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
-                  Un rapport complet livré en 5 heures, avec les informations essentielles pour analyser, corriger et construire vos prochaines séances d'entraînement.
+                  Recevez votre rapport complet en moins de 24 heures. Prêt pour votre prochain entraînement.
                 </p>
               </div>
             </div>
@@ -264,9 +219,9 @@ function LandingPage() {
                 <div className="w-12 sm:w-14 h-12 sm:h-14 bg-gradient-to-br from-violet-500 to-purple-500 rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform">
                   <FileText className="w-6 sm:w-7 h-6 sm:h-7 text-white" />
                 </div>
-                <h3 className="text-xl sm:text-2xl font-bold mb-3">Rapports PDF</h3>
+                <h3 className="text-xl sm:text-2xl font-bold mb-3">Rapports PDF pros</h3>
                 <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
-                  Exportez votre rapport avec heatmaps et statistiques détaillées. Prêt à être partagé avec le staff.
+                  Heatmaps, statistiques détaillées et recommandations tactiques. Prêt à partager.
                 </p>
               </div>
             </div>
@@ -280,7 +235,7 @@ function LandingPage() {
                 </div>
                 <h3 className="text-xl sm:text-2xl font-bold mb-3">Suivi d'effectif</h3>
                 <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
-                  Suivez individuellement vos joueurs, analysez leurs performances et accompagnez leur progression au quotidien.
+                  Gérez vos joueurs, suivez leurs performances et optimisez vos compositions.
                 </p>
               </div>
             </div>
@@ -292,9 +247,9 @@ function LandingPage() {
                 <div className="w-12 sm:w-14 h-12 sm:h-14 bg-gradient-to-br from-violet-500 to-purple-500 rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform">
                   <Shield className="w-6 sm:w-7 h-6 sm:h-7 text-white" />
                 </div>
-                <h3 className="text-xl sm:text-2xl font-bold mb-3">Analyse intelligente</h3>
+                <h3 className="text-xl sm:text-2xl font-bold mb-3">98% de précision</h3>
                 <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
-                  IA développée pour le football, conçue pour analyser chaque action avec précision et cohérence.
+                  Notre IA analyse chaque action avec une précision professionnelle validée par des experts.
                 </p>
               </div>
             </div>
@@ -306,9 +261,9 @@ function LandingPage() {
                 <div className="w-12 sm:w-14 h-12 sm:h-14 bg-gradient-to-br from-violet-500 to-purple-500 rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform">
                   <Activity className="w-6 sm:w-7 h-6 sm:h-7 text-white" />
                 </div>
-                <h3 className="text-xl sm:text-2xl font-bold mb-3">Support dédié 🇫🇷</h3>
+                <h3 className="text-xl sm:text-2xl font-bold mb-3">Support 24/7</h3>
                 <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
-                  Une équipe basée en France, disponible et réactive pour répondre à vos besoins.
+                  Notre équipe d'experts vous accompagne à chaque étape. Réponse garantie sous 24h.
                 </p>
               </div>
             </div>
@@ -316,41 +271,28 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* How it works */}
+      {/* Stats Section */}
       <section className="py-12 sm:py-20 px-4 sm:px-6 relative">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-10 sm:mb-14">
-            <div className="inline-flex items-center space-x-2 px-4 py-2 bg-violet-500/10 border border-violet-500/30 rounded-full mb-4">
-              <Zap className="w-4 h-4 text-violet-400" />
-              <span className="text-xs sm:text-sm text-violet-400 font-medium">Comment ça marche</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3">Simple comme 1, 2, 3</h2>
-            <p className="text-gray-400 max-w-xl mx-auto text-sm sm:text-base">
-              De la vidéo brute au rapport tactique professionnel en 3 étapes
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-3 gap-6 sm:gap-8 relative">
-            <div className="hidden sm:block absolute top-10 left-1/3 right-1/3 h-0.5 bg-gradient-to-r from-violet-500/30 via-purple-500/50 to-violet-500/30 z-0"></div>
-            {[
-              { step: '01', icon: '🎬', title: 'Uploadez votre vidéo', desc: 'Importez votre fichier vidéo depuis votre téléphone ou ordinateur. Tous formats acceptés — MP4, MOV, AVI.', color: 'from-violet-500/20 to-violet-500/5', border: 'border-violet-500/30' },
-              { step: '02', icon: '🤖', title: "L'IA analyse le match", desc: "Notre intelligence artificielle identifie chaque action et situation de jeu pour vous fournir un rapport complet en moins de 5 heures.", color: 'from-purple-500/20 to-purple-500/5', border: 'border-purple-500/30', highlight: true },
-              { step: '03', icon: '📊', title: 'Recevez votre rapport', desc: 'Accédez à vos statistiques collectives et individuelles, prêtes à être utilisées pour analyser vos performances.', color: 'from-fuchsia-500/20 to-fuchsia-500/5', border: 'border-fuchsia-500/30' },
-            ].map((s, i) => (
-              <div key={i} className={`relative z-10 p-6 sm:p-8 bg-gradient-to-b ${s.color} border ${s.border} rounded-2xl transition-all hover:scale-105`}>
-                <div className="flex items-start justify-between mb-5">
-                  <div className="text-3xl">{s.icon}</div>
-                  <span className="text-xs font-bold text-gray-600 tracking-widest">{s.step}</span>
-                </div>
-                <h3 className="text-lg sm:text-xl font-bold mb-3 text-white">{s.title}</h3>
-                <p className="text-sm sm:text-base text-gray-400 leading-relaxed">{s.desc}</p>
-                {s.highlight && (
-                  <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 border border-purple-500/20 rounded-full">
-                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
-                    <span className="text-xs text-purple-400 font-medium">Moins de 5h</span>
-                  </div>
-                )}
+          <div className="grid sm:grid-cols-3 gap-6 sm:gap-8">
+            <div className="text-center p-6 sm:p-8 bg-gradient-to-b from-violet-500/10 to-transparent border border-violet-500/20 rounded-2xl hover:transform hover:scale-105 transition-all">
+              <div className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent mb-2 animate-pulse">
+                98%
               </div>
-            ))}
+              <div className="text-sm sm:text-base text-gray-400">Précision de l'analyse</div>
+            </div>
+            <div className="text-center p-6 sm:p-8 bg-gradient-to-b from-violet-500/10 to-transparent border border-violet-500/20 rounded-2xl hover:transform hover:scale-105 transition-all">
+              <div className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent mb-2 animate-pulse" style={{ animationDelay: '0.5s' }}>
+                &lt;24h
+              </div>
+              <div className="text-sm sm:text-base text-gray-400">Temps d'analyse</div>
+            </div>
+            <div className="text-center p-6 sm:p-8 bg-gradient-to-b from-violet-500/10 to-transparent border border-violet-500/20 rounded-2xl hover:transform hover:scale-105 transition-all">
+              <div className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent mb-2 animate-pulse" style={{ animationDelay: '1s' }}>
+                100%
+              </div>
+              <div className="text-sm sm:text-base text-gray-400">Satisfaction garantie</div>
+            </div>
           </div>
         </div>
       </section>
@@ -359,8 +301,8 @@ function LandingPage() {
       <section id="pricing" className="py-12 sm:py-20 px-4 sm:px-6 relative">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 px-4">Tarifs exclusifs 🎉</h2>
-            <p className="text-lg sm:text-xl text-gray-400 px-4">Offre limitée, réservée aux 100 premiers inscrits.</p>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 px-4">Offre de lancement 🎉</h2>
+            <p className="text-lg sm:text-xl text-gray-400 px-4">Prix valables à vie pour les premiers utilisateurs</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto">
@@ -378,31 +320,19 @@ function LandingPage() {
               <ul className="space-y-3 sm:space-y-4 mb-8">
                 <li className="flex items-start space-x-3">
                   <CheckCircle2 className="w-5 h-5 text-violet-500 shrink-0 mt-0.5" />
-                  <span className="text-sm sm:text-base text-gray-300">3 matchs analysés / mois</span>
+                  <span className="text-sm sm:text-base text-gray-300">10 matchs analysés/mois</span>
                 </li>
                 <li className="flex items-start space-x-3">
                   <CheckCircle2 className="w-5 h-5 text-violet-500 shrink-0 mt-0.5" />
-                  <span className="text-sm sm:text-base text-gray-300">1 équipe</span>
+                  <span className="text-sm sm:text-base text-gray-300">Rapports PDF professionnels</span>
                 </li>
                 <li className="flex items-start space-x-3">
                   <CheckCircle2 className="w-5 h-5 text-violet-500 shrink-0 mt-0.5" />
-                  <span className="text-sm sm:text-base text-gray-300">Rapports collectifs et individuels</span>
+                  <span className="text-sm sm:text-base text-gray-300">Support email 24h</span>
                 </li>
                 <li className="flex items-start space-x-3">
                   <CheckCircle2 className="w-5 h-5 text-violet-500 shrink-0 mt-0.5" />
-                  <span className="text-sm sm:text-base text-gray-300">Suivi progression match après match</span>
-                </li>
-                <li className="flex items-start space-x-3">
-                  <CheckCircle2 className="w-5 h-5 text-violet-500 shrink-0 mt-0.5" />
-                  <span className="text-sm sm:text-base text-gray-300">Tableau de bord complet</span>
-                </li>
-                <li className="flex items-start space-x-3">
-                  <CheckCircle2 className="w-5 h-5 text-violet-500 shrink-0 mt-0.5" />
-                  <span className="text-sm sm:text-base text-gray-300">Support client dédié</span>
-                </li>
-                <li className="flex items-start space-x-3">
-                  <CheckCircle2 className="w-5 h-5 text-violet-500 shrink-0 mt-0.5" />
-                  <span className="text-sm sm:text-base text-gray-300">Accessible sur ordinateur, tablette, téléphone</span>
+                  <span className="text-sm sm:text-base text-gray-300">Gestion d'effectif basique</span>
                 </li>
               </ul>
               <Link to="/signup" className="block w-full text-center px-6 sm:px-8 py-3 bg-white/5 border border-white/10 text-white font-semibold rounded-lg hover:bg-white/10 transition-all text-sm sm:text-base">
@@ -427,31 +357,23 @@ function LandingPage() {
               <ul className="space-y-3 sm:space-y-4 mb-8">
                 <li className="flex items-start space-x-3">
                   <CheckCircle2 className="w-5 h-5 text-violet-500 shrink-0 mt-0.5" />
-                  <span className="text-sm sm:text-base text-gray-300 font-semibold">10 matchs analysés / mois</span>
+                  <span className="text-sm sm:text-base text-gray-300 font-semibold">Matchs illimités</span>
                 </li>
                 <li className="flex items-start space-x-3">
                   <CheckCircle2 className="w-5 h-5 text-violet-500 shrink-0 mt-0.5" />
-                  <span className="text-sm sm:text-base text-gray-300">Multi-utilisateurs</span>
+                  <span className="text-sm sm:text-base text-gray-300">Multi-utilisateurs (jusqu'à 5)</span>
                 </li>
                 <li className="flex items-start space-x-3">
                   <CheckCircle2 className="w-5 h-5 text-violet-500 shrink-0 mt-0.5" />
-                  <span className="text-sm sm:text-base text-gray-300">Multi-équipes</span>
+                  <span className="text-sm sm:text-base text-gray-300">Gestion complète d'effectif</span>
                 </li>
                 <li className="flex items-start space-x-3">
                   <CheckCircle2 className="w-5 h-5 text-violet-500 shrink-0 mt-0.5" />
-                  <span className="text-sm sm:text-base text-gray-300">Vue globale progression du club</span>
+                  <span className="text-sm sm:text-base text-gray-300">Support prioritaire 24/7</span>
                 </li>
                 <li className="flex items-start space-x-3">
                   <CheckCircle2 className="w-5 h-5 text-violet-500 shrink-0 mt-0.5" />
-                  <span className="text-sm sm:text-base text-gray-300">Tableau de bord avancé</span>
-                </li>
-                <li className="flex items-start space-x-3">
-                  <CheckCircle2 className="w-5 h-5 text-violet-500 shrink-0 mt-0.5" />
-                  <span className="text-sm sm:text-base text-gray-300">Support prioritaire dédié</span>
-                </li>
-                <li className="flex items-start space-x-3">
-                  <CheckCircle2 className="w-5 h-5 text-violet-500 shrink-0 mt-0.5" />
-                  <span className="text-sm sm:text-base text-gray-300">Accessible sur ordinateur, tablette, téléphone</span>
+                  <span className="text-sm sm:text-base text-gray-300">Analyses avancées</span>
                 </li>
               </ul>
               <Link to="/signup" className="block w-full text-center px-6 sm:px-8 py-3 bg-gradient-to-r from-violet-500 to-purple-500 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-violet-500/50 transition-all text-sm sm:text-base">
@@ -461,7 +383,7 @@ function LandingPage() {
           </div>
 
           <p className="text-center text-sm text-gray-500 mt-8 px-4">
-            Sans engagement
+            💎 Prix garantis à vie · Pas d'engagement · Annulation en 1 clic
           </p>
         </div>
       </section>
@@ -471,7 +393,7 @@ function LandingPage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 px-4">Une question ?</h2>
-            <p className="text-lg sm:text-xl text-gray-400 px-4">Offre limitée, réservée aux 100 premiers inscrits.</p>
+            <p className="text-lg sm:text-xl text-gray-400 px-4">Notre équipe vous répond sous 24h</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 sm:gap-12 max-w-6xl mx-auto">
