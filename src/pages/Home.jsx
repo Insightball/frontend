@@ -5,64 +5,133 @@ import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, BarChart
 
 // ─── Terrain SVG passes entre joueurs ─────────────────────────────────────
 function PassMap() {
-  const W = 560, H = 200
-  // Positions des lignes sur le terrain (% → px)
-  // GK=1, Def-gauche=3, Def-central=4, Def-droit=5, Mil-gauche=7, Mil-central=8, Mil-droit=10, Att-gauche=11, Att-central=9
+  const W = 620, H = 310
+  const PAD = { l: 18, r: 18, t: 14, b: 14 }
+  const fw = W - PAD.l - PAD.r
+  const fh = H - PAD.t - PAD.b
+
+  // volume total de passes par joueur → taille du nœud
   const nodes = [
-    { id: 1,  label: 'G',   x: 40,  y: 100, color: '#f59e0b' },
-    { id: 3,  label: 'DG',  x: 110, y: 55,  color: '#3b82f6' },
-    { id: 4,  label: 'DC',  x: 110, y: 100, color: '#3b82f6' },
-    { id: 5,  label: 'DD',  x: 110, y: 145, color: '#3b82f6' },
-    { id: 7,  label: 'MG',  x: 230, y: 60,  color: '#10b981' },
-    { id: 8,  label: 'MC',  x: 230, y: 100, color: '#10b981' },
-    { id: 10, label: 'MD',  x: 230, y: 140, color: '#10b981' },
-    { id: 9,  label: 'ATT',  x: 380, y: 75,  color: '#ef4444' },
-    { id: 11, label: 'ATT', x: 380, y: 125, color: '#ef4444' },
+    { id: 1,  label: 'G',  sub: 'Fogacci',   x: 0.07, y: 0.50, color: '#f59e0b', vol: 90 },
+    { id: 3,  label: 'DG', sub: 'Mersni',    x: 0.22, y: 0.20, color: '#60a5fa', vol: 130 },
+    { id: 4,  label: 'DC', sub: 'Bonalair',  x: 0.22, y: 0.50, color: '#60a5fa', vol: 145 },
+    { id: 5,  label: 'DD', sub: 'Bilendo',   x: 0.22, y: 0.80, color: '#60a5fa', vol: 125 },
+    { id: 7,  label: 'MG', sub: 'Fogacci L', x: 0.50, y: 0.22, color: '#34d399', vol: 160 },
+    { id: 8,  label: 'MC', sub: 'Kheroua',   x: 0.50, y: 0.50, color: '#34d399', vol: 185 },
+    { id: 10, label: 'MD', sub: 'Finidori',  x: 0.50, y: 0.78, color: '#34d399', vol: 170 },
+    { id: 9,  label: 'AG', sub: 'Randazzo',  x: 0.76, y: 0.28, color: '#f87171', vol: 115 },
+    { id: 11, label: 'AD', sub: 'Dangoumau', x: 0.76, y: 0.72, color: '#f87171', vol: 120 },
   ]
   const edges = [
-    { from: 1, to: 4,   n: 48 }, { from: 1, to: 3,   n: 22 }, { from: 1, to: 5,   n: 20 },
-    { from: 4, to: 8,   n: 61 }, { from: 3, to: 7,   n: 44 }, { from: 5, to: 10,  n: 38 },
-    { from: 3, to: 4,   n: 35 }, { from: 4, to: 5,   n: 31 }, { from: 7, to: 8,   n: 55 },
-    { from: 8, to: 10,  n: 42 }, { from: 7, to: 10,  n: 18 }, { from: 8, to: 9,   n: 47 },
-    { from: 8, to: 11,  n: 33 }, { from: 7, to: 9,   n: 28 }, { from: 10, to: 11, n: 25 },
-    { from: 9, to: 11,  n: 16 },
+    { from: 1, to: 4,  n: 48 }, { from: 1, to: 3,  n: 22 }, { from: 1, to: 5,  n: 20 },
+    { from: 4, to: 8,  n: 61 }, { from: 3, to: 7,  n: 44 }, { from: 5, to: 10, n: 38 },
+    { from: 3, to: 4,  n: 35 }, { from: 4, to: 5,  n: 31 }, { from: 7, to: 8,  n: 55 },
+    { from: 8, to: 10, n: 42 }, { from: 8, to: 9,  n: 47 }, { from: 8, to: 11, n: 33 },
+    { from: 7, to: 9,  n: 28 }, { from: 10, to: 11, n: 25 }, { from: 7, to: 10, n: 18 },
   ]
   const maxN = Math.max(...edges.map(e => e.n))
+  const maxVol = Math.max(...nodes.map(n => n.vol))
   const byId = {}
-  nodes.forEach(n => byId[n.id] = n)
+  nodes.forEach(n => {
+    byId[n.id] = {
+      ...n,
+      px: PAD.l + n.x * fw,
+      py: PAD.t + n.y * fh,
+      r: 13 + (n.vol / maxVol) * 8,
+    }
+  })
+
   return (
-    <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ borderRadius: 8 }}>
-      {/* Terrain */}
-      <rect width={W} height={H} fill="#0a1a0a" rx="6"/>
-      <rect x={12} y={10} width={W-24} height={H-20} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1.5" rx="3"/>
-      <line x1={W/2} y1={10} x2={W/2} y2={H-10} stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-      <circle cx={W/2} cy={H/2} r={30} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-      <rect x={12} y={H/2-28} width={44} height={56} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-      <rect x={W-56} y={H/2-28} width={44} height={56} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-      {/* Arrows */}
+    <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ borderRadius: 10, display: 'block' }}>
       <defs>
-        <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-          <path d="M0,0 L0,6 L6,3 z" fill="rgba(99,102,241,0.7)"/>
-        </marker>
+        <linearGradient id="pitch" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#0d2a0d"/>
+          <stop offset="50%" stopColor="#112e11"/>
+          <stop offset="100%" stopColor="#0d2a0d"/>
+        </linearGradient>
+        {/* Stripes */}
+        <pattern id="stripe" width="40" height={fh} patternUnits="userSpaceOnUse" x={PAD.l} y={PAD.t}>
+          <rect width="20" height={fh} fill="rgba(255,255,255,0.018)"/>
+        </pattern>
+        {/* Glow filter for nodes */}
+        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        {/* Arrow markers per alpha level */}
+        {[0.3,0.5,0.7,0.9].map(a => (
+          <marker key={a} id={`arr${a}`} markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+            <path d="M0,0 L0,7 L7,3.5 z" fill={`rgba(148,163,255,${a})`}/>
+          </marker>
+        ))}
       </defs>
+
+      {/* Pitch background */}
+      <rect width={W} height={H} fill="url(#pitch)" rx="10"/>
+      <rect x={PAD.l} y={PAD.t} width={fw} height={fh} fill="url(#stripe)"/>
+
+      {/* Pitch lines */}
+      <g stroke="rgba(255,255,255,0.12)" strokeWidth="1" fill="none">
+        {/* Border */}
+        <rect x={PAD.l} y={PAD.t} width={fw} height={fh} rx="2"/>
+        {/* Halfway line */}
+        <line x1={PAD.l+fw/2} y1={PAD.t} x2={PAD.l+fw/2} y2={PAD.t+fh}/>
+        {/* Centre circle */}
+        <circle cx={PAD.l+fw/2} cy={PAD.t+fh/2} r={fh*0.18}/>
+        <circle cx={PAD.l+fw/2} cy={PAD.t+fh/2} r={2} fill="rgba(255,255,255,0.2)" stroke="none"/>
+        {/* Left penalty area */}
+        <rect x={PAD.l} y={PAD.t+fh*0.25} width={fw*0.13} height={fh*0.50}/>
+        <rect x={PAD.l} y={PAD.t+fh*0.37} width={fw*0.055} height={fh*0.26}/>
+        {/* Right penalty area */}
+        <rect x={PAD.l+fw*0.87} y={PAD.t+fh*0.25} width={fw*0.13} height={fh*0.50}/>
+        <rect x={PAD.l+fw*0.945} y={PAD.t+fh*0.37} width={fw*0.055} height={fh*0.26}/>
+        {/* Penalty spots */}
+        <circle cx={PAD.l+fw*0.09} cy={PAD.t+fh/2} r={2} fill="rgba(255,255,255,0.2)" stroke="none"/>
+        <circle cx={PAD.l+fw*0.91} cy={PAD.t+fh/2} r={2} fill="rgba(255,255,255,0.2)" stroke="none"/>
+      </g>
+
+      {/* Edges */}
       {edges.map((e, i) => {
         const a = byId[e.from], b = byId[e.to]
-        const thick = 0.5 + (e.n / maxN) * 4
-        const alpha = 0.15 + (e.n / maxN) * 0.65
-        const dx = b.x - a.x, dy = b.y - a.y
+        const ratio = e.n / maxN
+        const thick = 0.8 + ratio * 5
+        const alpha = 0.2 + ratio * 0.75
+        const markerA = alpha < 0.4 ? 0.3 : alpha < 0.6 ? 0.5 : alpha < 0.8 ? 0.7 : 0.9
+        // Courbe quadratique : point de contrôle décalé perpendiculairement
+        const mx = (a.px + b.px) / 2
+        const my = (a.py + b.py) / 2
+        const dx = b.px - a.px, dy = b.py - a.py
         const len = Math.sqrt(dx*dx + dy*dy)
-        const ex = b.x - (dx/len)*14, ey = b.y - (dy/len)*14
+        // Décalage perpendiculaire (15% de la longueur, alternance selon index)
+        const perp = (i % 2 === 0 ? 1 : -1) * len * 0.10
+        const cx1 = mx - (dy/len)*perp, cy1 = my + (dx/len)*perp
+        // Point d'arrivée recule de r+2 vers le centre de la courbe
+        const ang = Math.atan2(b.py - cy1, b.px - cx1)
+        const ex = b.px - Math.cos(ang) * (b.r + 2)
+        const ey = b.py - Math.sin(ang) * (b.r + 2)
         return (
-          <line key={i} x1={a.x} y1={a.y} x2={ex} y2={ey}
-            stroke={`rgba(99,102,241,${alpha})`} strokeWidth={thick}
-            markerEnd="url(#arr)"/>
+          <path key={i}
+            d={`M ${a.px} ${a.py} Q ${cx1} ${cy1} ${ex} ${ey}`}
+            stroke={`rgba(148,163,255,${alpha})`} strokeWidth={thick}
+            fill="none" strokeLinecap="round"
+            markerEnd={`url(#arr${markerA})`}
+          />
         )
       })}
+
       {/* Nodes */}
-      {nodes.map(n => (
-        <g key={n.id}>
-          <circle cx={n.x} cy={n.y} r={13} fill={n.color} fillOpacity={0.18} stroke={n.color} strokeWidth="1.5"/>
-          <text x={n.x} y={n.y+4} textAnchor="middle" fontSize="9" fontWeight="700" fill={n.color}>{n.label}</text>
+      {Object.values(byId).map(n => (
+        <g key={n.id} filter="url(#glow)">
+          {/* Outer glow ring */}
+          <circle cx={n.px} cy={n.py} r={n.r+4} fill={n.color} fillOpacity={0.08}/>
+          {/* Main circle */}
+          <circle cx={n.px} cy={n.py} r={n.r} fill={n.color} fillOpacity={0.22} stroke={n.color} strokeWidth={1.8}/>
+          {/* Label */}
+          <text x={n.px} y={n.py+1} textAnchor="middle" dominantBaseline="middle"
+            fontSize={n.r > 18 ? "11" : "10"} fontWeight="800" fill={n.color} letterSpacing="0">{n.label}</text>
+          {/* Sous-nom */}
+          <text x={n.px} y={n.py+n.r+9} textAnchor="middle"
+            fontSize="7.5" fill="rgba(255,255,255,0.45)" fontWeight="500">{n.sub}</text>
         </g>
       ))}
     </svg>
