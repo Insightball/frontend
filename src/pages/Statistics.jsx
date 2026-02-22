@@ -4,91 +4,83 @@ import DashboardLayout from '../components/DashboardLayout'
 import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  ResponsiveContainer, LineChart, Line
+  ResponsiveContainer,
 } from 'recharts'
 import matchService from '../services/matchService'
 import playerService from '../services/playerService'
 
-// ─── Heatmap SVG pitch ───────────────────────────────────────────────────
+const G = {
+  gold: '#c9a227', goldD: '#a8861f',
+  goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.22)',
+  mono: "'JetBrains Mono', monospace",
+  display: "'Anton', sans-serif",
+  border: 'rgba(255,255,255,0.06)',
+  muted: 'rgba(245,242,235,0.32)',
+  text: '#f5f2eb',
+  green: '#22c55e', red: '#ef4444', blue: '#3b82f6', orange: '#f59e0b',
+}
+
+const TT = {
+  contentStyle: { backgroundColor: '#0f0f0d', border: `1px solid ${G.border}`, borderRadius: 0, fontFamily: G.mono, fontSize: 11 },
+  labelStyle: { color: G.muted },
+  itemStyle: { color: G.text },
+}
+
 function Heatmap({ data }) {
   const W = 320, H = 200
   return (
-    <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ borderRadius: 10, overflow: 'hidden' }}>
-      <rect width={W} height={H} fill="#071a07" rx="8" />
-      <rect x={8} y={8} width={W-16} height={H-16} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" rx="4" />
-      <line x1={W/2} y1={8} x2={W/2} y2={H-8} stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
-      <circle cx={W/2} cy={H/2} r={28} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
-      <rect x={8} y={H/2-32} width={46} height={64} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
-      <rect x={W-54} y={H/2-32} width={46} height={64} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+    <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ overflow: 'hidden', display: 'block' }}>
+      <rect width={W} height={H} fill="#080a05" />
+      <rect x={8} y={8} width={W - 16} height={H - 16} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+      <line x1={W / 2} y1={8} x2={W / 2} y2={H - 8} stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+      <circle cx={W / 2} cy={H / 2} r={28} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+      <rect x={8} y={H / 2 - 32} width={46} height={64} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
+      <rect x={W - 54} y={H / 2 - 32} width={46} height={64} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
       {data.map((pt, i) => {
         const px = 8 + (pt.x / 100) * (W - 16)
         const py = 8 + (pt.y / 100) * (H - 16)
-        return (
-          <circle key={i} cx={px} cy={py} r={20 + pt.intensity * 14}
-            fill={`rgba(99,102,241,${0.12 + pt.intensity * 0.45})`}
-            style={{ filter: `blur(${10 + pt.intensity * 8}px)` }}
-          />
-        )
+        return <circle key={i} cx={px} cy={py} r={20 + pt.intensity * 14} fill={`rgba(201,162,39,${0.1 + pt.intensity * 0.4})`} style={{ filter: `blur(${10 + pt.intensity * 8}px)` }} />
       })}
       {data.filter(pt => pt.intensity > 0.6).map((pt, i) => (
-        <circle key={`d${i}`}
-          cx={8 + (pt.x / 100) * (W - 16)}
-          cy={8 + (pt.y / 100) * (H - 16)}
-          r={3} fill="rgba(139,92,246,0.85)" />
+        <circle key={`d${i}`} cx={8 + (pt.x / 100) * (W - 16)} cy={8 + (pt.y / 100) * (H - 16)} r={3} fill={G.gold} fillOpacity={0.9} />
       ))}
     </svg>
   )
 }
 
-// ─── Heatmap événements (ballons gagnés/perdus/tirs) ────────────────────
 function EventHeatmap({ events }) {
   const W = 320, H = 200
   return (
-    <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ borderRadius: 10, overflow: 'hidden', display: 'block' }}>
-      <defs>
-        <linearGradient id="eg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#0d2b0d"/><stop offset="100%" stopColor="#091a09"/>
-        </linearGradient>
-        <pattern id="ep" width="28" height={H} patternUnits="userSpaceOnUse">
-          <rect width="14" height={H} fill="rgba(255,255,255,0.013)"/>
-        </pattern>
-      </defs>
-      <rect width={W} height={H} fill="url(#eg)" rx="8"/>
-      <rect width={W} height={H} fill="url(#ep)" rx="8"/>
-      <g stroke="rgba(255,255,255,0.11)" strokeWidth="1" fill="none">
-        <rect x={8} y={7} width={W-16} height={H-14} rx="2"/>
-        <line x1={W/2} y1={7} x2={W/2} y2={H-7}/>
-        <circle cx={W/2} cy={H/2} r={26}/>
-        <rect x={8} y={H/2-30} width={44} height={60}/>
-        <rect x={8} y={H/2-14} width={18} height={28}/>
-        <rect x={W-52} y={H/2-30} width={44} height={60}/>
-        <rect x={W-26} y={H/2-14} width={18} height={28}/>
+    <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ display: 'block' }}>
+      <rect width={W} height={H} fill="#080a05" />
+      <g stroke="rgba(255,255,255,0.09)" strokeWidth="1" fill="none">
+        <rect x={8} y={7} width={W - 16} height={H - 14} />
+        <line x1={W / 2} y1={7} x2={W / 2} y2={H - 7} />
+        <circle cx={W / 2} cy={H / 2} r={26} />
+        <rect x={8} y={H / 2 - 30} width={44} height={60} />
+        <rect x={W - 52} y={H / 2 - 30} width={44} height={60} />
       </g>
-      {/* Blobs */}
       {events.map((z, i) => {
-        const cx = 8 + (z.x/100)*(W-16), cy = 7 + (z.y/100)*(H-14)
-        const col = z.type==='won' ? `rgba(16,185,129,${0.12+z.i*0.4})` : z.type==='shot' ? `rgba(245,158,11,${0.12+z.i*0.4})` : `rgba(239,68,68,${0.12+z.i*0.4})`
-        return <circle key={i} cx={cx} cy={cy} r={16+z.i*12} fill={col} style={{filter:`blur(${6+z.i*4}px)`}}/>
+        const cx = 8 + (z.x / 100) * (W - 16), cy = 7 + (z.y / 100) * (H - 14)
+        const col = z.type === 'won' ? `rgba(34,197,94,${0.1 + z.i * 0.4})` : z.type === 'shot' ? `rgba(201,162,39,${0.12 + z.i * 0.4})` : `rgba(239,68,68,${0.1 + z.i * 0.4})`
+        return <circle key={i} cx={cx} cy={cy} r={16 + z.i * 12} fill={col} style={{ filter: `blur(${6 + z.i * 4}px)` }} />
       })}
-      {/* Points nets */}
       {events.map((z, i) => {
-        const cx = 8 + (z.x/100)*(W-16), cy = 7 + (z.y/100)*(H-14)
-        const col = z.type==='won' ? '#10b981' : z.type==='shot' ? '#f59e0b' : '#ef4444'
-        return <circle key={'d'+i} cx={cx} cy={cy} r={3.5} fill={col} fillOpacity={0.9} stroke="rgba(0,0,0,0.5)" strokeWidth="1"/>
+        const cx = 8 + (z.x / 100) * (W - 16), cy = 7 + (z.y / 100) * (H - 14)
+        const col = z.type === 'won' ? '#22c55e' : z.type === 'shot' ? G.gold : '#ef4444'
+        return <circle key={`d${i}`} cx={cx} cy={cy} r={3.5} fill={col} fillOpacity={0.9} stroke="rgba(0,0,0,0.5)" strokeWidth="1" />
       })}
     </svg>
   )
 }
 
-// ─── Comparaison 2 joueurs ───────────────────────────────────────────────
 function CompareView({ players, getStats }) {
   const [p1idx, setP1idx] = useState(0)
-  const [p2idx, setP2idx] = useState(Math.min(1, players.length-1))
-
+  const [p2idx, setP2idx] = useState(Math.min(1, players.length - 1))
   const p1 = players[p1idx], p2 = players[p2idx]
   if (!p1 || !p2) return null
   const s1 = getStats(p1, p1idx), s2 = getStats(p2, p2idx)
-
+  const C1 = G.gold, C2 = '#ef4444'
   const metrics = [
     { label: 'Buts', v1: s1.goals, v2: s2.goals, max: 10 },
     { label: 'Passes D.', v1: s1.assists, v2: s2.assists, max: 8 },
@@ -99,52 +91,39 @@ function CompareView({ players, getStats }) {
     { label: 'Passes', v1: s1.passes, v2: s2.passes, max: 70 },
     { label: 'Km/match', v1: parseFloat(s1.km), v2: parseFloat(s2.km), max: 12 },
   ]
-
-  const sel = { background: '#0d0f18', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 8, padding: '7px 12px', color: '#f1f5f9', fontSize: 13, outline: 'none', cursor: 'pointer', flex: 1 }
-
+  const selStyle = { background: '#0a0a08', border: `1px solid ${G.border}`, padding: '9px 12px', color: G.text, fontFamily: G.mono, fontSize: 12, outline: 'none', cursor: 'pointer', flex: 1 }
   return (
     <div>
-      {/* Sélecteurs */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 40px 1fr', gap: 10, marginBottom: 16, alignItems: 'center' }}>
-        <select value={p1idx} onChange={e=>setP1idx(+e.target.value)} style={sel}>
-          {players.map((p,i) => <option key={p.id} value={i}>#{p.number} {p.name}</option>)}
-        </select>
-        <div style={{ textAlign:'center', fontSize:13, color:'#4b5563', fontWeight:700 }}>vs</div>
-        <select value={p2idx} onChange={e=>setP2idx(+e.target.value)} style={sel}>
-          {players.map((p,i) => <option key={p.id} value={i}>#{p.number} {p.name}</option>)}
-        </select>
+        <select value={p1idx} onChange={e => setP1idx(+e.target.value)} style={selStyle}>{players.map((p, i) => <option key={p.id} value={i}>#{p.number} {p.name}</option>)}</select>
+        <div style={{ textAlign: 'center', fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>vs</div>
+        <select value={p2idx} onChange={e => setP2idx(+e.target.value)} style={selStyle}>{players.map((p, i) => <option key={p.id} value={i}>#{p.number} {p.name}</option>)}</select>
       </div>
-
-      {/* Headers face-à-face */}
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginBottom:16 }}>
-        {[{p:p1,color:'#6366f1'},{p:p2,color:'#ec4899'}].map(({p,color})=>(
-          <div key={p.id} style={{ background:`${color}10`, border:`1px solid ${color}30`, borderRadius:10, padding:'12px 14px', textAlign:'center' }}>
-            <div style={{ fontSize:20, fontWeight:800, color }}>{`#${p.number}`}</div>
-            <div style={{ fontSize:13, fontWeight:700, color:'#f1f5f9', marginTop:2 }}>{p.name}</div>
-            <div style={{ fontSize:11, color:'#6b7280' }}>{p.position}</div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: G.border, marginBottom: 16 }}>
+        {[{ p: p1, color: C1 }, { p: p2, color: C2 }].map(({ p, color }) => (
+          <div key={p.id} style={{ background: '#0a0a08', padding: '14px 16px', textAlign: 'center', borderTop: `2px solid ${color}` }}>
+            <div style={{ fontFamily: G.display, fontSize: 22, color }}>{`#${p.number}`}</div>
+            <div style={{ fontFamily: G.mono, fontSize: 11, color: G.text, marginTop: 4, letterSpacing: '.06em' }}>{p.name}</div>
+            <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.08em', textTransform: 'uppercase', marginTop: 2 }}>{p.position}</div>
           </div>
         ))}
       </div>
-
-      {/* Barres miroir */}
-      <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-        {metrics.map(({label, v1, v2, max}) => {
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {metrics.map(({ label, v1, v2, max }) => {
           const p1wins = v1 >= v2
           return (
             <div key={label}>
-              <div style={{ display:'flex', justifyContent:'space-between', marginBottom:4 }}>
-                <span style={{ fontSize:13, fontWeight:700, color: p1wins ? '#818cf8' : '#6b7280' }}>{v1}</span>
-                <span style={{ fontSize:11, color:'#4b5563' }}>{label}</span>
-                <span style={{ fontSize:13, fontWeight:700, color: !p1wins ? '#f472b6' : '#6b7280' }}>{v2}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                <span style={{ fontFamily: G.mono, fontSize: 12, fontWeight: 700, color: p1wins ? C1 : G.muted }}>{v1}</span>
+                <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>{label}</span>
+                <span style={{ fontFamily: G.mono, fontSize: 12, fontWeight: 700, color: !p1wins ? C2 : G.muted }}>{v2}</span>
               </div>
-              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:3 }}>
-                {/* Barre p1 → droite */}
-                <div style={{ height:5, background:'rgba(255,255,255,0.05)', borderRadius:99, overflow:'hidden', direction:'rtl' }}>
-                  <div style={{ height:'100%', width:`${Math.min((v1/max)*100,100)}%`, background:'#6366f1', borderRadius:99, opacity: p1wins ? 1 : 0.4 }}/>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
+                <div style={{ height: 3, background: 'rgba(255,255,255,0.04)', overflow: 'hidden', direction: 'rtl' }}>
+                  <div style={{ height: '100%', width: `${Math.min((v1 / max) * 100, 100)}%`, background: C1, opacity: p1wins ? 1 : 0.3 }} />
                 </div>
-                {/* Barre p2 → gauche */}
-                <div style={{ height:5, background:'rgba(255,255,255,0.05)', borderRadius:99, overflow:'hidden' }}>
-                  <div style={{ height:'100%', width:`${Math.min((v2/max)*100,100)}%`, background:'#ec4899', borderRadius:99, opacity: !p1wins ? 1 : 0.4 }}/>
+                <div style={{ height: 3, background: 'rgba(255,255,255,0.04)', overflow: 'hidden' }}>
+                  <div style={{ height: '100%', width: `${Math.min((v2 / max) * 100, 100)}%`, background: C2, opacity: !p1wins ? 1 : 0.3 }} />
                 </div>
               </div>
             </div>
@@ -155,71 +134,46 @@ function CompareView({ players, getStats }) {
   )
 }
 
-// ─── Progression match par match ─────────────────────────────────────────
 function ProgressionView({ matches }) {
   const [metric, setMetric] = useState('possession')
-
   const metrics = [
-    { id:'possession', label:'Possession', color:'#6366f1', key: m => m.stats?.possession || 58, suffix:'%' },
-    { id:'passes', label:'Passes', color:'#3b82f6', key: m => m.stats?.passes || 178, suffix:'' },
-    { id:'shots', label:'Tirs', color:'#f59e0b', key: m => m.stats?.shots || 8, suffix:'' },
+    { id: 'possession', label: 'Possession', color: G.gold, key: m => m.stats?.possession || 58, suffix: '%' },
+    { id: 'passes', label: 'Passes', color: G.blue, key: m => m.stats?.passes || 178, suffix: '' },
+    { id: 'shots', label: 'Tirs', color: G.orange, key: m => m.stats?.shots || 8, suffix: '' },
   ]
-  const current = metrics.find(m=>m.id===metric)
-
+  const current = metrics.find(m => m.id === metric)
   const data = matches.length > 0
-    ? matches.map((m, i) => ({
-        match: m.opponent ? `vs ${m.opponent.split(' ')[0]}` : `M${i+1}`,
-        score: m.score_home !== null ? `${m.score_home}-${m.score_away}` : null,
-        val: current.key(m),
-        result: m.score_home > m.score_away ? 'V' : m.score_home < m.score_away ? 'D' : 'N',
-      }))
+    ? matches.map((m, i) => ({ match: m.opponent ? `vs ${m.opponent.split(' ')[0]}` : `M${i + 1}`, score: m.score_home !== null ? `${m.score_home}-${m.score_away}` : null, val: current.key(m), result: m.score_home > m.score_away ? 'V' : m.score_home < m.score_away ? 'D' : 'N' }))
     : [
-        { match:'vs Amiens', score:'0-1', val:44, result:'D' },
-        { match:'vs Reims', score:'1-1', val:52, result:'N' },
-        { match:'vs Metz', score:'1-2', val:48, result:'D' },
-        { match:'vs Valois', score:'1-0', val:56, result:'V' },
-        { match:'vs Balagne', score:'2-0', val:61, result:'V' },
-        { match:'vs Charlev.', score:'3-1', val:63, result:'V' },
-        { match:'vs St-Q.', score:'0-0', val:46, result:'N' },
-      ]
-
-  const maxVal = Math.max(...data.map(d=>d.val))
-  const resultColor = { V:'#10b981', N:'#f59e0b', D:'#ef4444' }
-
+      { match: 'vs Amiens', score: '0-1', val: 44, result: 'D' }, { match: 'vs Reims', score: '1-1', val: 52, result: 'N' },
+      { match: 'vs Metz', score: '1-2', val: 48, result: 'D' }, { match: 'vs Valois', score: '1-0', val: 56, result: 'V' },
+      { match: 'vs Balagne', score: '2-0', val: 61, result: 'V' }, { match: 'vs Charlev.', score: '3-1', val: 63, result: 'V' },
+      { match: 'vs St-Q.', score: '0-0', val: 46, result: 'N' },
+    ]
+  const maxVal = Math.max(...data.map(d => d.val))
+  const resultColor = { V: G.green, N: G.orange, D: G.red }
   return (
     <div>
-      {/* Switcher */}
-      <div style={{ display:'flex', gap:6, marginBottom:16 }}>
+      <div style={{ display: 'flex', gap: 4, marginBottom: 16 }}>
         {metrics.map(m => (
-          <button key={m.id} onClick={()=>setMetric(m.id)} style={{
-            padding:'6px 14px', borderRadius:8, border:'none', cursor:'pointer', fontSize:12, fontWeight:600,
-            background: metric===m.id ? m.color : 'rgba(255,255,255,0.04)',
-            color: metric===m.id ? '#fff' : '#6b7280',
-            transition:'all 0.15s',
-          }}>{m.label}</button>
+          <button key={m.id} onClick={() => setMetric(m.id)} style={{ padding: '7px 16px', border: metric === m.id ? 'none' : `1px solid ${G.border}`, cursor: 'pointer', fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', background: metric === m.id ? m.color : 'transparent', color: metric === m.id ? '#0f0f0d' : G.muted, fontWeight: metric === m.id ? 700 : 400, transition: 'all .15s' }}>{m.label}</button>
         ))}
       </div>
-
-      {/* Graphique barres */}
-      <div style={{ display:'flex', gap:6, alignItems:'flex-end', height:120 }}>
+      <div style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 120 }}>
         {data.map((d, i) => (
-          <div key={i} style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:4 }}>
-            <span style={{ fontSize:10, fontWeight:700, color:current.color }}>{d.val}{current.suffix}</span>
-            <div style={{ width:'100%', height: Math.max(8, (d.val/maxVal)*90), background:current.color, borderRadius:'4px 4px 0 0', opacity:0.8 }}/>
-            <span style={{ fontSize:9, color:'#4b5563', textAlign:'center', whiteSpace:'nowrap' }}>{d.match}</span>
-            {d.score && (
-              <span style={{ fontSize:9, fontWeight:700, color: resultColor[d.result] || '#6b7280' }}>{d.score}</span>
-            )}
+          <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+            <span style={{ fontFamily: G.mono, fontSize: 9, fontWeight: 700, color: current.color }}>{d.val}{current.suffix}</span>
+            <div style={{ width: '100%', height: Math.max(6, (d.val / maxVal) * 90), background: current.color, opacity: 0.85 }} />
+            <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.04em', color: G.muted, textAlign: 'center', whiteSpace: 'nowrap' }}>{d.match}</span>
+            {d.score && <span style={{ fontFamily: G.mono, fontSize: 8, fontWeight: 700, color: resultColor[d.result] || G.muted }}>{d.score}</span>}
           </div>
         ))}
       </div>
-
-      {/* Légende résultats */}
-      <div style={{ display:'flex', gap:12, marginTop:10, justifyContent:'center' }}>
-        {[{r:'V',c:'#10b981',l:'Victoire'},{r:'N',c:'#f59e0b',l:'Nul'},{r:'D',c:'#ef4444',l:'Défaite'}].map(x=>(
-          <div key={x.r} style={{ display:'flex', alignItems:'center', gap:5 }}>
-            <div style={{ width:8, height:8, borderRadius:2, background:x.c }}/>
-            <span style={{ fontSize:11, color:'#6b7280' }}>{x.l}</span>
+      <div style={{ display: 'flex', gap: 16, marginTop: 12, justifyContent: 'center' }}>
+        {[{ c: G.green, l: 'Victoire' }, { c: G.orange, l: 'Nul' }, { c: G.red, l: 'Défaite' }].map(x => (
+          <div key={x.l} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+            <div style={{ width: 6, height: 6, background: x.c }} />
+            <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.06em', color: G.muted }}>{x.l}</span>
           </div>
         ))}
       </div>
@@ -228,93 +182,57 @@ function ProgressionView({ matches }) {
 }
 
 const TEAM_HEAT = [
-  { x: 25, y: 50, intensity: 0.9 }, { x: 50, y: 30, intensity: 0.8 },
-  { x: 50, y: 70, intensity: 0.7 }, { x: 70, y: 50, intensity: 0.95 },
-  { x: 60, y: 25, intensity: 0.6 }, { x: 60, y: 75, intensity: 0.65 },
-  { x: 80, y: 40, intensity: 0.75 }, { x: 80, y: 60, intensity: 0.7 },
-  { x: 35, y: 40, intensity: 0.5 }, { x: 35, y: 60, intensity: 0.55 },
+  { x: 25, y: 50, intensity: 0.9 }, { x: 50, y: 30, intensity: 0.8 }, { x: 50, y: 70, intensity: 0.7 },
+  { x: 70, y: 50, intensity: 0.95 }, { x: 60, y: 25, intensity: 0.6 }, { x: 60, y: 75, intensity: 0.65 },
+  { x: 80, y: 40, intensity: 0.75 }, { x: 80, y: 60, intensity: 0.7 }, { x: 35, y: 40, intensity: 0.5 }, { x: 35, y: 60, intensity: 0.55 },
 ]
-
 const POS_HEAT = {
-  'Gardien':   [{ x: 8, y: 50, intensity: 0.95 }, { x: 15, y: 35, intensity: 0.6 }, { x: 15, y: 65, intensity: 0.6 }],
+  'Gardien': [{ x: 8, y: 50, intensity: 0.95 }, { x: 15, y: 35, intensity: 0.6 }, { x: 15, y: 65, intensity: 0.6 }],
   'Défenseur': [{ x: 22, y: 30, intensity: 0.8 }, { x: 22, y: 70, intensity: 0.8 }, { x: 32, y: 50, intensity: 0.6 }, { x: 42, y: 45, intensity: 0.4 }],
-  'Milieu':    [{ x: 40, y: 50, intensity: 0.9 }, { x: 55, y: 35, intensity: 0.7 }, { x: 55, y: 65, intensity: 0.7 }, { x: 65, y: 50, intensity: 0.6 }],
+  'Milieu': [{ x: 40, y: 50, intensity: 0.9 }, { x: 55, y: 35, intensity: 0.7 }, { x: 55, y: 65, intensity: 0.7 }, { x: 65, y: 50, intensity: 0.6 }],
   'Attaquant': [{ x: 75, y: 50, intensity: 0.9 }, { x: 85, y: 35, intensity: 0.8 }, { x: 85, y: 65, intensity: 0.75 }, { x: 65, y: 45, intensity: 0.5 }],
 }
-
-// Zones événements par poste
 const POS_EVENTS = {
-  'Gardien': [
-    { x:10, y:50, i:0.9, type:'won' }, { x:16, y:35, i:0.65, type:'won' }, { x:16, y:65, i:0.6, type:'won' },
-    { x:20, y:52, i:0.5, type:'lost' },
-  ],
-  'Défenseur': [
-    { x:22, y:28, i:0.85, type:'won' }, { x:22, y:72, i:0.8, type:'won' }, { x:35, y:50, i:0.7, type:'won' },
-    { x:40, y:35, i:0.55, type:'lost' }, { x:42, y:60, i:0.5, type:'lost' },
-    { x:55, y:42, i:0.65, type:'shot' },
-  ],
-  'Milieu': [
-    { x:42, y:50, i:0.9, type:'won' }, { x:55, y:32, i:0.7, type:'won' }, { x:58, y:68, i:0.65, type:'won' },
-    { x:65, y:45, i:0.55, type:'lost' }, { x:68, y:60, i:0.5, type:'lost' },
-    { x:72, y:40, i:0.75, type:'shot' }, { x:76, y:55, i:0.7, type:'shot' },
-  ],
-  'Attaquant': [
-    { x:72, y:48, i:0.75, type:'won' }, { x:82, y:35, i:0.65, type:'won' },
-    { x:38, y:50, i:0.55, type:'lost' }, { x:45, y:38, i:0.5, type:'lost' }, { x:48, y:62, i:0.45, type:'lost' },
-    { x:80, y:42, i:0.9, type:'shot' }, { x:84, y:55, i:0.85, type:'shot' }, { x:88, y:48, i:0.8, type:'shot' },
-  ],
+  'Gardien': [{ x: 10, y: 50, i: 0.9, type: 'won' }, { x: 16, y: 35, i: 0.65, type: 'won' }, { x: 16, y: 65, i: 0.6, type: 'won' }, { x: 20, y: 52, i: 0.5, type: 'lost' }],
+  'Défenseur': [{ x: 22, y: 28, i: 0.85, type: 'won' }, { x: 22, y: 72, i: 0.8, type: 'won' }, { x: 35, y: 50, i: 0.7, type: 'won' }, { x: 40, y: 35, i: 0.55, type: 'lost' }, { x: 42, y: 60, i: 0.5, type: 'lost' }, { x: 55, y: 42, i: 0.65, type: 'shot' }],
+  'Milieu': [{ x: 42, y: 50, i: 0.9, type: 'won' }, { x: 55, y: 32, i: 0.7, type: 'won' }, { x: 58, y: 68, i: 0.65, type: 'won' }, { x: 65, y: 45, i: 0.55, type: 'lost' }, { x: 68, y: 60, i: 0.5, type: 'lost' }, { x: 72, y: 40, i: 0.75, type: 'shot' }, { x: 76, y: 55, i: 0.7, type: 'shot' }],
+  'Attaquant': [{ x: 72, y: 48, i: 0.75, type: 'won' }, { x: 82, y: 35, i: 0.65, type: 'won' }, { x: 38, y: 50, i: 0.55, type: 'lost' }, { x: 45, y: 38, i: 0.5, type: 'lost' }, { x: 48, y: 62, i: 0.45, type: 'lost' }, { x: 80, y: 42, i: 0.9, type: 'shot' }, { x: 84, y: 55, i: 0.85, type: 'shot' }, { x: 88, y: 48, i: 0.8, type: 'shot' }],
 }
 
-// ─── Helpers ─────────────────────────────────────────────────────────────
-function StatBar({ label, value, max, color = '#6366f1', suffix = '' }) {
+function StatBar({ label, value, max, color, suffix = '' }) {
   const pct = Math.min((value / max) * 100, 100)
   return (
-    <div style={{ marginBottom: 13 }}>
+    <div style={{ marginBottom: 12 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
-        <span style={{ fontSize: 13, color: '#94a3b8' }}>{label}</span>
-        <span style={{ fontSize: 13, color: '#f1f5f9', fontWeight: 700 }}>{value}{suffix}</span>
+        <span style={{ fontFamily: G.mono, fontSize: 11, letterSpacing: '.04em', color: G.muted }}>{label}</span>
+        <span style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 700, color: G.text }}>{value}{suffix}</span>
       </div>
-      <div style={{ height: 5, background: 'rgba(255,255,255,0.05)', borderRadius: 99, overflow: 'hidden' }}>
-        <div style={{ height: '100%', width: `${pct}%`, borderRadius: 99, background: color, transition: 'width 1s ease' }} />
+      <div style={{ height: 2, background: 'rgba(255,255,255,0.05)' }}>
+        <div style={{ height: '100%', width: `${pct}%`, background: color || G.gold, transition: 'width 1s ease' }} />
       </div>
     </div>
   )
 }
 
-function Card({ title, subtitle, children, style = {} }) {
+function Card({ title, subtitle, children, style = {}, accent }) {
   return (
-    <div style={{ background: '#0d0f18', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, padding: '22px', ...style }}>
-      {title && <div style={{ marginBottom: 18 }}>
-        <h2 style={{ fontSize: 15, fontWeight: 700, color: '#f1f5f9' }}>{title}</h2>
-        {subtitle && <p style={{ fontSize: 12, color: '#4b5563', marginTop: 3 }}>{subtitle}</p>}
-      </div>}
+    <div style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}`, borderTop: `2px solid ${accent || G.border}`, padding: '20px 22px', ...style }}>
+      {title && (
+        <div style={{ marginBottom: 16 }}>
+          <h2 style={{ fontFamily: G.mono, fontSize: 11, letterSpacing: '.12em', textTransform: 'uppercase', color: G.text, margin: 0 }}>{title}</h2>
+          {subtitle && <p style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.08em', color: G.muted, marginTop: 4 }}>{subtitle}</p>}
+        </div>
+      )}
       {children}
     </div>
   )
 }
 
-const TT = {
-  contentStyle: { backgroundColor: '#0d0f18', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10 },
-  labelStyle: { color: '#94a3b8' },
-}
-
 function getPlayerStats(player, idx) {
-  const isAtt = player.position === 'Attaquant'
-  const isMil = player.position === 'Milieu'
-  return {
-    touches: 58 - idx * 2,
-    passes: 40 - idx * 2,
-    passesSuccess: 86 - idx,
-    ballsWon: 8 - Math.floor(idx / 2),
-    ballsLost: 3 + Math.floor(idx / 3),
-    shots: isAtt ? 6 - Math.floor(idx / 2) : 2,
-    goals: isAtt ? Math.max(0, 4 - Math.floor(idx / 2)) : idx < 2 ? 1 : 0,
-    assists: isMil ? Math.max(0, 4 - Math.floor(idx / 2)) : 1,
-    km: (9.5 - idx * 0.15).toFixed(1),
-  }
+  const isAtt = player.position === 'Attaquant', isMil = player.position === 'Milieu'
+  return { touches: 58 - idx * 2, passes: 40 - idx * 2, passesSuccess: 86 - idx, ballsWon: 8 - Math.floor(idx / 2), ballsLost: 3 + Math.floor(idx / 3), shots: isAtt ? 6 - Math.floor(idx / 2) : 2, goals: isAtt ? Math.max(0, 4 - Math.floor(idx / 2)) : idx < 2 ? 1 : 0, assists: isMil ? Math.max(0, 4 - Math.floor(idx / 2)) : 1, km: (9.5 - idx * 0.15).toFixed(1) }
 }
 
-// ─── Main ─────────────────────────────────────────────────────────────────
 export default function Statistics() {
   const [matches, setMatches] = useState([])
   const [players, setPlayers] = useState([])
@@ -322,20 +240,17 @@ export default function Statistics() {
   const [tab, setTab] = useState('collective')
   const [selectedPlayer, setSelectedPlayer] = useState(null)
   const [selectedPeriod, setSelectedPeriod] = useState('all')
-  const [indivTab, setIndivTab] = useState('stats') // 'stats' | 'terrain' | 'compare' | 'progression'
+  const [indivTab, setIndivTab] = useState('stats')
 
   useEffect(() => { loadData() }, [])
-
   const loadData = async () => {
     try {
       setLoading(true)
       const [md, pd] = await Promise.all([matchService.getMatches(), playerService.getPlayers()])
       const completed = md.filter(m => m.status?.toUpperCase() === 'COMPLETED')
-      setMatches(completed)
-      setPlayers(pd)
+      setMatches(completed); setPlayers(pd)
       if (pd.length > 0) setSelectedPlayer(pd[0])
-    } catch (e) { console.error(e) }
-    finally { setLoading(false) }
+    } catch (e) { console.error(e) } finally { setLoading(false) }
   }
 
   const N = matches.length
@@ -350,29 +265,20 @@ export default function Statistics() {
   const totalKm = (N || 7) * 85
 
   const radarData = [
-    { cat: 'Possession', val: avgPoss },
-    { cat: 'Passes', val: 82 },
-    { cat: 'Pressing', val: 74 },
-    { cat: 'Défense', val: 78 },
-    { cat: 'Finition', val: Math.round((totalGoals / Math.max(totalShots, 1)) * 100) || 60 },
+    { cat: 'Possession', val: avgPoss }, { cat: 'Passes', val: 82 }, { cat: 'Pressing', val: 74 },
+    { cat: 'Défense', val: 78 }, { cat: 'Finition', val: Math.round((totalGoals / Math.max(totalShots, 1)) * 100) || 60 },
   ]
-
   const monthlyData = [
-    { month: 'Nov', victoires: 1, nuls: 0, defaites: 1 },
-    { month: 'Déc', victoires: 2, nuls: 1, defaites: 0 },
-    { month: 'Jan', victoires: 2, nuls: 0, defaites: 1 },
-    { month: 'Fév', victoires: 2, nuls: 0, defaites: 1 },
+    { month: 'Nov', victoires: 1, nuls: 0, defaites: 1 }, { month: 'Déc', victoires: 2, nuls: 1, defaites: 0 },
+    { month: 'Jan', victoires: 2, nuls: 0, defaites: 1 }, { month: 'Fév', victoires: 2, nuls: 0, defaites: 1 },
   ]
 
-  const sel = {
-    background: '#0d0f18', border: '1px solid rgba(255,255,255,0.07)',
-    borderRadius: 10, padding: '9px 14px', color: '#f1f5f9', fontSize: 14, outline: 'none', cursor: 'pointer',
-  }
+  const selStyle = { background: '#0a0a08', border: `1px solid ${G.border}`, padding: '9px 14px', color: G.text, fontFamily: G.mono, fontSize: 11, outline: 'none', cursor: 'pointer', letterSpacing: '.06em' }
 
   if (loading) return (
     <DashboardLayout>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 400 }}>
-        <div style={{ width: 40, height: 40, border: '3px solid rgba(99,102,241,0.3)', borderTopColor: '#6366f1', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} />
+        <div style={{ width: 28, height: 28, border: `2px solid ${G.goldBdr}`, borderTopColor: G.gold, borderRadius: '50%', animation: 'spin .7s linear infinite' }} />
       </div>
       <style>{'@keyframes spin { to { transform: rotate(360deg); } }'}</style>
     </DashboardLayout>
@@ -382,292 +288,267 @@ export default function Statistics() {
     <DashboardLayout>
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 18 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
           <div>
-            <h1 style={{ fontSize: 26, fontWeight: 800, color: '#f1f5f9', marginBottom: 4 }}>Statistiques</h1>
-            <p style={{ color: '#6b7280', fontSize: 14 }}>Saison 2025-2026 · U14 JS Cugnaux</p>
+            <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+              <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />Statistiques
+            </div>
+            <h1 style={{ fontFamily: G.display, fontSize: 44, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: G.text, margin: 0 }}>
+              Analyse<br /><span style={{ color: G.gold }}>de la saison.</span>
+            </h1>
           </div>
-          <div style={{ display: 'flex', gap: 10 }}>
-            <select value={selectedPeriod} onChange={e => setSelectedPeriod(e.target.value)} style={sel}>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 8 }}>
+            <select value={selectedPeriod} onChange={e => setSelectedPeriod(e.target.value)} style={selStyle}>
               <option value="all">Toute la saison</option>
               <option value="month">30 derniers jours</option>
               <option value="week">7 derniers jours</option>
             </select>
-            <button style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '10px 16px', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10, color: '#94a3b8', cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>
-              <Download size={14} /> PDF
+            <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 16px', background: 'transparent', border: `1px solid ${G.border}`, color: G.muted, cursor: 'pointer', fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', transition: 'all .15s' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = G.goldBdr; e.currentTarget.style.color = G.gold }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = G.border; e.currentTarget.style.color = G.muted }}>
+              <Download size={12} /> PDF
             </button>
           </div>
         </div>
 
         {/* Tabs */}
-        <div style={{ display: 'flex', gap: 4, background: 'rgba(255,255,255,0.03)', padding: 4, borderRadius: 12, width: 'fit-content', border: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid ${G.border}` }}>
           {[{ id: 'collective', label: '⚽  Collectives' }, { id: 'individual', label: '👤  Individuelles' }].map(t => (
             <button key={t.id} onClick={() => setTab(t.id)} style={{
-              padding: '9px 22px', borderRadius: 9, border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: 14,
-              background: tab === t.id ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'transparent',
-              color: tab === t.id ? '#fff' : '#6b7280',
-              boxShadow: tab === t.id ? '0 4px 14px rgba(99,102,241,0.35)' : 'none',
-              transition: 'all 0.2s',
+              padding: '10px 28px', border: 'none', cursor: 'pointer',
+              fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase',
+              background: tab === t.id ? G.gold : 'transparent',
+              color: tab === t.id ? '#0f0f0d' : G.muted,
+              fontWeight: tab === t.id ? 700 : 400,
+              borderBottom: tab === t.id ? 'none' : 'none',
+              transition: 'all .15s',
+              marginBottom: tab === t.id ? -1 : 0,
+              borderBottom: tab === t.id ? `1px solid ${G.gold}` : 'none',
             }}>{t.label}</button>
           ))}
         </div>
       </div>
 
-      {/* ─── COLLECTIVE ─── */}
+      {/* COLLECTIVES */}
       {tab === 'collective' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
 
           {/* Bilan */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 1, background: G.border }}>
             {[
-              { label: 'Matchs joués', value: N || 7, color: '#6366f1' },
-              { label: 'Victoires', value: wins || 4, color: '#10b981' },
-              { label: 'Nuls', value: draws || 1, color: '#f59e0b' },
-              { label: 'Défaites', value: losses || 2, color: '#ef4444' },
-            ].map((s, i) => (
-              <div key={s.label} style={{ background: '#0d0f18', border: '1px solid rgba(255,255,255,0.06)', borderBottom: `3px solid ${s.color}`, borderRadius: 14, padding: '18px 20px' }}>
-                <div style={{ fontSize: 38, fontWeight: 800, color: s.color, lineHeight: 1 }}>{s.value}</div>
-                <div style={{ fontSize: 13, color: '#6b7280', marginTop: 6 }}>{s.label}</div>
+              { label: 'Matchs joués', value: N || 7, color: G.gold },
+              { label: 'Victoires', value: wins || 4, color: G.green },
+              { label: 'Nuls', value: draws || 1, color: G.orange },
+              { label: 'Défaites', value: losses || 2, color: G.red },
+            ].map(s => (
+              <div key={s.label} style={{ background: '#0a0a08', padding: '22px', borderTop: `2px solid ${s.color}` }}>
+                <div style={{ fontFamily: G.display, fontSize: 56, lineHeight: 1, color: s.color }}>{s.value}</div>
+                <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted, marginTop: 10 }}>{s.label}</div>
               </div>
             ))}
           </div>
 
           {/* Row 2 */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 1, background: G.border }}>
             {/* Possession */}
-            <Card title="Possession de balle" subtitle="Moyenne sur la saison">
-              <div style={{ display: 'flex', justifyContent: 'center', padding: '8px 0 14px' }}>
-                <div style={{ position: 'relative', width: 130, height: 130 }}>
-                  <svg width="130" height="130" style={{ transform: 'rotate(-90deg)' }}>
-                    <circle cx="65" cy="65" r="52" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="13" />
-                    <circle cx="65" cy="65" r="52" fill="none" stroke="#6366f1" strokeWidth="13"
-                      strokeDasharray={`${(avgPoss / 100) * 2 * Math.PI * 52} ${2 * Math.PI * 52}`} strokeLinecap="round" />
+            <div style={{ background: 'rgba(255,255,255,0.02)', borderTop: `2px solid ${G.gold}`, padding: '20px 22px' }}>
+              <div style={{ marginBottom: 16 }}>
+                <h2 style={{ fontFamily: G.mono, fontSize: 11, letterSpacing: '.12em', textTransform: 'uppercase', color: G.text, margin: 0 }}>Possession de balle</h2>
+                <p style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.08em', color: G.muted, marginTop: 4 }}>Moyenne sur la saison</p>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'center', padding: '10px 0 16px' }}>
+                <div style={{ position: 'relative', width: 120, height: 120 }}>
+                  <svg width="120" height="120" style={{ transform: 'rotate(-90deg)' }}>
+                    <circle cx="60" cy="60" r="48" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="10" />
+                    <circle cx="60" cy="60" r="48" fill="none" stroke={G.gold} strokeWidth="10"
+                      strokeDasharray={`${(avgPoss / 100) * 2 * Math.PI * 48} ${2 * Math.PI * 48}`} strokeLinecap="butt" />
                   </svg>
                   <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ fontSize: 28, fontWeight: 800, color: '#f1f5f9' }}>{avgPoss}%</span>
-                    <span style={{ fontSize: 11, color: '#6b7280' }}>moy.</span>
+                    <span style={{ fontFamily: G.display, fontSize: 30, lineHeight: 1, color: G.text }}>{avgPoss}%</span>
+                    <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, marginTop: 2 }}>moy.</span>
                   </div>
                 </div>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: 8 }}>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: 18, fontWeight: 700, color: '#6366f1' }}>68%</div>
-                  <div style={{ fontSize: 11, color: '#4b5563' }}>Max</div>
-                </div>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: 18, fontWeight: 700, color: '#f59e0b' }}>48%</div>
-                  <div style={{ fontSize: 11, color: '#4b5563' }}>Min</div>
-                </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: G.border }}>
+                {[{ label: 'Max', value: '68%', color: G.green }, { label: 'Min', value: '48%', color: G.orange }].map(v => (
+                  <div key={v.label} style={{ background: '#0a0a08', padding: '10px', textAlign: 'center' }}>
+                    <div style={{ fontFamily: G.display, fontSize: 22, color: v.color, lineHeight: 1 }}>{v.value}</div>
+                    <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, marginTop: 4 }}>{v.label}</div>
+                  </div>
+                ))}
               </div>
-            </Card>
+            </div>
 
             {/* Passes */}
             <Card title="Passes" subtitle="Total & précision">
               <div style={{ textAlign: 'center', padding: '6px 0 14px' }}>
-                <div style={{ fontSize: 46, fontWeight: 800, color: '#3b82f6', lineHeight: 1 }}>{totalPasses}</div>
-                <div style={{ fontSize: 13, color: '#6b7280', marginTop: 4 }}>passes totales</div>
+                <div style={{ fontFamily: G.display, fontSize: 56, lineHeight: 1, color: G.text }}>{totalPasses}</div>
+                <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, marginTop: 6 }}>passes totales</div>
               </div>
-              <StatBar label="Passes courtes" value={82} max={100} color="#3b82f6" suffix="%" />
-              <StatBar label="Passes longues" value={61} max={100} color="#06b6d4" suffix="%" />
-              <StatBar label="Précision globale" value={78} max={100} color="#6366f1" suffix="%" />
+              <StatBar label="Passes courtes" value={82} max={100} color={G.gold} suffix="%" />
+              <StatBar label="Passes longues" value={61} max={100} color={G.blue} suffix="%" />
+              <StatBar label="Précision globale" value={78} max={100} color={G.green} suffix="%" />
             </Card>
 
             {/* Tirs */}
             <Card title="Tirs" subtitle="Cadrés vs total">
               <div style={{ display: 'flex', justifyContent: 'space-around', padding: '6px 0 16px' }}>
                 {[
-                  { val: totalShots, label: 'Total tirs', color: '#f59e0b' },
-                  { val: totalSOT, label: 'Cadrés', color: '#10b981' },
-                  { val: totalGoals, label: 'Buts', color: '#6366f1' },
+                  { val: totalShots, label: 'Total tirs', color: G.orange },
+                  { val: totalSOT, label: 'Cadrés', color: G.green },
+                  { val: totalGoals, label: 'Buts', color: G.gold },
                 ].map((v, i) => (
                   <div key={i} style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: 36, fontWeight: 800, color: v.color, lineHeight: 1 }}>{v.val}</div>
-                    <div style={{ fontSize: 12, color: '#6b7280', marginTop: 4 }}>{v.label}</div>
+                    <div style={{ fontFamily: G.display, fontSize: 42, lineHeight: 1, color: v.color }}>{v.val}</div>
+                    <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, marginTop: 6 }}>{v.label}</div>
                   </div>
                 ))}
               </div>
-              <div style={{ height: 7, background: 'rgba(255,255,255,0.05)', borderRadius: 99, overflow: 'hidden' }}>
-                <div style={{ height: '100%', width: `${Math.round((totalSOT / Math.max(totalShots, 1)) * 100)}%`, background: 'linear-gradient(90deg, #f59e0b, #10b981)', borderRadius: 99 }} />
+              <div style={{ height: 3, background: 'rgba(255,255,255,0.05)' }}>
+                <div style={{ height: '100%', width: `${Math.round((totalSOT / Math.max(totalShots, 1)) * 100)}%`, background: `linear-gradient(90deg, ${G.orange}, ${G.green})` }} />
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 5 }}>
-                <span style={{ fontSize: 11, color: '#4b5563' }}>Taux de cadrage</span>
-                <span style={{ fontSize: 11, color: '#10b981', fontWeight: 700 }}>{Math.round((totalSOT / Math.max(totalShots, 1)) * 100)}%</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
+                <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.08em', color: G.muted }}>Taux de cadrage</span>
+                <span style={{ fontFamily: G.mono, fontSize: 9, fontWeight: 700, color: G.green }}>{Math.round((totalSOT / Math.max(totalShots, 1)) * 100)}%</span>
               </div>
             </Card>
           </div>
 
           {/* Row 3 */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14 }}>
-            {/* KM */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 1, background: G.border }}>
             <Card title="Distance parcourue" subtitle="Cumulé équipe saison">
               <div style={{ textAlign: 'center', padding: '6px 0 14px' }}>
-                <div style={{ fontSize: 50, fontWeight: 800, color: '#10b981', lineHeight: 1 }}>{totalKm}</div>
-                <div style={{ fontSize: 13, color: '#6b7280', marginTop: 4 }}>km total</div>
+                <div style={{ fontFamily: G.display, fontSize: 56, lineHeight: 1, color: G.green }}>{totalKm}</div>
+                <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, marginTop: 6 }}>km total</div>
               </div>
-              <StatBar label="Moy. par match" value={85} max={120} color="#10b981" suffix=" km" />
-              <StatBar label="Moy. par joueur/match" value={8} max={12} color="#22c55e" suffix=" km" />
-              <StatBar label="Part sprints" value={32} max={50} color="#86efac" suffix="%" />
+              <StatBar label="Moy. par match" value={85} max={120} color={G.green} suffix=" km" />
+              <StatBar label="Moy. par joueur/match" value={8} max={12} color={G.gold} suffix=" km" />
+              <StatBar label="Part sprints" value={32} max={50} color={G.blue} suffix="%" />
             </Card>
 
-            {/* Radar */}
             <Card title="Performance globale">
               <ResponsiveContainer width="100%" height={195}>
                 <RadarChart data={radarData}>
-                  <PolarGrid stroke="rgba(255,255,255,0.06)" />
-                  <PolarAngleAxis dataKey="cat" stroke="#6b7280" tick={{ fontSize: 11 }} />
-                  <PolarRadiusAxis stroke="#374151" tick={{ fontSize: 9 }} domain={[0, 100]} />
-                  <Radar dataKey="val" stroke="#6366f1" fill="#6366f1" fillOpacity={0.2} />
+                  <PolarGrid stroke={G.border} />
+                  <PolarAngleAxis dataKey="cat" stroke={G.muted} tick={{ fontFamily: G.mono, fontSize: 9, fill: G.muted }} />
+                  <PolarRadiusAxis stroke="transparent" tick={false} domain={[0, 100]} />
+                  <Radar dataKey="val" stroke={G.gold} fill={G.gold} fillOpacity={0.12} strokeWidth={1.5} />
                   <Tooltip {...TT} />
                 </RadarChart>
               </ResponsiveContainer>
             </Card>
 
-            {/* Heatmap */}
             <Card title="Heatmap équipe" subtitle="Zones de présence collectives">
               <Heatmap data={TEAM_HEAT} />
             </Card>
           </div>
 
-          {/* Monthly */}
-          <Card title="Résultats mensuels">
-            <ResponsiveContainer width="100%" height={210}>
-              <BarChart data={monthlyData} barSize={22}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-                <XAxis dataKey="month" stroke="#4b5563" tick={{ fontSize: 12 }} />
-                <YAxis stroke="#4b5563" tick={{ fontSize: 12 }} />
+          {/* Mensuel */}
+          <Card title="Résultats mensuels" style={{ background: '#0a0a08' }}>
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={monthlyData} barSize={18}>
+                <CartesianGrid strokeDasharray="0 0" stroke={G.border} vertical={false} />
+                <XAxis dataKey="month" stroke="transparent" tick={{ fontFamily: G.mono, fontSize: 10, fill: G.muted }} />
+                <YAxis stroke="transparent" tick={{ fontFamily: G.mono, fontSize: 10, fill: G.muted }} />
                 <Tooltip {...TT} />
-                <Legend wrapperStyle={{ fontSize: 12 }} />
-                <Bar dataKey="victoires" fill="#10b981" name="Victoires" radius={[4,4,0,0]} />
-                <Bar dataKey="nuls" fill="#f59e0b" name="Nuls" radius={[4,4,0,0]} />
-                <Bar dataKey="defaites" fill="#ef4444" name="Défaites" radius={[4,4,0,0]} />
+                <Legend wrapperStyle={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.08em', textTransform: 'uppercase' }} />
+                <Bar dataKey="victoires" fill={G.green} name="Victoires" radius={0} />
+                <Bar dataKey="nuls" fill={G.orange} name="Nuls" radius={0} />
+                <Bar dataKey="defaites" fill={G.red} name="Défaites" radius={0} />
               </BarChart>
             </ResponsiveContainer>
           </Card>
         </div>
       )}
 
-      {/* ─── INDIVIDUAL ─── */}
+      {/* INDIVIDUELLES */}
       {tab === 'individual' && (
         <div>
-          {/* Sous-onglets */}
-          <div style={{ display:'flex', gap:6, marginBottom:16, flexWrap:'wrap' }}>
-            {[
-              { id:'stats', label:'📊 Stats' },
-              { id:'terrain', label:'🗺 Terrain' },
-              { id:'compare', label:'⚖️ Comparer' },
-              { id:'progression', label:'📈 Progression' },
-            ].map(t => (
-              <button key={t.id} onClick={()=>setIndivTab(t.id)} style={{
-                padding:'8px 16px', borderRadius:9, border:'none', cursor:'pointer', fontWeight:600, fontSize:13,
-                background: indivTab===t.id ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'rgba(255,255,255,0.04)',
-                color: indivTab===t.id ? '#fff' : '#6b7280',
-                boxShadow: indivTab===t.id ? '0 4px 14px rgba(99,102,241,0.35)' : 'none',
-                transition:'all 0.2s',
-              }}>{t.label}</button>
+          <div style={{ display: 'flex', gap: 4, marginBottom: 20 }}>
+            {[{ id: 'stats', label: '📊 Stats' }, { id: 'terrain', label: '🗺 Terrain' }, { id: 'compare', label: '⚖️ Comparer' }, { id: 'progression', label: '📈 Progression' }].map(t => (
+              <button key={t.id} onClick={() => setIndivTab(t.id)} style={{ padding: '8px 18px', border: indivTab === t.id ? 'none' : `1px solid ${G.border}`, cursor: 'pointer', fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', background: indivTab === t.id ? G.gold : 'transparent', color: indivTab === t.id ? '#0f0f0d' : G.muted, fontWeight: indivTab === t.id ? 700 : 400, transition: 'all .15s' }}>{t.label}</button>
             ))}
           </div>
 
-          {/* Vue Progression — pas besoin de joueur sélectionné */}
           {indivTab === 'progression' && (
-            <Card title="Progression match par match" subtitle="Évolution des métriques clés sur la saison">
-              <ProgressionView matches={matches}/>
+            <Card title="Progression match par match" subtitle="Évolution des métriques clés" accent={G.gold}>
+              <ProgressionView matches={matches} />
             </Card>
           )}
 
-          {/* Vue Comparer */}
           {indivTab === 'compare' && (
-            <Card title="Comparaison joueurs" subtitle="Affrontez 2 joueurs sur les métriques clés">
-              <CompareView players={players} getStats={getPlayerStats}/>
+            <Card title="Comparaison joueurs" subtitle="Face-à-face sur les métriques clés" accent={G.gold}>
+              <CompareView players={players} getStats={getPlayerStats} />
             </Card>
           )}
 
-          {/* Vues qui nécessitent un joueur sélectionné */}
           {(indivTab === 'stats' || indivTab === 'terrain') && (
-            <div style={{ display: 'flex', gap: 14 }}>
-              {/* List */}
-              <div style={{ width: 210, flexShrink: 0, background: '#0d0f18', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 14, overflow: 'hidden', alignSelf: 'flex-start' }}>
-                <div style={{ padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  <p style={{ fontSize: 11, fontWeight: 700, color: '#4b5563', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Joueurs ({players.length})</p>
+            <div style={{ display: 'flex', gap: 1, background: G.border }}>
+              {/* Liste */}
+              <div style={{ width: 200, flexShrink: 0, background: '#0a0a08', alignSelf: 'flex-start' }}>
+                <div style={{ padding: '10px 14px', borderBottom: `1px solid ${G.border}` }}>
+                  <p style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted }}>Joueurs ({players.length})</p>
                 </div>
                 <div style={{ maxHeight: '70vh', overflowY: 'auto' }}>
-                  {players.map((p) => {
+                  {players.map(p => {
                     const isSelected = selectedPlayer?.id === p.id
                     return (
-                      <div key={p.id} onClick={() => setSelectedPlayer(p)} style={{
-                        padding: '10px 16px', cursor: 'pointer',
-                        background: isSelected ? 'rgba(99,102,241,0.1)' : 'transparent',
-                        borderLeft: isSelected ? '3px solid #6366f1' : '3px solid transparent',
-                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                        transition: 'all 0.15s',
-                      }}>
+                      <div key={p.id} onClick={() => setSelectedPlayer(p)} style={{ padding: '10px 14px', cursor: 'pointer', background: isSelected ? G.goldBg : 'transparent', borderLeft: `2px solid ${isSelected ? G.gold : 'transparent'}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', transition: 'all .15s' }}
+                        onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = 'rgba(255,255,255,0.02)' }}
+                        onMouseLeave={e => { if (!isSelected) e.currentTarget.style.background = 'transparent' }}>
                         <div>
-                          <div style={{ fontSize: 13, fontWeight: 600, color: isSelected ? '#818cf8' : '#e2e8f0' }}>{p.name}</div>
-                          <div style={{ fontSize: 11, color: '#4b5563', marginTop: 1 }}>{p.position} · #{p.number}</div>
+                          <div style={{ fontFamily: G.mono, fontSize: 11, color: isSelected ? G.gold : G.text, letterSpacing: '.04em' }}>{p.name}</div>
+                          <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, marginTop: 2, letterSpacing: '.06em' }}>{p.position} · #{p.number}</div>
                         </div>
-                        {isSelected && <ChevronRight size={13} color="#6366f1" />}
+                        {isSelected && <ChevronRight size={11} color={G.gold} />}
                       </div>
                     )
                   })}
                 </div>
               </div>
 
-              {/* Detail */}
+              {/* Détail */}
               {selectedPlayer && (() => {
                 const idx = players.findIndex(p => p.id === selectedPlayer.id)
                 const s = getPlayerStats(selectedPlayer, idx)
-                const matchEvolution = Array.from({ length: 7 }, (_, i) => ({
-                  match: `M${i + 1}`,
-                  touches: Math.max(20, s.touches + (Math.random() > 0.5 ? 1 : -1) * Math.floor(Math.random() * 12)),
-                  passes: Math.max(10, s.passes + (Math.random() > 0.5 ? 1 : -1) * Math.floor(Math.random() * 8)),
-                }))
                 return (
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 14 }}>
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
                     {/* Header joueur */}
-                    <div style={{ background: '#0d0f18', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 14, padding: '18px 22px', display: 'flex', alignItems: 'center', gap: 16 }}>
-                      <div style={{ width: 52, height: 52, borderRadius: '50%', background: 'rgba(99,102,241,0.15)', border: '2px solid rgba(99,102,241,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 800, color: '#818cf8', flexShrink: 0 }}>
-                        #{selectedPlayer.number}
+                    <div style={{ background: '#0a0a08', padding: '18px 22px', display: 'flex', alignItems: 'center', gap: 16, borderTop: `2px solid ${G.gold}` }}>
+                      <div style={{ width: 48, height: 48, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <span style={{ fontFamily: G.display, fontSize: 22, color: G.gold }}>#{selectedPlayer.number}</span>
                       </div>
                       <div style={{ flex: 1 }}>
-                        <h2 style={{ fontSize: 19, fontWeight: 800, color: '#f1f5f9' }}>{selectedPlayer.name}</h2>
-                        <p style={{ color: '#6b7280', fontSize: 13, marginTop: 2 }}>{selectedPlayer.position} · {selectedPlayer.category}</p>
+                        <h2 style={{ fontFamily: G.display, fontSize: 22, textTransform: 'uppercase', letterSpacing: '.03em', color: G.text, margin: 0 }}>{selectedPlayer.name}</h2>
+                        <p style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, marginTop: 4 }}>{selectedPlayer.position} · {selectedPlayer.category}</p>
                       </div>
                       <div style={{ display: 'flex', gap: 24 }}>
-                        {[
-                          { label: 'Buts', value: s.goals, color: '#10b981' },
-                          { label: 'Passes D.', value: s.assists, color: '#6366f1' },
-                          { label: 'Km moy.', value: s.km, color: '#f59e0b' },
-                        ].map(v => (
+                        {[{ label: 'Buts', value: s.goals, color: G.green }, { label: 'Passes D.', value: s.assists, color: G.gold }, { label: 'Km moy.', value: s.km, color: G.orange }].map(v => (
                           <div key={v.label} style={{ textAlign: 'center' }}>
-                            <div style={{ fontSize: 22, fontWeight: 800, color: v.color }}>{v.value}</div>
-                            <div style={{ fontSize: 11, color: '#4b5563', marginTop: 2 }}>{v.label}</div>
+                            <div style={{ fontFamily: G.display, fontSize: 26, lineHeight: 1, color: v.color }}>{v.value}</div>
+                            <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.08em', textTransform: 'uppercase', color: G.muted, marginTop: 4 }}>{v.label}</div>
                           </div>
                         ))}
                       </div>
                     </div>
 
-                    {/* ─ Vue Stats ─ */}
                     {indivTab === 'stats' && (
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: G.border }}>
                         <Card title="Statistiques détaillées">
-                          <StatBar label="Ballons touchés" value={s.touches} max={80} color="#6366f1" />
-                          <StatBar label="Passes réussies" value={s.passesSuccess} max={100} color="#3b82f6" suffix="%" />
-                          <StatBar label="Ballons gagnés" value={s.ballsWon} max={15} color="#10b981" />
-                          <StatBar label="Ballons perdus" value={s.ballsLost} max={15} color="#ef4444" />
-                          <StatBar label="Tirs tentés" value={s.shots} max={10} color="#f59e0b" />
-                          <StatBar label="Distance parcourue" value={parseFloat(s.km)} max={12} color="#22c55e" suffix=" km" />
+                          <StatBar label="Ballons touchés" value={s.touches} max={80} color={G.gold} />
+                          <StatBar label="Passes réussies" value={s.passesSuccess} max={100} color={G.blue} suffix="%" />
+                          <StatBar label="Ballons gagnés" value={s.ballsWon} max={15} color={G.green} />
+                          <StatBar label="Ballons perdus" value={s.ballsLost} max={15} color={G.red} />
+                          <StatBar label="Tirs tentés" value={s.shots} max={10} color={G.orange} />
+                          <StatBar label="Distance parcourue" value={parseFloat(s.km)} max={12} color={G.green} suffix=" km" />
                         </Card>
                         <Card title="Heatmap individuelle" subtitle={`Zones de présence — ${selectedPlayer.position}`}>
                           <Heatmap data={POS_HEAT[selectedPlayer.position] || POS_HEAT['Milieu']} />
-                          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 14, padding: '10px', background: 'rgba(255,255,255,0.02)', borderRadius: 8 }}>
-                            {[
-                              { label: 'Touches', value: s.touches, color: '#6366f1' },
-                              { label: 'Passes', value: s.passes, color: '#3b82f6' },
-                              { label: 'Gagnés', value: s.ballsWon, color: '#10b981' },
-                              { label: 'Perdus', value: s.ballsLost, color: '#ef4444' },
-                            ].map(v => (
-                              <div key={v.label} style={{ textAlign: 'center' }}>
-                                <div style={{ fontSize: 18, fontWeight: 700, color: v.color }}>{v.value}</div>
-                                <div style={{ fontSize: 11, color: '#4b5563', marginTop: 2 }}>{v.label}</div>
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 1, background: G.border, marginTop: 12 }}>
+                            {[{ label: 'Touches', value: s.touches, color: G.gold }, { label: 'Passes', value: s.passes, color: G.blue }, { label: 'Gagnés', value: s.ballsWon, color: G.green }, { label: 'Perdus', value: s.ballsLost, color: G.red }].map(v => (
+                              <div key={v.label} style={{ background: '#0a0a08', padding: '10px 8px', textAlign: 'center' }}>
+                                <div style={{ fontFamily: G.display, fontSize: 20, color: v.color, lineHeight: 1 }}>{v.value}</div>
+                                <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.08em', textTransform: 'uppercase', color: G.muted, marginTop: 4 }}>{v.label}</div>
                               </div>
                             ))}
                           </div>
@@ -675,31 +556,24 @@ export default function Statistics() {
                       </div>
                     )}
 
-                    {/* ─ Vue Terrain ─ */}
                     {indivTab === 'terrain' && (
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: G.border }}>
                         <Card title="Zones d'action" subtitle="Ballons gagnés · perdus · tirs">
-                          <EventHeatmap events={POS_EVENTS[selectedPlayer.position] || POS_EVENTS['Milieu']}/>
-                          {/* Légende */}
-                          <div style={{ display:'flex', gap:14, marginTop:10 }}>
-                            {[{c:'#10b981',l:'Gagnés'},{c:'#ef4444',l:'Perdus'},{c:'#f59e0b',l:'Tirs'}].map(x=>(
-                              <div key={x.l} style={{ display:'flex', alignItems:'center', gap:5 }}>
-                                <div style={{ width:8, height:8, borderRadius:'50%', background:x.c }}/>
-                                <span style={{ fontSize:11, color:'#6b7280' }}>{x.l}</span>
+                          <EventHeatmap events={POS_EVENTS[selectedPlayer.position] || POS_EVENTS['Milieu']} />
+                          <div style={{ display: 'flex', gap: 14, marginTop: 10 }}>
+                            {[{ c: G.green, l: 'Gagnés' }, { c: G.red, l: 'Perdus' }, { c: G.gold, l: 'Tirs' }].map(x => (
+                              <div key={x.l} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                                <div style={{ width: 6, height: 6, background: x.c }} />
+                                <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.06em', color: G.muted }}>{x.l}</span>
                               </div>
                             ))}
                           </div>
                         </Card>
-                        <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-                          {[
-                            { val:s.ballsWon, label:'Ballons gagnés', color:'#10b981', bg:'rgba(16,185,129,0.08)', border:'rgba(16,185,129,0.2)' },
-                            { val:s.ballsLost, label:'Ballons perdus', color:'#ef4444', bg:'rgba(239,68,68,0.08)', border:'rgba(239,68,68,0.2)' },
-                            { val:s.shots, label:'Tirs tentés', color:'#f59e0b', bg:'rgba(245,158,11,0.08)', border:'rgba(245,158,11,0.2)' },
-                            { val:s.goals, label:'Buts marqués', color:'#6366f1', bg:'rgba(99,102,241,0.08)', border:'rgba(99,102,241,0.2)' },
-                          ].map(x=>(
-                            <div key={x.label} style={{ background:x.bg, border:`1px solid ${x.border}`, borderRadius:12, padding:'14px 18px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-                              <span style={{ fontSize:13, color:'#94a3b8' }}>{x.label}</span>
-                              <span style={{ fontSize:28, fontWeight:800, color:x.color }}>{x.val}</span>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
+                          {[{ val: s.ballsWon, label: 'Ballons gagnés', color: G.green }, { val: s.ballsLost, label: 'Ballons perdus', color: G.red }, { val: s.shots, label: 'Tirs tentés', color: G.orange }, { val: s.goals, label: 'Buts marqués', color: G.gold }].map(x => (
+                            <div key={x.label} style={{ background: '#0a0a08', padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderLeft: `2px solid ${x.color}` }}>
+                              <span style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.08em', color: G.muted }}>{x.label}</span>
+                              <span style={{ fontFamily: G.display, fontSize: 32, color: x.color, lineHeight: 1 }}>{x.val}</span>
                             </div>
                           ))}
                         </div>
@@ -715,7 +589,9 @@ export default function Statistics() {
 
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
-        select option { background: #0d0f18; }
+        select option { background: #0a0a08; }
+        ::-webkit-scrollbar { width: 2px; }
+        ::-webkit-scrollbar-thumb { background: rgba(201,162,39,0.2); }
       `}</style>
     </DashboardLayout>
   )
