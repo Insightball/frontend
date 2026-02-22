@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Play, BarChart3, Users, TrendingUp, CheckCircle2, ArrowRight, Sparkles, Zap, Target, Mail, Phone, MapPin, Send, Clock, Shield, Camera, FileText, Activity } from 'lucide-react'
+import { Play, BarChart3, Users, TrendingUp, CheckCircle2, ArrowRight, Sparkles, Zap, Target, Mail, Send, Clock, Shield, Camera, FileText, Activity } from 'lucide-react'
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 // ─── Terrain SVG passes entre joueurs ─────────────────────────────────────
@@ -543,11 +543,11 @@ function LandingPage() {
               </div>
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight">
                 <span className="bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
-                  Votre match, vos statistiques
+                  Obtenez les statistiques de votre match
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
-                  en 1 clic
+                  à partir d'une simple vidéo
                 </span>
               </h1>
               <p className="text-lg sm:text-xl text-gray-400 mb-8 max-w-xl">
@@ -567,22 +567,14 @@ function LandingPage() {
 
             {/* Colonne droite — photo */}
             <div className="relative flex items-center justify-center">
-              {/* Glow derrière la photo */}
               <div className="absolute inset-0 bg-violet-500/10 rounded-3xl blur-2xl scale-95" />
-              <div className="relative rounded-2xl overflow-hidden border border-violet-500/20 shadow-2xl shadow-violet-500/10 w-full max-w-lg lg:max-w-none">
+              <div className="relative overflow-hidden shadow-2xl shadow-violet-500/10 w-full max-w-md lg:max-w-sm xl:max-w-md mx-auto" style={{ borderRadius: 16 }}>
                 <img
                   src="/Coach_analyse_Insightball.png"
                   alt="Coach analysant les statistiques sur tablette"
                   className="w-full h-full object-cover"
                   style={{ aspectRatio: '4/5', objectPosition: 'center' }}
                 />
-                {/* Overlay dégradé bas */}
-                <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/60 to-transparent" />
-                {/* Badge flottant */}
-                <div className="absolute bottom-5 left-5 right-5 bg-black/60 backdrop-blur-md border border-white/10 rounded-xl px-4 py-3 flex items-center gap-3">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse flex-shrink-0" />
-                  <span className="text-sm text-white font-medium">Analyse en temps réel · Rapport prêt en 5h</span>
-                </div>
               </div>
             </div>
 
@@ -687,7 +679,7 @@ function LandingPage() {
       <section id="pricing" className="py-12 sm:py-20 px-4 sm:px-6 relative">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 px-4">Tarifs exclusifs 🎉</h2>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 px-4">Offres limitées</h2>
           </div>
           <div className="grid md:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto">
             {/* Coach */}
@@ -771,10 +763,8 @@ function LandingPage() {
             <div className="space-y-6 sm:space-y-8">
               {[
                 { icon: Mail, title: 'Email', content: <a href="mailto:contact@insightball.com" className="text-sm sm:text-base text-gray-400 hover:text-violet-400 transition-colors">contact@insightball.com</a> },
-                { icon: Phone, title: 'Téléphone', content: <a href="tel:+33123456789" className="text-sm sm:text-base text-gray-400 hover:text-violet-400 transition-colors">+33 1 23 45 67 89</a> },
-                { icon: MapPin, title: 'Adresse', content: <p className="text-sm sm:text-base text-gray-400">42 Avenue des Champs-Élysées<br />75008 Paris, France</p> },
               ].map((c) => (
-                <div key={c.title} className="flex items-start space-x-4">
+                <div key={c.title} className="flex items-center space-x-4">
                   <div className="w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-br from-violet-500 to-purple-500 rounded-lg flex items-center justify-center shrink-0">
                     <c.icon className="w-5 sm:w-6 h-5 sm:h-6 text-white" />
                   </div>
