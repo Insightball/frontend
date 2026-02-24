@@ -334,7 +334,7 @@ export default function LandingPage() {
         transition: 'box-shadow .2s',
       }}>
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <img src="/logo.svg" alt="INSIGHTBALL" style={{ height: 36, width: 'auto', display: 'block' }} />
+          <img src="/logo.svg" alt="INSIGHTBALL" style={{ height: 36, width: 'auto', display: 'block', mixBlendMode: 'screen' }} />
           <span style={{ fontFamily: G.display, fontSize: 18, fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase', color: G.white }}>
             INSIGHT<span style={{ color: G.gold }}>BALL</span>
           </span>
@@ -888,7 +888,7 @@ export default function LandingPage() {
         <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr', gap: 40, marginBottom: 48 }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-              <img src="/logo.svg" alt="INSIGHTBALL" style={{ height: 36, width: 'auto', display: 'block' }} />
+              <img src="/logo.svg" alt="INSIGHTBALL" style={{ height: 36, width: 'auto', display: 'block', mixBlendMode: 'screen' }} />
               <span style={{ fontFamily: G.display, fontSize: 18, fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase', color: G.white }}>
                 INSIGHT<span style={{ color: G.gold }}>BALL</span>
               </span>
