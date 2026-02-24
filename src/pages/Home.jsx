@@ -512,53 +512,45 @@ export default function LandingPage() {
       )}
 
       {/* ══ HERO ═══════════════════════════════════════ */}
-      {/* ══ HERO LAYOUT ══ */}
-      <div className="hero-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', maxWidth: 1200, margin: '0 auto', padding: '100px 48px 60px', gap: 60, minHeight: '100vh' }}>
-
-        {/* ── Texte gauche ── */}
-        <div style={{ padding: '80px 0' }}>
-          <h1 className="hero-title" style={{ fontFamily: G.display, fontSize: 'clamp(48px,6vw,78px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.ink, marginBottom: 24, opacity: 0, animation: 'heroUp .5s .2s forwards' }}>
-            Transformez vos vidéos<br/>
-            <span style={{ color: G.gold }}>en données<br/>exploitables.</span>
-          </h1>
-
-          <p style={{ fontSize: 18, lineHeight: 1.65, color: G.muted, maxWidth: 440, marginBottom: 36, opacity: 0, animation: 'heroUp .5s .35s forwards' }}>
-            Uploadez votre vidéo. Recevez un <strong style={{ color: G.ink, fontWeight: 500 }}>rapport tactique complet</strong> — heatmaps, stats individuelles, phases de jeu.
-          </p>
-
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', opacity: 0, animation: 'heroUp .5s .45s forwards' }}>
-            <a href="#waitlist" style={{ ...btnPrimary, textDecoration:'none' }}
-              onMouseEnter={e => e.currentTarget.style.background = G.goldD}
-              onMouseLeave={e => e.currentTarget.style.background = G.gold}>
-              Demander un accès →
-            </a>
-            <a href="#rapport" style={btnOutline}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = G.ink; e.currentTarget.style.color = G.ink }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = G.border2; e.currentTarget.style.color = G.ink2 }}>
-              Voir un exemple
-            </a>
+      {/* ══ HERO ══ */}
+      <div style={{ paddingTop: 60 }}>
+        <div className="hero-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', maxWidth: 1200, margin: '0 auto', padding: '100px 48px 60px', gap: 60, minHeight: '100vh' }}>
+          <div style={{ padding: '80px 0' }}>
+            <h1 className="hero-title" style={{ fontFamily: G.display, fontSize: 'clamp(48px,6vw,78px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.ink, marginBottom: 24, opacity: 0, animation: 'heroUp .5s .2s forwards' }}>
+              Transformez vos vidéos<br/>
+              <span style={{ color: G.gold }}>en données<br/>exploitables.</span>
+            </h1>
+            <p style={{ fontSize: 18, lineHeight: 1.65, color: G.muted, maxWidth: 440, marginBottom: 36, opacity: 0, animation: 'heroUp .5s .35s forwards' }}>
+              Uploadez votre vidéo. Recevez un <strong style={{ color: G.ink, fontWeight: 500 }}>rapport tactique complet</strong> — heatmaps, stats individuelles, phases de jeu.
+            </p>
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', opacity: 0, animation: 'heroUp .5s .45s forwards' }}>
+              <a href="#waitlist" style={{ ...btnPrimary, textDecoration:'none' }}
+                onMouseEnter={e => e.currentTarget.style.background = G.goldD}
+                onMouseLeave={e => e.currentTarget.style.background = G.gold}>
+                Demander un accès →
+              </a>
+              <a href="#rapport" style={btnOutline}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = G.ink; e.currentTarget.style.color = G.ink }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = G.border2; e.currentTarget.style.color = G.ink2 }}>
+                Voir un exemple
+              </a>
+            </div>
+            <div style={{ display: 'flex', gap: 32, marginTop: 48, paddingTop: 32, borderTop: `1px solid ${G.border}`, opacity: 0, animation: 'heroUp .5s .6s forwards', flexWrap: 'wrap' }}>
+              {[['40+','métriques analysées'],['< 1h','rapport généré'],['Séniors→U14','toutes catégories']].map(([n,l]) => (
+                <div key={l}>
+                  <div style={{ fontFamily: G.display, fontSize: 32, fontWeight: 800, color: G.ink, lineHeight: 1 }}>{n}</div>
+                  <div style={{ fontSize: 13, color: G.muted, marginTop: 3 }}>{l}</div>
+                </div>
+              ))}
+            </div>
           </div>
-
-          <div style={{ display: 'flex', gap: 32, marginTop: 48, paddingTop: 32, borderTop: `1px solid ${G.border}`, opacity: 0, animation: 'heroUp .5s .6s forwards', flexWrap: 'wrap' }}>
-            {[['40+','métriques analysées'],['< 1h','rapport généré'],['Séniors→U14','toutes catégories']].map(([n,l]) => (
-              <div key={l}>
-                <div style={{ fontFamily: G.display, fontSize: 32, fontWeight: 800, color: G.ink, lineHeight: 1 }}>{n}</div>
-                <div style={{ fontSize: 13, color: G.muted, marginTop: 3 }}>{l}</div>
-              </div>
-            ))}
+          <div className="hero-right" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, animation: 'heroUp .6s .3s forwards' }}>
+            <MockupRapport/>
           </div>
         </div>
-
-        {/* ── Mockup rapport — desktop : droite, mobile : dessous ── */}
-        <div className="hero-right" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, animation: 'heroUp .6s .3s forwards' }}>
-          <MockupRapport/>
+        <div className="hero-mobile-mockup" style={{ display: 'none', padding: '0 16px 56px' }}>
+          <MockupRapport mobile/>
         </div>
-      </div>
-
-      {/* Mockup mobile — sous le texte hero, visible uniquement sur mobile */}
-      <div className="hero-mobile-mockup" style={{ display: 'none', padding: '0 16px 56px' }}>
-        <MockupRapport mobile/>
-      </div>
       </div>
 
       {/* ══ FEATURES ═══════════════════════════════════ */}
