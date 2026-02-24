@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 // ← Header supprimé des routes login/signup/subscription — ces pages ont leur propre nav
@@ -25,13 +25,16 @@ function App() {
           {/* Landing - gère sa propre nav */}
           <Route path="/" element={<Home />} />
 
-          {/* Auth - gèrent leur propre nav, PAS de <Header /> */}
-          <Route path="/login"  element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+          {/* Auth — accès secret uniquement, URL non publiée */}
+          <Route path="/x-portal-7f2a/login"  element={<Login />} />
+          <Route path="/x-portal-7f2a/signup" element={<Signup />} />
+          {/* Redirections si quelqu'un devine les anciennes URLs */}
+          <Route path="/login"  element={<Navigate to="/" replace />} />
+          <Route path="/signup" element={<Navigate to="/" replace />} />
 
           {/* Demo / Plans - gèrent leur propre nav */}
           <Route path="/demo"                element={<Dashboard />} />
-          <Route path="/subscription/plans"  element={<SubscriptionPlans />} />
+          <Route path="/x-portal-7f2a/plans" element={<SubscriptionPlans />} />
           <Route path="/admin" element={<AdminPanel />} />
 
           {/* Protected dashboard routes */}

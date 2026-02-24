@@ -85,7 +85,7 @@ function Signup() {
             INSIGHT<span style={{ color:G.gold }}>BALL</span>
           </span>
         </Link>
-        <Link to="/login" style={{ fontFamily:G.mono, fontSize:9, letterSpacing:'.16em', textTransform:'uppercase', color:'rgba(245,242,235,0.4)', textDecoration:'none' }}
+        <Link to="/x-portal-7f2a/login" style={{ fontFamily:G.mono, fontSize:9, letterSpacing:'.16em', textTransform:'uppercase', color:'rgba(245,242,235,0.4)', textDecoration:'none' }}
           onMouseEnter={e=>e.target.style.color=G.gold} onMouseLeave={e=>e.target.style.color='rgba(245,242,235,0.4)'}>
           Déjà un compte →
         </Link>
@@ -218,7 +218,7 @@ function Signup() {
               <div style={{ marginTop:24, paddingTop:20, borderTop:'1px solid rgba(255,255,255,0.06)', textAlign:'center' }}>
                 <p style={{ fontFamily:G.mono, fontSize:10, color:'rgba(245,242,235,0.3)', margin:0 }}>
                   Déjà un compte ?{' '}
-                  <Link to="/login" style={{ color:G.gold, textDecoration:'none', fontWeight:700 }}>Se connecter</Link>
+                  <Link to="/x-portal-7f2a/login" style={{ color:G.gold, textDecoration:'none', fontWeight:700 }}>Se connecter</Link>
                 </p>
               </div>
             </div>

@@ -73,7 +73,7 @@ function Login() {
             INSIGHT<span style={{ color: G.gold }}>BALL</span>
           </span>
         </Link>
-        <Link to="/signup" style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.16em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.4)', textDecoration: 'none', transition: 'color .15s' }}
+        <Link to="/x-portal-7f2a/signup" style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.16em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.4)', textDecoration: 'none', transition: 'color .15s' }}
           onMouseEnter={e => e.target.style.color = G.gold}
           onMouseLeave={e => e.target.style.color = 'rgba(245,242,235,0.4)'}
         >
@@ -120,7 +120,7 @@ function Login() {
               <div style={{ marginBottom: 36 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                   <label style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.22em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.35)' }}>Mot de passe</label>
-                  <Link to="/forgot-password" style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase', color: G.gold, textDecoration: 'none' }}>Oublié ?</Link>
+                  <Link to="/x-portal-7f2a/forgot-password" style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase', color: G.gold, textDecoration: 'none' }}>Oublié ?</Link>
                 </div>
                 <input type="password" value={password} onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••" required autoComplete="current-password"
@@ -149,7 +149,7 @@ function Login() {
             <div style={{ marginTop: 28, paddingTop: 22, borderTop: '1px solid rgba(255,255,255,0.06)', textAlign: 'center' }}>
               <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.08em', color: 'rgba(245,242,235,0.3)', margin: 0 }}>
                 Pas encore de compte ?{' '}
-                <Link to="/signup" style={{ color: G.gold, textDecoration: 'none', fontWeight: 700 }}>Créer un compte</Link>
+                <Link to="/x-portal-7f2a/signup" style={{ color: G.gold, textDecoration: 'none', fontWeight: 700 }}>Créer un compte</Link>
               </p>
             </div>
           </div>
