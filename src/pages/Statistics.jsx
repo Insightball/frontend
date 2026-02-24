@@ -313,17 +313,16 @@ export default function Statistics() {
 
         {/* Tabs */}
         <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid ${G.border}` }}>
-          {[{ id: 'collective', label: '⚽  Collectives' }, { id: 'individual', label: '👤  Individuelles' }].map(t => (
+          {[{ id: 'collective', label: 'Collectives' }, { id: 'individual', label: 'Individuelles' }].map(t => (
             <button key={t.id} onClick={() => setTab(t.id)} style={{
-              padding: '10px 28px', border: 'none', cursor: 'pointer',
-              fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase',
-              background: tab === t.id ? G.gold : 'transparent',
-              color: tab === t.id ? '#0f0f0d' : G.muted,
+              padding: '12px 32px', border: 'none', cursor: 'pointer',
+              fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase',
+              background: 'transparent',
+              color: tab === t.id ? G.text : G.muted,
               fontWeight: tab === t.id ? 700 : 400,
-              borderBottom: tab === t.id ? 'none' : 'none',
+              borderBottom: tab === t.id ? `2px solid ${G.gold}` : '2px solid transparent',
+              marginBottom: -1,
               transition: 'all .15s',
-              marginBottom: tab === t.id ? -1 : 0,
-              borderBottom: tab === t.id ? `1px solid ${G.gold}` : 'none',
             }}>{t.label}</button>
           ))}
         </div>
@@ -465,8 +464,8 @@ export default function Statistics() {
       {tab === 'individual' && (
         <div>
           <div style={{ display: 'flex', gap: 4, marginBottom: 20 }}>
-            {[{ id: 'stats', label: '📊 Stats' }, { id: 'terrain', label: '🗺 Terrain' }, { id: 'compare', label: '⚖️ Comparer' }, { id: 'progression', label: '📈 Progression' }].map(t => (
-              <button key={t.id} onClick={() => setIndivTab(t.id)} style={{ padding: '8px 18px', border: indivTab === t.id ? 'none' : `1px solid ${G.border}`, cursor: 'pointer', fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', background: indivTab === t.id ? G.gold : 'transparent', color: indivTab === t.id ? '#0f0f0d' : G.muted, fontWeight: indivTab === t.id ? 700 : 400, transition: 'all .15s' }}>{t.label}</button>
+            {[{ id: 'stats', label: 'Stats' }, { id: 'terrain', label: 'Terrain' }, { id: 'compare', label: 'Comparer' }, { id: 'progression', label: 'Progression' }].map(t => (
+              <button key={t.id} onClick={() => setIndivTab(t.id)} style={{ padding: '12px 24px', border: 'none', borderBottom: indivTab === t.id ? `2px solid ${G.gold}` : '2px solid transparent', cursor: 'pointer', fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', background: 'transparent', color: indivTab === t.id ? G.text : G.muted, fontWeight: indivTab === t.id ? 700 : 400, transition: 'all .15s', marginBottom: -1 }}>{t.label}</button>
             ))}
           </div>
 

@@ -4,16 +4,27 @@ import { Video, Calendar, Clock, TrendingUp, MapPin, Plus, ChevronRight } from '
 import DashboardLayout from '../components/DashboardLayout'
 import matchService from '../services/matchService'
 
+const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');`
+
 const G = {
-  gold: '#c9a227', goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.25)',
-  mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
-  border: 'rgba(15,15,13,0.09)', muted: 'rgba(15,15,13,0.42)',
+  bg:      '#0a0908',
+  card:    'rgba(255,255,255,0.025)',
+  border:  'rgba(255,255,255,0.07)',
+  text:    '#f5f2eb',
+  muted:   'rgba(245,242,235,0.38)',
+  muted2:  'rgba(245,242,235,0.18)',
+  gold:    '#c9a227',
+  goldD:   '#a8861f',
+  goldBg:  'rgba(201,162,39,0.08)',
+  goldBdr: 'rgba(201,162,39,0.25)',
+  mono:    "'JetBrains Mono', monospace",
+  display: "'Anton', sans-serif",
 }
 
 function useCountUp(target, duration = 800) {
   const [count, setCount] = useState(0)
   useEffect(() => {
-    if (target === 0) return
+    if (target === 0) { setCount(0); return }
     let start = 0; const step = target / (duration / 16)
     const timer = setInterval(() => {
       start += step
@@ -26,22 +37,22 @@ function useCountUp(target, duration = 800) {
 
 function StatCard({ label, value, icon: Icon, color, delay = 0 }) {
   const count = useCountUp(value, 700)
-  const [visible, setVisible] = useState(false)
-  useEffect(() => { const t = setTimeout(() => setVisible(true), delay); return () => clearTimeout(t) }, [delay])
+  const [vis, setVis] = useState(false)
+  useEffect(() => { const t = setTimeout(() => setVis(true), delay); return () => clearTimeout(t) }, [delay])
   return (
     <div style={{
-      opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(14px)',
+      opacity: vis ? 1 : 0, transform: vis ? 'translateY(0)' : 'translateY(14px)',
       transition: 'all .45s cubic-bezier(.34,1.56,.64,1)',
-      background: '#ffffff', border: `1px solid rgba(15,15,13,0.09)`,
-      borderTop: `2px solid ${color}`, padding: '20px 18px', position: 'relative', overflow: 'hidden',
+      background: G.card, border: `1px solid ${G.border}`,
+      borderTop: `2px solid ${color}`, padding: '20px 18px',
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-        <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: 'rgba(15,15,13,0.45)' }}>{label}</span>
+        <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted }}>{label}</span>
         <div style={{ width: 28, height: 28, background: color + '15', border: `1px solid ${color}25`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <Icon size={13} color={color} />
         </div>
       </div>
-      <div style={{ fontFamily: G.display, fontSize: 42, lineHeight: 1, color: '#0f0f0d', letterSpacing: '.01em' }}>{count}</div>
+      <div style={{ fontFamily: G.display, fontSize: 44, lineHeight: 1, color: G.text, letterSpacing: '.01em' }}>{count}</div>
     </div>
   )
 }
@@ -55,7 +66,7 @@ function StatusBadge({ status }) {
   }
   const { label, color } = map[status] || map.pending
   return (
-    <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', padding: '4px 10px', background: color + '12', color, border: `1px solid ${color}25` }}>
+    <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase', padding: '3px 10px', background: color + '12', color, border: `1px solid ${color}25`, flexShrink: 0 }}>
       {label}
     </span>
   )
@@ -64,28 +75,27 @@ function StatusBadge({ status }) {
 function DashboardMatches() {
   const [matches, setMatches] = useState([])
   const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState('all')
+  const [filter, setFilter]   = useState('all')
 
   useEffect(() => { loadMatches() }, [])
 
   const loadMatches = async () => {
     try { setLoading(true); const data = await matchService.getMatches(); setMatches(data) }
-    catch (error) { console.error('Error:', error) }
-    finally { setLoading(false) }
+    catch (e) { console.error(e) } finally { setLoading(false) }
   }
 
   const formatDate = (d) => new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
   const filteredMatches = matches.filter(m => filter === 'all' || m.status === filter)
 
   const stats = [
-    { label: 'Total matchs',  value: matches.length,                                             icon: Video,      color: G.gold,    delay: 0 },
-    { label: 'En attente',    value: matches.filter(m => m.status === 'pending').length,          icon: Clock,      color: '#f59e0b', delay: 70 },
-    { label: 'En cours',      value: matches.filter(m => m.status === 'processing').length,       icon: TrendingUp, color: '#3b82f6', delay: 140 },
-    { label: 'Terminés',      value: matches.filter(m => m.status === 'completed').length,        icon: TrendingUp, color: '#22c55e', delay: 210 },
+    { label: 'Total matchs', value: matches.length,                                        icon: Video,      color: G.gold,    delay: 0   },
+    { label: 'En attente',   value: matches.filter(m => m.status === 'pending').length,    icon: Clock,      color: '#f59e0b', delay: 70  },
+    { label: 'En cours',     value: matches.filter(m => m.status === 'processing').length, icon: TrendingUp, color: '#3b82f6', delay: 140 },
+    { label: 'Terminés',     value: matches.filter(m => m.status === 'completed').length,  icon: TrendingUp, color: '#22c55e', delay: 210 },
   ]
 
   const filters = [
-    { key: 'all',        label: 'Tous' },
+    { key: 'all',        label: 'Tous',       color: G.gold },
     { key: 'pending',    label: 'En attente', color: '#f59e0b' },
     { key: 'processing', label: 'En cours',   color: '#3b82f6' },
     { key: 'completed',  label: 'Terminés',   color: '#22c55e' },
@@ -93,62 +103,75 @@ function DashboardMatches() {
 
   return (
     <DashboardLayout>
-      <style>{`@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }`}</style>
+      <style>{`
+        ${FONTS} * { box-sizing:border-box; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes spin { to { transform:rotate(360deg); } }
+      `}</style>
 
-      {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28 }}>
+      {/* ── HEADER ── */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28, paddingBottom: 24, borderBottom: `1px solid ${G.border}` }}>
         <div>
           <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
             <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />Mes matchs
           </div>
-          <h1 style={{ fontFamily: G.display, fontSize: 44, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: '#0f0f0d', margin: 0 }}>
-            Historique<br /><span style={{ color: G.gold }}>& analyses.</span>
+          {/* "Historique" plein et visible */}
+          <h1 style={{ fontFamily: G.display, fontSize: 52, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', margin: 0 }}>
+            <span style={{ color: G.text }}>Historique</span><br />
+            <span style={{ color: G.gold }}>& analyses.</span>
           </h1>
         </div>
         <Link to="/dashboard/matches/upload" style={{
           display: 'inline-flex', alignItems: 'center', gap: 8,
-          padding: '12px 24px', background: G.gold, color: '#0f0f0d',
+          padding: '12px 24px', background: G.gold, color: '#0a0908',
           fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700,
-          textDecoration: 'none', borderRadius: 2, transition: 'background .15s', marginTop: 8,
-        }}>
+          textDecoration: 'none', transition: 'background .15s', marginTop: 8,
+        }}
+          onMouseEnter={e => e.currentTarget.style.background = G.goldD}
+          onMouseLeave={e => e.currentTarget.style.background = G.gold}
+        >
           <Plus size={14} /> Nouveau match
         </Link>
       </div>
 
-      {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 1, background: G.border, marginBottom: 28 }}>
+      {/* ── STAT CARDS ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 1, background: G.border, marginBottom: 24 }}>
         {stats.map(s => <StatCard key={s.label} {...s} />)}
       </div>
 
-      {/* Filters */}
-      <div style={{ display: 'flex', gap: 4, marginBottom: 20 }}>
+      {/* ── FILTRES ── */}
+      <div style={{ display: 'flex', gap: 1, marginBottom: 24, background: G.border }}>
         {filters.map(({ key, label, color }) => (
           <button key={key} onClick={() => setFilter(key)} style={{
-            padding: '8px 18px', fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase',
-            background: filter === key ? (color || G.gold) : 'transparent',
-            color: filter === key ? '#0f0f0d' : G.muted,
-            border: filter === key ? 'none' : `1px solid ${G.border}`,
-            cursor: 'pointer', transition: 'all .15s',
+            flex: 1, padding: '10px 0',
+            fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase',
+            background: filter === key ? color + '18' : G.card,
+            color: filter === key ? color : G.muted,
+            borderTop: `2px solid ${filter === key ? color : 'transparent'}`,
+            border: 'none', cursor: 'pointer', transition: 'all .15s',
           }}>{label}</button>
         ))}
       </div>
 
-      {/* List */}
+      {/* ── LISTE ── */}
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '60px 0' }}>
-          <div style={{ width: 28, height: 28, border: `2px solid ${G.goldBdr}`, borderTopColor: G.gold, borderRadius: '50%', animation: 'spin .7s linear infinite', margin: '0 auto 12px' }} />
-          <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', color: 'rgba(15,15,13,0.45)' }}>Chargement...</p>
+        <div style={{ textAlign: 'center', padding: '80px 0' }}>
+          <div style={{ width: 28, height: 28, border: `2px solid ${G.goldBdr}`, borderTopColor: G.gold, borderRadius: '50%', animation: 'spin .7s linear infinite', margin: '0 auto 14px' }} />
+          <p style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted }}>Chargement...</p>
         </div>
       ) : filteredMatches.length === 0 ? (
-        <div style={{ background: '#faf8f4', border: `1px dashed ${G.goldBdr}`, padding: '64px 24px', textAlign: 'center' }}>
-          <div style={{ width: 52, height: 52, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+        /* ── EMPTY STATE full dark ── */
+        <div style={{ background: G.card, border: `1px solid ${G.border}`, borderTop: `2px solid ${G.goldBdr}`, padding: '80px 24px', textAlign: 'center' }}>
+          <div style={{ width: 56, height: 56, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
             <Video size={24} color={G.gold} />
           </div>
-          <h3 style={{ fontFamily: G.display, fontSize: 24, textTransform: 'uppercase', letterSpacing: '.03em', marginBottom: 8, color: '#0f0f0d' }}>Aucun match</h3>
-          <p style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(15,15,13,0.45)', marginBottom: 24, letterSpacing: '.06em' }}>
+          <h3 style={{ fontFamily: G.display, fontSize: 28, textTransform: 'uppercase', letterSpacing: '.03em', marginBottom: 10, color: G.text }}>
+            {filter === 'all' ? 'Aucun match' : 'Aucun résultat'}
+          </h3>
+          <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, marginBottom: 28, letterSpacing: '.06em', lineHeight: 1.7 }}>
             {filter === 'all' ? 'Uploadez votre premier match pour le faire analyser' : 'Aucun match dans cette catégorie'}
           </p>
-          <Link to="/dashboard/matches/upload" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '11px 24px', background: G.gold, color: '#0f0f0d', fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700, textDecoration: 'none' }}>
+          <Link to="/dashboard/matches/upload" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 28px', background: G.gold, color: '#0a0908', fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', fontWeight: 700, textDecoration: 'none' }}>
             <Plus size={14} /> Ajouter un match
           </Link>
         </div>
@@ -156,33 +179,33 @@ function DashboardMatches() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
           {filteredMatches.map((match, i) => (
             <Link key={match.id} to={`/dashboard/matches/${match.id}`}
-              style={{ display: 'block', background: '#ffffff', padding: '20px 24px', textDecoration: 'none', color: 'inherit', transition: 'background .15s', animation: `fadeIn .35s ease ${i * 50}ms both` }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(201,162,39,0.04)'; e.currentTarget.style.borderLeft = `3px solid ${G.gold}` }}
-              onMouseLeave={e => { e.currentTarget.style.background = '#0a0a08'; e.currentTarget.style.borderLeft = 'none' }}
+              style={{ display: 'block', background: G.card, padding: '20px 24px', textDecoration: 'none', transition: 'background .15s, border-left .15s', animation: `fadeIn .35s ease ${i * 50}ms both`, borderLeft: '2px solid transparent' }}
+              onMouseEnter={e => { e.currentTarget.style.background = G.goldBg; e.currentTarget.style.borderLeft = `2px solid ${G.gold}` }}
+              onMouseLeave={e => { e.currentTarget.style.background = G.card;   e.currentTarget.style.borderLeft = '2px solid transparent' }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-                    <h3 style={{ fontFamily: G.display, fontSize: 20, textTransform: 'uppercase', letterSpacing: '.03em', color: '#0f0f0d', margin: 0 }}>vs {match.opponent}</h3>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8, flexWrap: 'wrap' }}>
+                    <h3 style={{ fontFamily: G.display, fontSize: 20, textTransform: 'uppercase', letterSpacing: '.03em', color: G.text, margin: 0 }}>vs {match.opponent}</h3>
                     <StatusBadge status={match.status} />
+                    {match.category && <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.1em', padding: '2px 8px', border: `1px solid ${G.border}`, color: G.muted }}>{match.category}</span>}
                   </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, fontFamily: G.mono, fontSize: 10, color: 'rgba(15,15,13,0.45)', letterSpacing: '.06em' }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.06em' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                      <Calendar size={11} />{formatDate(match.date)}
+                      <Calendar size={10} />{formatDate(match.date)}
                     </div>
-                    {match.category && <span style={{ padding: '2px 8px', border: `1px solid rgba(15,15,13,0.09)`, color: 'rgba(15,15,13,0.45)' }}>{match.category}</span>}
-                    {match.location && <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}><MapPin size={11} />{match.location}</div>}
+                    {match.location && <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}><MapPin size={10} />{match.location}</div>}
                   </div>
 
                   {match.score_home !== null && match.score_away !== null && (
-                    <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span style={{ fontFamily: G.display, fontSize: 28, lineHeight: 1, color: '#0f0f0d' }}>{match.score_home}</span>
-                      <span style={{ fontFamily: G.mono, fontSize: 12, color: 'rgba(15,15,13,0.45)' }}>—</span>
-                      <span style={{ fontFamily: G.display, fontSize: 28, lineHeight: 1, color: '#0f0f0d' }}>{match.score_away}</span>
+                    <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <span style={{ fontFamily: G.display, fontSize: 28, lineHeight: 1, color: G.text }}>{match.score_home}</span>
+                      <span style={{ fontFamily: G.mono, fontSize: 14, color: G.muted }}>–</span>
+                      <span style={{ fontFamily: G.display, fontSize: 28, lineHeight: 1, color: G.text }}>{match.score_away}</span>
                       <span style={{
-                        fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase',
-                        marginLeft: 8, padding: '3px 10px',
-                        background: match.score_home > match.score_away ? 'rgba(34,197,94,0.08)' : match.score_home < match.score_away ? 'rgba(239,68,68,0.08)' : 'rgba(245,242,235,0.05)',
+                        fontFamily: G.mono, fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase',
+                        marginLeft: 6, padding: '3px 10px',
+                        background: match.score_home > match.score_away ? 'rgba(34,197,94,0.1)' : match.score_home < match.score_away ? 'rgba(239,68,68,0.1)' : 'rgba(245,242,235,0.05)',
                         color: match.score_home > match.score_away ? '#22c55e' : match.score_home < match.score_away ? '#ef4444' : G.muted,
                         border: `1px solid ${match.score_home > match.score_away ? 'rgba(34,197,94,0.2)' : match.score_home < match.score_away ? 'rgba(239,68,68,0.2)' : G.border}`,
                       }}>
@@ -192,23 +215,22 @@ function DashboardMatches() {
                   )}
 
                   {match.status === 'processing' && match.progress > 0 && (
-                    <div style={{ marginTop: 10 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: G.mono, fontSize: 9, color: 'rgba(15,15,13,0.45)', marginBottom: 5, letterSpacing: '.08em' }}>
+                    <div style={{ marginTop: 12 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: G.mono, fontSize: 8, color: G.muted, marginBottom: 5, letterSpacing: '.08em' }}>
                         <span>Analyse en cours...</span><span>{match.progress}%</span>
                       </div>
-                      <div style={{ height: 2, background: G.border, overflow: 'hidden' }}>
+                      <div style={{ height: 2, background: G.border }}>
                         <div style={{ height: '100%', width: `${match.progress}%`, background: G.gold, transition: 'width .3s' }} />
                       </div>
                     </div>
                   )}
                 </div>
-                <ChevronRight size={16} color={G.muted} style={{ marginLeft: 16, flexShrink: 0 }} />
+                <ChevronRight size={15} color={G.muted} style={{ marginLeft: 16, flexShrink: 0 }} />
               </div>
             </Link>
           ))}
         </div>
       )}
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </DashboardLayout>
   )
 }
