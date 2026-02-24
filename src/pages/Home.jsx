@@ -23,6 +23,10 @@ const G = {
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;600&display=swap');`
 
+/* ─── Google Sheets webhook URL ─────────────── */
+/* Remplace par ton URL Apps Script une fois deployé */
+const SHEETS_URL = 'https://script.google.com/macros/s/TON_SCRIPT_ID/exec'
+
 /* ─── Scroll reveal hook ─────────────────────── */
 function useReveal() {
   const ref = useRef(null)
@@ -30,7 +34,10 @@ function useReveal() {
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVisible(true); obs.unobserve(el) } }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' })
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.unobserve(el) } },
+      { threshold: 0.1, rootMargin: '0px 0px -30px 0px' }
+    )
     obs.observe(el)
     return () => obs.disconnect()
   }, [])
@@ -47,7 +54,7 @@ function AnimBar({ pct, color }) {
   )
 }
 
-/* ─── Composant section wrapper ──────────────── */
+/* ─── Reveal wrapper ─────────────────────────── */
 function Reveal({ children, delay = 0, style }) {
   const [ref, vis] = useReveal()
   return (
@@ -67,61 +74,172 @@ const PLAYERS = [
   { num: 6,  name: 'Fogacci L.',   pos: 'MIL', passes: 54, duels: 11, buts: 2, km: 10.3 },
 ]
 
-/* ─── Terrain SVG ────────────────────────────── */
-function PitchSVG() {
+/* ─── Heatmap SVG pro ────────────────────────── */
+function HeatmapSVG() {
   return (
-    <svg width="100%" viewBox="0 0 300 185" style={{ display: 'block', background: '#0b1a0b' }}>
-      <rect width="300" height="185" fill="#0b1a0b"/>
-      <rect x="7" y="7" width="286" height="171" fill="none" stroke="rgba(255,255,255,0.13)" strokeWidth="1"/>
-      <line x1="150" y1="7" x2="150" y2="178" stroke="rgba(255,255,255,0.10)" strokeWidth="1"/>
-      <circle cx="150" cy="92" r="25" fill="none" stroke="rgba(255,255,255,0.10)" strokeWidth="1"/>
-      <rect x="7" y="60" width="42" height="65" fill="none" stroke="rgba(255,255,255,0.09)" strokeWidth="1"/>
-      <rect x="251" y="60" width="42" height="65" fill="none" stroke="rgba(255,255,255,0.09)" strokeWidth="1"/>
-      {/* Zones chaleur */}
-      <circle cx="75"  cy="92" r="28" fill="rgba(201,162,39,0.08)" style={{filter:'blur(10px)'}}/>
-      <circle cx="150" cy="72" r="22" fill="rgba(201,162,39,0.12)" style={{filter:'blur(9px)'}}/>
-      <circle cx="150" cy="112" r="20" fill="rgba(201,162,39,0.10)" style={{filter:'blur(9px)'}}/>
-      <circle cx="210" cy="82" r="30" fill="rgba(239,68,68,0.16)" style={{filter:'blur(11px)'}}/>
-      <circle cx="240" cy="63" r="22" fill="rgba(239,68,68,0.18)" style={{filter:'blur(9px)'}}/>
-      <circle cx="240" cy="122" r="20" fill="rgba(239,68,68,0.15)" style={{filter:'blur(9px)'}}/>
-      <circle cx="265" cy="92" r="16" fill="rgba(239,68,68,0.22)" style={{filter:'blur(7px)'}}/>
-      {/* Points chauds */}
-      <circle cx="210" cy="82"  r="4"   fill="#ef4444" opacity=".85"/>
-      <circle cx="240" cy="63"  r="3.5" fill="#ef4444" opacity=".85"/>
-      <circle cx="240" cy="122" r="3.5" fill="#ef4444" opacity=".85"/>
-      <circle cx="150" cy="72"  r="3"   fill="#c9a227" opacity=".80"/>
-      <circle cx="150" cy="112" r="3"   fill="#c9a227" opacity=".80"/>
+    <svg width="100%" viewBox="0 0 320 200" style={{ display: 'block', background: '#0c1f0c' }}>
+      <defs>
+        <pattern id="stripes" x="0" y="0" width="22" height="200" patternUnits="userSpaceOnUse">
+          <rect width="11" height="200" fill="#0c1f0c"/>
+          <rect x="11" width="11" height="200" fill="#0e230e"/>
+        </pattern>
+        {/* Gradients chaleur */}
+        <radialGradient id="hRed" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stopColor="#ef4444" stopOpacity="0.90"/>
+          <stop offset="40%"  stopColor="#f97316" stopOpacity="0.55"/>
+          <stop offset="100%" stopColor="#ef4444" stopOpacity="0"/>
+        </radialGradient>
+        <radialGradient id="hOrange" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stopColor="#f97316" stopOpacity="0.80"/>
+          <stop offset="50%"  stopColor="#eab308" stopOpacity="0.40"/>
+          <stop offset="100%" stopColor="#f97316" stopOpacity="0"/>
+        </radialGradient>
+        <radialGradient id="hGold" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stopColor="#c9a227" stopOpacity="0.75"/>
+          <stop offset="55%"  stopColor="#c9a227" stopOpacity="0.30"/>
+          <stop offset="100%" stopColor="#c9a227" stopOpacity="0"/>
+        </radialGradient>
+        <radialGradient id="hGreen" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stopColor="#22c55e" stopOpacity="0.55"/>
+          <stop offset="100%" stopColor="#22c55e" stopOpacity="0"/>
+        </radialGradient>
+      </defs>
+
+      {/* Fond strié */}
+      <rect width="320" height="200" fill="url(#stripes)"/>
+
+      {/* Lignes terrain */}
+      <g stroke="rgba(255,255,255,0.20)" strokeWidth="1" fill="none">
+        <rect x="6" y="6" width="308" height="188"/>
+        <line x1="160" y1="6" x2="160" y2="194"/>
+        <circle cx="160" cy="100" r="28"/>
+        <circle cx="160" cy="100" r="2" fill="rgba(255,255,255,0.20)" stroke="none"/>
+        {/* Surfaces */}
+        <rect x="6" y="56" width="48" height="88"/>
+        <rect x="6" y="74" width="18" height="52"/>
+        <rect x="266" y="56" width="48" height="88"/>
+        <rect x="296" y="74" width="18" height="52"/>
+        {/* Arc réparation */}
+        <path d="M54 74 A28 28 0 0 1 54 126" strokeDasharray="4 3"/>
+        <path d="M266 74 A28 28 0 0 0 266 126" strokeDasharray="4 3"/>
+        {/* Corners */}
+        <path d="M6 18 A12 12 0 0 1 18 6"/>
+        <path d="M302 6 A12 12 0 0 1 314 18"/>
+        <path d="M314 182 A12 12 0 0 1 302 194"/>
+        <path d="M18 194 A12 12 0 0 1 6 182"/>
+      </g>
+      {/* Cages */}
+      <rect x="1" y="80" width="5" height="40" fill="none" stroke="rgba(255,255,255,0.45)" strokeWidth="1"/>
+      <rect x="314" y="80" width="5" height="40" fill="none" stroke="rgba(255,255,255,0.45)" strokeWidth="1"/>
+
+      {/* ── Zones de chaleur (style pro) ── */}
+      {/* Zone rouge — attaque droite (côté adversaire) */}
+      <ellipse cx="272" cy="88"  rx="52" ry="44" fill="url(#hRed)"    style={{filter:'blur(16px)'}}/>
+      <ellipse cx="255" cy="118" rx="40" ry="32" fill="url(#hRed)"    style={{filter:'blur(13px)'}}/>
+      {/* Zone orange — couloir milieu offensif droit */}
+      <ellipse cx="215" cy="78"  rx="42" ry="34" fill="url(#hOrange)" style={{filter:'blur(12px)'}}/>
+      <ellipse cx="230" cy="130" rx="34" ry="26" fill="url(#hOrange)" style={{filter:'blur(11px)'}}/>
+      {/* Zone or — axe central offensif */}
+      <ellipse cx="165" cy="72"  rx="35" ry="28" fill="url(#hGold)"   style={{filter:'blur(11px)'}}/>
+      <ellipse cx="158" cy="125" rx="30" ry="24" fill="url(#hGold)"   style={{filter:'blur(10px)'}}/>
+      {/* Zone verte — récup / défense centrale */}
+      <ellipse cx="82"  cy="98"  rx="36" ry="30" fill="url(#hGreen)"  style={{filter:'blur(13px)'}}/>
+
+      {/* ── Points chauds (actions précises) ── */}
+      <circle cx="274" cy="84"  r="5"   fill="#ef4444" opacity=".95"/>
+      <circle cx="258" cy="113" r="4"   fill="#ef4444" opacity=".88"/>
+      <circle cx="282" cy="122" r="3.5" fill="#f97316" opacity=".82"/>
+      <circle cx="217" cy="76"  r="4"   fill="#f97316" opacity=".80"/>
+      <circle cx="232" cy="132" r="3"   fill="#eab308" opacity=".78"/>
+      <circle cx="165" cy="70"  r="3.5" fill="#c9a227" opacity=".75"/>
+      <circle cx="155" cy="126" r="3"   fill="#c9a227" opacity=".70"/>
+      <circle cx="84"  cy="96"  r="3.5" fill="#22c55e" opacity=".72"/>
+
+      {/* Légende */}
+      <g transform="translate(8,186)">
+        <rect width="60" height="6" rx="3" fill="url(#hGreen)"/>
+        <text x="0" y="16" fill="rgba(255,255,255,0.35)" fontSize="7" fontFamily="monospace">Faible</text>
+        <text x="52" y="16" fill="rgba(255,255,255,0.35)" fontSize="7" fontFamily="monospace">Fort</text>
+        <defs>
+          <linearGradient id="lgLegend" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   stopColor="#22c55e" stopOpacity=".5"/>
+            <stop offset="50%"  stopColor="#c9a227" stopOpacity=".7"/>
+            <stop offset="80%"  stopColor="#f97316" stopOpacity=".8"/>
+            <stop offset="100%" stopColor="#ef4444" stopOpacity=".9"/>
+          </linearGradient>
+        </defs>
+        <rect width="60" height="6" rx="3" fill="url(#lgLegend)"/>
+      </g>
+      <text x="200" y="193" fill="rgba(255,255,255,0.30)" fontSize="7.5" fontFamily="monospace" letterSpacing="1">HEATMAP COLLECTIVE · MT2</text>
+      <text x="284" y="193" fill="#c9a227" fontSize="7.5" fontFamily="monospace" letterSpacing="1">GFCA</text>
     </svg>
   )
 }
 
-/* ════════════════════════════════════════════
+/* ════════════════════════════════════════════════
    LANDING PAGE
-════════════════════════════════════════════ */
+════════════════════════════════════════════════ */
 export default function LandingPage() {
-  const [navScrolled, setNavScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' })
-  const [contactSent, setContactSent] = useState(false)
-  const [wlForm, setWlForm] = useState({ firstName:'', lastName:'', email:'', club:'', role:'', category:'' })
-  const [wlSent, setWlSent] = useState(false)
-  const [wlLoading, setWlLoading] = useState(false)
-  const [wlError, setWlError] = useState('')
-  const [wlFocused, setWlFocused] = useState(null)
+  const [navScrolled, setNavScrolled]   = useState(false)
+  const [menuOpen, setMenuOpen]         = useState(false)
+  const [contactForm, setContactForm]   = useState({ name: '', email: '', message: '' })
+  const [contactSent, setContactSent]   = useState(false)
+  const [contactLoad, setContactLoad]   = useState(false)
+  const [wlForm, setWlForm]             = useState({ firstName:'', lastName:'', email:'', club:'', role:'', category:'' })
+  const [wlSent, setWlSent]             = useState(false)
+  const [wlLoading, setWlLoading]       = useState(false)
+  const [wlError, setWlError]           = useState('')
+  const [wlFocused, setWlFocused]       = useState(null)
 
+  /* ── Envoi waitlist → Google Sheets ── */
   const handleWaitlist = async (e) => {
     e.preventDefault()
     setWlLoading(true); setWlError('')
+    const payload = {
+      sheet: 'Waitlist',
+      firstName: wlForm.firstName,
+      lastName:  wlForm.lastName,
+      email:     wlForm.email,
+      club:      wlForm.club,
+      role:      wlForm.role,
+      category:  wlForm.category,
+      date:      new Date().toISOString(),
+    }
     try {
-      const res = await fetch('https://backend-pued.onrender.com/api/leads/waitlist', {
+      await fetch(SHEETS_URL, {
         method: 'POST',
+        mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ first_name: wlForm.firstName, last_name: wlForm.lastName, email: wlForm.email, club_name: wlForm.club, role: wlForm.role, category: wlForm.category }),
+        body: JSON.stringify(payload),
       })
-      if (!res.ok) throw new Error()
       setWlSent(true)
-    } catch { setWlError('Une erreur est survenue. Écrivez-nous à contact@insightball.com') }
+    } catch {
+      setWlError('Une erreur est survenue. Écrivez-nous : contact@insightball.com')
+    }
     setWlLoading(false)
+  }
+
+  /* ── Envoi contact → Google Sheets ── */
+  const handleContact = async (e) => {
+    e.preventDefault()
+    setContactLoad(true)
+    const payload = {
+      sheet:   'Contact',
+      name:    contactForm.name,
+      email:   contactForm.email,
+      message: contactForm.message,
+      date:    new Date().toISOString(),
+    }
+    try {
+      await fetch(SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+    } catch {}
+    setContactSent(true)
+    setContactLoad(false)
   }
 
   useEffect(() => {
@@ -129,12 +247,6 @@ export default function LandingPage() {
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
-
-  const handleContact = async (e) => {
-    e.preventDefault()
-    // Brancher votre endpoint ici
-    setContactSent(true)
-  }
 
   const css = `
     ${FONTS}
@@ -144,36 +256,35 @@ export default function LandingPage() {
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-thumb { background: ${G.border2}; border-radius: 2px; }
     @keyframes heroUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
-    @keyframes scroll  { to { transform: translateX(-50%); } }
     @media (max-width: 1024px) {
-      .hero-grid   { grid-template-columns: 1fr !important; max-width: 640px !important; }
-      .hero-right  { display: none !important; }
-      .feat-grid   { grid-template-columns: 1fr !important; }
-      .process-grid{ grid-template-columns: 1fr !important; }
+      .hero-grid    { grid-template-columns: 1fr !important; max-width: 640px !important; }
+      .hero-right   { display: none !important; }
+      .feat-grid    { grid-template-columns: 1fr !important; }
+      .process-grid { grid-template-columns: 1fr !important; }
       .process-card-sticky { display: none !important; }
-      .rapport-grid{ grid-template-columns: 1fr !important; }
-      .price-grid  { grid-template-columns: 1fr !important; max-width: 480px !important; }
-      .testi-grid  { grid-template-columns: 1fr !important; }
-      .cta-band    { flex-direction: column !important; align-items: flex-start !important; padding: 56px 32px !important; }
-      .footer-grid { grid-template-columns: 1fr 1fr !important; }
+      .rapport-grid { grid-template-columns: 1fr !important; }
+      .price-grid   { grid-template-columns: 1fr !important; max-width: 480px !important; }
+      .cta-band     { flex-direction: column !important; align-items: flex-start !important; padding: 56px 32px !important; }
+      .footer-grid  { grid-template-columns: 1fr 1fr !important; }
       .wrap, .wrap-inner { padding: 72px 32px !important; }
       .contact-grid { grid-template-columns: 1fr !important; }
+      .wl-grid      { grid-template-columns: 1fr !important; }
     }
     @media (max-width: 768px) {
       .nav-links, .nav-cta-d { display: none !important; }
-      .nav-burger { display: flex !important; }
-      .hero-title { font-size: clamp(40px,11vw,64px) !important; }
-      .sec-h2 { font-size: clamp(30px,7vw,44px) !important; }
+      .nav-burger  { display: flex !important; }
+      .hero-title  { font-size: clamp(40px,11vw,64px) !important; }
+      .sec-h2      { font-size: clamp(30px,7vw,44px) !important; }
       .wrap, .wrap-inner { padding: 56px 20px !important; }
-      .cta-band { padding: 56px 20px !important; }
+      .cta-band    { padding: 56px 20px !important; }
       .footer-grid { gap: 24px !important; }
     }
     @media (max-width: 480px) {
       .footer-grid { grid-template-columns: 1fr !important; }
+      .wl-grid     { grid-template-columns: 1fr !important; }
     }
   `
 
-  /* ── Styles réutilisables ── */
   const btnPrimary = {
     padding: '14px 28px', background: G.gold, color: G.white,
     fontFamily: G.display, fontSize: 15, fontWeight: 700,
@@ -195,11 +306,18 @@ export default function LandingPage() {
     fontFamily: G.display, fontSize: 28, fontWeight: 800, lineHeight: 1, color: color || G.ink,
   })
 
+  const inputLine = (focused) => ({
+    borderBottom: `2px solid ${focused ? G.gold : G.border}`,
+    marginBottom: 24, paddingBottom: 10, transition: 'border-color .15s',
+  })
+  const labelSt = { fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.muted, display: 'block', marginBottom: 6 }
+  const inputSt = { width:'100%', background:'transparent', border:'none', outline:'none', fontSize:15, color:G.ink, fontFamily:G.body }
+
   return (
     <div style={{ background: G.white, color: G.ink, fontFamily: G.body, fontSize: 16, lineHeight: 1.6, overflowX: 'hidden' }}>
       <style>{css}</style>
 
-      {/* ══ NAV ══════════════════════════════════════ */}
+      {/* ══ NAV ════════════════════════════════════════ */}
       <nav style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200,
         background: 'rgba(255,255,255,0.96)', backdropFilter: 'blur(10px)',
@@ -223,7 +341,7 @@ export default function LandingPage() {
         </Link>
 
         <div className="nav-links" style={{ display: 'flex', gap: 28, alignItems: 'center' }}>
-          {[['#features','Fonctionnalités'],['#pricing','Tarifs'],['#testimonials','Avis'],['#waitlist','Accès anticipé']].map(([h,l]) => (
+          {[['#features','Fonctionnalités'],['#pricing','Tarifs'],['#waitlist','Accès anticipé']].map(([h,l]) => (
             <a key={h} href={h} style={{ fontSize: 14, fontWeight: 500, color: G.muted, textDecoration: 'none', transition: 'color .15s' }}
               onMouseEnter={e => e.currentTarget.style.color = G.ink}
               onMouseLeave={e => e.currentTarget.style.color = G.muted}>{l}</a>
@@ -248,31 +366,25 @@ export default function LandingPage() {
         </button>
       </nav>
 
-      {/* Mobile menu */}
       {menuOpen && (
         <div style={{ position: 'fixed', top: 60, left: 0, right: 0, zIndex: 199, background: G.white, borderBottom: `1px solid ${G.border}`, padding: '16px 24px 20px', display: 'flex', flexDirection: 'column' }}>
-          {[['#features','Fonctionnalités'],['#pricing','Tarifs'],['#testimonials','Avis'],['#waitlist','Accès anticipé']].map(([h,l]) => (
+          {[['#features','Fonctionnalités'],['#pricing','Tarifs'],['#waitlist','Accès anticipé']].map(([h,l]) => (
             <a key={h} href={h} onClick={() => setMenuOpen(false)} style={{ fontSize: 15, fontWeight: 500, color: G.ink2, textDecoration: 'none', padding: '12px 0', borderBottom: `1px solid ${G.border}` }}>{l}</a>
           ))}
           <a href="#waitlist" onClick={() => setMenuOpen(false)} style={{ ...btnPrimary, marginTop: 12, justifyContent: 'center', textDecoration:'none' }}>Accès anticipé →</a>
         </div>
       )}
 
-      {/* ══ HERO ══════════════════════════════════════ */}
+      {/* ══ HERO ═══════════════════════════════════════ */}
       <div className="hero-grid" style={{ paddingTop: 60, display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', maxWidth: 1200, margin: '0 auto', padding: '60px 48px 0', gap: 60, minHeight: '100vh' }}>
         <div style={{ padding: '80px 0' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.12em', textTransform: 'uppercase', color: G.gold, background: G.goldL, border: `1px solid ${G.goldLx}`, padding: '5px 12px', borderRadius: 2, marginBottom: 24, opacity: 0, animation: 'heroUp .5s .1s forwards' }}>
-            <span style={{ width: 6, height: 6, background: G.gold, borderRadius: '50%' }}/>
-            Analyse vidéo · IA · Football
-          </div>
-
           <h1 className="hero-title" style={{ fontFamily: G.display, fontSize: 'clamp(48px,6vw,78px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.ink, marginBottom: 24, opacity: 0, animation: 'heroUp .5s .2s forwards' }}>
             Analysez vos matchs<br/>
             <span style={{ color: G.gold }}>comme un staff<br/>professionnel.</span>
           </h1>
 
           <p style={{ fontSize: 18, lineHeight: 1.65, color: G.muted, maxWidth: 440, marginBottom: 36, opacity: 0, animation: 'heroUp .5s .35s forwards' }}>
-            Uploadez votre vidéo. Recevez en quelques minutes un <strong style={{ color: G.ink, fontWeight: 500 }}>rapport tactique complet</strong> — heatmaps, stats individuelles, phases de jeu.
+            Uploadez votre vidéo. Recevez un <strong style={{ color: G.ink, fontWeight: 500 }}>rapport tactique complet</strong> — heatmaps, stats individuelles, phases de jeu.
           </p>
 
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', opacity: 0, animation: 'heroUp .5s .45s forwards' }}>
@@ -289,7 +401,7 @@ export default function LandingPage() {
           </div>
 
           <div style={{ display: 'flex', gap: 32, marginTop: 48, paddingTop: 32, borderTop: `1px solid ${G.border}`, opacity: 0, animation: 'heroUp .5s .6s forwards', flexWrap: 'wrap' }}>
-            {[['40+','métriques analysées'],['3 min','rapport généré'],['N3→U13','toutes catégories']].map(([n,l]) => (
+            {[['40+','métriques analysées'],['< 1h','rapport généré'],['N3→U13','toutes catégories']].map(([n,l]) => (
               <div key={l}>
                 <div style={{ fontFamily: G.display, fontSize: 32, fontWeight: 800, color: G.ink, lineHeight: 1 }}>{n}</div>
                 <div style={{ fontSize: 13, color: G.muted, marginTop: 3 }}>{l}</div>
@@ -303,7 +415,7 @@ export default function LandingPage() {
           <div style={{ width: '100%', maxWidth: 520, background: G.white, border: `1px solid ${G.border}`, borderRadius: 8, boxShadow: '0 8px 40px rgba(0,0,0,0.10)', overflow: 'hidden' }}>
             <div style={{ background: G.off, borderBottom: `1px solid ${G.border}`, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 6 }}>
               {['#f87171','#fbbf24','#4ade80'].map(c => <span key={c} style={{ width: 8, height: 8, borderRadius: '50%', background: c, flexShrink: 0 }}/>)}
-              <span style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, marginLeft: 6, letterSpacing: '.06em' }}>insightball — GFCA vs FC Ajaccio · N3</span>
+              <span style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, marginLeft: 6, letterSpacing: '.06em' }}>Rapport de match</span>
             </div>
             <div style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
               {/* KPIs */}
@@ -315,12 +427,12 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
-              {/* Pitch */}
+              {/* Heatmap pro */}
               <div style={{ border: `1px solid ${G.border}`, borderRadius: 4, overflow: 'hidden' }}>
                 <div style={{ background: G.off, borderBottom: `1px solid ${G.border}`, padding: '7px 12px', fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.1em', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between' }}>
                   <span>Heatmap collective</span><span style={{ color: G.gold }}>Mi-temps 2</span>
                 </div>
-                <PitchSVG/>
+                <HeatmapSVG/>
               </div>
               {/* Table */}
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -349,18 +461,7 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* ══ STRIPE ═══════════════════════════════════ */}
-      <div style={{ background: G.ink, overflow: 'hidden', padding: '13px 0' }}>
-        <div style={{ display: 'flex', width: 'max-content', gap: 40, animation: 'scroll 28s linear infinite' }}>
-          {[...Array(2)].map((_, i) => ['Heatmaps individuelles','Possession & pressing','Distance parcourue','Phases offensives','Duels gagnés','Export PDF','Comparaison joueurs','Progression saison','Zones de tir','Multi-équipes'].map(item => (
-            <span key={item+i} style={{ fontFamily: G.mono, fontSize: 10, fontWeight: 600, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.40)', whiteSpace: 'nowrap', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 12 }}>
-              {item}<span style={{ color: G.gold }}>·</span>
-            </span>
-          )))}
-        </div>
-      </div>
-
-      {/* ══ FEATURES ══════════════════════════════════ */}
+      {/* ══ FEATURES ═══════════════════════════════════ */}
       <div style={{ background: G.off }} id="features">
         <div className="wrap-inner" style={{ maxWidth: 1200, margin: '0 auto', padding: '96px 48px' }}>
           <Reveal>
@@ -409,7 +510,7 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* ══ PROCESS ═══════════════════════════════════ */}
+      {/* ══ PROCESS ════════════════════════════════════ */}
       <div id="process" style={{ maxWidth: 1200, margin: '0 auto' }}>
         <div className="wrap-inner" style={{ padding: '96px 48px' }}>
           <div className="process-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'start' }}>
@@ -426,10 +527,10 @@ export default function LandingPage() {
                 </p>
               </Reveal>
               {[
-                { n:'01', title:'Uploadez votre vidéo', desc:'Depuis votre téléphone, tablette ou caméra. MP4, MOV, AVI — tout format accepté. Aucun matériel spécifique requis.' },
-                { n:'02', title:'Renseignez le match', desc:'Équipes, composition, score. Deux minutes pour contextualiser votre analyse et personnaliser votre rapport.' },
-                { n:'03', title:"L'IA analyse", desc:'Notre moteur détecte les joueurs, les actions, les zones de jeu. Traitement complet en quelques minutes.' },
-                { n:'04', title:'Recevez votre rapport', desc:'Dashboard interactif + PDF prêt à imprimer ou partager. Votre analyse pro, livrée directement.' },
+                { n:'01', title:'Uploadez votre vidéo', desc:'Depuis votre téléphone, tablette ou caméra. MP4, MOV, AVI — tout format accepté.' },
+                { n:'02', title:'Renseignez le match', desc:'Équipes, composition, score. Deux minutes pour contextualiser votre analyse.' },
+                { n:'03', title:"L'IA analyse", desc:'Notre moteur détecte les joueurs, les actions, les zones de jeu. Traitement en moins d\'une heure.' },
+                { n:'04', title:'Recevez votre rapport', desc:'Dashboard interactif + PDF prêt à imprimer ou partager. Livré directement.' },
               ].map((s, i) => (
                 <Reveal key={s.n} delay={i * 0.1}>
                   <div style={{ display: 'flex', gap: 20, padding: '24px 0', borderBottom: `1px solid ${G.border}`, borderTop: i===0 ? `1px solid ${G.border}` : 'none', transition: 'padding-left .2s', cursor: 'default' }}
@@ -467,7 +568,7 @@ export default function LandingPage() {
                     ))}
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: G.goldL, border: `1px solid ${G.goldLx}`, borderRadius: 4, padding: '12px 14px', marginTop: 12 }}>
                       <span style={{ fontSize: 12, color: G.muted }}>Rapport prêt dans</span>
-                      <span style={{ fontFamily: G.display, fontSize: 22, fontWeight: 800, color: G.gold }}>2 min 14 s</span>
+                      <span style={{ fontFamily: G.display, fontSize: 22, fontWeight: 800, color: G.gold }}>42 min</span>
                     </div>
                   </div>
                 </div>
@@ -477,7 +578,7 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* ══ RAPPORT EXEMPLE ═══════════════════════════ */}
+      {/* ══ RAPPORT EXEMPLE ════════════════════════════ */}
       <div id="rapport" style={{ background: G.off }}>
         <div className="wrap-inner" style={{ maxWidth: 1200, margin: '0 auto', padding: '96px 48px' }}>
           <Reveal>
@@ -492,85 +593,49 @@ export default function LandingPage() {
             </p>
           </Reveal>
 
-          <div className="rapport-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32, alignItems: 'start' }}>
-            {/* Panel gauche */}
-            <Reveal>
-              <div style={{ background: G.white, border: `1px solid ${G.border}`, borderRadius: 8, overflow: 'hidden', boxShadow: '0 1px 6px rgba(0,0,0,0.05)' }}>
-                <div style={panelHd}><span>Heatmap collective — 2ème mi-temps</span><b style={{ color: G.gold, fontWeight: 600 }}>GFCA N3</b></div>
-                <div style={{ padding: 16 }}>
-                  <PitchSVG/>
-                  {/* Légende */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, color: G.muted, margin: '10px 0 16px' }}>
-                    <span>Faible</span>
-                    <div style={{ flex: 1, height: 4, borderRadius: 2, background: 'linear-gradient(90deg,rgba(26,122,74,0) 0%,rgba(26,122,74,0.5) 35%,rgba(201,162,39,0.8) 65%,rgba(239,68,68,1) 100%)' }}/>
-                    <span>Intense</span>
-                  </div>
-                  {/* KPIs */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8, marginBottom: 14 }}>
-                    {[[63,'%',G.gold,'Possession'],[18,'',G.ink,'Attaques'],[12,'',G.green,'Récupérations']].map(([v,u,c,l]) => (
-                      <div key={l} style={{ background: G.off, border: `1px solid ${G.border}`, borderRadius: 4, padding: '12px 10px', textAlign: 'center' }}>
-                        <div style={kpiN(c)}>{v}{u}</div>
-                        <div style={{ fontSize: 11, color: G.muted, marginTop: 3 }}>{l}</div>
-                      </div>
+          {/* Stats individuelles uniquement — heatmap supprimée */}
+          <Reveal>
+            <div style={{ background: G.white, border: `1px solid ${G.border}`, borderRadius: 8, overflow: 'hidden', boxShadow: '0 1px 6px rgba(0,0,0,0.05)' }}>
+              <div style={panelHd}><span>Performances individuelles</span><b style={{ color: G.gold, fontWeight: 600 }}>11 titulaires</b></div>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ background: G.off }}>
+                    {['Joueur','Passes','Duels','Buts','Km'].map(h => (
+                      <th key={h} style={{ fontFamily: G.mono, fontSize: 9, fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, padding: '8px 10px', textAlign: h==='Joueur'?'left':'center', borderBottom: `1px solid ${G.border}` }}>{h}</th>
                     ))}
-                  </div>
-                  {/* Barres */}
-                  {[['Précision passes','78%',G.gold,78],['Taux de cadrage','57%',G.green,57],['Ballons perdus / mi-temps','24',G.red,40]].map(([l,v,c,pct]) => (
-                    <div key={l} style={{ marginBottom: 10 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: G.muted, marginBottom: 5 }}>
-                        <span>{l}</span><span style={{ fontWeight: 600, color: G.ink }}>{v}</span>
-                      </div>
-                      <AnimBar pct={`${pct}%`} color={c}/>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
-
-            {/* Panel droit */}
-            <Reveal delay={0.1}>
-              <div style={{ background: G.white, border: `1px solid ${G.border}`, borderRadius: 8, overflow: 'hidden', boxShadow: '0 1px 6px rgba(0,0,0,0.05)' }}>
-                <div style={panelHd}><span>Performances individuelles</span><b style={{ color: G.gold, fontWeight: 600 }}>11 titulaires</b></div>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                  <thead>
-                    <tr style={{ background: G.off }}>
-                      {['Joueur','Passes','Duels','Buts','Km'].map(h => (
-                        <th key={h} style={{ fontFamily: G.mono, fontSize: 9, fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, padding: '8px 10px', textAlign: h==='Joueur'?'left':'center', borderBottom: `1px solid ${G.border}` }}>{h}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {PLAYERS.map(p => (
+                    <tr key={p.num} onMouseEnter={e => e.currentTarget.style.background=G.goldL} onMouseLeave={e => e.currentTarget.style.background='transparent'}>
+                      <td style={{ fontSize: 13, color: G.ink2, padding: '8px 10px', borderBottom: `1px solid ${G.border}`, verticalAlign: 'middle' }}>
+                        <span style={{ fontFamily: G.display, fontSize: 15, fontWeight: 700, color: G.gold, marginRight: 4 }}>{p.num}</span>
+                        {p.name}
+                        <span style={{ fontFamily: G.mono, fontSize: 9, background: G.off, border: `1px solid ${G.border}`, padding: '1px 5px', borderRadius: 2, marginLeft: 3, color: G.muted }}>{p.pos}</span>
+                      </td>
+                      {[p.passes, p.duels, p.buts, p.km].map((v,i) => (
+                        <td key={i} style={{ fontSize: 13, fontWeight: 600, color: G.ink2, padding: '8px 10px', textAlign: 'center', borderBottom: `1px solid ${G.border}` }}>{v}</td>
                       ))}
                     </tr>
-                  </thead>
-                  <tbody>
-                    {PLAYERS.map(p => (
-                      <tr key={p.num} onMouseEnter={e => e.currentTarget.style.background=G.goldL} onMouseLeave={e => e.currentTarget.style.background='transparent'}>
-                        <td style={{ fontSize: 13, color: G.ink2, padding: '8px 10px', borderBottom: `1px solid ${G.border}`, verticalAlign: 'middle' }}>
-                          <span style={{ fontFamily: G.display, fontSize: 15, fontWeight: 700, color: G.gold, marginRight: 4 }}>{p.num}</span>
-                          {p.name}
-                          <span style={{ fontFamily: G.mono, fontSize: 9, background: G.off, border: `1px solid ${G.border}`, padding: '1px 5px', borderRadius: 2, marginLeft: 3, color: G.muted }}>{p.pos}</span>
-                        </td>
-                        {[p.passes, p.duels, p.buts, p.km].map((v,i) => (
-                          <td key={i} style={{ fontSize: 13, fontWeight: 600, color: G.ink2, padding: '8px 10px', textAlign: 'center', borderBottom: `1px solid ${G.border}` }}>{v}</td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <div style={{ background: G.goldL, borderTop: `1px solid ${G.goldLx}`, padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-                  <div style={{ fontSize: 14, color: G.muted }}>
-                    <strong style={{ color: G.ink, fontWeight: 600 }}>Rapport PDF prêt</strong> — logo club, couleurs, pages complètes.
-                  </div>
-                  <a href="#waitlist" style={{ ...btnPrimary, padding: '8px 18px', fontSize: 12, borderRadius: 4, flexShrink: 0, textDecoration:'none' }}
-                    onMouseEnter={e => e.currentTarget.style.background = G.goldD}
-                    onMouseLeave={e => e.currentTarget.style.background = G.gold}>
-                    Accès anticipé →
-                  </a>
+                  ))}
+                </tbody>
+              </table>
+              <div style={{ background: G.goldL, borderTop: `1px solid ${G.goldLx}`, padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+                <div style={{ fontSize: 14, color: G.muted }}>
+                  <strong style={{ color: G.ink, fontWeight: 600 }}>Rapport PDF prêt</strong> — logo club, couleurs, pages complètes.
                 </div>
+                <a href="#waitlist" style={{ ...btnPrimary, padding: '8px 18px', fontSize: 12, borderRadius: 4, flexShrink: 0, textDecoration:'none' }}
+                  onMouseEnter={e => e.currentTarget.style.background = G.goldD}
+                  onMouseLeave={e => e.currentTarget.style.background = G.gold}>
+                  Accès anticipé →
+                </a>
               </div>
-            </Reveal>
-          </div>
+            </div>
+          </Reveal>
         </div>
       </div>
 
-      {/* ══ PRICING ═══════════════════════════════════ */}
+      {/* ══ PRICING ════════════════════════════════════ */}
       <div id="pricing" style={{ maxWidth: 1200, margin: '0 auto' }}>
         <div className="wrap-inner" style={{ padding: '96px 48px' }}>
           <Reveal>
@@ -580,27 +645,36 @@ export default function LandingPage() {
             <h2 className="sec-h2" style={{ fontFamily: G.display, fontSize: 'clamp(34px,4vw,54px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.ink, marginBottom: 16 }}>
               Simple et<br/><span style={{ color: G.gold }}>sans surprise.</span>
             </h2>
+            {/* Badge Offre limitée */}
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: G.goldL, border: `1px solid ${G.goldLx}`, borderRadius: 4, padding: '6px 14px', marginBottom: 20 }}>
+              <span style={{ width: 7, height: 7, background: G.gold, borderRadius: '50%', flexShrink: 0, boxShadow: `0 0 0 3px ${G.goldL}` }}/>
+              <span style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: G.gold }}>Offre limitée</span>
+            </div>
             <p style={{ fontSize: 17, color: G.muted, lineHeight: 1.65, maxWidth: 440, marginBottom: 56 }}>
-              Deux formules claires. Résiliez à tout moment, sans engagement.
+              Deux formules claires. Sans engagement.
             </p>
           </Reveal>
+
           <div className="price-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, maxWidth: 860 }}>
             {[
-              { id:'coach', plan:'Pour les coachs', name:'Coach', price:'29', old:'39', featured: false, items:['3 matchs analysés / mois','1 équipe','Rapports collectifs & individuels','Suivi progression sur la saison','Export PDF complet','Support inclus'] },
-              { id:'club',  plan:'Pour les clubs',  name:'Club',  price:'99', old:'139', featured: true,  items:['10 matchs analysés / mois','Multi-équipes illimité','Gestion effectif complète','Vue globale du club','Multi-utilisateurs (staff)','Dashboard club avancé','Support prioritaire dédié'] },
+              { id:'coach', plan:'Pour les coachs', name:'Coach', price:'29', featured: false,
+                items:['3 matchs analysés / mois','1 équipe','Rapports collectifs & individuels','Suivi progression sur la saison','Export PDF complet','Support inclus'] },
+              { id:'club',  plan:'Pour les clubs',  name:'Club',  price:'99', featured: true,
+                items:['10 matchs analysés / mois','Multi-équipes illimité','Gestion effectif complète','Vue globale du club','Multi-utilisateurs (staff)','Dashboard club avancé','Support prioritaire dédié'] },
             ].map((p, i) => (
               <Reveal key={p.id} delay={i * 0.1}>
-                <div style={{ background: G.white, border: `1.5px solid ${p.featured ? G.gold : G.border}`, borderRadius: 8, padding: '36px 32px', position: 'relative', boxShadow: p.featured ? '0 4px 24px rgba(201,162,39,0.12)' : 'none', transition: 'box-shadow .2s' }}
+                <div style={{ background: G.white, border: `1.5px solid ${p.featured ? G.gold : G.border}`, borderRadius: 8, padding: '36px 32px', position: 'relative', boxShadow: p.featured ? '0 4px 24px rgba(201,162,39,0.12)' : 'none', transition: 'box-shadow .2s', height: '100%' }}
                   onMouseEnter={e => !p.featured && (e.currentTarget.style.boxShadow = '0 8px 40px rgba(0,0,0,0.10)')}
                   onMouseLeave={e => !p.featured && (e.currentTarget.style.boxShadow = 'none')}>
-                  {p.featured && <div style={{ position: 'absolute', top: -1, right: 24, background: G.gold, color: G.white, fontFamily: G.mono, fontSize: 9, fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', padding: '4px 12px', borderRadius: '0 0 4px 4px' }}>⚡ Recommandé</div>}
+                  {p.featured && (
+                    <div style={{ position: 'absolute', top: -1, right: 24, background: G.gold, color: G.white, fontFamily: G.mono, fontSize: 9, fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', padding: '4px 12px', borderRadius: '0 0 4px 4px' }}>⚡ Recommandé</div>
+                  )}
                   <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, marginBottom: 6 }}>{p.plan}</div>
                   <div style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', color: G.ink, marginBottom: 20 }}>{p.name}</div>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 28 }}>
                     <span style={{ fontFamily: G.display, fontSize: 68, fontWeight: 800, lineHeight: 1, color: G.ink }}>{p.price}</span>
                     <span style={{ fontSize: 15, color: G.muted }}>€ / mois</span>
                   </div>
-                  <div style={{ fontSize: 14, color: G.border2, textDecoration: 'line-through', marginBottom: 28 }}>Offre de lancement — {p.old}€/mois</div>
                   <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 32 }}>
                     {p.items.map(item => (
                       <li key={item} style={{ fontSize: 14, color: G.ink2, display: 'flex', alignItems: 'flex-start', gap: 9, lineHeight: 1.5 }}>
@@ -608,7 +682,7 @@ export default function LandingPage() {
                       </li>
                     ))}
                   </ul>
-                  <a href='#waitlist' style={{ display: 'block', width: '100%', padding: 13, fontFamily: G.display, fontSize: 15, fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase', textAlign: 'center', textDecoration: 'none', borderRadius: 4, transition: 'all .15s', background: p.featured ? G.gold : 'transparent', color: p.featured ? G.white : G.ink2, border: p.featured ? 'none' : `1.5px solid ${G.border2}` }}
+                  <a href="#waitlist" style={{ display: 'block', width: '100%', padding: 13, fontFamily: G.display, fontSize: 15, fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase', textAlign: 'center', textDecoration: 'none', borderRadius: 4, transition: 'all .15s', background: p.featured ? G.gold : 'transparent', color: p.featured ? G.white : G.ink2, border: p.featured ? 'none' : `1.5px solid ${G.border2}` }}
                     onMouseEnter={e => { e.currentTarget.style.background = p.featured ? G.goldD : G.ink; e.currentTarget.style.color = G.white; e.currentTarget.style.borderColor = p.featured ? G.goldD : G.ink }}
                     onMouseLeave={e => { e.currentTarget.style.background = p.featured ? G.gold : 'transparent'; e.currentTarget.style.color = p.featured ? G.white : G.ink2; e.currentTarget.style.borderColor = p.featured ? G.gold : G.border2 }}>
                     Demander l'accès →
@@ -617,45 +691,11 @@ export default function LandingPage() {
               </Reveal>
             ))}
           </div>
-          <p style={{ fontSize: 13, color: G.muted, marginTop: 16 }}>Sans engagement · Résiliation en 1 clic · Paiement sécurisé</p>
+          <p style={{ fontSize: 13, color: G.muted, marginTop: 16 }}>Sans engagement</p>
         </div>
       </div>
 
-      {/* ══ TÉMOIGNAGES ═══════════════════════════════ */}
-      <div id="testimonials" style={{ background: G.off }}>
-        <div className="wrap-inner" style={{ maxWidth: 1200, margin: '0 auto', padding: '96px 48px' }}>
-          <Reveal>
-            <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ width: 18, height: 1.5, background: G.gold }}/>Ils utilisent INSIGHTBALL
-            </div>
-            <h2 className="sec-h2" style={{ fontFamily: G.display, fontSize: 'clamp(34px,4vw,54px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.ink, marginBottom: 56 }}>
-              Ce qu'ils<br/><span style={{ color: G.gold }}>en disent.</span>
-            </h2>
-          </Reveal>
-          <div className="testi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
-            {[
-              { quote: "J'ai arrêté de passer 3h à faire mes rapports vidéo manuellement. INSIGHTBALL me donne en 5 minutes ce qu'il me fallait une soirée entière pour produire.", name: 'Laurent M.', role: 'Entraîneur principal · Club R1 Occitanie' },
-              { quote: "Les joueurs s'impliquent beaucoup plus quand ils voient leurs propres données. Les heatmaps individuelles ont changé mes débriefings du lundi.", name: 'Sébastien K.', role: 'Coach U19 National · Normandie' },
-              { quote: "On n'a pas le budget d'un club pro pour des outils d'analyse. INSIGHTBALL nous donne accès à quelque chose qu'on pensait réservé à la Ligue 1.", name: 'Damien R.', role: 'Directeur sportif · Club N3 Corse' },
-            ].map((t, i) => (
-              <Reveal key={t.name} delay={i * 0.1}>
-                <blockquote style={{ background: G.white, border: `1px solid ${G.border}`, borderRadius: 8, padding: '28px 24px', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
-                  <div style={{ display: 'flex', gap: 3, marginBottom: 14 }}>
-                    {[...Array(5)].map((_,j) => <span key={j} style={{ color: G.gold, fontSize: 14 }}>★</span>)}
-                  </div>
-                  <p style={{ fontSize: 15, lineHeight: 1.7, color: G.ink2, marginBottom: 20, fontStyle: 'italic' }}>"{t.quote}"</p>
-                  <div style={{ width: 28, height: 2, background: G.gold, borderRadius: 1, marginBottom: 14 }}/>
-                  <div style={{ fontWeight: 600, fontSize: 14, color: G.ink }}>{t.name}</div>
-                  <div style={{ fontSize: 13, color: G.muted, marginTop: 2 }}>{t.role}</div>
-                </blockquote>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </div>
-
-
-      {/* ══ WAITLIST ══════════════════════════════════════════════════ */}
+      {/* ══ WAITLIST ═══════════════════════════════════ */}
       <div id="waitlist" style={{ background: G.off }}>
         <div className="wrap-inner" style={{ maxWidth: 1200, margin: '0 auto', padding: '96px 48px' }}>
           <Reveal>
@@ -666,11 +706,11 @@ export default function LandingPage() {
               Demandez votre<br/><span style={{ color: G.gold }}>accès en avant-première.</span>
             </h2>
             <p style={{ fontSize: 17, color: G.muted, lineHeight: 1.65, maxWidth: 560, marginBottom: 16 }}>
-              La plateforme arrive bientôt. Inscrivez-vous maintenant pour être parmi les premiers clubs à l'utiliser,
-              à <strong style={{ color: G.ink, fontWeight: 600 }}>tarif fondateur –30%</strong>.
+              La plateforme arrive bientôt. Inscrivez-vous maintenant pour être parmi les premiers clubs à l'utiliser
+              à <strong style={{ color: G.ink, fontWeight: 600 }}>tarif avantageux</strong>.
             </p>
             <div style={{ display: 'flex', gap: 24, marginBottom: 48, flexWrap: 'wrap' }}>
-              {[['⚡','Accès avant ouverture publique'],['🎯','Tarif fondateur –30%'],['🤝','Onboarding personnalisé']].map(([icon, label]) => (
+              {[['⚡','Accès avant ouverture publique'],['🎯','Tarif avantageux'],['🤝','Onboarding personnalisé']].map(([icon, label]) => (
                 <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: G.muted }}>
                   <span>{icon}</span><span>{label}</span>
                 </div>
@@ -679,7 +719,7 @@ export default function LandingPage() {
           </Reveal>
 
           {wlSent ? (
-            <div style={{ background: G.white, border: `1px solid ${G.border}`, borderRadius: 8, padding: '48px 32px', textAlign: 'center', maxWidth: 520, margin: '0 auto' }}>
+            <div style={{ background: G.white, border: `1px solid ${G.border}`, borderRadius: 8, padding: '48px 32px', textAlign: 'center', maxWidth: 520 }}>
               <div style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', color: G.ink, marginBottom: 12 }}>
                 Demande reçue <span style={{ color: G.gold }}>✓</span>
               </div>
@@ -701,55 +741,49 @@ export default function LandingPage() {
                 )}
 
                 <form onSubmit={handleWaitlist}>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '0 32px' }}>
-                    {/* Prénom */}
-                    <div style={{ borderBottom: `2px solid ${wlFocused==='firstName' ? G.gold : G.border}`, marginBottom: 24, paddingBottom: 10, transition: 'border-color .15s' }}>
-                      <label style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.muted, display: 'block', marginBottom: 6 }}>Prénom *</label>
+                  <div className="wl-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '0 32px' }}>
+                    <div style={inputLine(wlFocused==='firstName')}>
+                      <label style={labelSt}>Prénom *</label>
                       <input type="text" required value={wlForm.firstName} onChange={e => setWlForm({...wlForm, firstName: e.target.value})}
-                        placeholder="Jean" style={{ width:'100%', background:'transparent', border:'none', outline:'none', fontSize:15, color:G.ink, fontFamily:G.body }}
+                        placeholder="Jean" style={inputSt}
                         onFocus={() => setWlFocused('firstName')} onBlur={() => setWlFocused(null)} />
                     </div>
-                    {/* Nom */}
-                    <div style={{ borderBottom: `2px solid ${wlFocused==='lastName' ? G.gold : G.border}`, marginBottom: 24, paddingBottom: 10, transition: 'border-color .15s' }}>
-                      <label style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.muted, display: 'block', marginBottom: 6 }}>Nom *</label>
+                    <div style={inputLine(wlFocused==='lastName')}>
+                      <label style={labelSt}>Nom *</label>
                       <input type="text" required value={wlForm.lastName} onChange={e => setWlForm({...wlForm, lastName: e.target.value})}
-                        placeholder="Dupont" style={{ width:'100%', background:'transparent', border:'none', outline:'none', fontSize:15, color:G.ink, fontFamily:G.body }}
+                        placeholder="Dupont" style={inputSt}
                         onFocus={() => setWlFocused('lastName')} onBlur={() => setWlFocused(null)} />
                     </div>
-                    {/* Email */}
-                    <div style={{ borderBottom: `2px solid ${wlFocused==='email' ? G.gold : G.border}`, marginBottom: 24, paddingBottom: 10, transition: 'border-color .15s', gridColumn: '1 / 3' }}>
-                      <label style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.muted, display: 'block', marginBottom: 6 }}>Email *</label>
+                    <div style={{ ...inputLine(wlFocused==='email'), gridColumn: '1 / 3' }}>
+                      <label style={labelSt}>Email *</label>
                       <input type="email" required value={wlForm.email} onChange={e => setWlForm({...wlForm, email: e.target.value})}
-                        placeholder="jean.dupont@monclub.fr" style={{ width:'100%', background:'transparent', border:'none', outline:'none', fontSize:15, color:G.ink, fontFamily:G.body }}
+                        placeholder="jean.dupont@monclub.fr" style={inputSt}
                         onFocus={() => setWlFocused('email')} onBlur={() => setWlFocused(null)} />
                     </div>
-                    {/* Club */}
-                    <div style={{ borderBottom: `2px solid ${wlFocused==='club' ? G.gold : G.border}`, marginBottom: 24, paddingBottom: 10, transition: 'border-color .15s', gridColumn: '1 / 3' }}>
-                      <label style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.muted, display: 'block', marginBottom: 6 }}>Nom du club *</label>
+                    <div style={{ ...inputLine(wlFocused==='club'), gridColumn: '1 / 3' }}>
+                      <label style={labelSt}>Nom du club *</label>
                       <input type="text" required value={wlForm.club} onChange={e => setWlForm({...wlForm, club: e.target.value})}
-                        placeholder="AS Cugnaux, FC Toulouse..." style={{ width:'100%', background:'transparent', border:'none', outline:'none', fontSize:15, color:G.ink, fontFamily:G.body }}
+                        placeholder="AS Cugnaux, FC Toulouse..." style={inputSt}
                         onFocus={() => setWlFocused('club')} onBlur={() => setWlFocused(null)} />
                     </div>
-                    {/* Poste */}
-                    <div style={{ borderBottom: `2px solid ${wlFocused==='role' ? G.gold : G.border}`, marginBottom: 32, paddingBottom: 10, transition: 'border-color .15s' }}>
-                      <label style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.muted, display: 'block', marginBottom: 6 }}>Poste au sein du club *</label>
+                    <div style={{ ...inputLine(wlFocused==='role'), marginBottom: 32 }}>
+                      <label style={labelSt}>Poste *</label>
                       <select required value={wlForm.role} onChange={e => setWlForm({...wlForm, role: e.target.value})}
-                        style={{ width:'100%', background:'transparent', border:'none', outline:'none', fontSize:15, color: wlForm.role ? G.ink : G.muted, fontFamily:G.body, cursor:'pointer', appearance:'none' }}
+                        style={{ ...inputSt, color: wlForm.role ? G.ink : G.muted, cursor:'pointer', appearance:'none' }}
                         onFocus={() => setWlFocused('role')} onBlur={() => setWlFocused(null)}>
                         <option value="" disabled>Choisir...</option>
-                        <option value="Éducateur">Éducateur</option>
-                        <option value="Entraîneur">Entraîneur</option>
-                        <option value="Directeur Sportif">Directeur Sportif</option>
+                        <option>Éducateur</option>
+                        <option>Entraîneur</option>
+                        <option>Directeur Sportif</option>
                       </select>
                     </div>
-                    {/* Catégorie */}
-                    <div style={{ borderBottom: `2px solid ${wlFocused==='category' ? G.gold : G.border}`, marginBottom: 32, paddingBottom: 10, transition: 'border-color .15s' }}>
-                      <label style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.muted, display: 'block', marginBottom: 6 }}>Catégorie entraînée *</label>
+                    <div style={{ ...inputLine(wlFocused==='category'), marginBottom: 32 }}>
+                      <label style={labelSt}>Catégorie entraînée *</label>
                       <select required value={wlForm.category} onChange={e => setWlForm({...wlForm, category: e.target.value})}
-                        style={{ width:'100%', background:'transparent', border:'none', outline:'none', fontSize:15, color: wlForm.category ? G.ink : G.muted, fontFamily:G.body, cursor:'pointer', appearance:'none' }}
+                        style={{ ...inputSt, color: wlForm.category ? G.ink : G.muted, cursor:'pointer', appearance:'none' }}
                         onFocus={() => setWlFocused('category')} onBlur={() => setWlFocused(null)}>
                         <option value="" disabled>Choisir...</option>
-                        {['U14','U15','U16','U17','U18','U19','Séniors'].map(c => <option key={c} value={c}>{c}</option>)}
+                        {['U14','U15','U16','U17','U18','U19','Séniors'].map(c => <option key={c}>{c}</option>)}
                       </select>
                     </div>
                   </div>
@@ -759,14 +793,9 @@ export default function LandingPage() {
                     opacity: wlLoading ? .6 : 1, cursor: wlLoading ? 'not-allowed' : 'pointer',
                   }}
                     onMouseEnter={e => { if(!wlLoading) e.currentTarget.style.background = G.goldD }}
-                    onMouseLeave={e => { if(!wlLoading) e.currentTarget.style.background = G.gold }}
-                  >
+                    onMouseLeave={e => { if(!wlLoading) e.currentTarget.style.background = G.gold }}>
                     {wlLoading ? 'Envoi...' : '→ Demander mon accès anticipé'}
                   </button>
-
-                  <p style={{ fontSize: 12, color: G.muted, marginTop: 12 }}>
-                    Sans engagement · Aucun paiement requis · Données confidentielles
-                  </p>
                 </form>
               </div>
             </Reveal>
@@ -774,7 +803,7 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* ══ CONTACT ═══════════════════════════════════ */}
+      {/* ══ CONTACT ════════════════════════════════════ */}
       <div id="contact" style={{ maxWidth: 1200, margin: '0 auto' }}>
         <div className="wrap-inner" style={{ padding: '96px 48px' }}>
           <div className="contact-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'start' }}>
@@ -797,27 +826,29 @@ export default function LandingPage() {
             <Reveal delay={0.1}>
               {contactSent ? (
                 <div style={{ background: G.off, border: `1px solid ${G.border}`, borderRadius: 8, padding: '48px 32px', textAlign: 'center' }}>
-                  <div style={{ fontFamily: G.display, fontSize: 28, fontWeight: 800, textTransform: 'uppercase', color: G.ink, marginBottom: 12 }}>Message envoyé <span style={{ color: G.gold }}>✓</span></div>
+                  <div style={{ fontFamily: G.display, fontSize: 28, fontWeight: 800, textTransform: 'uppercase', color: G.ink, marginBottom: 12 }}>
+                    Message envoyé <span style={{ color: G.gold }}>✓</span>
+                  </div>
                   <p style={{ fontSize: 15, color: G.muted }}>On vous répond sous 24h.</p>
                 </div>
               ) : (
                 <form onSubmit={handleContact} style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                   {[{l:'Nom',t:'text',k:'name',p:'Jean Dupont'},{l:'Email',t:'email',k:'email',p:'votre@email.com'}].map(f => (
                     <div key={f.k} style={{ borderBottom: `1px solid ${G.border}`, paddingBottom: 16, marginBottom: 16 }}>
-                      <label style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.muted, display: 'block', marginBottom: 6 }}>{f.l}</label>
+                      <label style={labelSt}>{f.l}</label>
                       <input type={f.t} required value={contactForm[f.k]} onChange={e => setContactForm({...contactForm,[f.k]:e.target.value})} placeholder={f.p}
                         style={{ width: '100%', background: 'transparent', border: 'none', outline: 'none', fontSize: 16, color: G.ink, fontFamily: G.body }}/>
                     </div>
                   ))}
                   <div style={{ borderBottom: `1px solid ${G.border}`, paddingBottom: 16, marginBottom: 24 }}>
-                    <label style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.muted, display: 'block', marginBottom: 6 }}>Message</label>
+                    <label style={labelSt}>Message</label>
                     <textarea required rows={5} value={contactForm.message} onChange={e => setContactForm({...contactForm,message:e.target.value})} placeholder="Votre message…"
                       style={{ width: '100%', background: 'transparent', border: 'none', outline: 'none', resize: 'none', fontSize: 15, color: G.ink, fontFamily: G.body, lineHeight: 1.6 }}/>
                   </div>
-                  <button type="submit" style={{ ...btnPrimary, alignSelf: 'flex-start' }}
-                    onMouseEnter={e => e.currentTarget.style.background = G.goldD}
-                    onMouseLeave={e => e.currentTarget.style.background = G.gold}>
-                    Envoyer →
+                  <button type="submit" disabled={contactLoad} style={{ ...btnPrimary, alignSelf: 'flex-start', opacity: contactLoad ? .6 : 1 }}
+                    onMouseEnter={e => { if(!contactLoad) e.currentTarget.style.background = G.goldD }}
+                    onMouseLeave={e => { if(!contactLoad) e.currentTarget.style.background = G.gold }}>
+                    {contactLoad ? 'Envoi...' : 'Envoyer →'}
                   </button>
                 </form>
               )}
@@ -826,13 +857,13 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* ══ CTA BAND ══════════════════════════════════ */}
+      {/* ══ CTA BAND ═══════════════════════════════════ */}
       <div className="cta-band" style={{ background: G.ink, padding: '80px 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 40, flexWrap: 'wrap' }}>
         <div>
           <h2 className="sec-h2" style={{ fontFamily: G.display, fontSize: 'clamp(34px,4vw,54px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.white, marginBottom: 12 }}>
             Prêt à analyser<br/><span style={{ color: G.gold }}>votre prochain match ?</span>
           </h2>
-          <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)', maxWidth: 440 }}>Premiers résultats en moins de 3 minutes. Pas de carte bancaire pour commencer.</p>
+          <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)', maxWidth: 440 }}>Envoyez la vidéo de votre dernier match.</p>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-start', flexShrink: 0 }}>
           <a href="#waitlist" style={{ ...btnPrimary, fontSize: 16, padding: '16px 36px', textDecoration:'none' }}
@@ -841,7 +872,7 @@ export default function LandingPage() {
             Demander l'accès →
           </a>
           <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-            {['Sans engagement','Résiliation 1 clic','Support humain'].map(t => (
+            {['Sans engagement','Support humain'].map(t => (
               <span key={t} style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', display: 'flex', alignItems: 'center', gap: 6 }}>
                 <span style={{ color: G.gold }}>✓</span>{t}
               </span>
@@ -850,18 +881,20 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* ══ FOOTER ════════════════════════════════════ */}
+      {/* ══ FOOTER ═════════════════════════════════════ */}
       <footer style={{ background: G.white, borderTop: `1px solid ${G.border}`, padding: '56px 48px 32px' }}>
         <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr', gap: 40, marginBottom: 48 }}>
           <div>
-            <div style={{ fontFamily: G.display, fontSize: 20, fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase', marginBottom: 12 }}>
+            <div style={{ fontFamily: G.display, fontSize: 20, fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase', marginBottom: 4 }}>
               INSIGHT<span style={{ color: G.gold }}>BALL</span>
             </div>
-            <p style={{ fontSize: 14, color: G.muted, lineHeight: 1.6, maxWidth: 260 }}>L'analyse vidéo professionnelle, accessible à tous les clubs et coachs du football amateur et semi-professionnel.</p>
+            <p style={{ fontFamily: G.mono, fontSize: 11, color: G.gold, marginBottom: 14, letterSpacing: '.04em' }}>
+              NextGen Football Analytics 🚀
+            </p>
           </div>
           {[
             { title:'Produit', links:[['#features','Fonctionnalités'],['#pricing','Tarifs'],['#rapport','Exemple rapport'],['#waitlist','Accès anticipé']] },
-            { title:'Ressources', links:[['#','Documentation'],['#','Blog tactique'],['#','Guides d\'analyse'],['#','Support']] },
+            { title:'Ressources', links:[['#','Documentation'],['#','Blog tactique'],['#',"Guides d'analyse"],['#','Support']] },
             { title:'Légal', links:[['#','Mentions légales'],['#','CGV'],['#','Confidentialité'],['#','Cookies']] },
           ].map(col => (
             <div key={col.title}>
@@ -880,7 +913,7 @@ export default function LandingPage() {
         </div>
         <div style={{ borderTop: `1px solid ${G.border}`, paddingTop: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, fontSize: 13, color: G.muted }}>
           <span>© 2026 INSIGHTBALL — Tous droits réservés</span>
-          <span>Fait pour les coaches, par des passionnés de football</span>
+          <span>Passion Football 🩷</span>
         </div>
       </footer>
     </div>
