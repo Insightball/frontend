@@ -25,7 +25,7 @@ const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Cond
 
 /* ─── Google Sheets webhook URL ─────────────── */
 /* Remplace par ton URL Apps Script une fois deployé */
-const SHEETS_URL = 'https://script.google.com/macros/s/TON_SCRIPT_ID/exec'
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzVmVTmvlRMv27XsGYTtkjSK6-KV3cm3bLlI17Coe1e7HRUqamGaYBzbfPVePLnaqqROg/exec'
 
 /* ─── Scroll reveal hook ─────────────────────── */
 function useReveal() {
