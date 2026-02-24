@@ -212,16 +212,23 @@ function HeatmapSVG() {
           </g>
         ))}
 
-        {/* Légende compacte en bas à droite */}
-        <g transform="translate(168,186)">
-          {[['#ef4444','Tir cadré'],['#f97316','Tir non cadré'],['#22c55e','Récupération'],['#a855f7','Ballon perdu']].map(([c,l],i) => (
-            <g key={l} transform={`translate(${i * 37},0)`}>
-              <circle cx="4" cy="-3" r="3.5" fill={c}/>
-              <text x="10" y="0" fill="rgba(255,255,255,0.55)" fontSize="6" fontFamily="monospace">{l}</text>
-            </g>
-          ))}
-        </g>
       </svg>
+
+      {/* Légende sous le terrain */}
+      <div style={{
+        display: 'flex', flexWrap: 'wrap', gap: '8px 20px',
+        padding: '10px 14px',
+        background: 'rgba(0,0,0,0.45)',
+        borderTop: '1px solid rgba(255,255,255,0.07)',
+      }}>
+        {[['#ef4444','Tir cadré'],['#f97316','Tir non cadré'],['#22c55e','Récupération'],['#a855f7','Ballon perdu']].map(([c,l]) => (
+          <div key={l} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ width: 9, height: 9, borderRadius: '50%', background: c, flexShrink: 0, display: 'inline-block', boxShadow: `0 0 5px ${c}` }}/>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.75)', letterSpacing: '.06em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>{l}</span>
+          </div>
+        ))}
+        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: 'rgba(255,255,255,0.28)', marginLeft: 'auto', alignSelf: 'center', letterSpacing: '.08em' }}>SURVOLEZ UN POINT</span>
+      </div>
     </div>
   )
 }
