@@ -314,13 +314,13 @@ export default function LandingPage() {
     ::-webkit-scrollbar-thumb { background: ${G.border2}; border-radius: 2px; }
     @keyframes heroUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
     @media (max-width: 1024px) {
-      .hero-grid    { grid-template-columns: 1fr !important; max-width: 640px !important; }
+      .hero-grid    { grid-template-columns: 1fr !important; max-width: 640px !important; margin: 0 auto !important; }
       .hero-right   { display: none !important; }
       .feat-grid    { grid-template-columns: 1fr !important; }
       .process-grid { grid-template-columns: 1fr !important; }
       .process-card-sticky { display: none !important; }
       .rapport-grid { grid-template-columns: 1fr !important; }
-      .price-grid   { grid-template-columns: 1fr !important; max-width: 480px !important; }
+      .price-grid   { grid-template-columns: 1fr !important; max-width: 480px !important; margin: 0 auto !important; }
       .cta-band     { flex-direction: column !important; align-items: flex-start !important; padding: 56px 32px !important; }
       .footer-grid  { grid-template-columns: 1fr 1fr !important; }
       .wrap, .wrap-inner { padding: 72px 32px !important; }
@@ -329,16 +329,27 @@ export default function LandingPage() {
     }
     @media (max-width: 768px) {
       .nav-links, .nav-cta-d { display: none !important; }
-      .nav-burger  { display: flex !important; }
-      .hero-title  { font-size: clamp(40px,11vw,64px) !important; }
-      .sec-h2      { font-size: clamp(30px,7vw,44px) !important; }
+      .nav-burger   { display: flex !important; }
+      .hero-grid    { padding: 80px 20px 40px !important; min-height: unset !important; }
+      .hero-title   { font-size: clamp(36px,10vw,58px) !important; }
+      .sec-h2       { font-size: clamp(28px,7vw,42px) !important; }
       .wrap, .wrap-inner { padding: 56px 20px !important; }
-      .cta-band    { padding: 56px 20px !important; }
-      .footer-grid { gap: 24px !important; }
+      .cta-band     { padding: 56px 20px !important; }
+      .footer-grid  { grid-template-columns: 1fr 1fr !important; gap: 28px !important; }
+      .feat-grid    { grid-template-columns: 1fr !important; }
+      .price-grid   { grid-template-columns: 1fr !important; max-width: 100% !important; }
+      .wl-grid      { grid-template-columns: 1fr !important; }
+      .contact-grid { grid-template-columns: 1fr !important; }
     }
     @media (max-width: 480px) {
-      .footer-grid { grid-template-columns: 1fr !important; }
-      .wl-grid     { grid-template-columns: 1fr !important; }
+      .footer-grid  { grid-template-columns: 1fr !important; }
+      .wl-grid      { grid-template-columns: 1fr !important; }
+      .hero-grid    { padding: 80px 16px 32px !important; }
+      .wrap, .wrap-inner { padding: 48px 16px !important; }
+      .cta-band     { padding: 48px 16px !important; }
+      nav           { padding: 0 16px !important; }
+      .price-grid   { max-width: 100% !important; }
+      footer        { padding: 40px 16px 24px !important; }
     }
   `
 
@@ -387,6 +398,7 @@ export default function LandingPage() {
         borderBottom: 'none', height: 60,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '0 40px',
+        boxSizing: 'border-box',
         boxShadow: navScrolled ? '0 2px 20px rgba(0,0,0,0.40)' : 'none',
         transition: 'box-shadow .2s',
       }}>
@@ -433,7 +445,7 @@ export default function LandingPage() {
       )}
 
       {/* ══ HERO ═══════════════════════════════════════ */}
-      <div className="hero-grid" style={{ paddingTop: 60, display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', maxWidth: 1200, margin: '0 auto', padding: '60px 48px 0', gap: 60, minHeight: '100vh' }}>
+      <div className="hero-grid" style={{ paddingTop: 60, display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', maxWidth: 1200, margin: '0 auto', padding: '100px 48px 60px', gap: 60, minHeight: '100vh' }}>
         <div style={{ padding: '80px 0' }}>
           <h1 className="hero-title" style={{ fontFamily: G.display, fontSize: 'clamp(48px,6vw,78px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.ink, marginBottom: 24, opacity: 0, animation: 'heroUp .5s .2s forwards' }}>
             Transformez vos vidéos<br/>
@@ -928,7 +940,7 @@ export default function LandingPage() {
           <h2 className="sec-h2" style={{ fontFamily: G.display, fontSize: 'clamp(34px,4vw,54px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.white, marginBottom: 12 }}>
             Prêt à analyser<br/><span style={{ color: G.gold }}>votre prochain match ?</span>
           </h2>
-          <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)', maxWidth: 440 }}>Faites analyser votre match.</p>
+
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-start', flexShrink: 0 }}>
           <a href="#waitlist" style={{ ...btnPrimary, fontSize: 16, padding: '16px 36px', textDecoration:'none' }}
@@ -973,9 +985,9 @@ export default function LandingPage() {
             </div>
           ))}
         </div>
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.10)', paddingTop: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, fontSize: 13, color: 'rgba(255,255,255,0.70)' }}>
-          <span>© 2026 INSIGHTBALL — Tous droits réservés</span>
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.10)', paddingTop: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, fontSize: 13, color: 'rgba(255,255,255,0.75)', textAlign: 'center' }}>
           <span>Made in 🇫🇷 with ❤️</span>
+          <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12 }}>© 2026 INSIGHTBALL — Tous droits réservés</span>
         </div>
       </footer>
     </div>
