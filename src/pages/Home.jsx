@@ -233,6 +233,69 @@ function HeatmapSVG() {
   )
 }
 
+/* ─── Mockup rapport responsive ─────────────── */
+function MockupRapport({ mobile }) {
+  const pad   = mobile ? 12 : 16
+  const kpiFs = mobile ? 20 : 26
+  const rowFs = mobile ? 11 : 12
+  const nbRows = mobile ? 2 : 3
+
+  return (
+    <div style={{ width: '100%', maxWidth: mobile ? '100%' : 520, background: G.white, border: `1px solid ${G.border}`, borderRadius: 8, boxShadow: '0 8px 40px rgba(0,0,0,0.10)', overflow: 'hidden' }}>
+      {/* Barre titre */}
+      <div style={{ background: G.off, borderBottom: `1px solid ${G.border}`, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 6 }}>
+        {['#f87171','#fbbf24','#4ade80'].map(c => <span key={c} style={{ width: 8, height: 8, borderRadius: '50%', background: c, flexShrink: 0 }}/>)}
+        <span style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, marginLeft: 6, letterSpacing: '.06em' }}>Rapport de match</span>
+      </div>
+
+      <div style={{ padding: pad, display: 'flex', flexDirection: 'column', gap: mobile ? 8 : 10 }}>
+        {/* KPIs */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: mobile ? 6 : 8 }}>
+          {[['63%',G.gold,'Possession'],['18',G.ink,'Attaques'],['8/14','#1a7a4a','Cadrés']].map(([v,c,l]) => (
+            <div key={l} style={{ background: G.off, border: `1px solid ${G.border}`, borderRadius: 4, padding: mobile ? '10px 6px' : '12px 10px', textAlign: 'center' }}>
+              <div style={{ fontFamily: G.display, fontSize: kpiFs, fontWeight: 800, lineHeight: 1, color: c }}>{v}</div>
+              <div style={{ fontSize: mobile ? 9 : 10, color: G.muted, marginTop: 2 }}>{l}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Heatmap */}
+        <div style={{ border: `1px solid ${G.border}`, borderRadius: 4, overflow: 'hidden' }}>
+          <div style={{ background: G.off, borderBottom: `1px solid ${G.border}`, padding: '7px 12px', fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.1em', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between' }}>
+            <span>Heatmap collective</span><span style={{ color: G.gold }}>Mi-temps 2</span>
+          </div>
+          <HeatmapSVG/>
+        </div>
+
+        {/* Table joueurs */}
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ background: G.off }}>
+              {['Joueur','Pass.','Duels','Km'].map(h => (
+                <th key={h} style={{ fontFamily: G.mono, fontSize: mobile ? 8 : 9, fontWeight: 600, letterSpacing: '.08em', textTransform: 'uppercase', color: G.muted, padding: mobile ? '6px 8px' : '7px 10px', textAlign: h==='Joueur'?'left':'center', borderBottom: `1px solid ${G.border}` }}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {PLAYERS.slice(0, nbRows).map(p => (
+              <tr key={p.num}>
+                <td style={{ fontSize: rowFs, color: G.ink2, padding: mobile ? '6px 8px' : '7px 10px', borderBottom: `1px solid ${G.border}` }}>
+                  <span style={{ fontFamily: G.display, fontSize: mobile ? 13 : 14, fontWeight: 700, color: G.gold, marginRight: 3 }}>{p.num}</span>
+                  {mobile ? p.name.split(' ')[0] : p.name}
+                  <span style={{ fontFamily: G.mono, fontSize: 8, background: G.off, border: `1px solid ${G.border}`, padding: '1px 4px', borderRadius: 2, marginLeft: 3, color: G.muted }}>{p.pos}</span>
+                </td>
+                {[p.passes, p.duels, p.km].map((v,i) => (
+                  <td key={i} style={{ fontSize: rowFs, fontWeight: 600, color: G.ink2, padding: mobile ? '6px 8px' : '7px 10px', textAlign: 'center', borderBottom: `1px solid ${G.border}` }}>{v}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
 /* ════════════════════════════════════════════════
    LANDING PAGE
 ════════════════════════════════════════════════ */
@@ -341,15 +404,19 @@ export default function LandingPage() {
       .wl-grid      { grid-template-columns: 1fr !important; }
       .contact-grid { grid-template-columns: 1fr !important; }
     }
+    @media (max-width: 1024px) {
+      .hero-mobile-mockup { display: block !important; }
+    }
     @media (max-width: 480px) {
       .footer-grid  { grid-template-columns: 1fr !important; }
       .wl-grid      { grid-template-columns: 1fr !important; }
-      .hero-grid    { padding: 80px 16px 32px !important; }
+      .hero-grid    { padding: 80px 16px 32px !important; min-height: unset !important; }
       .wrap, .wrap-inner { padding: 48px 16px !important; }
       .cta-band     { padding: 48px 16px !important; }
       nav           { padding: 0 16px !important; }
       .price-grid   { max-width: 100% !important; }
       footer        { padding: 40px 16px 24px !important; }
+      .hero-mobile-mockup { padding: 0 12px 40px !important; }
     }
   `
 
@@ -445,7 +512,10 @@ export default function LandingPage() {
       )}
 
       {/* ══ HERO ═══════════════════════════════════════ */}
-      <div className="hero-grid" style={{ paddingTop: 60, display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', maxWidth: 1200, margin: '0 auto', padding: '100px 48px 60px', gap: 60, minHeight: '100vh' }}>
+      {/* ══ HERO LAYOUT ══ */}
+      <div className="hero-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', maxWidth: 1200, margin: '0 auto', padding: '100px 48px 60px', gap: 60, minHeight: '100vh' }}>
+
+        {/* ── Texte gauche ── */}
         <div style={{ padding: '80px 0' }}>
           <h1 className="hero-title" style={{ fontFamily: G.display, fontSize: 'clamp(48px,6vw,78px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.ink, marginBottom: 24, opacity: 0, animation: 'heroUp .5s .2s forwards' }}>
             Transformez vos vidéos<br/>
@@ -479,55 +549,16 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Dashboard mockup */}
+        {/* ── Mockup rapport — desktop : droite, mobile : dessous ── */}
         <div className="hero-right" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, animation: 'heroUp .6s .3s forwards' }}>
-          <div style={{ width: '100%', maxWidth: 520, background: G.white, border: `1px solid ${G.border}`, borderRadius: 8, boxShadow: '0 8px 40px rgba(0,0,0,0.10)', overflow: 'hidden' }}>
-            <div style={{ background: G.off, borderBottom: `1px solid ${G.border}`, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 6 }}>
-              {['#f87171','#fbbf24','#4ade80'].map(c => <span key={c} style={{ width: 8, height: 8, borderRadius: '50%', background: c, flexShrink: 0 }}/>)}
-              <span style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, marginLeft: 6, letterSpacing: '.06em' }}>Rapport de match</span>
-            </div>
-            <div style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {/* KPIs */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8 }}>
-                {[['63%',G.gold,'Possession'],['18',G.ink,'Attaques'],['8/14',G.green,'Cadrés']].map(([v,c,l]) => (
-                  <div key={l} style={{ background: G.off, border: `1px solid ${G.border}`, borderRadius: 4, padding: '12px 10px', textAlign: 'center' }}>
-                    <div style={{ fontFamily: G.display, fontSize: 26, fontWeight: 800, lineHeight: 1, color: c }}>{v}</div>
-                    <div style={{ fontSize: 10, color: G.muted, marginTop: 2 }}>{l}</div>
-                  </div>
-                ))}
-              </div>
-              {/* Heatmap pro */}
-              <div style={{ border: `1px solid ${G.border}`, borderRadius: 4, overflow: 'hidden' }}>
-                <div style={{ background: G.off, borderBottom: `1px solid ${G.border}`, padding: '7px 12px', fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.1em', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between' }}>
-                  <span>Heatmap collective</span><span style={{ color: G.gold }}>Mi-temps 2</span>
-                </div>
-                <HeatmapSVG/>
-              </div>
-              {/* Table */}
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                  <tr style={{ background: G.off }}>
-                    {['Joueur','Passes','Duels','Km'].map(h => (
-                      <th key={h} style={{ fontFamily: G.mono, fontSize: 9, fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, padding: '7px 10px', textAlign: h==='Joueur'?'left':'center', borderBottom: `1px solid ${G.border}` }}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {PLAYERS.slice(0,3).map(p => (
-                    <tr key={p.num} onMouseEnter={e => e.currentTarget.style.background=G.goldL} onMouseLeave={e => e.currentTarget.style.background='transparent'}>
-                      <td style={{ fontSize: 12, color: G.ink2, padding: '7px 10px', borderBottom: `1px solid ${G.border}` }}>
-                        <span style={{ fontFamily: G.display, fontSize: 14, fontWeight: 700, color: G.gold, marginRight: 4 }}>{p.num}</span>
-                        {p.name}
-                        <span style={{ fontFamily: G.mono, fontSize: 9, background: G.off, border: `1px solid ${G.border}`, padding: '1px 5px', borderRadius: 2, marginLeft: 4, color: G.muted }}>{p.pos}</span>
-                      </td>
-                      {[p.passes, p.duels, p.km].map((v,i) => <td key={i} style={{ fontSize: 12, fontWeight: 600, color: G.ink2, padding: '7px 10px', textAlign: 'center', borderBottom: `1px solid ${G.border}` }}>{v}</td>)}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <MockupRapport/>
         </div>
+      </div>
+
+      {/* Mockup mobile — sous le texte hero, visible uniquement sur mobile */}
+      <div className="hero-mobile-mockup" style={{ display: 'none', padding: '0 16px 56px' }}>
+        <MockupRapport mobile/>
+      </div>
       </div>
 
       {/* ══ FEATURES ═══════════════════════════════════ */}
