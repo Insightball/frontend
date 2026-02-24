@@ -75,104 +75,154 @@ const PLAYERS = [
 ]
 
 /* ─── Heatmap SVG pro ────────────────────────── */
+/* ─── Heatmap interactive avec tooltip ──────── */
+const EVENTS = [
+  { cx: 274, cy: 84,  r: 6,   color: '#ef4444', type: 'Tir cadré',          detail: 'Dangoumau — 74'',  icon: '⚽' },
+  { cx: 258, cy: 113, r: 5,   color: '#ef4444', type: 'Tir cadré',          detail: 'Randazzo — 61'',   icon: '⚽' },
+  { cx: 282, cy: 122, r: 4.5, color: '#f97316', type: 'Tir non cadré',      detail: 'Finidori — 55'',   icon: '🎯' },
+  { cx: 217, cy: 76,  r: 5,   color: '#f97316', type: 'Tir non cadré',      detail: 'Kheroua — 38'',    icon: '🎯' },
+  { cx: 232, cy: 132, r: 4,   color: '#eab308', type: 'Ballon récupéré',    detail: 'Fogacci — 67'',    icon: '✅' },
+  { cx: 165, cy: 70,  r: 4.5, color: '#c9a227', type: 'Ballon récupéré',    detail: 'Kheroua — 42'',    icon: '✅' },
+  { cx: 155, cy: 126, r: 3.5, color: '#c9a227', type: 'Ballon perdu',       detail: 'Finidori — 51'',   icon: '❌' },
+  { cx: 84,  cy: 96,  r: 4,   color: '#22c55e', type: 'Ballon récupéré',    detail: 'Bonalair — 29'',   icon: '✅' },
+  { cx: 195, cy: 88,  r: 3.5, color: '#a855f7', type: 'Ballon perdu',       detail: 'Dangoumau — 44'',  icon: '❌' },
+  { cx: 240, cy: 98,  r: 5,   color: '#ef4444', type: 'Tir cadré',          detail: 'Randazzo — 82'',   icon: '⚽' },
+]
+
 function HeatmapSVG() {
+  const [tooltip, setTooltip] = useState(null)
+  const [hovered, setHovered] = useState(null)
+
   return (
-    <svg width="100%" viewBox="0 0 320 200" style={{ display: 'block', background: '#0c1f0c' }}>
-      <defs>
-        <pattern id="stripes" x="0" y="0" width="22" height="200" patternUnits="userSpaceOnUse">
-          <rect width="11" height="200" fill="#0c1f0c"/>
-          <rect x="11" width="11" height="200" fill="#0e230e"/>
-        </pattern>
-        {/* Gradients chaleur */}
-        <radialGradient id="hRed" cx="50%" cy="50%" r="50%">
-          <stop offset="0%"   stopColor="#ef4444" stopOpacity="0.90"/>
-          <stop offset="40%"  stopColor="#f97316" stopOpacity="0.55"/>
-          <stop offset="100%" stopColor="#ef4444" stopOpacity="0"/>
-        </radialGradient>
-        <radialGradient id="hOrange" cx="50%" cy="50%" r="50%">
-          <stop offset="0%"   stopColor="#f97316" stopOpacity="0.80"/>
-          <stop offset="50%"  stopColor="#eab308" stopOpacity="0.40"/>
-          <stop offset="100%" stopColor="#f97316" stopOpacity="0"/>
-        </radialGradient>
-        <radialGradient id="hGold" cx="50%" cy="50%" r="50%">
-          <stop offset="0%"   stopColor="#c9a227" stopOpacity="0.75"/>
-          <stop offset="55%"  stopColor="#c9a227" stopOpacity="0.30"/>
-          <stop offset="100%" stopColor="#c9a227" stopOpacity="0"/>
-        </radialGradient>
-        <radialGradient id="hGreen" cx="50%" cy="50%" r="50%">
-          <stop offset="0%"   stopColor="#22c55e" stopOpacity="0.55"/>
-          <stop offset="100%" stopColor="#22c55e" stopOpacity="0"/>
-        </radialGradient>
-      </defs>
+    <div style={{ position: 'relative', width: '100%' }}>
+      {/* Tooltip */}
+      {tooltip && (
+        <div style={{
+          position: 'absolute',
+          left: tooltip.x, top: tooltip.y,
+          transform: 'translate(-50%, -110%)',
+          background: 'rgba(17,17,16,0.95)',
+          border: `1px solid ${tooltip.color}`,
+          borderRadius: 6, padding: '7px 12px',
+          pointerEvents: 'none', zIndex: 99,
+          minWidth: 140, boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+          whiteSpace: 'nowrap',
+        }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: tooltip.color, fontFamily: "'JetBrains Mono', monospace", letterSpacing: '.06em', marginBottom: 2 }}>
+            {tooltip.icon} {tooltip.type}
+          </div>
+          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)', fontFamily: "'Barlow', sans-serif" }}>
+            {tooltip.detail}
+          </div>
+        </div>
+      )}
 
-      {/* Fond strié */}
-      <rect width="320" height="200" fill="url(#stripes)"/>
-
-      {/* Lignes terrain */}
-      <g stroke="rgba(255,255,255,0.20)" strokeWidth="1" fill="none">
-        <rect x="6" y="6" width="308" height="188"/>
-        <line x1="160" y1="6" x2="160" y2="194"/>
-        <circle cx="160" cy="100" r="28"/>
-        <circle cx="160" cy="100" r="2" fill="rgba(255,255,255,0.20)" stroke="none"/>
-        {/* Surfaces */}
-        <rect x="6" y="56" width="48" height="88"/>
-        <rect x="6" y="74" width="18" height="52"/>
-        <rect x="266" y="56" width="48" height="88"/>
-        <rect x="296" y="74" width="18" height="52"/>
-        {/* Arc réparation */}
-        <path d="M54 74 A28 28 0 0 1 54 126" strokeDasharray="4 3"/>
-        <path d="M266 74 A28 28 0 0 0 266 126" strokeDasharray="4 3"/>
-        {/* Corners */}
-        <path d="M6 18 A12 12 0 0 1 18 6"/>
-        <path d="M302 6 A12 12 0 0 1 314 18"/>
-        <path d="M314 182 A12 12 0 0 1 302 194"/>
-        <path d="M18 194 A12 12 0 0 1 6 182"/>
-      </g>
-      {/* Cages */}
-      <rect x="1" y="80" width="5" height="40" fill="none" stroke="rgba(255,255,255,0.45)" strokeWidth="1"/>
-      <rect x="314" y="80" width="5" height="40" fill="none" stroke="rgba(255,255,255,0.45)" strokeWidth="1"/>
-
-      {/* ── Zones de chaleur (style pro) ── */}
-      {/* Zone rouge — attaque droite (côté adversaire) */}
-      <ellipse cx="272" cy="88"  rx="52" ry="44" fill="url(#hRed)"    style={{filter:'blur(16px)'}}/>
-      <ellipse cx="255" cy="118" rx="40" ry="32" fill="url(#hRed)"    style={{filter:'blur(13px)'}}/>
-      {/* Zone orange — couloir milieu offensif droit */}
-      <ellipse cx="215" cy="78"  rx="42" ry="34" fill="url(#hOrange)" style={{filter:'blur(12px)'}}/>
-      <ellipse cx="230" cy="130" rx="34" ry="26" fill="url(#hOrange)" style={{filter:'blur(11px)'}}/>
-      {/* Zone or — axe central offensif */}
-      <ellipse cx="165" cy="72"  rx="35" ry="28" fill="url(#hGold)"   style={{filter:'blur(11px)'}}/>
-      <ellipse cx="158" cy="125" rx="30" ry="24" fill="url(#hGold)"   style={{filter:'blur(10px)'}}/>
-      {/* Zone verte — récup / défense centrale */}
-      <ellipse cx="82"  cy="98"  rx="36" ry="30" fill="url(#hGreen)"  style={{filter:'blur(13px)'}}/>
-
-      {/* ── Points chauds (actions précises) ── */}
-      <circle cx="274" cy="84"  r="5"   fill="#ef4444" opacity=".95"/>
-      <circle cx="258" cy="113" r="4"   fill="#ef4444" opacity=".88"/>
-      <circle cx="282" cy="122" r="3.5" fill="#f97316" opacity=".82"/>
-      <circle cx="217" cy="76"  r="4"   fill="#f97316" opacity=".80"/>
-      <circle cx="232" cy="132" r="3"   fill="#eab308" opacity=".78"/>
-      <circle cx="165" cy="70"  r="3.5" fill="#c9a227" opacity=".75"/>
-      <circle cx="155" cy="126" r="3"   fill="#c9a227" opacity=".70"/>
-      <circle cx="84"  cy="96"  r="3.5" fill="#22c55e" opacity=".72"/>
-
-      {/* Légende */}
-      <g transform="translate(8,186)">
-        <rect width="60" height="6" rx="3" fill="url(#hGreen)"/>
-        <text x="0" y="16" fill="rgba(255,255,255,0.35)" fontSize="7" fontFamily="monospace">Faible</text>
-        <text x="52" y="16" fill="rgba(255,255,255,0.35)" fontSize="7" fontFamily="monospace">Fort</text>
+      <svg width="100%" viewBox="0 0 320 200" style={{ display: 'block', background: '#0c1f0c', cursor: 'crosshair' }}>
         <defs>
-          <linearGradient id="lgLegend" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%"   stopColor="#22c55e" stopOpacity=".5"/>
-            <stop offset="50%"  stopColor="#c9a227" stopOpacity=".7"/>
-            <stop offset="80%"  stopColor="#f97316" stopOpacity=".8"/>
-            <stop offset="100%" stopColor="#ef4444" stopOpacity=".9"/>
-          </linearGradient>
+          <pattern id="stripes" x="0" y="0" width="22" height="200" patternUnits="userSpaceOnUse">
+            <rect width="11" height="200" fill="#0c1f0c"/>
+            <rect x="11" width="11" height="200" fill="#0e230e"/>
+          </pattern>
+          <radialGradient id="hRed" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stopColor="#ef4444" stopOpacity="0.88"/>
+            <stop offset="40%"  stopColor="#f97316" stopOpacity="0.50"/>
+            <stop offset="100%" stopColor="#ef4444" stopOpacity="0"/>
+          </radialGradient>
+          <radialGradient id="hOrange" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stopColor="#f97316" stopOpacity="0.78"/>
+            <stop offset="55%"  stopColor="#eab308" stopOpacity="0.35"/>
+            <stop offset="100%" stopColor="#f97316" stopOpacity="0"/>
+          </radialGradient>
+          <radialGradient id="hGold" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stopColor="#c9a227" stopOpacity="0.72"/>
+            <stop offset="60%"  stopColor="#c9a227" stopOpacity="0.28"/>
+            <stop offset="100%" stopColor="#c9a227" stopOpacity="0"/>
+          </radialGradient>
+          <radialGradient id="hGreen" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stopColor="#22c55e" stopOpacity="0.52"/>
+            <stop offset="100%" stopColor="#22c55e" stopOpacity="0"/>
+          </radialGradient>
         </defs>
-        <rect width="60" height="6" rx="3" fill="url(#lgLegend)"/>
-      </g>
-      <text x="200" y="193" fill="rgba(255,255,255,0.30)" fontSize="7.5" fontFamily="monospace" letterSpacing="1">HEATMAP COLLECTIVE · MT2</text>
-      <text x="284" y="193" fill="#c9a227" fontSize="7.5" fontFamily="monospace" letterSpacing="1">GFCA</text>
-    </svg>
+
+        {/* Fond */}
+        <rect width="320" height="200" fill="url(#stripes)"/>
+
+        {/* Zones chaleur */}
+        <ellipse cx="272" cy="88"  rx="52" ry="44" fill="url(#hRed)"    style={{filter:'blur(16px)'}}/>
+        <ellipse cx="255" cy="118" rx="40" ry="32" fill="url(#hRed)"    style={{filter:'blur(13px)'}}/>
+        <ellipse cx="215" cy="78"  rx="42" ry="34" fill="url(#hOrange)" style={{filter:'blur(12px)'}}/>
+        <ellipse cx="230" cy="130" rx="34" ry="26" fill="url(#hOrange)" style={{filter:'blur(11px)'}}/>
+        <ellipse cx="165" cy="72"  rx="35" ry="28" fill="url(#hGold)"   style={{filter:'blur(11px)'}}/>
+        <ellipse cx="158" cy="125" rx="30" ry="24" fill="url(#hGold)"   style={{filter:'blur(10px)'}}/>
+        <ellipse cx="82"  cy="98"  rx="36" ry="30" fill="url(#hGreen)"  style={{filter:'blur(13px)'}}/>
+
+        {/* Lignes terrain */}
+        <g stroke="rgba(255,255,255,0.22)" strokeWidth="1" fill="none">
+          <rect x="6" y="6" width="308" height="188"/>
+          <line x1="160" y1="6" x2="160" y2="194"/>
+          <circle cx="160" cy="100" r="28"/>
+          <circle cx="160" cy="100" r="2" fill="rgba(255,255,255,0.22)" stroke="none"/>
+          <rect x="6" y="56" width="48" height="88"/>
+          <rect x="6" y="74" width="18" height="52"/>
+          <rect x="266" y="56" width="48" height="88"/>
+          <rect x="296" y="74" width="18" height="52"/>
+          <path d="M54 74 A28 28 0 0 1 54 126" strokeDasharray="4 3"/>
+          <path d="M266 74 A28 28 0 0 0 266 126" strokeDasharray="4 3"/>
+          <path d="M6 18 A12 12 0 0 1 18 6"/>
+          <path d="M302 6 A12 12 0 0 1 314 18"/>
+          <path d="M314 182 A12 12 0 0 1 302 194"/>
+          <path d="M18 194 A12 12 0 0 1 6 182"/>
+        </g>
+        <rect x="1" y="80" width="5" height="40" fill="none" stroke="rgba(255,255,255,0.45)" strokeWidth="1"/>
+        <rect x="314" y="80" width="5" height="40" fill="none" stroke="rgba(255,255,255,0.45)" strokeWidth="1"/>
+
+        {/* Points interactifs */}
+        {EVENTS.map((ev, i) => (
+          <g key={i}>
+            {/* Halo au survol */}
+            {hovered === i && (
+              <circle cx={ev.cx} cy={ev.cy} r={ev.r + 5} fill={ev.color} opacity=".20"/>
+            )}
+            {/* Point principal */}
+            <circle
+              cx={ev.cx} cy={ev.cy} r={hovered === i ? ev.r + 1.5 : ev.r}
+              fill={ev.color}
+              opacity={hovered === i ? 1 : 0.88}
+              stroke={hovered === i ? '#fff' : 'none'}
+              strokeWidth="1.5"
+              style={{ transition: 'all .15s', cursor: 'pointer' }}
+              onMouseEnter={(e) => {
+                setHovered(i)
+                const rect = e.currentTarget.closest('svg').getBoundingClientRect()
+                const svgEl = e.currentTarget.closest('svg')
+                const viewW = 320, viewH = 200
+                const scaleX = rect.width / viewW
+                const scaleY = rect.height / viewH
+                setTooltip({
+                  x: ev.cx * scaleX,
+                  y: ev.cy * scaleY,
+                  color: ev.color,
+                  type: ev.type,
+                  detail: ev.detail,
+                  icon: ev.icon,
+                })
+              }}
+              onMouseLeave={() => { setHovered(null); setTooltip(null) }}
+            />
+          </g>
+        ))}
+
+        {/* Légende compacte en bas à droite */}
+        <g transform="translate(168,186)">
+          {[['#ef4444','Tir cadré'],['#f97316','Tir non cadré'],['#22c55e','Récupération'],['#a855f7','Ballon perdu']].map(([c,l],i) => (
+            <g key={l} transform={`translate(${i * 37},0)`}>
+              <circle cx="4" cy="-3" r="3.5" fill={c}/>
+              <text x="10" y="0" fill="rgba(255,255,255,0.55)" fontSize="6" fontFamily="monospace">{l}</text>
+            </g>
+          ))}
+        </g>
+      </svg>
+    </div>
   )
 }
 
@@ -379,8 +429,8 @@ export default function LandingPage() {
       <div className="hero-grid" style={{ paddingTop: 60, display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', maxWidth: 1200, margin: '0 auto', padding: '60px 48px 0', gap: 60, minHeight: '100vh' }}>
         <div style={{ padding: '80px 0' }}>
           <h1 className="hero-title" style={{ fontFamily: G.display, fontSize: 'clamp(48px,6vw,78px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.ink, marginBottom: 24, opacity: 0, animation: 'heroUp .5s .2s forwards' }}>
-            Analysez vos matchs<br/>
-            <span style={{ color: G.gold }}>comme un staff<br/>professionnel.</span>
+            Transformez vos vidéos<br/>
+            <span style={{ color: G.gold }}>en données<br/>exploitables.</span>
           </h1>
 
           <p style={{ fontSize: 18, lineHeight: 1.65, color: G.muted, maxWidth: 440, marginBottom: 36, opacity: 0, animation: 'heroUp .5s .35s forwards' }}>
@@ -916,7 +966,7 @@ export default function LandingPage() {
             </div>
           ))}
         </div>
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.10)', paddingTop: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.10)', paddingTop: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, fontSize: 13, color: 'rgba(255,255,255,0.70)' }}>
           <span>© 2026 INSIGHTBALL — Tous droits réservés</span>
           <span>Made in 🇫🇷 with ❤️</span>
         </div>
