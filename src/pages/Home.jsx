@@ -326,25 +326,25 @@ export default function LandingPage() {
       {/* ══ NAV ════════════════════════════════════════ */}
       <nav style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200,
-        background: 'rgba(255,255,255,0.96)', backdropFilter: 'blur(10px)',
-        borderBottom: `1px solid ${G.border}`, height: 60,
+        background: G.ink, backdropFilter: 'none',
+        borderBottom: 'none', height: 60,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '0 40px',
-        boxShadow: navScrolled ? '0 2px 20px rgba(0,0,0,0.07)' : 'none',
+        boxShadow: navScrolled ? '0 2px 20px rgba(0,0,0,0.40)' : 'none',
         transition: 'box-shadow .2s',
       }}>
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
           <img src="/logo.svg" alt="INSIGHTBALL" style={{ height: 36, width: 'auto', display: 'block' }} />
-          <span style={{ fontFamily: G.display, fontSize: 18, fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase', color: G.ink }}>
+          <span style={{ fontFamily: G.display, fontSize: 18, fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase', color: G.white }}>
             INSIGHT<span style={{ color: G.gold }}>BALL</span>
           </span>
         </Link>
 
         <div className="nav-links" style={{ display: 'flex', gap: 28, alignItems: 'center' }}>
           {[['#features','Fonctionnalités'],['#pricing','Tarifs'],['#waitlist','Accès anticipé']].map(([h,l]) => (
-            <a key={h} href={h} style={{ fontSize: 14, fontWeight: 500, color: G.muted, textDecoration: 'none', transition: 'color .15s' }}
-              onMouseEnter={e => e.currentTarget.style.color = G.ink}
-              onMouseLeave={e => e.currentTarget.style.color = G.muted}>{l}</a>
+            <a key={h} href={h} style={{ fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.65)', textDecoration: 'none', transition: 'color .15s' }}
+              onMouseEnter={e => e.currentTarget.style.color = G.gold}
+              onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.65)'}>{l}</a>
           ))}
         </div>
 
@@ -358,7 +358,7 @@ export default function LandingPage() {
           style={{ display: 'none', background: 'none', border: 'none', cursor: 'pointer', flexDirection: 'column', gap: 5, padding: 4 }}>
           {[0,1,2].map(i => (
             <span key={i} style={{
-              width: 22, height: 1.5, background: G.ink, display: 'block', transition: '.2s',
+              width: 22, height: 1.5, background: G.white, display: 'block', transition: '.2s',
               transform: menuOpen && i===0 ? 'translateY(6.5px) rotate(45deg)' : menuOpen && i===2 ? 'translateY(-6.5px) rotate(-45deg)' : 'none',
               opacity: menuOpen && i===1 ? 0 : 1,
             }}/>
@@ -367,9 +367,9 @@ export default function LandingPage() {
       </nav>
 
       {menuOpen && (
-        <div style={{ position: 'fixed', top: 60, left: 0, right: 0, zIndex: 199, background: G.white, borderBottom: `1px solid ${G.border}`, padding: '16px 24px 20px', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ position: 'fixed', top: 60, left: 0, right: 0, zIndex: 199, background: G.ink, borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '16px 24px 20px', display: 'flex', flexDirection: 'column' }}>
           {[['#features','Fonctionnalités'],['#pricing','Tarifs'],['#waitlist','Accès anticipé']].map(([h,l]) => (
-            <a key={h} href={h} onClick={() => setMenuOpen(false)} style={{ fontSize: 15, fontWeight: 500, color: G.ink2, textDecoration: 'none', padding: '12px 0', borderBottom: `1px solid ${G.border}` }}>{l}</a>
+            <a key={h} href={h} onClick={() => setMenuOpen(false)} style={{ fontSize: 15, fontWeight: 500, color: 'rgba(255,255,255,0.75)', textDecoration: 'none', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>{l}</a>
           ))}
           <a href="#waitlist" onClick={() => setMenuOpen(false)} style={{ ...btnPrimary, marginTop: 12, justifyContent: 'center', textDecoration:'none' }}>Accès anticipé →</a>
         </div>
