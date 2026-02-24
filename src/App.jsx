@@ -15,6 +15,7 @@ import Statistics from './pages/Statistics'
 import TeamManagement from './pages/TeamManagement'
 import SubscriptionPlans from './pages/SubscriptionPlans'
 import UploadMatch from './pages/UploadMatch'
+import AdminPanel from './pages/AdminPanel'
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           {/* Demo / Plans - gèrent leur propre nav */}
           <Route path="/demo"                element={<Dashboard />} />
           <Route path="/subscription/plans"  element={<SubscriptionPlans />} />
+          <Route path="/admin" element={<AdminPanel />} />
 
           {/* Protected dashboard routes */}
           <Route path="/dashboard" element={<ProtectedRoute><DashboardHome /></ProtectedRoute>} />
