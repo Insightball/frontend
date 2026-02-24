@@ -7,7 +7,7 @@ import matchService from '../services/matchService'
 const G = {
   gold: '#c9a227', goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.25)',
   mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
-  border: 'rgba(255,255,255,0.06)', muted: 'rgba(245,242,235,0.35)',
+  border: 'rgba(15,15,13,0.09)', muted: 'rgba(15,15,13,0.42)',
 }
 
 function useCountUp(target, duration = 800) {
@@ -32,16 +32,16 @@ function StatCard({ label, value, icon: Icon, color, delay = 0 }) {
     <div style={{
       opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(14px)',
       transition: 'all .45s cubic-bezier(.34,1.56,.64,1)',
-      background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}`,
+      background: '#ffffff', border: `1px solid rgba(15,15,13,0.09)`,
       borderTop: `2px solid ${color}`, padding: '20px 18px', position: 'relative', overflow: 'hidden',
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-        <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted }}>{label}</span>
+        <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: 'rgba(15,15,13,0.45)' }}>{label}</span>
         <div style={{ width: 28, height: 28, background: color + '15', border: `1px solid ${color}25`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <Icon size={13} color={color} />
         </div>
       </div>
-      <div style={{ fontFamily: G.display, fontSize: 42, lineHeight: 1, color: '#f5f2eb', letterSpacing: '.01em' }}>{count}</div>
+      <div style={{ fontFamily: G.display, fontSize: 42, lineHeight: 1, color: '#0f0f0d', letterSpacing: '.01em' }}>{count}</div>
     </div>
   )
 }
@@ -101,7 +101,7 @@ function DashboardMatches() {
           <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
             <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />Mes matchs
           </div>
-          <h1 style={{ fontFamily: G.display, fontSize: 44, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: '#f5f2eb', margin: 0 }}>
+          <h1 style={{ fontFamily: G.display, fontSize: 44, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: '#0f0f0d', margin: 0 }}>
             Historique<br /><span style={{ color: G.gold }}>& analyses.</span>
           </h1>
         </div>
@@ -137,15 +137,15 @@ function DashboardMatches() {
       {loading ? (
         <div style={{ textAlign: 'center', padding: '60px 0' }}>
           <div style={{ width: 28, height: 28, border: `2px solid ${G.goldBdr}`, borderTopColor: G.gold, borderRadius: '50%', animation: 'spin .7s linear infinite', margin: '0 auto 12px' }} />
-          <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>Chargement...</p>
+          <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', color: 'rgba(15,15,13,0.45)' }}>Chargement...</p>
         </div>
       ) : filteredMatches.length === 0 ? (
-        <div style={{ background: 'rgba(255,255,255,0.01)', border: `1px dashed ${G.goldBdr}`, padding: '64px 24px', textAlign: 'center' }}>
+        <div style={{ background: '#faf8f4', border: `1px dashed ${G.goldBdr}`, padding: '64px 24px', textAlign: 'center' }}>
           <div style={{ width: 52, height: 52, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
             <Video size={24} color={G.gold} />
           </div>
-          <h3 style={{ fontFamily: G.display, fontSize: 24, textTransform: 'uppercase', letterSpacing: '.03em', marginBottom: 8, color: '#f5f2eb' }}>Aucun match</h3>
-          <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, marginBottom: 24, letterSpacing: '.06em' }}>
+          <h3 style={{ fontFamily: G.display, fontSize: 24, textTransform: 'uppercase', letterSpacing: '.03em', marginBottom: 8, color: '#0f0f0d' }}>Aucun match</h3>
+          <p style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(15,15,13,0.45)', marginBottom: 24, letterSpacing: '.06em' }}>
             {filter === 'all' ? 'Uploadez votre premier match pour le faire analyser' : 'Aucun match dans cette catégorie'}
           </p>
           <Link to="/dashboard/matches/upload" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '11px 24px', background: G.gold, color: '#0f0f0d', fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700, textDecoration: 'none' }}>
@@ -156,29 +156,29 @@ function DashboardMatches() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
           {filteredMatches.map((match, i) => (
             <Link key={match.id} to={`/dashboard/matches/${match.id}`}
-              style={{ display: 'block', background: '#0a0a08', padding: '20px 24px', textDecoration: 'none', color: 'inherit', transition: 'background .15s', animation: `fadeIn .35s ease ${i * 50}ms both` }}
+              style={{ display: 'block', background: '#ffffff', padding: '20px 24px', textDecoration: 'none', color: 'inherit', transition: 'background .15s', animation: `fadeIn .35s ease ${i * 50}ms both` }}
               onMouseEnter={e => { e.currentTarget.style.background = 'rgba(201,162,39,0.04)'; e.currentTarget.style.borderLeft = `3px solid ${G.gold}` }}
               onMouseLeave={e => { e.currentTarget.style.background = '#0a0a08'; e.currentTarget.style.borderLeft = 'none' }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-                    <h3 style={{ fontFamily: G.display, fontSize: 20, textTransform: 'uppercase', letterSpacing: '.03em', color: '#f5f2eb', margin: 0 }}>vs {match.opponent}</h3>
+                    <h3 style={{ fontFamily: G.display, fontSize: 20, textTransform: 'uppercase', letterSpacing: '.03em', color: '#0f0f0d', margin: 0 }}>vs {match.opponent}</h3>
                     <StatusBadge status={match.status} />
                   </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.06em' }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, fontFamily: G.mono, fontSize: 10, color: 'rgba(15,15,13,0.45)', letterSpacing: '.06em' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                       <Calendar size={11} />{formatDate(match.date)}
                     </div>
-                    {match.category && <span style={{ padding: '2px 8px', border: `1px solid ${G.border}`, color: G.muted }}>{match.category}</span>}
+                    {match.category && <span style={{ padding: '2px 8px', border: `1px solid rgba(15,15,13,0.09)`, color: 'rgba(15,15,13,0.45)' }}>{match.category}</span>}
                     {match.location && <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}><MapPin size={11} />{match.location}</div>}
                   </div>
 
                   {match.score_home !== null && match.score_away !== null && (
                     <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span style={{ fontFamily: G.display, fontSize: 28, lineHeight: 1, color: '#f5f2eb' }}>{match.score_home}</span>
-                      <span style={{ fontFamily: G.mono, fontSize: 12, color: G.muted }}>—</span>
-                      <span style={{ fontFamily: G.display, fontSize: 28, lineHeight: 1, color: '#f5f2eb' }}>{match.score_away}</span>
+                      <span style={{ fontFamily: G.display, fontSize: 28, lineHeight: 1, color: '#0f0f0d' }}>{match.score_home}</span>
+                      <span style={{ fontFamily: G.mono, fontSize: 12, color: 'rgba(15,15,13,0.45)' }}>—</span>
+                      <span style={{ fontFamily: G.display, fontSize: 28, lineHeight: 1, color: '#0f0f0d' }}>{match.score_away}</span>
                       <span style={{
                         fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase',
                         marginLeft: 8, padding: '3px 10px',
@@ -193,7 +193,7 @@ function DashboardMatches() {
 
                   {match.status === 'processing' && match.progress > 0 && (
                     <div style={{ marginTop: 10 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: G.mono, fontSize: 9, color: G.muted, marginBottom: 5, letterSpacing: '.08em' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: G.mono, fontSize: 9, color: 'rgba(15,15,13,0.45)', marginBottom: 5, letterSpacing: '.08em' }}>
                         <span>Analyse en cours...</span><span>{match.progress}%</span>
                       </div>
                       <div style={{ height: 2, background: G.border, overflow: 'hidden' }}>

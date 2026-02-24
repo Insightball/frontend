@@ -6,7 +6,7 @@ import playerService from '../services/playerService'
 const G = {
   gold: '#c9a227', goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.25)',
   mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
-  border: 'rgba(255,255,255,0.06)', muted: 'rgba(245,242,235,0.35)',
+  border: 'rgba(15,15,13,0.09)', muted: 'rgba(15,15,13,0.42)',
 }
 
 function TeamManagement() {
@@ -43,8 +43,8 @@ function TeamManagement() {
     { date: '2026-02-23', category: 'U19', opponent: 'AS Monaco',    players: 16 },
   ]
 
-  const cardStyle = { background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}`, padding: '24px' }
-  const sectionTitle = { fontFamily: G.mono, fontSize: 10, letterSpacing: '.16em', textTransform: 'uppercase', color: '#f5f2eb', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 10 }
+  const cardStyle = { background: '#ffffff', border: `1px solid rgba(15,15,13,0.09)`, padding: '24px' }
+  const sectionTitle = { fontFamily: G.mono, fontSize: 10, letterSpacing: '.16em', textTransform: 'uppercase', color: '#0f0f0d', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 10 }
 
   return (
     <DashboardLayout>
@@ -53,7 +53,7 @@ function TeamManagement() {
         <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
           <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />Gestion équipe
         </div>
-        <h1 style={{ fontFamily: G.display, fontSize: 44, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: '#f5f2eb', margin: 0 }}>
+        <h1 style={{ fontFamily: G.display, fontSize: 44, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: '#0f0f0d', margin: 0 }}>
           Mon<br /><span style={{ color: G.gold }}>club.</span>
         </h1>
       </div>
@@ -65,21 +65,21 @@ function TeamManagement() {
           Effectif par catégorie
         </div>
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '32px 0', fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.1em' }}>Chargement...</div>
+          <div style={{ textAlign: 'center', padding: '32px 0', fontFamily: G.mono, fontSize: 10, color: 'rgba(15,15,13,0.45)', letterSpacing: '.1em' }}>Chargement...</div>
         ) : Object.keys(playersByCategory).length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '32px 0', fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.08em' }}>Aucun joueur enregistré</div>
+          <div style={{ textAlign: 'center', padding: '32px 0', fontFamily: G.mono, fontSize: 10, color: 'rgba(15,15,13,0.45)', letterSpacing: '.08em' }}>Aucun joueur enregistré</div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {Object.entries(playersByCategory).map(([cat, catPlayers]) => (
-              <div key={cat} style={{ background: '#0a0a08', border: `1px solid ${G.border}`, padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div key={cat} style={{ background: '#ffffff', border: `1px solid rgba(15,15,13,0.09)`, padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <span style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', padding: '3px 10px', background: G.goldBg, border: `1px solid ${G.goldBdr}`, color: G.gold }}>{cat}</span>
-                  <span style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.06em' }}>{catPlayers.length} joueurs</span>
+                  <span style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(15,15,13,0.45)', letterSpacing: '.06em' }}>{catPlayers.length} joueurs</span>
                 </div>
-                <div style={{ display: 'flex', gap: 8, fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em' }}>
+                <div style={{ display: 'flex', gap: 8, fontFamily: G.mono, fontSize: 9, color: 'rgba(15,15,13,0.45)', letterSpacing: '.06em' }}>
                   {['Gardien','Défenseur','Milieu','Attaquant'].map(pos => {
                     const n = catPlayers.filter(p => p.position === pos).length
-                    return n > 0 ? <span key={pos} style={{ padding: '2px 8px', border: `1px solid ${G.border}` }}>{pos.charAt(0)} {n}</span> : null
+                    return n > 0 ? <span key={pos} style={{ padding: '2px 8px', border: `1px solid rgba(15,15,13,0.09)` }}>{pos.charAt(0)} {n}</span> : null
                   })}
                 </div>
               </div>
@@ -90,23 +90,23 @@ function TeamManagement() {
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: G.border, marginBottom: 1 }}>
         {/* Entraînements */}
-        <div style={{ ...cardStyle, background: '#0a0a08' }}>
+        <div style={{ ...cardStyle, background: '#ffffff' }}>
           <div style={sectionTitle}>
             <div style={{ width: 3, height: 16, background: G.gold }} />
             Planning entraînements
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
             {trainingSchedule.map((t, i) => (
-              <div key={i} style={{ background: '#0a0a08', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, transition: 'background .15s' }}
+              <div key={i} style={{ background: '#ffffff', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, transition: 'background .15s' }}
                 onMouseEnter={e => e.currentTarget.style.background = G.goldBg}
                 onMouseLeave={e => e.currentTarget.style.background = '#0a0a08'}>
                 <div style={{ width: 56, flexShrink: 0 }}>
-                  <div style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.08em', color: '#f5f2eb' }}>{t.day}</div>
-                  <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em' }}>{t.time}</div>
+                  <div style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.08em', color: '#0f0f0d' }}>{t.day}</div>
+                  <div style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(15,15,13,0.45)', letterSpacing: '.06em' }}>{t.time}</div>
                 </div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.08em', color: '#f5f2eb' }}>{t.category}</div>
-                  <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em' }}>{t.location}</div>
+                  <div style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.08em', color: '#0f0f0d' }}>{t.category}</div>
+                  <div style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(15,15,13,0.45)', letterSpacing: '.06em' }}>{t.location}</div>
                 </div>
                 <Calendar size={12} color={G.muted} />
               </div>
@@ -115,7 +115,7 @@ function TeamManagement() {
         </div>
 
         {/* Prochains matchs */}
-        <div style={{ ...cardStyle, background: '#0a0a08' }}>
+        <div style={{ ...cardStyle, background: '#ffffff' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
             <div style={sectionTitle}>
               <div style={{ width: 3, height: 16, background: G.gold }} />
@@ -128,20 +128,20 @@ function TeamManagement() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
             {upcomingMatches.map((match, i) => (
               <div key={i}
-                style={{ background: '#0a0a08', padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer', transition: 'background .15s' }}
+                style={{ background: '#ffffff', padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer', transition: 'background .15s' }}
                 onMouseEnter={e => e.currentTarget.style.background = G.goldBg}
                 onMouseLeave={e => e.currentTarget.style.background = '#0a0a08'}>
                 <div style={{ width: 40, height: 40, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <div style={{ fontFamily: G.mono, fontSize: 13, fontWeight: 700, color: G.gold, lineHeight: 1 }}>
                     {new Date(match.date).toLocaleDateString('fr-FR', { day: 'numeric' })}
                   </div>
-                  <div style={{ fontFamily: G.mono, fontSize: 8, color: G.muted, letterSpacing: '.08em' }}>
+                  <div style={{ fontFamily: G.mono, fontSize: 8, color: 'rgba(15,15,13,0.45)', letterSpacing: '.08em' }}>
                     {new Date(match.date).toLocaleDateString('fr-FR', { month: 'short' })}
                   </div>
                 </div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 700, color: '#f5f2eb', letterSpacing: '.06em', marginBottom: 4 }}>vs {match.opponent}</div>
-                  <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em', display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 700, color: '#0f0f0d', letterSpacing: '.06em', marginBottom: 4 }}>vs {match.opponent}</div>
+                  <div style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(15,15,13,0.45)', letterSpacing: '.06em', display: 'flex', alignItems: 'center', gap: 8 }}>
                     <span style={{ padding: '1px 8px', border: `1px solid ${G.goldBdr}`, color: G.gold }}>{match.category}</span>
                     <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Users size={9} />{match.players} joueurs</span>
                   </div>
@@ -155,28 +155,28 @@ function TeamManagement() {
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: G.border }}>
         {/* Staff */}
-        <div style={{ ...cardStyle, background: '#0a0a08' }}>
+        <div style={{ ...cardStyle, background: '#ffffff' }}>
           <div style={sectionTitle}>
             <div style={{ width: 3, height: 16, background: G.gold }} />
             Staff technique
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: G.border, marginBottom: 12 }}>
             {staff.map(member => (
-              <div key={member.id} style={{ background: '#0a0a08', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, transition: 'background .15s' }}
+              <div key={member.id} style={{ background: '#ffffff', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, transition: 'background .15s' }}
                 onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.02)'}
                 onMouseLeave={e => e.currentTarget.style.background = '#0a0a08'}>
                 <div style={{ width: 36, height: 36, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <Users size={14} color={G.gold} />
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontFamily: G.mono, fontSize: 11, color: '#f5f2eb', letterSpacing: '.04em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{member.name}</div>
-                  <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em', marginTop: 2 }}>{member.role}</div>
+                  <div style={{ fontFamily: G.mono, fontSize: 11, color: '#0f0f0d', letterSpacing: '.04em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{member.name}</div>
+                  <div style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(15,15,13,0.45)', letterSpacing: '.06em', marginTop: 2 }}>{member.role}</div>
                 </div>
-                <span style={{ fontFamily: G.mono, fontSize: 8, padding: '2px 8px', border: `1px solid ${G.border}`, color: G.muted, letterSpacing: '.08em' }}>{member.category}</span>
+                <span style={{ fontFamily: G.mono, fontSize: 8, padding: '2px 8px', border: `1px solid rgba(15,15,13,0.09)`, color: 'rgba(15,15,13,0.45)', letterSpacing: '.08em' }}>{member.category}</span>
               </div>
             ))}
           </div>
-          <button style={{ width: '100%', padding: '11px', background: 'transparent', border: `1px solid ${G.border}`, fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'all .15s' }}
+          <button style={{ width: '100%', padding: '11px', background: 'transparent', border: `1px solid rgba(15,15,13,0.09)`, fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: 'rgba(15,15,13,0.45)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'all .15s' }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = G.goldBdr; e.currentTarget.style.color = G.gold }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = G.border; e.currentTarget.style.color = G.muted }}>
             <UserPlus size={12} /> Ajouter un membre
@@ -184,7 +184,7 @@ function TeamManagement() {
         </div>
 
         {/* Actions + Stats */}
-        <div style={{ background: '#0a0a08', padding: '24px', display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <div style={{ background: '#ffffff', padding: '24px', display: 'flex', flexDirection: 'column', gap: 24 }}>
           {/* Quick Actions */}
           <div>
             <div style={sectionTitle}>
@@ -223,8 +223,8 @@ function TeamManagement() {
                 { label: 'Matchs gagnés',    value: '75%', color: G.gold },
                 { label: 'Joueurs blessés',  value: '3',   color: '#ef4444' },
               ].map(({ label, value, color }) => (
-                <div key={label} style={{ background: '#0a0a08', padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.06em' }}>{label}</span>
+                <div key={label} style={{ background: '#ffffff', padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(15,15,13,0.45)', letterSpacing: '.06em' }}>{label}</span>
                   <span style={{ fontFamily: G.display, fontSize: 22, color, letterSpacing: '.02em' }}>{value}</span>
                 </div>
               ))}

@@ -9,7 +9,7 @@ import { useAuth } from '../context/AuthContext'
 const G = {
   gold: '#c9a227', goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.25)',
   mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
-  border: 'rgba(255,255,255,0.06)', muted: 'rgba(245,242,235,0.35)',
+  border: 'rgba(15,15,13,0.09)', muted: 'rgba(15,15,13,0.42)',
 }
 
 function useCountUp(target, duration = 700) {
@@ -34,16 +34,16 @@ function StatCard({ value, label, icon: Icon, color, delay = 0 }) {
     <div style={{
       opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(12px)',
       transition: 'all .4s cubic-bezier(.34,1.56,.64,1)',
-      background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}`,
+      background: '#ffffff', border: `1px solid rgba(15,15,13,0.09)`,
       borderTop: `2px solid ${color}`, padding: '18px 16px',
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
-        <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>{label}</span>
+        <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: 'rgba(15,15,13,0.45)' }}>{label}</span>
         <div style={{ width: 26, height: 26, background: color + '12', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <Icon size={12} color={color} />
         </div>
       </div>
-      <div style={{ fontFamily: G.display, fontSize: 40, lineHeight: 1, color: '#f5f2eb', letterSpacing: '.01em' }}>{count}</div>
+      <div style={{ fontFamily: G.display, fontSize: 40, lineHeight: 1, color: '#0f0f0d', letterSpacing: '.01em' }}>{count}</div>
     </div>
   )
 }
@@ -106,7 +106,7 @@ function PlayerManagement() {
           <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
             <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />Effectif
           </div>
-          <h1 style={{ fontFamily: G.display, fontSize: 44, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: '#f5f2eb', margin: 0 }}>
+          <h1 style={{ fontFamily: G.display, fontSize: 44, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: '#0f0f0d', margin: 0 }}>
             Vos<br /><span style={{ color: G.gold }}>joueurs.</span>
           </h1>
         </div>
@@ -130,13 +130,13 @@ function PlayerManagement() {
         <div style={{ flex: 1, position: 'relative' }}>
           <Search size={14} color={G.muted} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
           <input type="text" placeholder="Nom ou numéro..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-            style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}`, padding: '10px 14px 10px 38px', color: '#f5f2eb', fontFamily: G.mono, fontSize: 11, outline: 'none', boxSizing: 'border-box', transition: 'border-color .15s', letterSpacing: '.04em' }}
+            style={{ width: '100%', background: '#ffffff', border: `1px solid rgba(15,15,13,0.09)`, padding: '10px 14px 10px 38px', color: '#0f0f0d', fontFamily: G.mono, fontSize: 11, outline: 'none', boxSizing: 'border-box', transition: 'border-color .15s', letterSpacing: '.04em' }}
             onFocus={e => e.target.style.borderColor = G.goldBdr}
             onBlur={e => e.target.style.borderColor = G.border}
           />
         </div>
         <select value={selectedPosition} onChange={e => setSelectedPosition(e.target.value)}
-          style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}`, padding: '10px 14px', color: '#f5f2eb', fontFamily: G.mono, fontSize: 11, outline: 'none', cursor: 'pointer', letterSpacing: '.06em' }}>
+          style={{ background: '#ffffff', border: `1px solid rgba(15,15,13,0.09)`, padding: '10px 14px', color: '#0f0f0d', fontFamily: G.mono, fontSize: 11, outline: 'none', cursor: 'pointer', letterSpacing: '.06em' }}>
           <option value="all">Tous les postes</option>
           <option value="Gardien">Gardiens</option>
           <option value="Défenseur">Défenseurs</option>
@@ -149,17 +149,17 @@ function PlayerManagement() {
       {loading ? (
         <div style={{ textAlign: 'center', padding: '60px 0' }}>
           <div style={{ width: 28, height: 28, border: `2px solid ${G.goldBdr}`, borderTopColor: G.gold, borderRadius: '50%', animation: 'spin .7s linear infinite', margin: '0 auto 12px' }} />
-          <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>Chargement...</p>
+          <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', color: 'rgba(15,15,13,0.45)' }}>Chargement...</p>
         </div>
       ) : filteredPlayers.length === 0 ? (
-        <div style={{ background: 'rgba(255,255,255,0.01)', border: `1px dashed ${G.goldBdr}`, padding: '60px 24px', textAlign: 'center' }}>
+        <div style={{ background: '#faf8f4', border: `1px dashed ${G.goldBdr}`, padding: '60px 24px', textAlign: 'center' }}>
           <div style={{ width: 52, height: 52, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
             <UsersIcon size={22} color={G.gold} />
           </div>
-          <h3 style={{ fontFamily: G.display, fontSize: 22, textTransform: 'uppercase', letterSpacing: '.03em', color: '#f5f2eb', marginBottom: 8 }}>
+          <h3 style={{ fontFamily: G.display, fontSize: 22, textTransform: 'uppercase', letterSpacing: '.03em', color: '#0f0f0d', marginBottom: 8 }}>
             {players.length === 0 ? 'Aucun joueur' : 'Aucun résultat'}
           </h3>
-          <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.06em', color: G.muted, marginBottom: 20 }}>
+          <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.06em', color: 'rgba(15,15,13,0.45)', marginBottom: 20 }}>
             {players.length === 0 ? 'Commencez par ajouter vos joueurs' : 'Modifiez vos filtres'}
           </p>
           {players.length === 0 && (
@@ -177,7 +177,7 @@ function PlayerManagement() {
               <div key={position} style={{ animation: `fadeIn .35s ease ${i * 70}ms both` }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
                   <div style={{ width: 3, height: 18, background: color }} />
-                  <h2 style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.16em', textTransform: 'uppercase', color: '#f5f2eb', margin: 0 }}>{label}</h2>
+                  <h2 style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.16em', textTransform: 'uppercase', color: '#0f0f0d', margin: 0 }}>{label}</h2>
                   <span style={{ fontFamily: G.mono, fontSize: 9, padding: '2px 10px', background: color + '12', color, border: `1px solid ${color}20`, letterSpacing: '.08em' }}>{pos.length}</span>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 1, background: G.border }}>

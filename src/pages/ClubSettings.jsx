@@ -10,20 +10,20 @@ const G = {
   gold: '#c9a227', goldD: '#a8861f',
   goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.25)',
   mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
-  border: 'rgba(255,255,255,0.06)', muted: 'rgba(245,242,235,0.35)',
+  border: 'rgba(15,15,13,0.09)', muted: 'rgba(15,15,13,0.42)',
 }
 
 const inputStyle = {
-  width: '100%', background: '#0a0a08',
+  width: '100%', background: '#ffffff',
   border: '1px solid rgba(255,255,255,0.07)',
-  padding: '12px 16px', color: '#f5f2eb',
+  padding: '12px 16px', color: '#0f0f0d',
   fontFamily: "'JetBrains Mono', monospace", fontSize: 13,
   outline: 'none', boxSizing: 'border-box', transition: 'border-color .15s',
 }
 
 function Section({ title, children, accent }) {
   return (
-    <div style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}`, borderTop: `2px solid ${accent || G.border}`, padding: '28px' }}>
+    <div style={{ background: '#ffffff', border: `1px solid rgba(15,15,13,0.09)`, borderTop: `2px solid ${accent || G.border}`, padding: '28px' }}>
       <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
         <span style={{ width: 12, height: 1, background: G.gold, display: 'inline-block' }} />{title}
       </div>
@@ -77,7 +77,7 @@ function ClubSettings() {
 
   if (loading) return (
     <DashboardLayout>
-      <div style={{ textAlign: 'center', padding: '80px 0', fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted }}>
+      <div style={{ textAlign: 'center', padding: '80px 0', fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', color: 'rgba(15,15,13,0.45)' }}>
         Chargement...
       </div>
     </DashboardLayout>
@@ -90,7 +90,7 @@ function ClubSettings() {
         <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
           <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />Paramètres du club
         </div>
-        <h1 style={{ fontFamily: G.display, fontSize: 44, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: '#f5f2eb', margin: 0 }}>
+        <h1 style={{ fontFamily: G.display, fontSize: 44, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: '#0f0f0d', margin: 0 }}>
           Identité<br /><span style={{ color: G.gold }}>du club.</span>
         </h1>
       </div>
@@ -99,7 +99,7 @@ function ClubSettings() {
 
         {/* Aperçu */}
         <Section title="Aperçu" accent={G.gold}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '28px', background: '#0a0a08', border: `1px solid ${G.border}` }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '28px', background: '#ffffff', border: `1px solid rgba(15,15,13,0.09)` }}>
             <ClubBadge club={{ ...formData, logo_url: logoPreview || formData.logo_url }} size="xl" showName />
           </div>
         </Section>
@@ -109,17 +109,17 @@ function ClubSettings() {
           <input type="text" name="name" value={formData.name} onChange={handleChange}
             placeholder="Mon Club FC" style={inputStyle}
             onFocus={e => e.target.style.borderColor = G.gold}
-            onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.07)'}
+            onBlur={e => e.target.style.borderColor = 'rgba(15,15,13,0.09)'}
           />
         </Section>
 
         {/* Logo */}
         <Section title="Logo">
           {(logoPreview || formData.logo_url) && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20, padding: '14px 16px', background: '#0a0a08', border: `1px solid ${G.border}` }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20, padding: '14px 16px', background: '#ffffff', border: `1px solid rgba(15,15,13,0.09)` }}>
               <img src={logoPreview || formData.logo_url} alt="Logo" style={{ width: 56, height: 56, objectFit: 'contain', background: 'transparent' }} />
               <div style={{ flex: 1 }}>
-                <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, marginBottom: 6 }}>Logo actuel</div>
+                <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: 'rgba(15,15,13,0.45)', marginBottom: 6 }}>Logo actuel</div>
                 <button onClick={handleRemoveLogo} style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
                   <X size={11} /> Supprimer
                 </button>
@@ -136,14 +136,14 @@ function ClubSettings() {
             <div style={{ width: 36, height: 36, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}>
               <Upload size={16} color={G.gold} />
             </div>
-            <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', color: '#f5f2eb', marginBottom: 4 }}>Uploader un logo</p>
-            <p style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em' }}>PNG, JPG — max 2MB</p>
+            <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', color: '#0f0f0d', marginBottom: 4 }}>Uploader un logo</p>
+            <p style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(15,15,13,0.45)', letterSpacing: '.06em' }}>PNG, JPG — max 2MB</p>
           </label>
-          <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, marginBottom: 8 }}>ou URL</div>
+          <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: 'rgba(15,15,13,0.45)', marginBottom: 8 }}>ou URL</div>
           <input type="url" name="logo_url" value={formData.logo_url} onChange={handleChange}
             placeholder="https://example.com/logo.png" style={inputStyle}
             onFocus={e => e.target.style.borderColor = G.gold}
-            onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.07)'}
+            onBlur={e => e.target.style.borderColor = 'rgba(15,15,13,0.09)'}
           />
         </Section>
 
@@ -155,14 +155,14 @@ function ClubSettings() {
               { label: 'Couleur secondaire',  name: 'secondary_color' },
             ].map(({ label, name }) => (
               <div key={name}>
-                <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.18em', textTransform: 'uppercase', color: G.muted, marginBottom: 10 }}>{label}</div>
+                <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.18em', textTransform: 'uppercase', color: 'rgba(15,15,13,0.45)', marginBottom: 10 }}>{label}</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <input type="color" name={name} value={formData[name]} onChange={handleChange}
-                    style={{ width: 44, height: 44, border: `1px solid ${G.border}`, background: 'transparent', cursor: 'pointer', padding: 2 }} />
+                    style={{ width: 44, height: 44, border: `1px solid rgba(15,15,13,0.09)`, background: 'transparent', cursor: 'pointer', padding: 2 }} />
                   <input type="text" name={name} value={formData[name]} onChange={handleChange}
                     style={{ ...inputStyle, fontFamily: "'JetBrains Mono', monospace", flex: 1 }}
                     onFocus={e => e.target.style.borderColor = G.gold}
-                    onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.07)'}
+                    onBlur={e => e.target.style.borderColor = 'rgba(15,15,13,0.09)'}
                   />
                 </div>
               </div>
@@ -171,7 +171,7 @@ function ClubSettings() {
         </Section>
 
         {/* Subscription */}
-        <div style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}`, padding: '28px' }}>
+        <div style={{ background: '#ffffff', border: `1px solid rgba(15,15,13,0.09)`, padding: '28px' }}>
           <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
             <span style={{ width: 12, height: 1, background: G.gold }} />Abonnement
           </div>
@@ -179,9 +179,9 @@ function ClubSettings() {
         </div>
 
         {/* Save */}
-        <div style={{ background: '#0a0a08', border: `1px solid ${G.border}`, padding: '20px 28px', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 12 }}>
+        <div style={{ background: '#ffffff', border: `1px solid rgba(15,15,13,0.09)`, padding: '20px 28px', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 12 }}>
           <button onClick={loadClub} disabled={saving}
-            style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted, background: 'none', border: 'none', cursor: 'pointer', transition: 'color .15s' }}
+            style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: 'rgba(15,15,13,0.45)', background: 'none', border: 'none', cursor: 'pointer', transition: 'color .15s' }}
             onMouseEnter={e => e.currentTarget.style.color = '#f5f2eb'}
             onMouseLeave={e => e.currentTarget.style.color = G.muted}>
             Annuler

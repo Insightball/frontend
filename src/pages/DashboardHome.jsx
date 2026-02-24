@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Calendar, TrendingUp, Users, Film, CheckCircle, Clock, ArrowRight, Award, AlertCircle } from 'lucide-react'
+import { Calendar, TrendingUp, Users, Film, CheckCircle, Clock, ArrowRight, AlertCircle } from 'lucide-react'
 import DashboardLayout from '../components/DashboardLayout'
-import LoadingSkeleton from '../components/LoadingSkeleton'
 import { useAuth } from '../context/AuthContext'
 import matchService from '../services/matchService'
 import playerService from '../services/playerService'
 
-/* ─── Palette ─────────────────────────────────── */
+const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');`
+
 const G = {
   paper:   '#f5f2eb',
   cream:   '#faf8f4',
+  white:   '#ffffff',
   ink:     '#0f0f0d',
   ink2:    '#2a2a26',
   muted:   'rgba(15,15,13,0.42)',
@@ -19,38 +20,14 @@ const G = {
   goldD:   '#a8861f',
   goldBg:  'rgba(201,162,39,0.07)',
   goldBdr: 'rgba(201,162,39,0.25)',
+  mono:    "'JetBrains Mono', monospace",
+  display: "'Anton', sans-serif",
 }
-
-/* ─── Reusable mini-components ─────────────────── */
 
 function SectionKicker({ children }) {
   return (
-    <div
-      className="flex items-center gap-2"
-      style={{
-        fontFamily: "'JetBrains Mono', monospace",
-        fontSize: 9,
-        letterSpacing: '.2em',
-        textTransform: 'uppercase',
-        color: G.gold,
-        marginBottom: 12,
-      }}
-    >
+    <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
       <span style={{ display: 'inline-block', width: 16, height: 1, background: G.gold }} />
-      {children}
-    </div>
-  )
-}
-
-function CardBox({ children, style = {} }) {
-  return (
-    <div
-      style={{
-        background: G.cream,
-        border: `1px solid ${G.rule}`,
-        ...style,
-      }}
-    >
       {children}
     </div>
   )
@@ -58,63 +35,34 @@ function CardBox({ children, style = {} }) {
 
 function StatCard({ icon: Icon, label, value, sub, accentTop }) {
   return (
-    <div
-      style={{
-        background: G.cream,
-        border: `1px solid ${G.rule}`,
-        borderTop: `2px solid ${accentTop || G.rule}`,
-        padding: '24px 22px',
-        position: 'relative',
-        transition: 'border-color .2s',
-      }}
-      onMouseEnter={e => e.currentTarget.style.borderColor = G.goldBdr}
-      onMouseLeave={e => {
-        e.currentTarget.style.borderColor = G.rule
-        e.currentTarget.style.borderTopColor = accentTop || G.rule
-      }}
+    <div style={{
+      background: G.white, border: `1px solid ${G.rule}`,
+      borderTop: `2px solid ${accentTop || G.rule}`,
+      padding: '22px 20px', transition: 'box-shadow .2s',
+    }}
+      onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 20px rgba(15,15,13,0.06)'}
+      onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
     >
-      <div className="flex items-center justify-between" style={{ marginBottom: 16 }}>
-        <div
-          className="flex items-center justify-center"
-          style={{
-            width: 36, height: 36,
-            background: G.goldBg,
-            border: `1px solid ${G.goldBdr}`,
-          }}
-        >
-          <Icon style={{ width: 16, height: 16, color: G.gold }} />
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+        <div style={{ width: 34, height: 34, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Icon size={15} color={G.gold} />
         </div>
-        <span
-          style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 9, letterSpacing: '.14em',
-            textTransform: 'uppercase',
-            color: G.muted,
-          }}
-        >
-          {sub}
-        </span>
+        <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted }}>{sub}</span>
       </div>
-      <div
-        style={{
-          fontFamily: "'Anton', sans-serif",
-          fontSize: 52,
-          lineHeight: 1,
-          letterSpacing: '.01em',
-          color: G.ink,
-          marginBottom: 6,
-        }}
-      >
-        {value}
-      </div>
-      <div style={{ fontSize: 13, color: G.muted }}>
-        {label}
-      </div>
+      <div style={{ fontFamily: G.display, fontSize: 50, lineHeight: 1, letterSpacing: '.01em', color: G.ink, marginBottom: 6 }}>{value}</div>
+      <div style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.06em' }}>{label}</div>
     </div>
   )
 }
 
-/* ─── Main component ───────────────────────────── */
+function StatusBadge({ status }) {
+  if (status === 'completed')
+    return <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.gold, border: `1px solid ${G.goldBdr}`, background: G.goldBg, padding: '3px 10px' }}>✓ Terminé</span>
+  if (status === 'processing')
+    return <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: '#3b82f6', border: '1px solid rgba(59,130,246,0.2)', background: 'rgba(59,130,246,0.06)', padding: '3px 10px' }}>⏳ En cours</span>
+  return null
+}
+
 function DashboardHome() {
   const { user } = useAuth()
   const [matches, setMatches]   = useState([])
@@ -133,7 +81,7 @@ function DashboardHome() {
       setMatches(matchesData)
       setPlayers(playersData)
     } catch (err) {
-      console.error('Error loading dashboard data:', err)
+      console.error(err)
     } finally {
       setLoading(false)
     }
@@ -145,497 +93,235 @@ function DashboardHome() {
   const quota             = 10
 
   const upcomingMatches = [
-    { date: '2026-02-22', opponent: 'AS Furiani',     category: 'N3' },
+    { date: '2026-02-22', opponent: 'AS Furiani',      category: 'N3' },
     { date: '2026-03-01', opponent: 'FC Bastia-Borgo', category: 'N3' },
-    { date: '2026-03-08', opponent: 'UF Zonza',       category: 'N3' },
+    { date: '2026-03-08', opponent: 'UF Zonza',        category: 'N3' },
   ]
 
   const topPlayers = players.slice(0, 5).map((p, i) => ({
-    ...p,
-    rating:  (8.5 - i * 0.3).toFixed(1),
-    matches: 10 - i,
-    trend:   i % 2 === 0 ? 'up' : 'down',
+    ...p, rating: (8.5 - i * 0.3).toFixed(1), matchesCount: 10 - i, trend: i % 2 === 0 ? 'up' : 'down',
   }))
 
   const notifications = [
-    { type: 'success', message: 'Match vs Lyon analysé avec succès',    time: 'Il y a 2h'     },
-    { type: 'warning', message: 'Quota 7/10 matchs utilisés ce mois',  time: 'Il y a 1 jour'  },
-    { type: 'info',    message: '3 joueurs en progression ce mois',     time: 'Il y a 2 jours' },
+    { type: 'success', message: 'Match vs Lyon analysé avec succès',   time: 'Il y a 2h'      },
+    { type: 'warning', message: 'Quota 7/10 matchs utilisés ce mois',  time: 'Il y a 1 jour'   },
+    { type: 'info',    message: '3 joueurs en progression ce mois',    time: 'Il y a 2 jours'  },
   ]
 
-  /* ─── Status badge helper ─── */
-  const StatusBadge = ({ status }) => {
-    if (status === 'completed')
-      return (
-        <span style={{
-          fontFamily: "'JetBrains Mono', monospace",
-          fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase',
-          color: G.gold, border: `1px solid ${G.goldBdr}`,
-          background: G.goldBg, padding: '3px 10px',
-        }}>
-          ✓ Terminé
-        </span>
-      )
-    if (status === 'processing')
-      return (
-        <span style={{
-          fontFamily: "'JetBrains Mono', monospace",
-          fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase',
-          color: G.muted, border: `1px solid ${G.rule}`,
-          background: 'transparent', padding: '3px 10px',
-          animation: 'pulse 2s infinite',
-        }}>
-          ⏳ En cours
-        </span>
-      )
-    return null
-  }
+  const CardHead = ({ title, linkLabel, linkTo }) => (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 22px', borderBottom: `1px solid ${G.rule}` }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ width: 2, height: 18, background: G.gold }} />
+        <h2 style={{ fontFamily: G.display, fontSize: 17, letterSpacing: '.04em', textTransform: 'uppercase', color: G.ink, margin: 0 }}>{title}</h2>
+      </div>
+      {linkLabel && (
+        <Link to={linkTo} style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.gold, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
+          {linkLabel} <ArrowRight size={11} />
+        </Link>
+      )}
+    </div>
+  )
 
   return (
     <DashboardLayout>
-      <div style={{ padding: '36px 40px', maxWidth: 1200 }}>
+      <style>{`${FONTS} * { box-sizing: border-box; }`}</style>
+      <div style={{ maxWidth: 1200 }}>
 
-        {/* ── HEADER ── */}
-        <div style={{ marginBottom: 40, borderBottom: `1px solid ${G.rule}`, paddingBottom: 28 }}>
+        {/* HEADER */}
+        <div style={{ marginBottom: 32, borderBottom: `1px solid ${G.rule}`, paddingBottom: 24 }}>
           <SectionKicker>Tableau de bord</SectionKicker>
-          <h1
-            style={{
-              fontFamily: "'Anton', sans-serif",
-              fontSize: 'clamp(36px, 4vw, 52px)',
-              letterSpacing: '.02em',
-              textTransform: 'uppercase',
-              lineHeight: .92,
-              color: G.ink,
-              marginBottom: 6,
-            }}
-          >
+          <h1 style={{ fontFamily: G.display, fontSize: 'clamp(36px,4vw,52px)', letterSpacing: '.02em', textTransform: 'uppercase', lineHeight: .92, color: G.ink, margin: '0 0 6px' }}>
             Bienvenue,{' '}
-            <span style={{ color: G.gold }}>
-              {user?.name?.split(' ')[0]}
-            </span>
+            <span style={{ color: G.gold }}>{user?.name?.split(' ')[0]}</span>
           </h1>
-          <p style={{ fontSize: 14, color: G.muted, fontFamily: "'JetBrains Mono', monospace", letterSpacing: '.06em' }}>
+          <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.06em', margin: 0 }}>
             {user?.club_name || 'Votre club'}
           </p>
         </div>
 
-        {/* ── STAT CARDS ── */}
+        {/* STAT CARDS */}
         {loading ? (
-          <div className="grid grid-cols-4 gap-px" style={{ background: G.rule, marginBottom: 40 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 1, background: G.rule, marginBottom: 32 }}>
             {[1,2,3,4].map(i => (
-              <div key={i} style={{ background: G.cream, padding: '24px 22px', height: 140 }}>
-                <div style={{ background: G.rule, height: 36, width: 36, marginBottom: 16 }} />
-                <div style={{ background: G.rule, height: 48, width: '60%', marginBottom: 8 }} />
-                <div style={{ background: G.rule, height: 12, width: '80%' }} />
+              <div key={i} style={{ background: G.white, padding: '22px 20px', height: 130 }}>
+                <div style={{ background: G.paper, height: 34, width: 34, marginBottom: 14 }} />
+                <div style={{ background: G.paper, height: 44, width: '60%', marginBottom: 8 }} />
+                <div style={{ background: G.paper, height: 10, width: '80%' }} />
               </div>
             ))}
           </div>
         ) : (
-          <div
-            className="grid grid-cols-4 gap-px"
-            style={{ background: G.rule, marginBottom: 40 }}
-          >
-            <StatCard
-              icon={CheckCircle}
-              label="Matchs analysés"
-              value={completedMatches}
-              sub="Ce mois"
-              accentTop={G.gold}
-            />
-            <StatCard
-              icon={Clock}
-              label="En analyse"
-              value={processingMatches}
-              sub="Actif"
-            />
-            <StatCard
-              icon={Users}
-              label="Joueurs dans l'effectif"
-              value={totalPlayers}
-              sub="Effectif"
-            />
-            {/* Quota avec barre */}
-            <div
-              style={{
-                background: G.cream,
-                border: `1px solid ${G.rule}`,
-                borderTop: `2px solid ${G.rule}`,
-                padding: '24px 22px',
-              }}
-            >
-              <div className="flex items-center justify-between" style={{ marginBottom: 16 }}>
-                <div
-                  className="flex items-center justify-center"
-                  style={{ width: 36, height: 36, background: G.goldBg, border: `1px solid ${G.goldBdr}` }}
-                >
-                  <Film style={{ width: 16, height: 16, color: G.gold }} />
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 1, background: G.rule, marginBottom: 32 }}>
+            <StatCard icon={CheckCircle} label="Matchs analysés"         value={completedMatches}  sub="Ce mois"  accentTop={G.gold} />
+            <StatCard icon={Clock}       label="En analyse"               value={processingMatches} sub="Actif" />
+            <StatCard icon={Users}       label="Joueurs dans l'effectif"  value={totalPlayers}      sub="Effectif" />
+            <div style={{ background: G.white, border: `1px solid ${G.rule}`, borderTop: `2px solid ${G.rule}`, padding: '22px 20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+                <div style={{ width: 34, height: 34, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Film size={15} color={G.gold} />
                 </div>
-                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted }}>
-                  Quota
-                </span>
+                <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted }}>Quota</span>
               </div>
-              <div style={{ fontFamily: "'Anton', sans-serif", fontSize: 52, lineHeight: 1, color: G.ink, marginBottom: 4 }}>
-                {quota - completedMatches}
-              </div>
-              <div style={{ fontSize: 12, color: G.muted, marginBottom: 12 }}>
-                Matchs restants / {quota}
-              </div>
-              {/* Progress bar */}
+              <div style={{ fontFamily: G.display, fontSize: 50, lineHeight: 1, color: G.ink, marginBottom: 4 }}>{quota - completedMatches}</div>
+              <div style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, marginBottom: 12, letterSpacing: '.04em' }}>Matchs restants / {quota}</div>
               <div style={{ height: 2, background: G.rule, width: '100%' }}>
-                <div
-                  style={{
-                    height: '100%',
-                    width: `${(completedMatches / quota) * 100}%`,
-                    background: G.gold,
-                    transition: 'width .5s ease',
-                  }}
-                />
+                <div style={{ height: '100%', width: `${(completedMatches / quota) * 100}%`, background: G.gold, transition: 'width .5s' }} />
               </div>
             </div>
           </div>
         )}
 
-        {/* ── BODY GRID ── */}
-        <div className="grid gap-6" style={{ gridTemplateColumns: '1fr 1fr 340px' }}>
+        {/* BODY GRID */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 300px', gap: 1, background: G.rule, alignItems: 'start' }}>
 
-          {/* ── Derniers matchs ── */}
-          <div style={{ gridColumn: '1 / 3' }}>
-            <CardBox style={{ marginBottom: 24 }}>
-              {/* En-tête */}
-              <div
-                className="flex items-center justify-between"
-                style={{ padding: '20px 24px', borderBottom: `1px solid ${G.rule}` }}
-              >
-                <div className="flex items-center gap-3">
-                  <div style={{ width: 2, height: 20, background: G.gold }} />
-                  <h2 style={{ fontFamily: "'Anton', sans-serif", fontSize: 18, letterSpacing: '.04em', textTransform: 'uppercase', color: G.ink }}>
-                    Derniers matchs
-                  </h2>
-                </div>
-                <Link
-                  to="/dashboard/matches"
-                  className="flex items-center gap-1"
-                  style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', color: G.gold, textDecoration: 'none' }}
-                >
-                  Voir tout <ArrowRight style={{ width: 12, height: 12 }} />
-                </Link>
-              </div>
+          {/* Col gauche + centre */}
+          <div style={{ gridColumn: '1 / 3', display: 'flex', flexDirection: 'column', gap: 1 }}>
 
-              {/* Contenu */}
-              <div style={{ padding: '0 24px 20px' }}>
+            {/* Derniers matchs */}
+            <div style={{ background: G.white, border: `1px solid ${G.rule}` }}>
+              <CardHead title="Derniers matchs" linkLabel="Voir tout" linkTo="/dashboard/matches" />
+              <div style={{ padding: '0 22px 16px' }}>
                 {loading ? (
-                  <div style={{ padding: '20px 0' }}>
-                    {[1,2,3].map(i => (
-                      <div key={i} style={{ height: 56, background: G.paper, borderBottom: `1px solid ${G.rule}` }} />
-                    ))}
-                  </div>
+                  [1,2,3].map(i => <div key={i} style={{ height: 52, background: G.paper, marginBottom: 1, marginTop: 1 }} />)
                 ) : matches.length === 0 ? (
-                  <div className="text-center" style={{ padding: '48px 0' }}>
-                    <Film style={{ width: 32, height: 32, color: G.muted, margin: '0 auto 12px' }} />
-                    <p style={{ fontSize: 14, color: G.muted, marginBottom: 20 }}>Aucun match analysé pour le moment</p>
-                    <Link
-                      to="/dashboard/matches"
-                      style={{
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase',
-                        padding: '11px 28px',
-                        background: G.ink, color: '#fff',
-                        textDecoration: 'none', display: 'inline-block',
-                      }}
-                    >
+                  <div style={{ textAlign: 'center', padding: '44px 0' }}>
+                    <Film size={28} color={G.muted} style={{ margin: '0 auto 12px', display: 'block' }} />
+                    <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, marginBottom: 20, letterSpacing: '.06em' }}>Aucun match analysé</p>
+                    <Link to="/dashboard/matches" style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', padding: '11px 24px', background: G.ink, color: '#fff', textDecoration: 'none', fontWeight: 700 }}>
                       Uploader un match →
                     </Link>
                   </div>
                 ) : (
                   matches.slice(0, 4).map((match, i) => (
-                    <Link
-                      key={match.id}
-                      to={`/dashboard/matches/${match.id}`}
-                      className="flex items-center gap-4"
-                      style={{
-                        padding: '16px 0',
-                        borderBottom: i < 3 ? `1px solid ${G.rule}` : 'none',
-                        textDecoration: 'none',
-                        transition: 'opacity .15s',
-                      }}
-                      onMouseEnter={e => e.currentTarget.style.opacity = '.75'}
+                    <Link key={match.id} to={`/dashboard/matches/${match.id}`}
+                      style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0', borderBottom: i < 3 ? `1px solid ${G.rule}` : 'none', textDecoration: 'none', transition: 'opacity .15s' }}
+                      onMouseEnter={e => e.currentTarget.style.opacity = '.7'}
                       onMouseLeave={e => e.currentTarget.style.opacity = '1'}
                     >
-                      {/* Date box */}
-                      <div
-                        className="text-center flex-shrink-0"
-                        style={{ width: 44, padding: '6px 0', background: G.paper, border: `1px solid ${G.rule}` }}
-                      >
-                        <div style={{ fontFamily: "'Anton', sans-serif", fontSize: 20, lineHeight: 1, color: G.ink }}>
-                          {new Date(match.date).getDate()}
-                        </div>
-                        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>
+                      <div style={{ width: 44, flexShrink: 0, textAlign: 'center', padding: '6px 0', background: G.paper, border: `1px solid ${G.rule}` }}>
+                        <div style={{ fontFamily: G.display, fontSize: 20, lineHeight: 1, color: G.ink }}>{new Date(match.date).getDate()}</div>
+                        <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>
                           {new Date(match.date).toLocaleDateString('fr-FR', { month: 'short' })}
                         </div>
                       </div>
-
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-3" style={{ marginBottom: 3 }}>
-                          <span style={{ fontFamily: "'Anton', sans-serif", fontSize: 16, letterSpacing: '.02em', textTransform: 'uppercase', color: G.ink }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 3 }}>
+                          <span style={{ fontFamily: G.display, fontSize: 15, letterSpacing: '.02em', textTransform: 'uppercase', color: G.ink }}>
                             {match.category} — {match.opponent}
                           </span>
                           <StatusBadge status={match.status} />
                         </div>
-                        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: G.muted, letterSpacing: '.06em' }}>
+                        <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em' }}>
                           {new Date(match.date).toLocaleDateString('fr-FR', { weekday: 'long' })}
                         </div>
                       </div>
-
                       {match.status === 'completed' && match.stats && (
-                        <div className="flex items-center gap-6 flex-shrink-0">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 20, flexShrink: 0 }}>
                           {[
-                            { lbl: 'Possession', val: `${match.stats.possession}%` },
-                            { lbl: 'Passes',     val: match.stats.passes },
-                            { lbl: 'Tirs',       val: match.stats.shots },
+                            { lbl: 'Poss',   val: `${match.stats.possession}%` },
+                            { lbl: 'Passes', val: match.stats.passes },
+                            { lbl: 'Tirs',   val: match.stats.shots },
                           ].map(s => (
-                            <div key={s.lbl} className="text-center">
-                              <div style={{ fontFamily: "'Anton', sans-serif", fontSize: 22, lineHeight: 1, color: G.gold, marginBottom: 2 }}>
-                                {s.val}
-                              </div>
-                              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>
-                                {s.lbl}
-                              </div>
+                            <div key={s.lbl} style={{ textAlign: 'center' }}>
+                              <div style={{ fontFamily: G.display, fontSize: 20, lineHeight: 1, color: G.gold, marginBottom: 2 }}>{s.val}</div>
+                              <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>{s.lbl}</div>
                             </div>
                           ))}
                         </div>
                       )}
-
-                      <ArrowRight style={{ width: 14, height: 14, color: G.gold, flexShrink: 0 }} />
+                      <ArrowRight size={13} color={G.gold} style={{ flexShrink: 0 }} />
                     </Link>
                   ))
                 )}
               </div>
-            </CardBox>
+            </div>
 
-            {/* ── Top joueurs ── */}
-            <CardBox>
-              <div
-                className="flex items-center justify-between"
-                style={{ padding: '20px 24px', borderBottom: `1px solid ${G.rule}` }}
-              >
-                <div className="flex items-center gap-3">
-                  <div style={{ width: 2, height: 20, background: G.gold }} />
-                  <h2 style={{ fontFamily: "'Anton', sans-serif", fontSize: 18, letterSpacing: '.04em', textTransform: 'uppercase', color: G.ink }}>
-                    Top joueurs du mois
-                  </h2>
-                </div>
-                <Link
-                  to="/dashboard/players"
-                  style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', color: G.gold, textDecoration: 'none' }}
-                >
-                  Voir tout <ArrowRight style={{ width: 12, height: 12, display: 'inline' }} />
-                </Link>
-              </div>
-
-              <div style={{ padding: '0 24px 16px' }}>
+            {/* Top joueurs */}
+            <div style={{ background: G.white, border: `1px solid ${G.rule}` }}>
+              <CardHead title="Top joueurs du mois" linkLabel="Voir tout" linkTo="/dashboard/players" />
+              <div style={{ padding: '0 22px 16px' }}>
                 {loading ? (
-                  <div style={{ padding: '20px 0' }}>
-                    {[1,2,3].map(i => <div key={i} style={{ height: 52, background: G.paper, marginBottom: 1 }} />)}
-                  </div>
+                  [1,2,3].map(i => <div key={i} style={{ height: 52, background: G.paper, marginBottom: 1, marginTop: 1 }} />)
                 ) : topPlayers.length === 0 ? (
-                  <p style={{ padding: '32px 0', textAlign: 'center', fontSize: 14, color: G.muted }}>Aucun joueur enregistré</p>
+                  <p style={{ padding: '32px 0', textAlign: 'center', fontFamily: G.mono, fontSize: 11, color: G.muted }}>Aucun joueur enregistré</p>
                 ) : (
                   topPlayers.map((player, i) => (
-                    <div
-                      key={player.id}
-                      className="flex items-center gap-4"
-                      style={{
-                        padding: '14px 0',
-                        borderBottom: i < topPlayers.length - 1 ? `1px solid ${G.rule}` : 'none',
-                      }}
-                    >
-                      {/* Rank */}
-                      <div
-                        style={{
-                          fontFamily: "'Anton', sans-serif",
-                          fontSize: 18, letterSpacing: '.02em',
-                          color: i === 0 ? G.gold : G.muted,
-                          width: 28, flexShrink: 0,
-                          textAlign: 'center',
-                        }}
-                      >
-                        {i + 1}
-                      </div>
-
-                      {/* Avatar */}
+                    <div key={player.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 0', borderBottom: i < topPlayers.length - 1 ? `1px solid ${G.rule}` : 'none' }}>
+                      <div style={{ fontFamily: G.display, fontSize: 18, color: i === 0 ? G.gold : G.muted, width: 24, flexShrink: 0, textAlign: 'center' }}>{i + 1}</div>
                       {player.photo_url ? (
-                        <img
-                          src={player.photo_url}
-                          alt={player.name}
-                          style={{ width: 40, height: 40, objectFit: 'cover', flexShrink: 0, border: `1px solid ${G.rule}` }}
-                        />
+                        <img src={player.photo_url} alt={player.name} style={{ width: 38, height: 38, objectFit: 'cover', flexShrink: 0, border: `1px solid ${G.rule}` }} />
                       ) : (
-                        <div
-                          style={{
-                            width: 40, height: 40,
-                            background: G.goldBg,
-                            border: `1px solid ${G.goldBdr}`,
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            flexShrink: 0,
-                          }}
-                        >
-                          <Users style={{ width: 16, height: 16, color: G.gold }} />
+                        <div style={{ width: 38, height: 38, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <Users size={14} color={G.gold} />
                         </div>
                       )}
-
-                      <div className="flex-1 min-w-0">
-                        <div style={{ fontWeight: 500, fontSize: 14, color: G.ink, marginBottom: 2 }}>{player.name}</div>
-                        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>
-                          {player.position} · {player.matches} matchs
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontFamily: G.mono, fontSize: 12, color: G.ink, fontWeight: 500, marginBottom: 2 }}>{player.name}</div>
+                        <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>
+                          {player.position} · {player.matchesCount} matchs
                         </div>
                       </div>
-
-                      <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                        <div style={{ fontFamily: "'Anton', sans-serif", fontSize: 26, lineHeight: 1, color: G.gold, letterSpacing: '.01em' }}>
-                          {player.rating}
-                        </div>
-                      </div>
-
-                      <div>
-                        <TrendingUp
-                          style={{
-                            width: 14, height: 14,
-                            color: player.trend === 'up' ? G.gold : G.muted,
-                            transform: player.trend === 'up' ? 'none' : 'rotate(180deg)',
-                          }}
-                        />
-                      </div>
+                      <div style={{ fontFamily: G.display, fontSize: 26, lineHeight: 1, color: G.gold }}>{player.rating}</div>
+                      <TrendingUp size={13} color={player.trend === 'up' ? G.gold : G.muted}
+                        style={{ transform: player.trend === 'up' ? 'none' : 'rotate(180deg)', flexShrink: 0 }} />
                     </div>
                   ))
                 )}
               </div>
-            </CardBox>
+            </div>
           </div>
 
-          {/* ── Colonne droite ── */}
-          <div className="flex flex-col gap-6">
+          {/* Colonne droite */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
 
             {/* Alertes */}
-            <CardBox>
-              <div
-                className="flex items-center gap-3"
-                style={{ padding: '18px 20px', borderBottom: `1px solid ${G.rule}` }}
-              >
-                <div style={{ width: 2, height: 18, background: G.gold }} />
-                <h2 style={{ fontFamily: "'Anton', sans-serif", fontSize: 16, letterSpacing: '.04em', textTransform: 'uppercase', color: G.ink }}>
-                  Alertes
-                </h2>
-              </div>
-              <div style={{ padding: '4px 0' }}>
-                {notifications.map((n, i) => (
-                  <div
-                    key={i}
-                    className="flex items-start gap-3"
-                    style={{
-                      padding: '14px 20px',
-                      borderBottom: i < notifications.length - 1 ? `1px solid ${G.rule}` : 'none',
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: 28, height: 28, flexShrink: 0,
-                        background: n.type === 'success' ? G.goldBg : 'rgba(15,15,13,0.04)',
-                        border: `1px solid ${n.type === 'success' ? G.goldBdr : G.rule}`,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      }}
-                    >
-                      {n.type === 'success' && <CheckCircle style={{ width: 12, height: 12, color: G.gold }} />}
-                      {n.type === 'warning' && <AlertCircle style={{ width: 12, height: 12, color: G.muted }} />}
-                      {n.type === 'info'    && <TrendingUp  style={{ width: 12, height: 12, color: G.muted }} />}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p style={{ fontSize: 12, color: G.ink2, lineHeight: 1.5, marginBottom: 3 }}>{n.message}</p>
-                      <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '.08em', color: G.muted }}>
-                        {n.time}
-                      </p>
-                    </div>
+            <div style={{ background: G.white, border: `1px solid ${G.rule}` }}>
+              <CardHead title="Alertes" />
+              {notifications.map((n, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '14px 20px', borderBottom: i < notifications.length - 1 ? `1px solid ${G.rule}` : 'none' }}>
+                  <div style={{ width: 28, height: 28, flexShrink: 0, background: n.type === 'success' ? G.goldBg : G.paper, border: `1px solid ${n.type === 'success' ? G.goldBdr : G.rule}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {n.type === 'success' && <CheckCircle size={12} color={G.gold} />}
+                    {n.type === 'warning' && <AlertCircle size={12} color={G.muted} />}
+                    {n.type === 'info'    && <TrendingUp  size={12} color={G.muted} />}
                   </div>
-                ))}
-              </div>
-            </CardBox>
+                  <div style={{ flex: 1 }}>
+                    <p style={{ fontFamily: G.mono, fontSize: 11, color: G.ink2, lineHeight: 1.5, margin: '0 0 3px' }}>{n.message}</p>
+                    <p style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.08em', color: G.muted, margin: 0 }}>{n.time}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
 
             {/* Prochains matchs */}
-            <CardBox>
-              <div
-                className="flex items-center gap-3"
-                style={{ padding: '18px 20px', borderBottom: `1px solid ${G.rule}` }}
-              >
-                <div style={{ width: 2, height: 18, background: G.gold }} />
-                <h2 style={{ fontFamily: "'Anton', sans-serif", fontSize: 16, letterSpacing: '.04em', textTransform: 'uppercase', color: G.ink }}>
-                  Prochains matchs
-                </h2>
-              </div>
-              <div style={{ padding: '4px 0' }}>
-                {upcomingMatches.map((m, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-3"
-                    style={{
-                      padding: '14px 20px',
-                      borderBottom: i < upcomingMatches.length - 1 ? `1px solid ${G.rule}` : 'none',
-                    }}
-                  >
-                    {/* Date box */}
-                    <div
-                      style={{
-                        width: 40, flexShrink: 0, textAlign: 'center',
-                        padding: '5px 0',
-                        background: G.paper,
-                        border: `1px solid ${G.rule}`,
-                      }}
-                    >
-                      <div style={{ fontFamily: "'Anton', sans-serif", fontSize: 18, lineHeight: 1, color: G.ink }}>
-                        {new Date(m.date).getDate()}
-                      </div>
-                      <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>
-                        {new Date(m.date).toLocaleDateString('fr-FR', { month: 'short' })}
-                      </div>
+            <div style={{ background: G.white, border: `1px solid ${G.rule}` }}>
+              <CardHead title="Prochains matchs" />
+              {upcomingMatches.map((m, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 20px', borderBottom: i < upcomingMatches.length - 1 ? `1px solid ${G.rule}` : 'none' }}>
+                  <div style={{ width: 40, flexShrink: 0, textAlign: 'center', padding: '5px 0', background: G.paper, border: `1px solid ${G.rule}` }}>
+                    <div style={{ fontFamily: G.display, fontSize: 18, lineHeight: 1, color: G.ink }}>{new Date(m.date).getDate()}</div>
+                    <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>
+                      {new Date(m.date).toLocaleDateString('fr-FR', { month: 'short' })}
                     </div>
-
-                    <div className="flex-1 min-w-0">
-                      <div style={{ fontWeight: 500, fontSize: 13, color: G.ink, marginBottom: 2 }}>{m.opponent}</div>
-                      <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '.08em', textTransform: 'uppercase', color: G.muted }}>
-                        {m.category}
-                      </div>
-                    </div>
-
-                    <Calendar style={{ width: 14, height: 14, color: G.gold, flexShrink: 0 }} />
                   </div>
-                ))}
-              </div>
-            </CardBox>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontFamily: G.mono, fontSize: 12, color: G.ink, fontWeight: 500, marginBottom: 2 }}>{m.opponent}</div>
+                    <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.08em', textTransform: 'uppercase', color: G.muted }}>{m.category}</div>
+                  </div>
+                  <Calendar size={13} color={G.gold} />
+                </div>
+              ))}
+            </div>
 
             {/* CTA upload */}
-            <div
-              style={{
-                background: G.ink,
-                padding: '24px 20px',
-                borderTop: `2px solid ${G.gold}`,
-              }}
-            >
-              <div style={{ fontFamily: "'Anton', sans-serif", fontSize: 20, letterSpacing: '.03em', textTransform: 'uppercase', color: '#fff', marginBottom: 6, lineHeight: 1 }}>
-                Analyser<br/><span style={{ color: G.gold }}>un match</span>
+            <div style={{ background: G.ink, padding: '24px 20px', borderTop: `2px solid ${G.gold}` }}>
+              <div style={{ fontFamily: G.display, fontSize: 20, letterSpacing: '.03em', textTransform: 'uppercase', color: '#fff', marginBottom: 6, lineHeight: 1 }}>
+                Analyser<br /><span style={{ color: G.gold }}>un match</span>
               </div>
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,.4)', lineHeight: 1.6, marginBottom: 18 }}>
+              <p style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(255,255,255,.4)', lineHeight: 1.6, marginBottom: 18, letterSpacing: '.04em' }}>
                 Uploadez votre vidéo et recevez votre rapport en 5h.
               </p>
-              <Link
-                to="/dashboard/matches"
-                style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase',
-                  padding: '11px 24px',
-                  background: G.gold, color: G.ink,
-                  textDecoration: 'none', display: 'inline-block',
-                  fontWeight: 700,
-                  transition: 'background .15s',
-                }}
-                onMouseEnter={e => e.currentTarget.style.background = '#d4af3a'}
+              <Link to="/dashboard/matches" style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', padding: '11px 24px', background: G.gold, color: G.ink, textDecoration: 'none', display: 'inline-block', fontWeight: 700 }}
+                onMouseEnter={e => e.currentTarget.style.background = G.goldD}
                 onMouseLeave={e => e.currentTarget.style.background = G.gold}
               >
                 Uploader →

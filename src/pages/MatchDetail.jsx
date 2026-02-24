@@ -9,7 +9,7 @@ import MatchTimeline from '../components/MatchTimeline'
 const G = {
   gold: '#c9a227', goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.25)',
   mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
-  border: 'rgba(255,255,255,0.06)', muted: 'rgba(245,242,235,0.35)',
+  border: 'rgba(15,15,13,0.09)', muted: 'rgba(15,15,13,0.42)',
 }
 
 function MatchDetail() {
@@ -51,7 +51,7 @@ function MatchDetail() {
       <div style={{ marginBottom: 28 }}>
         <button
           onClick={() => window.history.back()}
-          style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', cursor: 'pointer', fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted, marginBottom: 20, padding: 0, transition: 'color .15s' }}
+          style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', cursor: 'pointer', fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: 'rgba(15,15,13,0.45)', marginBottom: 20, padding: 0, transition: 'color .15s' }}
           onMouseEnter={e => e.currentTarget.style.color = G.gold}
           onMouseLeave={e => e.currentTarget.style.color = G.muted}
         >
@@ -64,12 +64,12 @@ function MatchDetail() {
               <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />
               {match.category} · {new Date(match.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
             </div>
-            <h1 style={{ fontFamily: G.display, fontSize: 44, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: '#f5f2eb', margin: 0 }}>
+            <h1 style={{ fontFamily: G.display, fontSize: 44, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: '#0f0f0d', margin: 0 }}>
               vs {match.opponent}
             </h1>
           </div>
           <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-            <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 18px', background: 'transparent', border: `1px solid ${G.border}`, color: G.muted, fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .15s' }}
+            <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 18px', background: 'transparent', border: `1px solid rgba(15,15,13,0.09)`, color: 'rgba(15,15,13,0.45)', fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .15s' }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = G.goldBdr; e.currentTarget.style.color = G.gold }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = G.border; e.currentTarget.style.color = G.muted }}>
               <Share2 size={12} /> Partager
@@ -83,28 +83,28 @@ function MatchDetail() {
         </div>
 
         {/* Score card */}
-        <div style={{ marginTop: 24, background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}`, borderTop: `2px solid ${resultColor}`, padding: '28px 36px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 32 }}>
+        <div style={{ marginTop: 24, background: '#ffffff', border: `1px solid rgba(15,15,13,0.09)`, borderTop: `2px solid ${resultColor}`, padding: '28px 36px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 32 }}>
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted, marginBottom: 6 }}>
+            <div style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(15,15,13,0.45)', marginBottom: 6 }}>
               {match.is_home ? 'Nous' : match.opponent}
             </div>
-            <div style={{ fontFamily: G.display, fontSize: 72, lineHeight: 1, color: '#f5f2eb' }}>{match.score_home}</div>
+            <div style={{ fontFamily: G.display, fontSize: 72, lineHeight: 1, color: '#0f0f0d' }}>{match.score_home}</div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
             <span style={{ fontFamily: G.display, fontSize: 28, color: 'rgba(245,242,235,.2)' }}>—</span>
             <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', padding: '4px 14px', background: resultColor + '12', color: resultColor, border: `1px solid ${resultColor}25` }}>{resultLabel}</span>
           </div>
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted, marginBottom: 6 }}>
+            <div style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(15,15,13,0.45)', marginBottom: 6 }}>
               {match.is_home ? match.opponent : 'Nous'}
             </div>
-            <div style={{ fontFamily: G.display, fontSize: 72, lineHeight: 1, color: '#f5f2eb' }}>{match.score_away}</div>
+            <div style={{ fontFamily: G.display, fontSize: 72, lineHeight: 1, color: '#0f0f0d' }}>{match.score_away}</div>
           </div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid ${G.border}`, marginBottom: 28, overflowX: 'auto' }}>
+      <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid rgba(15,15,13,0.09)`, marginBottom: 28, overflowX: 'auto' }}>
         {tabs.map(tab => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
             padding: '12px 20px', fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase',
@@ -131,9 +131,9 @@ function MatchDetail() {
                 { label: 'Corners',       value: match.stats.corners },
                 { label: 'Fautes',        value: match.stats.fouls },
               ].map((stat, i) => (
-                <div key={i} style={{ background: '#0a0a08', padding: '16px 14px' }}>
-                  <div style={{ fontFamily: G.display, fontSize: 32, color: '#f5f2eb', lineHeight: 1, marginBottom: 6 }}>{stat.value}</div>
-                  <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>{stat.label}</div>
+                <div key={i} style={{ background: '#ffffff', padding: '16px 14px' }}>
+                  <div style={{ fontFamily: G.display, fontSize: 32, color: '#0f0f0d', lineHeight: 1, marginBottom: 6 }}>{stat.value}</div>
+                  <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: 'rgba(15,15,13,0.45)' }}>{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -144,7 +144,7 @@ function MatchDetail() {
 
         {activeTab === 'players' && (
           <div>
-            <h2 style={{ fontFamily: G.display, fontSize: 28, textTransform: 'uppercase', letterSpacing: '.03em', color: '#f5f2eb', marginBottom: 20 }}>Stats individuelles</h2>
+            <h2 style={{ fontFamily: G.display, fontSize: 28, textTransform: 'uppercase', letterSpacing: '.03em', color: '#0f0f0d', marginBottom: 20 }}>Stats individuelles</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
               {match.player_stats.map((ps, i) => <PlayerStatsCard key={i} player={ps.player} stats={ps} onClick={p => console.log(p)} />)}
             </div>
@@ -152,14 +152,14 @@ function MatchDetail() {
         )}
 
         {['phases', 'comparison', 'video', 'report'].map(tabId => activeTab === tabId && (
-          <div key={tabId} style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}`, padding: '64px 24px', textAlign: 'center' }}>
+          <div key={tabId} style={{ background: '#ffffff', border: `1px solid rgba(15,15,13,0.09)`, padding: '64px 24px', textAlign: 'center' }}>
             <div style={{ width: 44, height: 44, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
               <span style={{ fontFamily: G.mono, fontSize: 14, color: G.gold }}>⏳</span>
             </div>
-            <h3 style={{ fontFamily: G.display, fontSize: 22, textTransform: 'uppercase', letterSpacing: '.04em', color: '#f5f2eb', marginBottom: 8 }}>
+            <h3 style={{ fontFamily: G.display, fontSize: 22, textTransform: 'uppercase', letterSpacing: '.04em', color: '#0f0f0d', marginBottom: 8 }}>
               {tabs.find(t => t.id === tabId)?.label}
             </h3>
-            <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.08em', color: G.muted }}>Disponible prochainement</p>
+            <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.08em', color: 'rgba(15,15,13,0.45)' }}>Disponible prochainement</p>
           </div>
         ))}
       </div>

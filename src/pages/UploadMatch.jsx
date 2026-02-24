@@ -10,24 +10,24 @@ const G = {
   ink: '#0f0f0d', gold: '#c9a227', goldD: '#a8861f',
   goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.25)',
   mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
-  muted: 'rgba(245,242,235,0.35)', border: 'rgba(255,255,255,0.06)',
+  muted: 'rgba(15,15,13,0.42)', border: 'rgba(15,15,13,0.09)',
   card: 'rgba(255,255,255,0.02)',
 }
 
 const S = {
-  card: { background: G.card, border: `1px solid ${G.border}`, padding: 28 },
-  label: { display: 'block', fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.muted, marginBottom: 8 },
+  card: { background: G.card, border: `1px solid rgba(15,15,13,0.09)`, padding: 28 },
+  label: { display: 'block', fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(15,15,13,0.45)', marginBottom: 8 },
   input: {
-    width: '100%', background: '#0a0a08',
+    width: '100%', background: '#ffffff',
     border: '1px solid rgba(255,255,255,0.07)',
-    padding: '12px 16px', color: '#f5f2eb',
+    padding: '12px 16px', color: '#0f0f0d',
     fontFamily: "'JetBrains Mono', monospace", fontSize: 13,
     outline: 'none', transition: 'border-color .15s', boxSizing: 'border-box',
   },
   select: {
-    width: '100%', background: '#0a0a08',
+    width: '100%', background: '#ffffff',
     border: '1px solid rgba(255,255,255,0.07)',
-    padding: '12px 16px', color: '#f5f2eb',
+    padding: '12px 16px', color: '#0f0f0d',
     fontFamily: "'JetBrains Mono', monospace", fontSize: 13,
     outline: 'none', cursor: 'pointer', boxSizing: 'border-box',
   },
@@ -142,7 +142,7 @@ function UploadMatch() {
           <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />
           Nouveau match
         </div>
-        <h1 style={{ fontFamily: "'Anton', sans-serif", fontSize: 44, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: '#f5f2eb', margin: 0 }}>
+        <h1 style={{ fontFamily: "'Anton', sans-serif", fontSize: 44, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: '#0f0f0d', margin: 0 }}>
           Analyser<br /><span style={{ color: G.gold }}>un match.</span>
         </h1>
       </div>
@@ -178,22 +178,22 @@ function UploadMatch() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
               <Field label="Date *">
                 <input type="date" name="date" value={matchData.date} onChange={handleMatchChange} style={S.input}
-                  onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.07)'}/>
+                  onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = 'rgba(15,15,13,0.09)'}/>
               </Field>
               <Field label="Adversaire *">
                 <input type="text" name="opponent" value={matchData.opponent} onChange={handleMatchChange}
                   placeholder="FC Marseille" style={S.input}
-                  onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.07)'}/>
+                  onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = 'rgba(15,15,13,0.09)'}/>
               </Field>
               <Field label="Compétition">
                 <input type="text" name="competition" value={matchData.competition} onChange={handleMatchChange}
                   placeholder="Championnat N3" style={S.input}
-                  onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.07)'}/>
+                  onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = 'rgba(15,15,13,0.09)'}/>
               </Field>
               <Field label="Lieu">
                 <input type="text" name="location" value={matchData.location} onChange={handleMatchChange}
                   placeholder="Domicile / Extérieur" style={S.input}
-                  onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.07)'}/>
+                  onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = 'rgba(15,15,13,0.09)'}/>
               </Field>
               <Field label="Catégorie">
                 <select name="category" value={matchData.category} onChange={handleMatchChange} style={S.select}>
@@ -204,7 +204,7 @@ function UploadMatch() {
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                   <input type="number" name="score_home" value={matchData.score_home} onChange={handleMatchChange}
                     placeholder="0" style={{ ...S.input, textAlign: 'center', width: '40%' }} min="0" max="20"/>
-                  <span style={{ fontFamily: G.mono, fontSize: 14, color: G.muted }}>—</span>
+                  <span style={{ fontFamily: G.mono, fontSize: 14, color: 'rgba(15,15,13,0.45)' }}>—</span>
                   <input type="number" name="score_away" value={matchData.score_away} onChange={handleMatchChange}
                     placeholder="0" style={{ ...S.input, textAlign: 'center', width: '40%' }} min="0" max="20"/>
                 </div>
@@ -231,7 +231,7 @@ function UploadMatch() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
               <div>
                 <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 6 }}>— Titulaires</div>
-                <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.08em' }}>{lineup.starters.length}/11</p>
+                <p style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(15,15,13,0.45)', letterSpacing: '.08em' }}>{lineup.starters.length}/11</p>
               </div>
               {lineup.starters.length < 11 && (
                 <button onClick={addStarter} style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', padding: '9px 18px', background: G.goldBg, color: G.gold, border: `1px solid ${G.goldBdr}`, cursor: 'pointer' }}>
@@ -241,7 +241,7 @@ function UploadMatch() {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {lineup.starters.map((starter, index) => (
-                <div key={index} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', background: '#0a0a08', border: `1px solid ${G.border}`, animation: 'fadeIn .2s ease' }}>
+                <div key={index} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', background: '#ffffff', border: `1px solid rgba(15,15,13,0.09)`, animation: 'fadeIn .2s ease' }}>
                   <div style={{ fontFamily: "'Anton', sans-serif", fontSize: 16, color: G.gold, width: 28, textAlign: 'center', flexShrink: 0 }}>{index + 1}</div>
                   <select value={starter.player_id} onChange={e => updateStarter(index, 'player_id', e.target.value)}
                     style={{ ...S.select, flex: 1 }}>
@@ -274,7 +274,7 @@ function UploadMatch() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
               <div>
                 <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 6 }}>— Remplaçants</div>
-                <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.08em' }}>{lineup.substitutes.length}/5 — optionnels</p>
+                <p style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(15,15,13,0.45)', letterSpacing: '.08em' }}>{lineup.substitutes.length}/5 — optionnels</p>
               </div>
               {lineup.substitutes.length < 5 && (
                 <button onClick={addSubstitute} style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', padding: '9px 18px', background: 'rgba(201,162,39,0.06)', color: G.gold, border: `1px solid ${G.goldBdr}`, cursor: 'pointer' }}>
@@ -284,8 +284,8 @@ function UploadMatch() {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {lineup.substitutes.map((sub, index) => (
-                <div key={index} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', background: '#0a0a08', border: `1px solid ${G.border}`, animation: 'fadeIn .2s ease' }}>
-                  <div style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, width: 28, textAlign: 'center', flexShrink: 0, letterSpacing: '.08em' }}>R{index + 1}</div>
+                <div key={index} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', background: '#ffffff', border: `1px solid rgba(15,15,13,0.09)`, animation: 'fadeIn .2s ease' }}>
+                  <div style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(15,15,13,0.45)', width: 28, textAlign: 'center', flexShrink: 0, letterSpacing: '.08em' }}>R{index + 1}</div>
                   <select value={sub.player_id} onChange={e => updateSubstitute(index, 'player_id', e.target.value)} style={{ ...S.select, flex: 1 }}>
                     <option value="">Sélectionner joueur</option>
                     {getAvailablePlayers(sub.player_id).map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
@@ -328,17 +328,17 @@ function UploadMatch() {
                   <div style={{ width: 48, height: 48, margin: '0 auto 14px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Check size={20} color="#22c55e" />
                   </div>
-                  <p style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 700, color: '#f5f2eb', marginBottom: 4, letterSpacing: '.04em' }}>{videoFile.name}</p>
+                  <p style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 700, color: '#0f0f0d', marginBottom: 4, letterSpacing: '.04em' }}>{videoFile.name}</p>
                   <p style={{ fontFamily: G.mono, fontSize: 10, color: '#22c55e', letterSpacing: '.08em' }}>{(videoFile.size / 1024 / 1024).toFixed(2)} MB</p>
-                  <p style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, marginTop: 6, letterSpacing: '.06em' }}>Cliquez pour changer</p>
+                  <p style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(15,15,13,0.45)', marginTop: 6, letterSpacing: '.06em' }}>Cliquez pour changer</p>
                 </div>
               ) : (
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ width: 48, height: 48, margin: '0 auto 14px', background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Upload size={20} color={G.gold} />
                   </div>
-                  <p style={{ fontFamily: G.mono, fontSize: 12, fontWeight: 700, color: '#f5f2eb', marginBottom: 4, letterSpacing: '.06em', textTransform: 'uppercase' }}>Déposez votre vidéo</p>
-                  <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.06em' }}>ou cliquez pour sélectionner</p>
+                  <p style={{ fontFamily: G.mono, fontSize: 12, fontWeight: 700, color: '#0f0f0d', marginBottom: 4, letterSpacing: '.06em', textTransform: 'uppercase' }}>Déposez votre vidéo</p>
+                  <p style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(15,15,13,0.45)', letterSpacing: '.06em' }}>ou cliquez pour sélectionner</p>
                   <p style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,.2)', marginTop: 6, letterSpacing: '.06em' }}>MP4, MOV, AVI — max 2GB</p>
                 </div>
               )}
@@ -354,7 +354,7 @@ function UploadMatch() {
         {/* Navigation */}
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 24 }}>
           {step > 1 ? (
-            <button onClick={prevStep} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 22px', background: 'transparent', border: `1px solid ${G.border}`, color: G.muted, cursor: 'pointer', fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase' }}>
+            <button onClick={prevStep} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 22px', background: 'transparent', border: `1px solid rgba(15,15,13,0.09)`, color: 'rgba(15,15,13,0.45)', cursor: 'pointer', fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase' }}>
               <ChevronLeft size={16} /> Précédent
             </button>
           ) : (
