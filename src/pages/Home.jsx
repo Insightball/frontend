@@ -328,16 +328,7 @@ export default function LandingPage() {
         transition: 'box-shadow .2s',
       }}>
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none' }}>
-          <div style={{ width: 28, height: 28, background: G.ink, borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <circle cx="8" cy="8" r="6.5" stroke={G.gold} strokeWidth="1.2"/>
-              <path d="M3 5.5L8 2.5L13 5.5V10.5L8 13.5L3 10.5Z" stroke={G.gold} strokeWidth=".8" fill="none"/>
-              <circle cx="8" cy="8" r="1.8" fill={G.gold}/>
-            </svg>
-          </div>
-          <span style={{ fontFamily: G.display, fontSize: 18, fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase', color: G.ink }}>
-            INSIGHT<span style={{ color: G.gold }}>BALL</span>
-          </span>
+          <img src="/logo.svg" alt="INSIGHTBALL" style={{ height: 36, width: 'auto', display: 'block' }} />
         </Link>
 
         <div className="nav-links" style={{ display: 'flex', gap: 28, alignItems: 'center' }}>
@@ -401,7 +392,7 @@ export default function LandingPage() {
           </div>
 
           <div style={{ display: 'flex', gap: 32, marginTop: 48, paddingTop: 32, borderTop: `1px solid ${G.border}`, opacity: 0, animation: 'heroUp .5s .6s forwards', flexWrap: 'wrap' }}>
-            {[['40+','métriques analysées'],['< 1h','rapport généré'],['N3→U13','toutes catégories']].map(([n,l]) => (
+            {[['40+','métriques analysées'],['< 1h','rapport généré'],['Séniors→U14','toutes catégories']].map(([n,l]) => (
               <div key={l}>
                 <div style={{ fontFamily: G.display, fontSize: 32, fontWeight: 800, color: G.ink, lineHeight: 1 }}>{n}</div>
                 <div style={{ fontSize: 13, color: G.muted, marginTop: 3 }}>{l}</div>
@@ -527,19 +518,28 @@ export default function LandingPage() {
                 </p>
               </Reveal>
               {[
-                { n:'01', title:'Uploadez votre vidéo', desc:'Depuis votre téléphone, tablette ou caméra. MP4, MOV, AVI — tout format accepté.' },
-                { n:'02', title:'Renseignez le match', desc:'Équipes, composition, score. Deux minutes pour contextualiser votre analyse.' },
-                { n:'03', title:"L'IA analyse", desc:'Notre moteur détecte les joueurs, les actions, les zones de jeu. Traitement en moins d\'une heure.' },
-                { n:'04', title:'Recevez votre rapport', desc:'Dashboard interactif + PDF prêt à imprimer ou partager. Livré directement.' },
+                { n:'01', title:'Uploadez votre vidéo', desc:'Depuis votre téléphone, tablette ou caméra. MP4, MOV, AVI — tout format accepté.', dark: false },
+                { n:'02', title:'Renseignez le match', desc:'Équipes, composition, score. Deux minutes pour contextualiser votre analyse.', dark: true },
+                { n:'03', title:"L'IA analyse", desc:"Notre moteur détecte les joueurs, les actions, les zones de jeu. Traitement en moins d'une heure.", dark: false },
+                { n:'04', title:'Recevez votre rapport', desc:'Dashboard interactif + PDF prêt à imprimer ou partager. Livré directement.', dark: true },
               ].map((s, i) => (
                 <Reveal key={s.n} delay={i * 0.1}>
-                  <div style={{ display: 'flex', gap: 20, padding: '24px 0', borderBottom: `1px solid ${G.border}`, borderTop: i===0 ? `1px solid ${G.border}` : 'none', transition: 'padding-left .2s', cursor: 'default' }}
-                    onMouseEnter={e => { e.currentTarget.style.paddingLeft = '8px'; e.currentTarget.querySelector('.sn').style.color = G.gold }}
-                    onMouseLeave={e => { e.currentTarget.style.paddingLeft = '0'; e.currentTarget.querySelector('.sn').style.color = G.border2 }}>
-                    <div className="sn" style={{ fontFamily: G.display, fontSize: 44, fontWeight: 800, lineHeight: 1, color: G.border2, flexShrink: 0, width: 44, transition: 'color .2s' }}>{s.n}</div>
-                    <div>
-                      <h4 style={{ fontFamily: G.display, fontSize: 18, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.03em', color: G.ink, marginBottom: 6 }}>{s.title}</h4>
-                      <p style={{ fontSize: 14, color: G.muted, lineHeight: 1.6 }}>{s.desc}</p>
+                  <div style={{
+                    display: 'flex', gap: 20, padding: '28px 24px',
+                    background: s.dark ? G.ink : G.white,
+                    borderBottom: `1px solid ${s.dark ? 'rgba(255,255,255,0.08)' : G.border}`,
+                    borderTop: i===0 ? `1px solid ${G.border}` : 'none',
+                    transition: 'transform .15s', cursor: 'default',
+                    borderRadius: i===0 ? '4px 4px 0 0' : i===3 ? '0 0 4px 4px' : 0,
+                  }}>
+                    <div style={{
+                      fontFamily: G.display, fontSize: 48, fontWeight: 800, lineHeight: 1,
+                      color: s.dark ? G.gold : G.border2,
+                      flexShrink: 0, width: 52,
+                    }}>{s.n}</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                      <h4 style={{ fontFamily: G.display, fontSize: 20, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.03em', color: s.dark ? G.gold : G.ink, marginBottom: 6 }}>{s.title}</h4>
+                      <p style={{ fontSize: 14, color: s.dark ? 'rgba(255,255,255,0.55)' : G.muted, lineHeight: 1.6 }}>{s.desc}</p>
                     </div>
                   </div>
                 </Reveal>
@@ -586,10 +586,10 @@ export default function LandingPage() {
               <span style={{ width: 18, height: 1.5, background: G.gold }}/>Exemple de rapport
             </div>
             <h2 className="sec-h2" style={{ fontFamily: G.display, fontSize: 'clamp(34px,4vw,54px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.ink, marginBottom: 16 }}>
-              Ce que vous<br/><span style={{ color: G.gold }}>recevez concrètement.</span>
+              Vue d'ensemble<br/><span style={{ color: G.gold }}>de votre équipe.</span>
             </h2>
             <p style={{ fontSize: 17, color: G.muted, lineHeight: 1.65, maxWidth: 520, marginBottom: 56 }}>
-              Un vrai rapport issu d'un match analysé. Ce que vous voyez ci-dessous est exactement ce que vous obtenez.
+              Possession, tirs, duels, distance — tout ce qu'il faut pour analyser la performance collective et individuelle de votre équipe match après match.
             </p>
           </Reveal>
 
@@ -622,7 +622,7 @@ export default function LandingPage() {
               </table>
               <div style={{ background: G.goldL, borderTop: `1px solid ${G.goldLx}`, padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
                 <div style={{ fontSize: 14, color: G.muted }}>
-                  <strong style={{ color: G.ink, fontWeight: 600 }}>Rapport PDF prêt</strong> — logo club, couleurs, pages complètes.
+                  <strong style={{ color: G.ink, fontWeight: 600 }}>Rapport PDF prêt</strong> à être partagé.
                 </div>
                 <a href="#waitlist" style={{ ...btnPrimary, padding: '8px 18px', fontSize: 12, borderRadius: 4, flexShrink: 0, textDecoration:'none' }}
                   onMouseEnter={e => e.currentTarget.style.background = G.goldD}
@@ -651,16 +651,16 @@ export default function LandingPage() {
               <span style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: G.gold }}>Offre limitée</span>
             </div>
             <p style={{ fontSize: 17, color: G.muted, lineHeight: 1.65, maxWidth: 440, marginBottom: 56 }}>
-              Deux formules claires. Sans engagement.
+              Deux formules claires.
             </p>
           </Reveal>
 
           <div className="price-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, maxWidth: 860 }}>
             {[
               { id:'coach', plan:'Pour les coachs', name:'Coach', price:'29', featured: false,
-                items:['3 matchs analysés / mois','1 équipe','Rapports collectifs & individuels','Suivi progression sur la saison','Export PDF complet','Support inclus'] },
+                items:["Jusqu'à 3 matchs analysés / mois",'1 équipe','Rapports collectifs & individuels','Suivi progression sur la saison','Export PDF complet','Support inclus'] },
               { id:'club',  plan:'Pour les clubs',  name:'Club',  price:'99', featured: true,
-                items:['10 matchs analysés / mois','Multi-équipes illimité','Gestion effectif complète','Vue globale du club','Multi-utilisateurs (staff)','Dashboard club avancé','Support prioritaire dédié'] },
+                items:["Jusqu'à 10 matchs analysés / mois",'Multi-équipes illimité','Gestion effectif complète','Vue globale du club','Multi-utilisateurs (staff)','Dashboard club avancé','Support prioritaire dédié'] },
             ].map((p, i) => (
               <Reveal key={p.id} delay={i * 0.1}>
                 <div style={{ background: G.white, border: `1.5px solid ${p.featured ? G.gold : G.border}`, borderRadius: 8, padding: '36px 32px', position: 'relative', boxShadow: p.featured ? '0 4px 24px rgba(201,162,39,0.12)' : 'none', transition: 'box-shadow .2s', height: '100%' }}
@@ -691,7 +691,7 @@ export default function LandingPage() {
               </Reveal>
             ))}
           </div>
-          <p style={{ fontSize: 13, color: G.muted, marginTop: 16 }}>Sans engagement</p>
+
         </div>
       </div>
 
@@ -706,11 +706,10 @@ export default function LandingPage() {
               Demandez votre<br/><span style={{ color: G.gold }}>accès en avant-première.</span>
             </h2>
             <p style={{ fontSize: 17, color: G.muted, lineHeight: 1.65, maxWidth: 560, marginBottom: 16 }}>
-              La plateforme arrive bientôt. Inscrivez-vous maintenant pour être parmi les premiers clubs à l'utiliser
-              à <strong style={{ color: G.ink, fontWeight: 600 }}>tarif avantageux</strong>.
+              La plateforme arrive bientôt. Inscrivez-vous maintenant pour bénéficier d'un accès en avant-première.
             </p>
             <div style={{ display: 'flex', gap: 24, marginBottom: 48, flexWrap: 'wrap' }}>
-              {[['⚡','Accès avant ouverture publique'],['🎯','Tarif avantageux'],['🤝','Onboarding personnalisé']].map(([icon, label]) => (
+              {[['⚡','Accès avant ouverture publique'],['🤝','Onboarding personnalisé']].map(([icon, label]) => (
                 <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: G.muted }}>
                   <span>{icon}</span><span>{label}</span>
                 </div>
@@ -863,7 +862,7 @@ export default function LandingPage() {
           <h2 className="sec-h2" style={{ fontFamily: G.display, fontSize: 'clamp(34px,4vw,54px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.white, marginBottom: 12 }}>
             Prêt à analyser<br/><span style={{ color: G.gold }}>votre prochain match ?</span>
           </h2>
-          <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)', maxWidth: 440 }}>Envoyez la vidéo de votre dernier match.</p>
+          <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)', maxWidth: 440 }}>Faites analyser votre match.</p>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-start', flexShrink: 0 }}>
           <a href="#waitlist" style={{ ...btnPrimary, fontSize: 16, padding: '16px 36px', textDecoration:'none' }}
@@ -871,13 +870,7 @@ export default function LandingPage() {
             onMouseLeave={e => e.currentTarget.style.background = G.gold}>
             Demander l'accès →
           </a>
-          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-            {['Sans engagement','Support humain'].map(t => (
-              <span key={t} style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ color: G.gold }}>✓</span>{t}
-              </span>
-            ))}
-          </div>
+
         </div>
       </div>
 
@@ -885,11 +878,9 @@ export default function LandingPage() {
       <footer style={{ background: G.white, borderTop: `1px solid ${G.border}`, padding: '56px 48px 32px' }}>
         <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr', gap: 40, marginBottom: 48 }}>
           <div>
-            <div style={{ fontFamily: G.display, fontSize: 20, fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase', marginBottom: 4 }}>
-              INSIGHT<span style={{ color: G.gold }}>BALL</span>
-            </div>
-            <p style={{ fontFamily: G.mono, fontSize: 11, color: G.gold, marginBottom: 14, letterSpacing: '.04em' }}>
-              NextGen Football Analytics 🚀
+            <img src="/logo.svg" alt="INSIGHTBALL" style={{ height: 40, width: 'auto', display: 'block', marginBottom: 4 }} />
+            <p style={{ fontFamily: G.mono, fontSize: 11, color: G.ink, marginBottom: 14, letterSpacing: '.04em' }}>
+              Football Analytics 🚀
             </p>
           </div>
           {[
@@ -913,7 +904,7 @@ export default function LandingPage() {
         </div>
         <div style={{ borderTop: `1px solid ${G.border}`, paddingTop: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, fontSize: 13, color: G.muted }}>
           <span>© 2026 INSIGHTBALL — Tous droits réservés</span>
-          <span>Passion Football 🩷</span>
+          <span>Made in 🇫🇷 with ❤️</span>
         </div>
       </footer>
     </div>
