@@ -566,7 +566,7 @@ function WaitlistSection() {
   }
 
   const perks = [
-    { icon: '⚡', title: 'Accès en avant-première', desc: 'Avant l'ouverture publique' },
+    { icon: '⚡', title: 'Accès en avant-première', desc: 'Avant l\'ouverture publique' },
     { icon: '🎯', title: 'Tarif fondateur –30%', desc: 'Réservé aux 50 premiers inscrits' },
     { icon: '🤝', title: 'Onboarding personnalisé', desc: 'Notre équipe vous accompagne' },
   ]
@@ -620,7 +620,7 @@ function WaitlistSection() {
             </h3>
             <p style={{ fontFamily: G.mono, fontSize: 11, letterSpacing: '.06em', color: 'rgba(245,242,235,0.45)', lineHeight: 1.8, maxWidth: 380, margin: '0 auto 12px' }}>
               Votre demande d'accès anticipé a bien été enregistrée.<br/>
-              Nous vous contacterons en priorité dès l'ouverture.
+              Nous vous contacterons en priorité dès l\'ouverture.
             </p>
             <p style={{ fontFamily: G.mono, fontSize: 10, color: G.gold, letterSpacing: '.08em' }}>
               Merci pour votre confiance. 🏆
