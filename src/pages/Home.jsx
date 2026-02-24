@@ -77,16 +77,16 @@ const PLAYERS = [
 /* ─── Heatmap SVG pro ────────────────────────── */
 /* ─── Heatmap interactive avec tooltip ──────── */
 const EVENTS = [
-  { cx: 274, cy: 84,  r: 6,   color: '#ef4444', type: 'Tir cadré',          detail: 'Dangoumau — 74'',  icon: '⚽' },
-  { cx: 258, cy: 113, r: 5,   color: '#ef4444', type: 'Tir cadré',          detail: 'Randazzo — 61'',   icon: '⚽' },
-  { cx: 282, cy: 122, r: 4.5, color: '#f97316', type: 'Tir non cadré',      detail: 'Finidori — 55'',   icon: '🎯' },
-  { cx: 217, cy: 76,  r: 5,   color: '#f97316', type: 'Tir non cadré',      detail: 'Kheroua — 38'',    icon: '🎯' },
-  { cx: 232, cy: 132, r: 4,   color: '#eab308', type: 'Ballon récupéré',    detail: 'Fogacci — 67'',    icon: '✅' },
-  { cx: 165, cy: 70,  r: 4.5, color: '#c9a227', type: 'Ballon récupéré',    detail: 'Kheroua — 42'',    icon: '✅' },
-  { cx: 155, cy: 126, r: 3.5, color: '#c9a227', type: 'Ballon perdu',       detail: 'Finidori — 51'',   icon: '❌' },
-  { cx: 84,  cy: 96,  r: 4,   color: '#22c55e', type: 'Ballon récupéré',    detail: 'Bonalair — 29'',   icon: '✅' },
-  { cx: 195, cy: 88,  r: 3.5, color: '#a855f7', type: 'Ballon perdu',       detail: 'Dangoumau — 44'',  icon: '❌' },
-  { cx: 240, cy: 98,  r: 5,   color: '#ef4444', type: 'Tir cadré',          detail: 'Randazzo — 82'',   icon: '⚽' },
+  { cx: 274, cy: 84,  r: 6,   color: '#ef4444', type: 'Tir cadré',       detail: 'Dangoumau - 74min',  icon: '⚽' },
+  { cx: 258, cy: 113, r: 5,   color: '#ef4444', type: 'Tir cadré',       detail: 'Randazzo - 61min',   icon: '⚽' },
+  { cx: 282, cy: 122, r: 4.5, color: '#f97316', type: 'Tir non cadré',   detail: 'Finidori - 55min',   icon: '🎯' },
+  { cx: 217, cy: 76,  r: 5,   color: '#f97316', type: 'Tir non cadré',   detail: 'Kheroua - 38min',    icon: '🎯' },
+  { cx: 232, cy: 132, r: 4,   color: '#eab308', type: 'Ballon récupéré', detail: 'Fogacci - 67min',    icon: '✅' },
+  { cx: 165, cy: 70,  r: 4.5, color: '#c9a227', type: 'Ballon récupéré', detail: 'Kheroua - 42min',    icon: '✅' },
+  { cx: 155, cy: 126, r: 3.5, color: '#c9a227', type: 'Ballon perdu',    detail: 'Finidori - 51min',   icon: '❌' },
+  { cx: 84,  cy: 96,  r: 4,   color: '#22c55e', type: 'Ballon récupéré', detail: 'Bonalair - 29min',   icon: '✅' },
+  { cx: 195, cy: 88,  r: 3.5, color: '#a855f7', type: 'Ballon perdu',    detail: 'Dangoumau - 44min',  icon: '❌' },
+  { cx: 240, cy: 98,  r: 5,   color: '#ef4444', type: 'Tir cadré',       detail: 'Randazzo - 82min',   icon: '⚽' },
 ]
 
 function HeatmapSVG() {
