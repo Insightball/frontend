@@ -310,8 +310,14 @@ export default function LandingPage() {
     borderBottom: `2px solid ${focused ? G.gold : G.border}`,
     marginBottom: 24, paddingBottom: 10, transition: 'border-color .15s',
   })
+  const inputLineDark = (focused) => ({
+    borderBottom: `2px solid ${focused ? G.gold : 'rgba(255,255,255,0.15)'}`,
+    marginBottom: 24, paddingBottom: 10, transition: 'border-color .15s',
+  })
   const labelSt = { fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.muted, display: 'block', marginBottom: 6 }
+  const labelStDark = { fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.40)', display: 'block', marginBottom: 6 }
   const inputSt = { width:'100%', background:'transparent', border:'none', outline:'none', fontSize:15, color:G.ink, fontFamily:G.body }
+  const inputStDark = { width:'100%', background:'transparent', border:'none', outline:'none', fontSize:15, color:G.white, fontFamily:G.body }
 
   return (
     <div style={{ background: G.white, color: G.ink, fontFamily: G.body, fontSize: 16, lineHeight: 1.6, overflowX: 'hidden' }}>
@@ -327,8 +333,11 @@ export default function LandingPage() {
         boxShadow: navScrolled ? '0 2px 20px rgba(0,0,0,0.07)' : 'none',
         transition: 'box-shadow .2s',
       }}>
-        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none' }}>
+        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
           <img src="/logo.svg" alt="INSIGHTBALL" style={{ height: 36, width: 'auto', display: 'block' }} />
+          <span style={{ fontFamily: G.display, fontSize: 18, fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase', color: G.ink }}>
+            INSIGHT<span style={{ color: G.gold }}>BALL</span>
+          </span>
         </Link>
 
         <div className="nav-links" style={{ display: 'flex', gap: 28, alignItems: 'center' }}>
@@ -696,21 +705,21 @@ export default function LandingPage() {
       </div>
 
       {/* ══ WAITLIST ═══════════════════════════════════ */}
-      <div id="waitlist" style={{ background: G.off }}>
+      <div id="waitlist" style={{ background: G.ink }}>
         <div className="wrap-inner" style={{ maxWidth: 1200, margin: '0 auto', padding: '96px 48px' }}>
           <Reveal>
             <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 10 }}>
               <span style={{ width: 18, height: 1.5, background: G.gold }}/>Accès anticipé
             </div>
-            <h2 className="sec-h2" style={{ fontFamily: G.display, fontSize: 'clamp(34px,4vw,54px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.ink, marginBottom: 16 }}>
+            <h2 className="sec-h2" style={{ fontFamily: G.display, fontSize: 'clamp(34px,4vw,54px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.white, marginBottom: 16 }}>
               Demandez votre<br/><span style={{ color: G.gold }}>accès en avant-première.</span>
             </h2>
-            <p style={{ fontSize: 17, color: G.muted, lineHeight: 1.65, maxWidth: 560, marginBottom: 16 }}>
+            <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.55)', lineHeight: 1.65, maxWidth: 560, marginBottom: 16 }}>
               La plateforme arrive bientôt. Inscrivez-vous maintenant pour bénéficier d'un accès en avant-première.
             </p>
             <div style={{ display: 'flex', gap: 24, marginBottom: 48, flexWrap: 'wrap' }}>
               {[['⚡','Accès avant ouverture publique'],['🤝','Onboarding personnalisé']].map(([icon, label]) => (
-                <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: G.muted }}>
+                <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: 'rgba(255,255,255,0.45)' }}>
                   <span>{icon}</span><span>{label}</span>
                 </div>
               ))}
@@ -718,18 +727,18 @@ export default function LandingPage() {
           </Reveal>
 
           {wlSent ? (
-            <div style={{ background: G.white, border: `1px solid ${G.border}`, borderRadius: 8, padding: '48px 32px', textAlign: 'center', maxWidth: 520 }}>
-              <div style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', color: G.ink, marginBottom: 12 }}>
+            <div style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, padding: '48px 32px', textAlign: 'center', maxWidth: 520 }}>
+              <div style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', color: G.white, marginBottom: 12 }}>
                 Demande reçue <span style={{ color: G.gold }}>✓</span>
               </div>
-              <p style={{ fontSize: 15, color: G.muted, lineHeight: 1.7 }}>
+              <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>
                 Votre demande a bien été enregistrée. On vous contacte en priorité dès l'ouverture.
               </p>
             </div>
           ) : (
             <Reveal delay={0.1}>
-              <div style={{ background: G.white, border: `1px solid ${G.border}`, borderTop: `3px solid ${G.gold}`, borderRadius: 8, padding: '40px 40px', maxWidth: 760, boxShadow: '0 2px 16px rgba(0,0,0,0.06)' }}>
-                <div style={{ fontFamily: G.display, fontSize: 20, fontWeight: 800, textTransform: 'uppercase', color: G.ink, marginBottom: 28 }}>
+              <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.12)', borderTop: `3px solid ${G.gold}`, borderRadius: 8, padding: '40px 40px', maxWidth: 760, boxShadow: '0 8px 40px rgba(0,0,0,0.30)' }}>
+                <div style={{ fontFamily: G.display, fontSize: 20, fontWeight: 800, textTransform: 'uppercase', color: G.white, marginBottom: 28 }}>
                   Remplissez le formulaire
                 </div>
 
@@ -741,34 +750,34 @@ export default function LandingPage() {
 
                 <form onSubmit={handleWaitlist}>
                   <div className="wl-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '0 32px' }}>
-                    <div style={inputLine(wlFocused==='firstName')}>
-                      <label style={labelSt}>Prénom *</label>
+                    <div style={inputLineDark(wlFocused==='firstName')}>
+                      <label style={labelStDark}>Prénom *</label>
                       <input type="text" required value={wlForm.firstName} onChange={e => setWlForm({...wlForm, firstName: e.target.value})}
-                        placeholder="Jean" style={inputSt}
+                        placeholder="Jean" style={inputStDark}
                         onFocus={() => setWlFocused('firstName')} onBlur={() => setWlFocused(null)} />
                     </div>
-                    <div style={inputLine(wlFocused==='lastName')}>
-                      <label style={labelSt}>Nom *</label>
+                    <div style={inputLineDark(wlFocused==='lastName')}>
+                      <label style={labelStDark}>Nom *</label>
                       <input type="text" required value={wlForm.lastName} onChange={e => setWlForm({...wlForm, lastName: e.target.value})}
-                        placeholder="Dupont" style={inputSt}
+                        placeholder="Dupont" style={inputStDark}
                         onFocus={() => setWlFocused('lastName')} onBlur={() => setWlFocused(null)} />
                     </div>
                     <div style={{ ...inputLine(wlFocused==='email'), gridColumn: '1 / 3' }}>
-                      <label style={labelSt}>Email *</label>
+                      <label style={labelStDark}>Email *</label>
                       <input type="email" required value={wlForm.email} onChange={e => setWlForm({...wlForm, email: e.target.value})}
-                        placeholder="jean.dupont@monclub.fr" style={inputSt}
+                        placeholder="jean.dupont@monclub.fr" style={inputStDark}
                         onFocus={() => setWlFocused('email')} onBlur={() => setWlFocused(null)} />
                     </div>
                     <div style={{ ...inputLine(wlFocused==='club'), gridColumn: '1 / 3' }}>
-                      <label style={labelSt}>Nom du club *</label>
+                      <label style={labelStDark}>Nom du club *</label>
                       <input type="text" required value={wlForm.club} onChange={e => setWlForm({...wlForm, club: e.target.value})}
-                        placeholder="AS Cugnaux, FC Toulouse..." style={inputSt}
+                        placeholder="AS Cugnaux, FC Toulouse..." style={inputStDark}
                         onFocus={() => setWlFocused('club')} onBlur={() => setWlFocused(null)} />
                     </div>
                     <div style={{ ...inputLine(wlFocused==='role'), marginBottom: 32 }}>
-                      <label style={labelSt}>Poste *</label>
+                      <label style={labelStDark}>Poste *</label>
                       <select required value={wlForm.role} onChange={e => setWlForm({...wlForm, role: e.target.value})}
-                        style={{ ...inputSt, color: wlForm.role ? G.ink : G.muted, cursor:'pointer', appearance:'none' }}
+                        style={{ ...inputStDark, color: wlForm.role ? G.white : 'rgba(255,255,255,0.35)', cursor:'pointer', appearance:'none' }}
                         onFocus={() => setWlFocused('role')} onBlur={() => setWlFocused(null)}>
                         <option value="" disabled>Choisir...</option>
                         <option>Éducateur</option>
@@ -777,9 +786,9 @@ export default function LandingPage() {
                       </select>
                     </div>
                     <div style={{ ...inputLine(wlFocused==='category'), marginBottom: 32 }}>
-                      <label style={labelSt}>Catégorie entraînée *</label>
+                      <label style={labelStDark}>Catégorie entraînée *</label>
                       <select required value={wlForm.category} onChange={e => setWlForm({...wlForm, category: e.target.value})}
-                        style={{ ...inputSt, color: wlForm.category ? G.ink : G.muted, cursor:'pointer', appearance:'none' }}
+                        style={{ ...inputStDark, color: wlForm.category ? G.white : 'rgba(255,255,255,0.35)', cursor:'pointer', appearance:'none' }}
                         onFocus={() => setWlFocused('category')} onBlur={() => setWlFocused(null)}>
                         <option value="" disabled>Choisir...</option>
                         {['U14','U15','U16','U17','U18','U19','Séniors'].map(c => <option key={c}>{c}</option>)}
@@ -875,11 +884,16 @@ export default function LandingPage() {
       </div>
 
       {/* ══ FOOTER ═════════════════════════════════════ */}
-      <footer style={{ background: G.white, borderTop: `1px solid ${G.border}`, padding: '56px 48px 32px' }}>
+      <footer style={{ background: G.ink, borderTop: `1px solid rgba(255,255,255,0.08)`, padding: '56px 48px 32px' }}>
         <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr', gap: 40, marginBottom: 48 }}>
           <div>
-            <img src="/logo.svg" alt="INSIGHTBALL" style={{ height: 40, width: 'auto', display: 'block', marginBottom: 4 }} />
-            <p style={{ fontFamily: G.mono, fontSize: 11, color: G.ink, marginBottom: 14, letterSpacing: '.04em' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+              <img src="/logo.svg" alt="INSIGHTBALL" style={{ height: 36, width: 'auto', display: 'block' }} />
+              <span style={{ fontFamily: G.display, fontSize: 18, fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase', color: G.white }}>
+                INSIGHT<span style={{ color: G.gold }}>BALL</span>
+              </span>
+            </div>
+            <p style={{ fontFamily: G.mono, fontSize: 11, color: G.gold, marginBottom: 14, letterSpacing: '.04em' }}>
               Football Analytics 🚀
             </p>
           </div>
@@ -889,20 +903,20 @@ export default function LandingPage() {
             { title:'Légal', links:[['#','Mentions légales'],['#','CGV'],['#','Confidentialité'],['#','Cookies']] },
           ].map(col => (
             <div key={col.title}>
-              <div style={{ fontFamily: G.mono, fontSize: 10, fontWeight: 600, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted, marginBottom: 14 }}>{col.title}</div>
+              <div style={{ fontFamily: G.mono, fontSize: 10, fontWeight: 600, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 14 }}>{col.title}</div>
               <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 9 }}>
                 {col.links.map(([h,l]) => (
                   <li key={l}>
-                    <a href={h} style={{ fontSize: 14, color: G.ink2, textDecoration: 'none', transition: 'color .15s' }}
+                    <a href={h} style={{ fontSize: 14, color: 'rgba(255,255,255,0.60)', textDecoration: 'none', transition: 'color .15s' }}
                       onMouseEnter={e => e.currentTarget.style.color = G.gold}
-                      onMouseLeave={e => e.currentTarget.style.color = G.ink2}>{l}</a>
+                      onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.60)'}>{l}</a>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
         </div>
-        <div style={{ borderTop: `1px solid ${G.border}`, paddingTop: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, fontSize: 13, color: G.muted }}>
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.10)', paddingTop: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>
           <span>© 2026 INSIGHTBALL — Tous droits réservés</span>
           <span>Made in 🇫🇷 with ❤️</span>
         </div>
