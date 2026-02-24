@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { Calendar, TrendingUp, TrendingDown, Users, Film, CheckCircle, Clock, ArrowRight, AlertCircle, Upload } from 'lucide-react'
 import DashboardLayout from '../components/DashboardLayout'
@@ -94,6 +94,14 @@ export default function DashboardHome() {
   const [matches, setMatches] = useState([])
   const [players, setPlayers] = useState([])
   const [loading, setLoading] = useState(true)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   useEffect(() => {
     ;(async () => {
@@ -155,7 +163,7 @@ export default function DashboardHome() {
       </div>
 
       {/* ── STAT CARDS ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 1, background: G.border, marginBottom: 1 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 1, background: G.border, marginBottom: 1 }}>
         <StatCard icon={Film}        label="Matchs analysés"        value={completed}  sub="Ce mois" accent={G.gold}  loading={loading} />
         <StatCard icon={Clock}       label="En cours d'analyse"     value={processing} sub="Actif"   accent={G.blue}  loading={loading} />
         <StatCard icon={Users}       label="Joueurs effectif"       value={players.length} sub="Total" loading={loading} />
@@ -176,10 +184,10 @@ export default function DashboardHome() {
       </div>
 
       {/* ── BODY ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 280px', gap: 1, background: G.border, marginTop: 0, alignItems: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 280px', gap: 1, background: G.border, marginTop: 0, alignItems: 'start' }}>
 
         {/* ── Col gauche + centre ── */}
-        <div style={{ gridColumn: '1/3', display: 'flex', flexDirection: 'column', gap: 1 }}>
+        <div style={{ gridColumn: isMobile ? '1' : '1/3', display: 'flex', flexDirection: 'column', gap: 1 }}>
 
           {/* Derniers matchs */}
           <div style={{ background: G.card, border: `1px solid ${G.border}` }}>

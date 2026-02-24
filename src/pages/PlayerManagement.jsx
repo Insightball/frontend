@@ -64,6 +64,14 @@ function PlayerManagement() {
   const [players, setPlayers]               = useState([])
   const [filteredPlayers, setFilteredPlayers] = useState([])
   const [loading, setLoading]               = useState(true)
+  const [isMobile, setIsMobile]             = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
   const [isFormOpen, setIsFormOpen]         = useState(false)
   const [editingPlayer, setEditingPlayer]   = useState(null)
   const [selectedPosition, setSelectedPosition] = useState('all')
@@ -143,12 +151,12 @@ function PlayerManagement() {
       </div>
 
       {/* ── STAT CARDS ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 1, background: G.border, marginBottom: 28 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(3,1fr)' : 'repeat(5,1fr)', gap: 1, background: G.border, marginBottom: 28 }}>
         {stats.map(s => <StatCard key={s.label} {...s} />)}
       </div>
 
       {/* ── FILTRES ── */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
+      <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 8, marginBottom: 24 }}>
         <div style={{ flex: 1, position: 'relative' }}>
           <Search size={13} color={G.muted} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
           <input type="text" placeholder="Nom ou numéro..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
@@ -203,7 +211,7 @@ function PlayerManagement() {
                   <h2 style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.16em', textTransform: 'uppercase', color: G.text, margin: 0 }}>{label}</h2>
                   <span style={{ fontFamily: G.mono, fontSize: 8, padding: '2px 10px', background: color + '12', color, border: `1px solid ${color}20`, letterSpacing: '.08em' }}>{pos.length}</span>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 1, background: G.border }}>
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 1, background: G.border }}>
                   {pos.map(player => <PlayerCard key={player.id} player={player} onEdit={p => { setEditingPlayer(p); setIsFormOpen(true) }} onDelete={handleDeletePlayer} />)}
                 </div>
               </div>

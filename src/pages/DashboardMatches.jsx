@@ -76,6 +76,14 @@ function DashboardMatches() {
   const [matches, setMatches] = useState([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter]   = useState('all')
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   useEffect(() => { loadMatches() }, [])
 
@@ -135,7 +143,7 @@ function DashboardMatches() {
       </div>
 
       {/* ── STAT CARDS ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 1, background: G.border, marginBottom: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 1, background: G.border, marginBottom: 24 }}>
         {stats.map(s => <StatCard key={s.label} {...s} />)}
       </div>
 

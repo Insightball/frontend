@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Home, Film, Users, Settings, LogOut, BarChart3, Trophy, ChevronRight } from 'lucide-react'
+import { Home, Film, Users, Settings, LogOut, BarChart3, Trophy, ChevronRight, Menu, X } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');`
@@ -21,22 +21,32 @@ const G = {
   display: "'Anton', sans-serif",
 }
 
+const SIDEBAR_W = 220
+
 function DashboardLayout({ children }) {
   const location  = useLocation()
   const navigate  = useNavigate()
   const { user, logout } = useAuth()
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [isMobile, setIsMobile]     = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+
+  // Fermer sidebar quand on change de page sur mobile
+  useEffect(() => { setMobileOpen(false) }, [location.pathname])
 
   const navigation = [
-    { name: 'Accueil',      href: '/dashboard',          icon: Home },
-    { name: 'Matchs',       href: '/dashboard/matches',  icon: Film },
-    { name: 'Effectif',     href: '/dashboard/players',  icon: Users },
-    { name: 'Statistiques', href: '/dashboard/stats',    icon: BarChart3 },
+    { name: 'Accueil',      href: '/dashboard',         icon: Home },
+    { name: 'Matchs',       href: '/dashboard/matches', icon: Film },
+    { name: 'Effectif',     href: '/dashboard/players', icon: Users },
+    { name: 'Statistiques', href: '/dashboard/stats',   icon: BarChart3 },
   ]
-
-  if (user?.plan === 'club') {
-    navigation.push({ name: 'Équipe', href: '/dashboard/team', icon: Trophy })
-  }
-
+  if (user?.plan === 'club') navigation.push({ name: 'Équipe', href: '/dashboard/team', icon: Trophy })
   navigation.push({ name: 'Paramètres', href: '/dashboard/settings', icon: Settings })
 
   const handleLogout = () => { logout(); navigate('/login') }
@@ -44,6 +54,113 @@ function DashboardLayout({ children }) {
   const initials = user?.name
     ? user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
     : '?'
+
+  const isActive = (href) =>
+    href === '/dashboard'
+      ? location.pathname === href
+      : location.pathname.startsWith(href)
+
+  /* ── Sidebar content (partagé desktop + mobile overlay) ── */
+  const SidebarContent = () => (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+
+      {/* Logo */}
+      <div style={{ padding: '20px 18px 16px', borderBottom: `1px solid ${G.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+          <img src="/logo.svg" alt="InsightBall" style={{ width: 26, height: 26 }} />
+          <span style={{ fontFamily: G.display, fontSize: 15, letterSpacing: '.08em', color: G.text }}>
+            INSIGHT<span style={{ color: G.gold }}>BALL</span>
+          </span>
+        </Link>
+        {/* Bouton fermer sur mobile */}
+        {isMobile && (
+          <button onClick={() => setMobileOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: G.muted, padding: 4 }}>
+            <X size={18} />
+          </button>
+        )}
+      </div>
+
+      {/* User card */}
+      <div style={{ padding: '14px 16px', borderBottom: `1px solid ${G.border}` }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ width: 34, height: 34, flexShrink: 0, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontFamily: G.display, fontSize: 12, color: G.gold }}>{initials}</span>
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{ fontFamily: G.mono, fontSize: 11, color: G.text, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '.02em' }}>
+              {user?.name}
+            </p>
+            <p style={{ fontFamily: G.mono, fontSize: 9, color: G.muted2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '.04em', marginTop: 1 }}>
+              {user?.email}
+            </p>
+          </div>
+        </div>
+        {user?.plan && (
+          <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted2 }}>Plan</span>
+            <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', padding: '3px 10px', background: G.goldBg, border: `1px solid ${G.goldBdr}`, color: G.gold }}>
+              {user.plan}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Nav */}
+      <nav style={{ padding: '10px 8px', flex: 1, overflowY: 'auto' }}>
+        <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.muted2, padding: '8px 10px 6px', marginBottom: 2 }}>
+          Navigation
+        </div>
+        {navigation.map(item => {
+          const active = isActive(item.href)
+          return (
+            <Link key={item.name} to={item.href} style={{
+              display: 'flex', alignItems: 'center', gap: 10,
+              padding: '10px 10px', marginBottom: 2,
+              background: active ? G.goldBg : 'transparent',
+              borderLeft: `2px solid ${active ? G.gold : 'transparent'}`,
+              color: active ? G.gold : G.muted,
+              fontFamily: G.mono, fontSize: 10,
+              letterSpacing: '.1em', textTransform: 'uppercase',
+              textDecoration: 'none', transition: 'all .15s',
+            }}
+              onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.color = G.text } }}
+              onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = G.muted } }}
+            >
+              <item.icon size={13} strokeWidth={active ? 2 : 1.5} />
+              <span style={{ flex: 1 }}>{item.name}</span>
+              {active && <ChevronRight size={10} />}
+            </Link>
+          )
+        })}
+      </nav>
+
+      {/* Footer */}
+      <div style={{ borderTop: `1px solid ${G.border}`, padding: '10px 8px' }}>
+        {user?.club_name && (
+          <div style={{ padding: '6px 10px 10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+              <span style={{ width: 5, height: 5, background: G.gold, borderRadius: '50%', display: 'inline-block' }} />
+              <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted2 }}>Club</span>
+            </div>
+            <p style={{ fontFamily: G.mono, fontSize: 11, color: G.text, letterSpacing: '.04em' }}>{user.club_name}</p>
+          </div>
+        )}
+        <button onClick={handleLogout} style={{
+          width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+          padding: '10px 10px', background: 'transparent', border: 'none',
+          color: G.muted2, fontFamily: G.mono, fontSize: 10,
+          letterSpacing: '.1em', textTransform: 'uppercase',
+          cursor: 'pointer', transition: 'all .15s',
+        }}
+          onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.background = 'rgba(239,68,68,0.06)' }}
+          onMouseLeave={e => { e.currentTarget.style.color = G.muted2; e.currentTarget.style.background = 'transparent' }}
+        >
+          <LogOut size={13} strokeWidth={1.5} />
+          Déconnexion
+        </button>
+      </div>
+    </div>
+  )
 
   return (
     <div style={{ minHeight: '100vh', background: G.bg, display: 'flex' }}>
@@ -54,118 +171,111 @@ function DashboardLayout({ children }) {
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
       `}</style>
 
-      {/* ── SIDEBAR ── */}
-      <aside style={{
-        position: 'fixed', top: 0, left: 0, bottom: 0,
-        width: 220, background: G.bg2,
-        borderRight: `1px solid ${G.border}`,
-        display: 'flex', flexDirection: 'column',
-        zIndex: 50, overflowY: 'auto',
-      }}>
+      {/* ── DESKTOP SIDEBAR (fixe, visible ≥768px) ── */}
+      {!isMobile && (
+        <aside style={{
+          position: 'fixed', top: 0, left: 0, bottom: 0,
+          width: SIDEBAR_W,
+          background: G.bg2,
+          borderRight: `1px solid ${G.border}`,
+          zIndex: 50,
+          overflowY: 'auto',
+        }}>
+          <SidebarContent />
+        </aside>
+      )}
 
-        {/* Logo */}
-        <div style={{ padding: '22px 20px 18px', borderBottom: `1px solid ${G.border}` }}>
-          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-            <img src="/logo.svg" alt="InsightBall" style={{ width: 26, height: 26 }} />
-            <span style={{ fontFamily: G.display, fontSize: 15, letterSpacing: '.08em', color: G.text }}>
-              INSIGHT<span style={{ color: G.gold }}>BALL</span>
-            </span>
-          </Link>
-        </div>
+      {/* ── MOBILE: Overlay + Drawer ── */}
+      {isMobile && (
+        <>
+          {/* Overlay sombre derrière le drawer */}
+          {mobileOpen && (
+            <div
+              onClick={() => setMobileOpen(false)}
+              style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 90 }}
+            />
+          )}
 
-        {/* User card */}
-        <div style={{ padding: '16px 16px 14px', borderBottom: `1px solid ${G.border}` }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            {/* Avatar initiales */}
-            <div style={{
-              width: 34, height: 34, flexShrink: 0,
-              background: G.goldBg, border: `1px solid ${G.goldBdr}`,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-              <span style={{ fontFamily: G.display, fontSize: 12, color: G.gold, letterSpacing: '.06em' }}>{initials}</span>
-            </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={{ fontFamily: G.mono, fontSize: 11, color: G.text, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '.02em' }}>
-                {user?.name}
-              </p>
-              <p style={{ fontFamily: G.mono, fontSize: 9, color: G.muted2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '.04em', marginTop: 1 }}>
-                {user?.email}
-              </p>
-            </div>
-          </div>
-          {user?.plan && (
-            <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted2 }}>Plan</span>
-              <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', padding: '3px 10px', background: G.goldBg, border: `1px solid ${G.goldBdr}`, color: G.gold }}>
-                {user.plan}
+          {/* Drawer latéral */}
+          <aside style={{
+            position: 'fixed', top: 0, left: 0, bottom: 0,
+            width: 280,
+            background: G.bg2,
+            borderRight: `1px solid ${G.border}`,
+            zIndex: 100,
+            transform: mobileOpen ? 'translateX(0)' : 'translateX(-100%)',
+            transition: 'transform .25s cubic-bezier(.4,0,.2,1)',
+            overflowY: 'auto',
+          }}>
+            <SidebarContent />
+          </aside>
+
+          {/* ── MOBILE HEADER fixe ── */}
+          <header style={{
+            position: 'fixed', top: 0, left: 0, right: 0, height: 56,
+            background: G.bg2,
+            borderBottom: `1px solid ${G.border}`,
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            padding: '0 16px',
+            zIndex: 80,
+          }}>
+            <button onClick={() => setMobileOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: G.text, padding: 6, display: 'flex', alignItems: 'center' }}>
+              <Menu size={20} />
+            </button>
+
+            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
+              <img src="/logo.svg" alt="InsightBall" style={{ width: 22, height: 22 }} />
+              <span style={{ fontFamily: G.display, fontSize: 14, letterSpacing: '.08em', color: G.text }}>
+                INSIGHT<span style={{ color: G.gold }}>BALL</span>
               </span>
-            </div>
-          )}
-        </div>
+            </Link>
 
-        {/* Navigation */}
-        <nav style={{ padding: '10px 8px', flex: 1 }}>
-          <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.muted2, padding: '8px 10px 6px', marginBottom: 2 }}>
-            Navigation
-          </div>
-          {navigation.map(item => {
-            const isActive = location.pathname === item.href
-              || (item.href !== '/dashboard' && location.pathname.startsWith(item.href))
-            return (
-              <Link key={item.name} to={item.href} style={{
-                display: 'flex', alignItems: 'center', gap: 10,
-                padding: '9px 10px', marginBottom: 1,
-                background: isActive ? G.goldBg : 'transparent',
-                borderLeft: `2px solid ${isActive ? G.gold : 'transparent'}`,
-                color: isActive ? G.gold : G.muted,
-                fontFamily: G.mono, fontSize: 10,
-                letterSpacing: '.1em', textTransform: 'uppercase',
-                textDecoration: 'none', transition: 'all .15s',
-              }}
-                onMouseEnter={e => { if (!isActive) { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.color = G.text } }}
-                onMouseLeave={e => { if (!isActive) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = G.muted } }}
-              >
-                <item.icon size={13} strokeWidth={isActive ? 2 : 1.5} />
-                <span style={{ flex: 1 }}>{item.name}</span>
-                {isActive && <ChevronRight size={10} />}
-              </Link>
-            )
-          })}
-        </nav>
-
-        {/* Footer sidebar */}
-        <div style={{ borderTop: `1px solid ${G.border}`, padding: '10px 8px' }}>
-          {user?.club_name && (
-            <div style={{ padding: '8px 10px 12px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
-                <span style={{ width: 5, height: 5, background: G.gold, borderRadius: '50%', flexShrink: 0, display: 'inline-block' }} />
-                <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted2 }}>Club</span>
-              </div>
-              <p style={{ fontFamily: G.mono, fontSize: 11, color: G.text, letterSpacing: '.04em' }}>{user.club_name}</p>
+            {/* Avatar initiales */}
+            <div style={{ width: 32, height: 32, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontFamily: G.display, fontSize: 11, color: G.gold }}>{initials}</span>
             </div>
-          )}
-          <button onClick={handleLogout} style={{
-            width: '100%', display: 'flex', alignItems: 'center', gap: 10,
-            padding: '9px 10px', background: 'transparent', border: 'none',
-            color: G.muted2, fontFamily: G.mono, fontSize: 10,
-            letterSpacing: '.1em', textTransform: 'uppercase',
-            cursor: 'pointer', transition: 'all .15s',
-          }}
-            onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.background = 'rgba(239,68,68,0.06)' }}
-            onMouseLeave={e => { e.currentTarget.style.color = G.muted2; e.currentTarget.style.background = 'transparent' }}
-          >
-            <LogOut size={13} strokeWidth={1.5} />
-            Déconnexion
-          </button>
-        </div>
-      </aside>
+          </header>
+
+          {/* ── BOTTOM NAV mobile ── */}
+          <nav style={{
+            position: 'fixed', bottom: 0, left: 0, right: 0,
+            background: G.bg2,
+            borderTop: `1px solid ${G.border}`,
+            display: 'flex',
+            zIndex: 80,
+            paddingBottom: 'env(safe-area-inset-bottom)',
+          }}>
+            {navigation.slice(0, 4).map(item => {
+              const active = isActive(item.href)
+              return (
+                <Link key={item.name} to={item.href} style={{
+                  flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center',
+                  padding: '10px 4px 8px',
+                  color: active ? G.gold : G.muted2,
+                  textDecoration: 'none',
+                  borderTop: `2px solid ${active ? G.gold : 'transparent'}`,
+                  transition: 'all .15s',
+                  gap: 4,
+                }}>
+                  <item.icon size={18} strokeWidth={active ? 2 : 1.5} />
+                  <span style={{ fontFamily: G.mono, fontSize: 7, letterSpacing: '.12em', textTransform: 'uppercase' }}>
+                    {item.name}
+                  </span>
+                </Link>
+              )
+            })}
+          </nav>
+        </>
+      )}
 
       {/* ── MAIN CONTENT ── */}
       <main style={{
-        flex: 1, marginLeft: 220,
+        flex: 1,
+        marginLeft: isMobile ? 0 : SIDEBAR_W,
         minHeight: '100vh',
         background: G.bg,
-        padding: '36px 40px',
+        padding: isMobile ? '72px 16px 80px' : '36px 40px',
+        // 72px = header mobile 56px + marge, 80px = bottom nav
       }}>
         {children}
       </main>
