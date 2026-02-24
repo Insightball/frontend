@@ -810,25 +810,25 @@ export default function LandingPage() {
                     <div style={inputLineDark(wlFocused==='firstName')}>
                       <label style={labelStDark}>Prénom *</label>
                       <input type="text" required value={wlForm.firstName} onChange={e => setWlForm({...wlForm, firstName: e.target.value})}
-                        placeholder="Jean" style={inputStDark}
+                        placeholder="" style={inputStDark}
                         onFocus={() => setWlFocused('firstName')} onBlur={() => setWlFocused(null)} />
                     </div>
                     <div style={inputLineDark(wlFocused==='lastName')}>
                       <label style={labelStDark}>Nom *</label>
                       <input type="text" required value={wlForm.lastName} onChange={e => setWlForm({...wlForm, lastName: e.target.value})}
-                        placeholder="Dupont" style={inputStDark}
+                        placeholder="" style={inputStDark}
                         onFocus={() => setWlFocused('lastName')} onBlur={() => setWlFocused(null)} />
                     </div>
                     <div style={{ ...inputLine(wlFocused==='email'), gridColumn: '1 / 3' }}>
                       <label style={labelStDark}>Email *</label>
                       <input type="email" required value={wlForm.email} onChange={e => setWlForm({...wlForm, email: e.target.value})}
-                        placeholder="jean.dupont@monclub.fr" style={inputStDark}
+                        placeholder="" style={inputStDark}
                         onFocus={() => setWlFocused('email')} onBlur={() => setWlFocused(null)} />
                     </div>
                     <div style={{ ...inputLine(wlFocused==='club'), gridColumn: '1 / 3' }}>
                       <label style={labelStDark}>Nom du club *</label>
                       <input type="text" required value={wlForm.club} onChange={e => setWlForm({...wlForm, club: e.target.value})}
-                        placeholder="AS Cugnaux, FC Toulouse..." style={inputStDark}
+                        placeholder="" style={inputStDark}
                         onFocus={() => setWlFocused('club')} onBlur={() => setWlFocused(null)} />
                     </div>
                     <div style={{ ...inputLine(wlFocused==='role'), marginBottom: 32 }}>
@@ -898,7 +898,7 @@ export default function LandingPage() {
                 </div>
               ) : (
                 <form onSubmit={handleContact} style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-                  {[{l:'Nom',t:'text',k:'name',p:'Jean Dupont'},{l:'Email',t:'email',k:'email',p:'votre@email.com'}].map(f => (
+                  {[{l:'Nom',t:'text',k:'name',p:''},{l:'Email',t:'email',k:'email',p:''}].map(f => (
                     <div key={f.k} style={{ borderBottom: `1px solid ${G.border}`, paddingBottom: 16, marginBottom: 16 }}>
                       <label style={labelSt}>{f.l}</label>
                       <input type={f.t} required value={contactForm[f.k]} onChange={e => setContactForm({...contactForm,[f.k]:e.target.value})} placeholder={f.p}
