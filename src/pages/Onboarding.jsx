@@ -53,11 +53,23 @@ export default function Onboarding() {
     if (!clubData.name.trim()) { setError('Nom du club requis'); return }
     setSaving(true); setError('')
     try {
-      await api.patch('/club/me', {
-        name: clubData.name,
-        primary_color: clubData.primary_color,
-        secondary_color: clubData.secondary_color,
-      })
+      // Essayer de mettre à jour, sinon créer
+      try {
+        await api.patch('/club/me', {
+          name: clubData.name,
+          primary_color: clubData.primary_color,
+          secondary_color: clubData.secondary_color,
+        })
+      } catch (e) {
+        if (e?.response?.status === 404) {
+          // Pas encore de club — le créer
+          await api.post('/club/', {
+            name: clubData.name,
+            primary_color: clubData.primary_color,
+            secondary_color: clubData.secondary_color,
+          })
+        } else throw e
+      }
       setStep(2)
     } catch (e) {
       setError('Erreur lors de la sauvegarde')
