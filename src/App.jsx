@@ -13,6 +13,7 @@ import MatchDetail from './pages/MatchDetail'
 import Statistics from './pages/Statistics'
 import TeamManagement from './pages/TeamManagement'
 import ClubMembers from './pages/ClubMembers'
+import JoinClub from './pages/JoinClub'
 import SubscriptionPlans from './pages/SubscriptionPlans'
 import UploadMatch from './pages/UploadMatch'
 import AdminPanel from './pages/AdminPanel'
@@ -31,6 +32,9 @@ function App() {
           {/* Redirections si quelqu'un devine les anciennes URLs */}
           <Route path="/login"  element={<Navigate to="/" replace />} />
           <Route path="/signup" element={<Navigate to="/" replace />} />
+
+          {/* Invitation club */}
+          <Route path="/join" element={<JoinClub />} />
 
           {/* Demo / Plans - gèrent leur propre nav */}
           <Route path="/demo"                element={<Dashboard />} />
