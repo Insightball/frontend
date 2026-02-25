@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Home, Film, Users, Settings, LogOut, BarChart3, Trophy, ChevronRight, Menu, X } from 'lucide-react'
+import { Home, Film, Users, Settings, LogOut, BarChart3, Trophy, ChevronRight, Menu, X, UserCog } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');`
@@ -37,7 +37,6 @@ function DashboardLayout({ children }) {
     return () => window.removeEventListener('resize', check)
   }, [])
 
-  // Fermer sidebar quand on change de page sur mobile
   useEffect(() => { setMobileOpen(false) }, [location.pathname])
 
   const navigation = [
@@ -46,7 +45,16 @@ function DashboardLayout({ children }) {
     { name: 'Effectif',     href: '/dashboard/players', icon: Users },
     { name: 'Statistiques', href: '/dashboard/stats',   icon: BarChart3 },
   ]
-  if (user?.plan === 'club') navigation.push({ name: 'Équipe', href: '/dashboard/team', icon: Trophy })
+
+  // Entrées réservées plan Club
+  if (user?.plan === 'club') {
+    navigation.push({ name: 'Équipe',   href: '/dashboard/team',    icon: Trophy })
+    // Membres uniquement visible pour les admins du club
+    if (user?.role === 'admin') {
+      navigation.push({ name: 'Membres', href: '/dashboard/members', icon: UserCog })
+    }
+  }
+
   navigation.push({ name: 'Paramètres', href: '/dashboard/settings', icon: Settings })
 
   const handleLogout = () => { logout(); navigate('/login') }
@@ -60,7 +68,6 @@ function DashboardLayout({ children }) {
       ? location.pathname === href
       : location.pathname.startsWith(href)
 
-  /* ── Sidebar content (partagé desktop + mobile overlay) ── */
   const SidebarContent = () => (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
 
@@ -72,7 +79,6 @@ function DashboardLayout({ children }) {
             INSIGHT<span style={{ color: G.gold }}>BALL</span>
           </span>
         </Link>
-        {/* Bouton fermer sur mobile */}
         {isMobile && (
           <button onClick={() => setMobileOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: G.muted, padding: 4 }}>
             <X size={18} />
@@ -95,11 +101,22 @@ function DashboardLayout({ children }) {
             </p>
           </div>
         </div>
-        {user?.plan && (
-          <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted2 }}>Plan</span>
-            <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', padding: '3px 10px', background: G.goldBg, border: `1px solid ${G.goldBdr}`, color: G.gold }}>
-              {user.plan}
+        <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          {user?.plan && (
+            <>
+              <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted2 }}>Plan</span>
+              <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', padding: '3px 10px', background: G.goldBg, border: `1px solid ${G.goldBdr}`, color: G.gold }}>
+                {user.plan}
+              </span>
+            </>
+          )}
+        </div>
+        {/* Badge rôle pour plan club */}
+        {user?.plan === 'club' && user?.role && (
+          <div style={{ marginTop: 6, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted2 }}>Rôle</span>
+            <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', padding: '3px 10px', background: 'rgba(255,255,255,0.04)', border: `1px solid rgba(255,255,255,0.08)`, color: G.muted }}>
+              {user.role}
             </span>
           </div>
         )}
@@ -171,7 +188,7 @@ function DashboardLayout({ children }) {
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
       `}</style>
 
-      {/* ── DESKTOP SIDEBAR (fixe, visible ≥768px) ── */}
+      {/* Desktop sidebar */}
       {!isMobile && (
         <aside style={{
           position: 'fixed', top: 0, left: 0, bottom: 0,
@@ -185,18 +202,15 @@ function DashboardLayout({ children }) {
         </aside>
       )}
 
-      {/* ── MOBILE: Overlay + Drawer ── */}
+      {/* Mobile overlay + drawer */}
       {isMobile && (
         <>
-          {/* Overlay sombre derrière le drawer */}
           {mobileOpen && (
             <div
               onClick={() => setMobileOpen(false)}
               style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 90 }}
             />
           )}
-
-          {/* Drawer latéral */}
           <aside style={{
             position: 'fixed', top: 0, left: 0, bottom: 0,
             width: 280,
@@ -210,7 +224,6 @@ function DashboardLayout({ children }) {
             <SidebarContent />
           </aside>
 
-          {/* ── MOBILE HEADER fixe ── */}
           <header style={{
             position: 'fixed', top: 0, left: 0, right: 0, height: 56,
             background: G.bg2,
@@ -222,21 +235,17 @@ function DashboardLayout({ children }) {
             <button onClick={() => setMobileOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: G.text, padding: 6, display: 'flex', alignItems: 'center' }}>
               <Menu size={20} />
             </button>
-
             <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
               <img src="/logo.svg" alt="InsightBall" style={{ width: 22, height: 22 }} />
               <span style={{ fontFamily: G.display, fontSize: 14, letterSpacing: '.08em', color: G.text }}>
                 INSIGHT<span style={{ color: G.gold }}>BALL</span>
               </span>
             </Link>
-
-            {/* Avatar initiales */}
             <div style={{ width: 32, height: 32, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span style={{ fontFamily: G.display, fontSize: 11, color: G.gold }}>{initials}</span>
             </div>
           </header>
 
-          {/* ── BOTTOM NAV mobile ── */}
           <nav style={{
             position: 'fixed', bottom: 0, left: 0, right: 0,
             background: G.bg2,
@@ -268,14 +277,13 @@ function DashboardLayout({ children }) {
         </>
       )}
 
-      {/* ── MAIN CONTENT ── */}
+      {/* Main content */}
       <main style={{
         flex: 1,
         marginLeft: isMobile ? 0 : SIDEBAR_W,
         minHeight: '100vh',
         background: G.bg,
         padding: isMobile ? '72px 16px 80px' : '36px 40px',
-        // 72px = header mobile 56px + marge, 80px = bottom nav
       }}>
         {children}
       </main>

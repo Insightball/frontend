@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
-// ← Header supprimé des routes login/signup/subscription — ces pages ont leur propre nav
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
@@ -13,6 +12,7 @@ import ClubSettings from './pages/ClubSettings'
 import MatchDetail from './pages/MatchDetail'
 import Statistics from './pages/Statistics'
 import TeamManagement from './pages/TeamManagement'
+import ClubMembers from './pages/ClubMembers'
 import SubscriptionPlans from './pages/SubscriptionPlans'
 import UploadMatch from './pages/UploadMatch'
 import AdminPanel from './pages/AdminPanel'
@@ -45,6 +45,7 @@ function App() {
           <Route path="/dashboard/players" element={<ProtectedRoute><PlayerManagement /></ProtectedRoute>} />
           <Route path="/dashboard/stats" element={<ProtectedRoute><Statistics /></ProtectedRoute>} />
           <Route path="/dashboard/team" element={<ProtectedRoute><TeamManagement /></ProtectedRoute>} />
+          <Route path="/dashboard/members" element={<ProtectedRoute><ClubMembers /></ProtectedRoute>} />
           <Route path="/dashboard/settings" element={<ProtectedRoute><ClubSettings /></ProtectedRoute>} />
         </Routes>
       </Router>
