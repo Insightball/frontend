@@ -202,31 +202,6 @@ export default function ClubSettings() {
           <SubscriptionManagement />
         </div>
 
-        {/* Zone de danger */}
-        <div style={{ background: G.bg2, border: `1px solid rgba(239,68,68,0.2)`, borderTop: `2px solid #ef4444`, padding: '28px' }}>
-          <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: '#ef4444', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
-            <span style={{ width: 12, height: 1, background: '#ef4444', display: 'inline-block' }} />Supprimer le compte
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
-            <div>
-              <div style={{ fontFamily: G.mono, fontSize: 12, color: G.text, marginBottom: 6 }}>Supprimer mon compte</div>
-              <div style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(245,242,235,0.60)', letterSpacing: '.03em', lineHeight: 1.6 }}>
-                Données conservées 30 jours · récupération par email.
-              </div>
-            </div>
-            <button onClick={() => setShowDeleteModal(true)} style={{
-              display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px',
-              background: 'rgba(239,68,68,0.08)', border: `1px solid rgba(239,68,68,0.25)`,
-              fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase',
-              color: '#ef4444', cursor: 'pointer', transition: 'all .15s', flexShrink: 0,
-            }}
-              onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.15)'}
-              onMouseLeave={e => e.currentTarget.style.background = 'rgba(239,68,68,0.08)'}>
-              <Trash2 size={12} /> Supprimer mon compte
-            </button>
-          </div>
-        </div>
-
         {/* Save */}
         <div style={{ background: G.bg2, border: `1px solid ${G.border}`, padding: '20px 28px', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 12 }}>
           <button onClick={loadClub} disabled={saving} style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted, background: 'none', border: 'none', cursor: 'pointer' }}>
@@ -237,8 +212,24 @@ export default function ClubSettings() {
             background: saving ? 'rgba(201,162,39,0.4)' : G.gold,
             color: '#0f0f0d', fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700,
             border: 'none', cursor: saving ? 'not-allowed' : 'pointer',
-          }}>
+          }}
+            onMouseEnter={e => { if (!saving) e.currentTarget.style.background = G.goldD }}
+            onMouseLeave={e => { if (!saving) e.currentTarget.style.background = G.gold }}>
             {saving ? 'Sauvegarde...' : <><Save size={13} /> Sauvegarder</>}
+          </button>
+        </div>
+
+        {/* Supprimer compte — discret */}
+        <div style={{ padding: '16px 28px', display: 'flex', justifyContent: 'flex-end' }}>
+          <button onClick={() => setShowDeleteModal(true)} style={{
+            background: 'none', border: 'none', cursor: 'pointer',
+            fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase',
+            color: 'rgba(239,68,68,0.45)', display: 'flex', alignItems: 'center', gap: 6,
+            transition: 'color .15s', padding: 0,
+          }}
+            onMouseEnter={e => e.currentTarget.style.color = 'rgba(239,68,68,0.80)'}
+            onMouseLeave={e => e.currentTarget.style.color = 'rgba(239,68,68,0.45)'}>
+            <Trash2 size={10} /> Supprimer mon compte
           </button>
         </div>
       </div>
