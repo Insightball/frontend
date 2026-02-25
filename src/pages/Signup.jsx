@@ -41,7 +41,7 @@ function Signup() {
     if (formData.password !== formData.confirmPassword) { setError('Les mots de passe ne correspondent pas'); return }
     if (formData.password.length < 8) { setError('Minimum 8 caractères'); return }
     setLoading(true)
-    try { await signup({ ...formData, plan: selectedPlan }); navigate('/dashboard') }
+    try { await signup({ ...formData, plan: selectedPlan }); navigate('/onboarding') }
     catch (err) {
       const msg = err?.response?.data?.detail || err?.message || 'Une erreur est survenue.'
       setError(msg); setLoading(false)

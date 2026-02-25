@@ -24,6 +24,7 @@ const ResetPassword     = lazy(() => import('./pages/ResetPassword'))
 const RecoverAccount    = lazy(() => import('./pages/RecoverAccount'))
 const SubscriptionPlans = lazy(() => import('./pages/SubscriptionPlans'))
 const UploadMatch       = lazy(() => import('./pages/UploadMatch'))
+const Onboarding        = lazy(() => import('./pages/Onboarding'))
 const AdminPanel        = lazy(() => import('./pages/AdminPanel'))
 
 const PageLoader = () => (
@@ -60,6 +61,9 @@ function App() {
             <Route path="/x-portal-7f2a/signup" element={<Signup />} />
             <Route path="/login"  element={<Navigate to="/" replace />} />
             <Route path="/signup" element={<Navigate to="/" replace />} />
+
+            {/* Onboarding */}
+            <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
 
             {/* Invitation & récupération */}
             <Route path="/join"    element={<JoinClub />} />
