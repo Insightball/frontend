@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X, User, Hash } from 'lucide-react'
 
 const G = {
@@ -48,6 +48,23 @@ function PlayerForm({ isOpen, onClose, onSubmit, player = null, category }) {
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
   const [focused, setFocused] = useState(null)
+
+  // Sync formData quand player change (mode édition)
+  useEffect(() => {
+    if (player) {
+      setFormData({
+        name:           player.name           || '',
+        number:         player.number         || '',
+        position:       player.position       || 'Milieu',
+        category:       player.category       || category || 'N3',
+        photo_url:      player.photo_url      || '',
+        birth_date:     player.birth_date     || '',
+        height:         player.height         || '',
+        weight:         player.weight         || '',
+        preferred_foot: player.preferred_foot || '',
+      })
+    }
+  }, [player])
 
   if (!isOpen) return null
 
