@@ -11,7 +11,7 @@ const G = {
   gold: '#c9a227', goldD: '#a8861f',
   goldBg: 'rgba(201,162,39,0.08)', goldBdr: 'rgba(201,162,39,0.25)',
   mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
-  border: 'rgba(255,255,255,0.07)', muted: 'rgba(245,242,235,0.35)',
+  border: 'rgba(255,255,255,0.07)', muted: 'rgba(245,242,235,0.62)',
   text: '#f5f2eb',
 }
 
@@ -160,7 +160,7 @@ export default function ClubSettings() {
             <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', color: G.text, marginBottom: 4 }}>Uploader un logo</p>
             <p style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em' }}>PNG, JPG — max 2MB</p>
           </label>
-          <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, marginBottom: 8 }}>ou URL</div>
+          <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.55)', marginBottom: 8 }}>ou URL</div>
           <input type="url" name="logo_url" value={formData.logo_url} onChange={handleChange}
             placeholder="https://example.com/logo.png" style={inputStyle}
             onFocus={e => e.target.style.borderColor = G.goldBdr}
@@ -172,7 +172,7 @@ export default function ClubSettings() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
             {[{ label: 'Couleur principale', name: 'primary_color' }, { label: 'Couleur secondaire', name: 'secondary_color' }].map(({ label, name }) => (
               <div key={name}>
-                <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.18em', textTransform: 'uppercase', color: G.muted, marginBottom: 10 }}>{label}</div>
+                <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.18em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.65)', marginBottom: 10 }}>{label}</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <input type="color" name={name} value={formData[name]} onChange={handleChange}
                     style={{ width: 44, height: 44, border: `1px solid ${G.border}`, background: 'transparent', cursor: 'pointer', padding: 2 }} />
@@ -196,13 +196,13 @@ export default function ClubSettings() {
         {/* Zone de danger */}
         <div style={{ background: G.bg2, border: `1px solid rgba(239,68,68,0.2)`, borderTop: `2px solid #ef4444`, padding: '28px' }}>
           <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: '#ef4444', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
-            <span style={{ width: 12, height: 1, background: '#ef4444', display: 'inline-block' }} />Zone de danger
+            <span style={{ width: 12, height: 1, background: '#ef4444', display: 'inline-block' }} />Supprimer le compte
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
             <div>
               <div style={{ fontFamily: G.mono, fontSize: 12, color: G.text, marginBottom: 6 }}>Supprimer mon compte</div>
-              <div style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.03em', lineHeight: 1.6 }}>
-                Vos données sont conservées 30 jours — récupérable par email.
+              <div style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(245,242,235,0.60)', letterSpacing: '.03em', lineHeight: 1.6 }}>
+                Données conservées 30 jours · récupération par email.
               </div>
             </div>
             <button onClick={() => setShowDeleteModal(true)} style={{

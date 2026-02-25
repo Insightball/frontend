@@ -11,8 +11,8 @@ const G = {
   card:    'rgba(255,255,255,0.025)',
   border:  'rgba(255,255,255,0.07)',
   text:    '#f5f2eb',
-  muted:   'rgba(245,242,235,0.35)',
-  muted2:  'rgba(245,242,235,0.18)',
+  muted:   'rgba(245,242,235,0.60)',
+  muted2:  'rgba(245,242,235,0.55)',
   gold:    '#c9a227',
   goldD:   '#a8861f',
   goldBg:  'rgba(201,162,39,0.08)',
@@ -155,11 +155,16 @@ function DashboardLayout({ children }) {
       <div style={{ borderTop: `1px solid ${G.border}`, padding: '10px 8px' }}>
         {user?.club_name && (
           <div style={{ padding: '6px 10px 10px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
-              <span style={{ width: 5, height: 5, background: G.gold, borderRadius: '50%', display: 'inline-block' }} />
-              <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted2 }}>Club</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              {user?.club_logo
+                ? <img src={user.club_logo} alt={user.club_name} style={{ width: 28, height: 28, objectFit: 'contain', flexShrink: 0 }} />
+                : <span style={{ width: 5, height: 5, background: G.gold, borderRadius: '50%', display: 'inline-block', flexShrink: 0 }} />
+              }
+              <div>
+                <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.55)' }}>Club</div>
+                <p style={{ fontFamily: G.mono, fontSize: 12, color: G.text, letterSpacing: '.04em', fontWeight: 600 }}>{user.club_name}</p>
+              </div>
             </div>
-            <p style={{ fontFamily: G.mono, fontSize: 11, color: G.text, letterSpacing: '.04em' }}>{user.club_name}</p>
           </div>
         )}
         <button onClick={handleLogout} style={{
@@ -260,7 +265,7 @@ function DashboardLayout({ children }) {
                 <Link key={item.name} to={item.href} style={{
                   flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center',
                   padding: '10px 4px 8px',
-                  color: active ? G.gold : G.muted2,
+                  color: active ? G.gold : 'rgba(245,242,235,0.65)',
                   textDecoration: 'none',
                   borderTop: `2px solid ${active ? G.gold : 'transparent'}`,
                   transition: 'all .15s',

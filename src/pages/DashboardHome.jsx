@@ -14,8 +14,8 @@ const G = {
   card:    'rgba(255,255,255,0.025)',
   border:  'rgba(255,255,255,0.07)',
   text:    '#f5f2eb',
-  muted:   'rgba(245,242,235,0.35)',
-  muted2:  'rgba(245,242,235,0.55)',
+  muted:   'rgba(245,242,235,0.60)',
+  muted2:  'rgba(245,242,235,0.70)',
   gold:    '#c9a227',
   goldD:   '#a8861f',
   goldBg:  'rgba(201,162,39,0.08)',
@@ -157,8 +157,11 @@ export default function DashboardHome() {
         <h1 style={{ fontFamily: G.display, fontSize: 'clamp(36px,3.5vw,52px)', textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.02em', color: G.text, marginBottom: 6 }}>
           Bonjour,{' '}<span style={{ color: G.gold }}>{user?.name?.split(' ')[0]}</span>
         </h1>
-        <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.06em' }}>
-          {user?.club_name || 'Votre club'} · Saison 2025/26
+        <p style={{ fontFamily: G.mono, fontSize: 12, color: 'rgba(245,242,235,0.75)', letterSpacing: '.08em', marginTop: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
+          {user?.club_logo && <img src={user.club_logo} alt="" style={{ height: 18, width: 18, objectFit: 'contain' }} />}
+          <span>{user?.club_name || 'Votre club'}</span>
+          <span style={{ color: 'rgba(245,242,235,0.35)' }}>·</span>
+          <span>Saison 2025/26</span>
         </p>
       </div>
 
@@ -197,7 +200,7 @@ export default function DashboardHome() {
                matches.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '48px 24px' }}>
                   <Film size={28} color={G.muted} style={{ margin: '0 auto 14px', display: 'block' }} />
-                  <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, marginBottom: 20, letterSpacing: '.06em' }}>Aucun match analysé</p>
+                  <p style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(245,242,235,0.65)', marginBottom: 20, letterSpacing: '.06em' }}>Aucun match analysé</p>
                   <Link to="/dashboard/matches" style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', padding: '11px 24px', background: G.gold, color: '#0a0908', textDecoration: 'none', fontWeight: 700 }}>
                     Uploader →
                   </Link>
@@ -250,7 +253,7 @@ export default function DashboardHome() {
             <div style={{ padding: '4px 0' }}>
               {loading ? [1,2,3,4,5].map(i => <Skeleton key={i} h={52} />) :
                topPlayers.length === 0 ? (
-                <p style={{ padding: '32px 20px', fontFamily: G.mono, fontSize: 10, color: G.muted, textAlign: 'center' }}>Aucun joueur enregistré</p>
+                <p style={{ padding: '32px 20px', fontFamily: G.mono, fontSize: 11, color: 'rgba(245,242,235,0.65)', textAlign: 'center' }}>Aucun joueur enregistré</p>
                ) : (
                 topPlayers.map((p, i) => (
                   <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', borderBottom: i < topPlayers.length-1 ? `1px solid ${G.border}` : 'none' }}>

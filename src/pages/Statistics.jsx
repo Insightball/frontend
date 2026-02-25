@@ -14,15 +14,15 @@ const G = {
   goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.22)',
   mono: "'JetBrains Mono', monospace",
   display: "'Anton', sans-serif",
-  border: 'rgba(255,255,255,0.06)',
-  muted: 'rgba(245,242,235,0.32)',
+  border: 'rgba(255,255,255,0.10)',
+  muted: 'rgba(245,242,235,0.62)',
   text: '#f5f2eb',
   green: '#22c55e', red: '#ef4444', blue: '#3b82f6', orange: '#f59e0b',
 }
 
 const TT = {
   contentStyle: { backgroundColor: '#0f0f0d', border: `1px solid ${G.border}`, borderRadius: 0, fontFamily: G.mono, fontSize: 11 },
-  labelStyle: { color: G.muted },
+  labelStyle: { color: 'rgba(245,242,235,0.75)' },
   itemStyle: { color: G.text },
 }
 
