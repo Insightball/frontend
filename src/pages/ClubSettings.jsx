@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Save, X, Trash2, AlertTriangle, CheckCircle, AlertCircle } from 'lucide-react'
+import { Upload, Save, X, Trash2, AlertTriangle, CheckCircle, AlertCircle } from 'lucide-react'
 import DashboardLayout from '../components/DashboardLayout'
 import ClubBadge from '../components/ClubBadge'
 import SubscriptionManagement from '../components/SubscriptionManagement'
@@ -41,7 +41,10 @@ export default function ClubSettings() {
   const [deleteLoading, setDeleteLoading] = useState(false)
   const [deleteConfirm, setDeleteConfirm] = useState('')
   const [formData, setFormData] = useState({ name: '', logo_url: '', primary_color: '#c9a227', secondary_color: '#0f0f0d' })
-  const [toast, setToast] = useState(null) // { type: 'success'|'error', msg }
+  const [toast, setToast] = useState(null)
+  const [logoFile, setLogoFile] = useState(null)
+  const [logoPreview, setLogoPreview] = useState(null)
+  const [uploadProgress, setUploadProgress] = useState(0)
 
   useEffect(() => { loadClub() }, [])
 
@@ -59,7 +62,41 @@ export default function ClubSettings() {
 
   const showToast = (type, msg) => { setToast({ type, msg }); setTimeout(() => setToast(null), 3500) }
 
-  const handleRemoveLogo = () => setFormData(prev => ({ ...prev, logo_url: '' }))
+  const handleLogoFile = (e) => {
+    const file = e.target.files?.[0]; if (!file) return
+    if (!file.type.startsWith('image/')) { showToast('error', 'Sélectionnez une image JPG, PNG ou WEBP'); return }
+    if (file.size > 2 * 1024 * 1024) { showToast('error', 'Fichier trop volumineux (max 2MB)'); return }
+    setLogoFile(file)
+    const reader = new FileReader(); reader.onloadend = () => setLogoPreview(reader.result); reader.readAsDataURL(file)
+  }
+
+  const handleRemoveLogo = () => { setFormData(prev => ({ ...prev, logo_url: '' })); setLogoFile(null); setLogoPreview(null) }
+
+  const uploadLogoToS3 = async (file) => {
+    const token = localStorage.getItem('insightball_token')
+    // 1. Obtenir presigned URL
+    const res = await fetch('https://backend-pued.onrender.com/api/upload/presigned-url/image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ filename: file.name, content_type: file.type })
+    })
+    if (!res.ok) throw new Error('Erreur presigned URL')
+    const { upload_url, file_key } = await res.json()
+    // 2. Upload direct sur S3
+    const xhr = new XMLHttpRequest()
+    await new Promise((resolve, reject) => {
+      xhr.upload.onprogress = (e) => { if (e.total) setUploadProgress(Math.round(e.loaded * 100 / e.total)) }
+      xhr.onload = () => xhr.status < 300 ? resolve() : reject(new Error('Upload S3 échoué'))
+      xhr.onerror = () => reject(new Error('Erreur réseau'))
+      xhr.open('PUT', upload_url)
+      xhr.setRequestHeader('Content-Type', file.type)
+      xhr.send(file)
+    })
+    // 3. Construire URL publique
+    const bucket = import.meta.env.VITE_AWS_BUCKET_NAME || 'insightball-videos'
+    const region = import.meta.env.VITE_AWS_REGION || 'eu-west-3'
+    return `https://${bucket}.s3.${region}.amazonaws.com/${file_key}`
+  }
 
   const handleDeleteAccount = async () => {
     if (deleteConfirm !== 'SUPPRIMER') return
@@ -82,14 +119,24 @@ export default function ClubSettings() {
   const handleSave = async () => {
     try {
       setSaving(true)
+      setUploadProgress(0)
+      let finalLogo = formData.logo_url
+      if (logoFile) {
+        try {
+          finalLogo = await uploadLogoToS3(logoFile)
+        } catch {
+          showToast('error', 'Erreur upload logo — autres modifications sauvegardées')
+        }
+      }
       await clubService.updateClub({
         name: formData.name,
-        logo_url: formData.logo_url,
+        logo_url: finalLogo,
         primary_color: formData.primary_color,
         secondary_color: formData.secondary_color,
       })
-      showToast('success', 'Paramètres sauvegardés')
+      showToast('success', 'Paramètres sauvegardés ✓')
       await loadClub()
+      setLogoFile(null); setLogoPreview(null); setUploadProgress(0)
     } catch (e) {
       console.error(e)
       showToast('error', 'Erreur lors de la sauvegarde')
@@ -154,11 +201,11 @@ export default function ClubSettings() {
 
         {/* Logo */}
         <Section title="Logo">
-          {formData.logo_url && (
+          {(logoPreview || formData.logo_url) && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20, padding: '14px 16px', background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}` }}>
-              <img src={formData.logo_url} alt="Logo" style={{ width: 56, height: 56, objectFit: 'contain' }} />
+              <img src={logoPreview || formData.logo_url} alt="Logo" style={{ width: 56, height: 56, objectFit: 'contain' }} />
               <div style={{ flex: 1 }}>
-                <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, marginBottom: 6 }}>Logo actuel</div>
+                <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, marginBottom: 6 }}>{logoPreview ? 'Nouveau logo (non sauvegardé)' : 'Logo actuel'}</div>
                 <button onClick={handleRemoveLogo} style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
                   <X size={11} /> Supprimer
                 </button>
@@ -178,7 +225,25 @@ export default function ClubSettings() {
             <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', color: G.text, marginBottom: 4 }}>Uploader un logo</p>
             <p style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em' }}>PNG, JPG — max 2MB</p>
           </label>
-          <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.55)', marginBottom: 8 }}>ou URL</div>
+          <label htmlFor="logo-upload" style={{
+            display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', marginBottom: 12,
+            background: 'rgba(201,162,39,0.06)', border: `1px dashed ${G.goldBdr}`,
+            cursor: 'pointer', transition: 'background .15s',
+          }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(201,162,39,0.10)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(201,162,39,0.06)'}>
+            <Upload size={14} color={G.gold} />
+            <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.gold }}>
+              {logoFile ? logoFile.name : 'Choisir un fichier image'}
+            </span>
+            <input id="logo-upload" type="file" accept="image/*" onChange={handleLogoFile} style={{ display: 'none' }} />
+          </label>
+          {uploadProgress > 0 && uploadProgress < 100 && (
+            <div style={{ height: 2, background: G.border, marginBottom: 12 }}>
+              <div style={{ height: '100%', width: `${uploadProgress}%`, background: G.gold, transition: 'width .2s' }} />
+            </div>
+          )}
+          <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.55)', marginBottom: 8 }}>ou URL directe</div>
           <input type="url" name="logo_url" value={formData.logo_url} onChange={handleChange}
             placeholder="https://example.com/logo.png" style={inputStyle}
             onFocus={e => e.target.style.borderColor = G.goldBdr}
