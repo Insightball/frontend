@@ -2,13 +2,14 @@ import { useState } from 'react'
 import { Trash2, AlertTriangle, X, User, Mail, Shield } from 'lucide-react'
 import DashboardLayout from '../components/DashboardLayout'
 import { useAuth } from '../context/AuthContext'
+import SubscriptionManagement from '../components/SubscriptionManagement'
 
 const G = {
   bg: '#0a0908', bg2: '#0f0e0c',
   gold: '#c9a227', goldD: '#a8861f',
   goldBg: 'rgba(201,162,39,0.08)', goldBdr: 'rgba(201,162,39,0.25)',
   mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
-  border: 'rgba(255,255,255,0.07)', muted: 'rgba(245,242,235,0.35)',
+  border: 'rgba(255,255,255,0.07)', muted: 'rgba(245,242,235,0.62)',
   text: '#f5f2eb',
 }
 
@@ -67,7 +68,7 @@ export default function CoachSettings() {
             {[
               { icon: User, label: 'Nom', value: user?.name || '—' },
               { icon: Mail, label: 'Email', value: user?.email || '—' },
-              { icon: Shield, label: 'Plan', value: 'Coach' },
+              { icon: Shield, label: 'Plan', value: user?.plan || 'Coach' },
             ].map(({ icon: Icon, label, value }) => (
               <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}` }}>
                 <div style={{ width: 32, height: 32, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -83,40 +84,25 @@ export default function CoachSettings() {
         </Section>
 
         {/* Abonnement */}
-        <Section title="Abonnement">
-          <div style={{ padding: '16px', background: G.goldBg, border: `1px solid ${G.goldBdr}`, marginBottom: 16 }}>
-            <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, marginBottom: 8 }}>Plan Coach actif</div>
-            <div style={{ fontFamily: G.display, fontSize: 28, color: G.text, letterSpacing: '.02em' }}>29€<span style={{ fontSize: 14, color: G.muted }}>/mois</span></div>
+        <div style={{ background: G.bg2, border: `1px solid ${G.border}`, borderTop: `2px solid ${G.border}`, padding: '28px' }}>
+          <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
+            <span style={{ width: 12, height: 1, background: G.gold, display: 'inline-block' }} />Abonnement
           </div>
-          <div style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, lineHeight: 1.7, letterSpacing: '.04em' }}>
-            Pour gérer votre abonnement, contactez-nous à{' '}
-            <a href="mailto:contact@insightball.com" style={{ color: G.gold, textDecoration: 'none' }}>contact@insightball.com</a>
-          </div>
-        </Section>
+          <SubscriptionManagement />
+        </div>
 
-        {/* Zone de danger */}
-        <div style={{ background: G.bg2, border: `1px solid rgba(239,68,68,0.2)`, borderTop: `2px solid #ef4444`, padding: '28px' }}>
-          <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: '#ef4444', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
-            <span style={{ width: 12, height: 1, background: '#ef4444', display: 'inline-block' }} />Zone de danger
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
-            <div>
-              <div style={{ fontFamily: G.mono, fontSize: 12, color: G.text, marginBottom: 6 }}>Supprimer mon compte</div>
-              <div style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.03em', lineHeight: 1.6 }}>
-                Vos données sont conservées 30 jours — récupérable par email.
-              </div>
-            </div>
-            <button onClick={() => setShowDeleteModal(true)} style={{
-              display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px',
-              background: 'rgba(239,68,68,0.08)', border: `1px solid rgba(239,68,68,0.25)`,
-              fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase',
-              color: '#ef4444', cursor: 'pointer', flexShrink: 0,
-            }}
-              onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.15)'}
-              onMouseLeave={e => e.currentTarget.style.background = 'rgba(239,68,68,0.08)'}>
-              <Trash2 size={12} /> Supprimer mon compte
-            </button>
-          </div>
+        {/* Supprimer compte — discret */}
+        <div style={{ padding: '16px 28px', display: 'flex', justifyContent: 'flex-end', background: G.bg2, border: `1px solid ${G.border}` }}>
+          <button onClick={() => setShowDeleteModal(true)} style={{
+            background: 'none', border: 'none', cursor: 'pointer',
+            fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase',
+            color: 'rgba(239,68,68,0.45)', display: 'flex', alignItems: 'center', gap: 6, padding: 0,
+            transition: 'color .15s',
+          }}
+            onMouseEnter={e => e.currentTarget.style.color = '#ef4444'}
+            onMouseLeave={e => e.currentTarget.style.color = 'rgba(239,68,68,0.45)'}>
+            <Trash2 size={10} /> Supprimer mon compte
+          </button>
         </div>
       </div>
 
