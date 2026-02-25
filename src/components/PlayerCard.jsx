@@ -1,110 +1,148 @@
 import { User, Edit2, Trash2, AlertCircle } from 'lucide-react'
 
-const POSITION_COLORS = {
-  'Gardien': 'bg-yellow-500/10 border-yellow-500/30 text-yellow-500',
-  'Défenseur': 'bg-blue-500/10 border-blue-500/30 text-blue-500',
-  'Milieu': 'bg-green-500/10 border-green-500/30 text-green-500',
-  'Attaquant': 'bg-red-500/10 border-red-500/30 text-red-500',
+const G = {
+  gold: '#c9a227', goldBg: 'rgba(201,162,39,0.08)', goldBdr: 'rgba(201,162,39,0.25)',
+  mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
+  border: 'rgba(255,255,255,0.07)', muted: 'rgba(245,242,235,0.60)',
+  text: '#f5f2eb', bg2: '#0f0e0c',
+  green: '#22c55e', red: '#ef4444', blue: '#3b82f6', orange: '#f59e0b', yellow: '#eab308',
 }
 
-const STATUS_BADGES = {
-  'actif': { label: 'Actif', color: 'bg-green-500' },
-  'blessé': { label: 'Blessé', color: 'bg-red-500' },
-  'suspendu': { label: 'Suspendu', color: 'bg-orange-500' },
-  'inactif': { label: 'Inactif', color: 'bg-gray-500' },
+const POS = {
+  'Gardien':   { bg: 'rgba(234,179,8,0.10)',  border: 'rgba(234,179,8,0.30)',  color: '#eab308' },
+  'Défenseur': { bg: 'rgba(59,130,246,0.10)', border: 'rgba(59,130,246,0.30)', color: '#3b82f6' },
+  'Milieu':    { bg: 'rgba(34,197,94,0.10)',  border: 'rgba(34,197,94,0.30)',  color: '#22c55e' },
+  'Attaquant': { bg: 'rgba(239,68,68,0.10)',  border: 'rgba(239,68,68,0.30)',  color: '#ef4444' },
+}
+
+const STATUS = {
+  'actif':     { label: 'Actif',     color: G.green },
+  'blessé':    { label: 'Blessé',    color: G.red   },
+  'suspendu':  { label: 'Suspendu',  color: G.orange },
+  'inactif':   { label: 'Inactif',   color: 'rgba(245,242,235,0.35)' },
+}
+
+const FOOT = {
+  'droit':        { label: 'Pied D.', color: G.gold   },
+  'gauche':       { label: 'Pied G.', color: G.blue   },
+  'ambidextre':   { label: 'Ambi.',   color: G.green  },
 }
 
 function PlayerCard({ player, onEdit, onDelete }) {
-  const positionColor = POSITION_COLORS[player.position] || 'bg-gray-500/10 border-gray-500/30 text-gray-500'
-  const statusBadge = STATUS_BADGES[player.status] || STATUS_BADGES['actif']
+  const pos    = POS[player.position]    || POS['Milieu']
+  const status = STATUS[player.status]  || STATUS['actif']
+  const foot   = FOOT[player.preferred_foot]
 
   return (
-    <div className="bg-dark-card border border-dark-border rounded-lg p-4 hover:border-primary/30 transition-all group">
-      <div className="flex items-start gap-4">
-        {/* Photo / Avatar */}
-        <div className="relative">
-          {player.photo_url ? (
-            <img 
-              src={player.photo_url} 
-              alt={player.name}
-              className="w-16 h-16 rounded-lg object-cover"
-            />
-          ) : (
-            <div className="w-16 h-16 bg-dark-border rounded-lg flex items-center justify-center">
-              <User className="w-8 h-8 text-gray-600" />
-            </div>
-          )}
-          
-          {/* Numéro maillot */}
-          <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-primary text-black rounded-full flex items-center justify-center font-bold text-sm">
+    <div
+      style={{
+        background: G.bg2, border: `1px solid ${G.border}`,
+        padding: '18px', position: 'relative', transition: 'border-color .15s, box-shadow .15s',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(201,162,39,0.30)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.25)' }}
+      onMouseLeave={e => { e.currentTarget.style.borderColor = G.border; e.currentTarget.style.boxShadow = 'none' }}
+      className="player-card-root"
+    >
+      {/* Actions hover */}
+      <div className="player-card-actions" style={{
+        position: 'absolute', top: 12, right: 12,
+        display: 'flex', gap: 4, opacity: 0, transition: 'opacity .15s',
+      }}>
+        <button onClick={() => onEdit(player)} style={{ background: 'rgba(255,255,255,0.05)', border: `1px solid ${G.border}`, padding: '5px 7px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+          <Edit2 size={12} color={G.gold} />
+        </button>
+        <button onClick={() => onDelete(player)} style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.2)', padding: '5px 7px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+          <Trash2 size={12} color={G.red} />
+        </button>
+      </div>
+
+      <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+        {/* Photo */}
+        <div style={{ position: 'relative', flexShrink: 0 }}>
+          {player.photo_url
+            ? <img src={player.photo_url} alt={player.name} style={{ width: 64, height: 64, objectFit: 'cover', display: 'block' }} />
+            : <div style={{ width: 64, height: 64, background: 'rgba(255,255,255,0.04)', border: `1px solid ${G.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <User size={26} color='rgba(245,242,235,0.20)' />
+              </div>
+          }
+          {/* Numéro */}
+          <div style={{
+            position: 'absolute', bottom: -6, right: -6,
+            width: 22, height: 22, background: G.gold,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontFamily: G.display, fontSize: 11, color: '#0f0f0d', fontWeight: 900,
+          }}>
             {player.number}
           </div>
-          
-          {/* Status badge */}
-          {player.status !== 'actif' && (
-            <div className={`absolute -top-1 -left-1 w-3 h-3 ${statusBadge.color} rounded-full border-2 border-dark-card`} />
+          {/* Dot status si non-actif */}
+          {player.status && player.status !== 'actif' && (
+            <div style={{ position: 'absolute', top: -4, left: -4, width: 10, height: 10, background: status.color, borderRadius: '50%', border: `2px solid ${G.bg2}` }} />
           )}
         </div>
 
         {/* Info */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between mb-2">
-            <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-white truncate group-hover:text-primary transition-colors">
-                {player.name}
-              </h3>
-              <p className="text-sm text-gray-400">{player.category}</p>
-            </div>
-
-            {/* Actions (visible au survol) */}
-            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button
-                onClick={() => onEdit(player)}
-                className="p-1.5 hover:bg-dark-border rounded transition-colors"
-                title="Modifier"
-              >
-                <Edit2 className="w-4 h-4 text-gray-400 hover:text-primary" />
-              </button>
-              <button
-                onClick={() => onDelete(player)}
-                className="p-1.5 hover:bg-red-500/10 rounded transition-colors"
-                title="Supprimer"
-              >
-                <Trash2 className="w-4 h-4 text-gray-400 hover:text-red-500" />
-              </button>
-            </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          {/* Nom */}
+          <div style={{ fontFamily: G.display, fontSize: 16, textTransform: 'uppercase', letterSpacing: '.03em', color: G.text, marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {player.name}
           </div>
 
-          {/* Poste */}
-          <div className="flex items-center gap-2 mb-3">
-            <span className={`px-2 py-1 border rounded text-xs font-medium ${positionColor}`}>
+          {/* Catégorie */}
+          <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', color: G.muted, marginBottom: 10 }}>
+            {player.category}
+          </div>
+
+          {/* Badge poste + pied */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12, flexWrap: 'wrap' }}>
+            <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.08em', padding: '3px 9px', background: pos.bg, border: `1px solid ${pos.border}`, color: pos.color }}>
               {player.position}
             </span>
-            
-            {player.status !== 'actif' && (
-              <span className="flex items-center gap-1 px-2 py-1 bg-dark-border rounded text-xs text-gray-400">
-                <AlertCircle className="w-3 h-3" />
-                {statusBadge.label}
+            {foot && (
+              <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.08em', padding: '3px 9px', background: 'rgba(255,255,255,0.04)', border: `1px solid rgba(255,255,255,0.10)`, color: foot.color }}>
+                {foot.label}
+              </span>
+            )}
+            {player.status && player.status !== 'actif' && (
+              <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.08em', padding: '3px 9px', background: 'rgba(255,255,255,0.04)', border: `1px solid rgba(255,255,255,0.10)`, color: status.color, display: 'flex', alignItems: 'center', gap: 4 }}>
+                <AlertCircle size={9} /> {status.label}
               </span>
             )}
           </div>
 
-          {/* Stats */}
-          <div className="flex items-center gap-4 text-xs text-gray-500">
-            <div>
-              <span className="text-gray-400">{player.matches_played}</span> matchs
-            </div>
-            <div>
-              <span className="text-gray-400">{Math.round(player.minutes_played / 60)}</span> heures
+          {/* Stats physiques + matchs */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+            {player.height && (
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontFamily: G.display, fontSize: 15, color: G.text, lineHeight: 1 }}>{player.height}</span>
+                <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.1em', color: G.muted, textTransform: 'uppercase' }}>cm</span>
+              </div>
+            )}
+            {player.weight && (
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontFamily: G.display, fontSize: 15, color: G.text, lineHeight: 1 }}>{player.weight}</span>
+                <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.1em', color: G.muted, textTransform: 'uppercase' }}>kg</span>
+              </div>
+            )}
+            {(player.height || player.weight) && <div style={{ width: 1, height: 20, background: G.border }} />}
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span style={{ fontFamily: G.display, fontSize: 15, color: G.muted, lineHeight: 1 }}>{player.matches_played ?? 0}</span>
+              <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.1em', color: G.muted, textTransform: 'uppercase' }}>matchs</span>
             </div>
             {player.birth_date && (
-              <div>
-                {new Date().getFullYear() - new Date(player.birth_date).getFullYear()} ans
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontFamily: G.display, fontSize: 15, color: G.muted, lineHeight: 1 }}>
+                  {new Date().getFullYear() - new Date(player.birth_date).getFullYear()}
+                </span>
+                <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.1em', color: G.muted, textTransform: 'uppercase' }}>ans</span>
               </div>
             )}
           </div>
         </div>
       </div>
+
+      <style>{`
+        .player-card-root:hover .player-card-actions { opacity: 1 !important; }
+      `}</style>
     </div>
   )
 }
