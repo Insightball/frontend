@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Upload, Save, X } from 'lucide-react'
+import { Upload, Save, X, Trash2, AlertTriangle } from 'lucide-react'
 import DashboardLayout from '../components/DashboardLayout'
 import ClubBadge from '../components/ClubBadge'
 import SubscriptionManagement from '../components/SubscriptionManagement'
@@ -38,6 +38,9 @@ export default function ClubSettings() {
   const [club, setClub] = useState(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [deleteLoading, setDeleteLoading] = useState(false)
+  const [deleteConfirm, setDeleteConfirm] = useState('')
   const [formData, setFormData] = useState({ name: '', logo_url: '', primary_color: '#c9a227', secondary_color: '#0f0f0d' })
   const [logoFile, setLogoFile] = useState(null)
   const [logoPreview, setLogoPreview] = useState(null)
@@ -65,6 +68,24 @@ export default function ClubSettings() {
   }
 
   const handleRemoveLogo = () => { setFormData(prev => ({ ...prev, logo_url: '' })); setLogoFile(null); setLogoPreview(null) }
+
+  const handleDeleteAccount = async () => {
+    if (deleteConfirm !== 'SUPPRIMER') return
+    setDeleteLoading(true)
+    try {
+      const token = localStorage.getItem('insightball_token')
+      const res = await fetch('https://backend-pued.onrender.com/api/account/delete', {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      if (!res.ok) throw new Error()
+      localStorage.removeItem('insightball_token')
+      window.location.href = '/'
+    } catch {
+      alert('Erreur lors de la suppression')
+      setDeleteLoading(false)
+    }
+  }
 
   const handleSave = async () => {
     try {
@@ -172,6 +193,31 @@ export default function ClubSettings() {
           <SubscriptionManagement />
         </div>
 
+        {/* Zone de danger */}
+        <div style={{ background: G.bg2, border: `1px solid rgba(239,68,68,0.2)`, borderTop: `2px solid #ef4444`, padding: '28px' }}>
+          <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: '#ef4444', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
+            <span style={{ width: 12, height: 1, background: '#ef4444', display: 'inline-block' }} />Zone de danger
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+            <div>
+              <div style={{ fontFamily: G.mono, fontSize: 12, color: G.text, marginBottom: 6 }}>Supprimer mon compte</div>
+              <div style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.03em', lineHeight: 1.6 }}>
+                Vos données sont conservées 30 jours — récupérable par email.
+              </div>
+            </div>
+            <button onClick={() => setShowDeleteModal(true)} style={{
+              display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px',
+              background: 'rgba(239,68,68,0.08)', border: `1px solid rgba(239,68,68,0.25)`,
+              fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase',
+              color: '#ef4444', cursor: 'pointer', transition: 'all .15s', flexShrink: 0,
+            }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.15)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'rgba(239,68,68,0.08)'}>
+              <Trash2 size={12} /> Supprimer mon compte
+            </button>
+          </div>
+        </div>
+
         {/* Save */}
         <div style={{ background: G.bg2, border: `1px solid ${G.border}`, padding: '20px 28px', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 12 }}>
           <button onClick={loadClub} disabled={saving} style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted, background: 'none', border: 'none', cursor: 'pointer' }}>
@@ -187,6 +233,71 @@ export default function ClubSettings() {
           </button>
         </div>
       </div>
+
+      {/* Modale suppression */}
+      {showDeleteModal && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}>
+          <div style={{ background: G.bg2, width: '100%', maxWidth: 440, border: `1px solid rgba(239,68,68,0.3)`, borderTop: `2px solid #ef4444` }}>
+
+            <div style={{ padding: '20px 24px', borderBottom: `1px solid ${G.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <AlertTriangle size={16} color="#ef4444" />
+                <span style={{ fontFamily: G.display, fontSize: 18, textTransform: 'uppercase', color: G.text }}>Supprimer le compte</span>
+              </div>
+              <button onClick={() => { setShowDeleteModal(false); setDeleteConfirm('') }} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+                <X size={16} color={G.muted} />
+              </button>
+            </div>
+
+            <div style={{ padding: '24px' }}>
+              <div style={{ padding: '14px 16px', background: 'rgba(239,68,68,0.06)', border: `1px solid rgba(239,68,68,0.15)`, marginBottom: 24 }}>
+                <p style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(245,242,235,0.7)', lineHeight: 1.7, margin: 0 }}>
+                  Votre compte sera désactivé immédiatement. Toutes vos données seront conservées pendant <strong style={{ color: G.text }}>30 jours</strong> et vous recevrez un email pour récupérer votre compte si vous changez d'avis.
+                </p>
+              </div>
+
+              <div style={{ marginBottom: 20 }}>
+                <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted, marginBottom: 10 }}>
+                  Tapez <strong style={{ color: '#ef4444' }}>SUPPRIMER</strong> pour confirmer
+                </div>
+                <input
+                  type="text"
+                  value={deleteConfirm}
+                  onChange={e => setDeleteConfirm(e.target.value)}
+                  placeholder="SUPPRIMER"
+                  style={{
+                    width: '100%', background: 'rgba(239,68,68,0.04)',
+                    border: `1px solid ${deleteConfirm === 'SUPPRIMER' ? '#ef4444' : 'rgba(239,68,68,0.15)'}`,
+                    padding: '12px 16px', color: G.text,
+                    fontFamily: G.mono, fontSize: 13,
+                    outline: 'none', boxSizing: 'border-box', letterSpacing: '.06em',
+                  }}
+                />
+              </div>
+
+              <div style={{ display: 'flex', gap: 10 }}>
+                <button onClick={() => { setShowDeleteModal(false); setDeleteConfirm('') }} style={{
+                  flex: 1, padding: '11px', background: 'transparent',
+                  border: `1px solid ${G.border}`, fontFamily: G.mono, fontSize: 9,
+                  letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, cursor: 'pointer',
+                }}>Annuler</button>
+                <button onClick={handleDeleteAccount} disabled={deleteConfirm !== 'SUPPRIMER' || deleteLoading} style={{
+                  flex: 2, padding: '11px', background: deleteConfirm === 'SUPPRIMER' ? '#ef4444' : 'rgba(239,68,68,0.2)',
+                  border: 'none', fontFamily: G.mono, fontSize: 9,
+                  letterSpacing: '.1em', textTransform: 'uppercase',
+                  color: deleteConfirm === 'SUPPRIMER' ? '#fff' : 'rgba(239,68,68,0.4)',
+                  cursor: deleteConfirm === 'SUPPRIMER' ? 'pointer' : 'not-allowed',
+                  fontWeight: 700, transition: 'all .15s',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                }}>
+                  {deleteLoading ? 'Suppression...' : <><Trash2 size={11} /> Supprimer définitivement</>}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </DashboardLayout>
   )
