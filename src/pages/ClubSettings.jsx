@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Upload, Save, X, Trash2, AlertTriangle } from 'lucide-react'
+import { Save, X, Trash2, AlertTriangle, CheckCircle, AlertCircle } from 'lucide-react'
 import DashboardLayout from '../components/DashboardLayout'
 import ClubBadge from '../components/ClubBadge'
 import SubscriptionManagement from '../components/SubscriptionManagement'
 import clubService from '../services/clubService'
-import uploadService from '../services/uploadService'
 
 const G = {
   bg: '#0a0908', bg2: '#0f0e0c',
@@ -42,8 +41,7 @@ export default function ClubSettings() {
   const [deleteLoading, setDeleteLoading] = useState(false)
   const [deleteConfirm, setDeleteConfirm] = useState('')
   const [formData, setFormData] = useState({ name: '', logo_url: '', primary_color: '#c9a227', secondary_color: '#0f0f0d' })
-  const [logoFile, setLogoFile] = useState(null)
-  const [logoPreview, setLogoPreview] = useState(null)
+  const [toast, setToast] = useState(null) // { type: 'success'|'error', msg }
 
   useEffect(() => { loadClub() }, [])
 
@@ -59,15 +57,9 @@ export default function ClubSettings() {
 
   const handleChange = (e) => setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
 
-  const handleLogoFile = (e) => {
-    const file = e.target.files?.[0]; if (!file) return
-    if (!file.type.startsWith('image/')) { alert('Sélectionnez une image'); return }
-    if (file.size > 2 * 1024 * 1024) { alert('Fichier trop volumineux (max 2MB)'); return }
-    setLogoFile(file)
-    const reader = new FileReader(); reader.onloadend = () => setLogoPreview(reader.result); reader.readAsDataURL(file)
-  }
+  const showToast = (type, msg) => { setToast({ type, msg }); setTimeout(() => setToast(null), 3500) }
 
-  const handleRemoveLogo = () => { setFormData(prev => ({ ...prev, logo_url: '' })); setLogoFile(null); setLogoPreview(null) }
+  const handleRemoveLogo = () => setFormData(prev => ({ ...prev, logo_url: '' }))
 
   const handleDeleteAccount = async () => {
     if (deleteConfirm !== 'SUPPRIMER') return
@@ -82,7 +74,7 @@ export default function ClubSettings() {
       localStorage.removeItem('insightball_token')
       window.location.href = '/'
     } catch {
-      alert('Erreur lors de la suppression')
+      showToast('error', 'Erreur lors de la suppression')
       setDeleteLoading(false)
     }
   }
@@ -90,13 +82,20 @@ export default function ClubSettings() {
   const handleSave = async () => {
     try {
       setSaving(true)
-      let finalLogo = formData.logo_url
-      if (logoFile) { try { finalLogo = await uploadService.uploadFile(logoFile) } catch { alert('Erreur logo, autres modifs sauvegardées') } }
-      await clubService.updateClub({ name: formData.name, logo_url: finalLogo, primary_color: formData.primary_color, secondary_color: formData.secondary_color })
-      alert('Paramètres sauvegardés !')
-      await loadClub(); setLogoFile(null); setLogoPreview(null)
-    } catch (e) { console.error(e); alert('Erreur lors de la sauvegarde') }
-    finally { setSaving(false) }
+      await clubService.updateClub({
+        name: formData.name,
+        logo_url: formData.logo_url,
+        primary_color: formData.primary_color,
+        secondary_color: formData.secondary_color,
+      })
+      showToast('success', 'Paramètres sauvegardés')
+      await loadClub()
+    } catch (e) {
+      console.error(e)
+      showToast('error', 'Erreur lors de la sauvegarde')
+    } finally {
+      setSaving(false)
+    }
   }
 
   if (loading) return (
@@ -107,6 +106,25 @@ export default function ClubSettings() {
 
   return (
     <DashboardLayout>
+      {/* Toast */}
+      {toast && (
+        <div style={{
+          position: 'fixed', bottom: 24, right: 24, zIndex: 9999,
+          display: 'flex', alignItems: 'center', gap: 10,
+          padding: '14px 20px',
+          background: toast.type === 'success' ? 'rgba(34,197,94,0.12)' : 'rgba(239,68,68,0.12)',
+          border: `1px solid ${toast.type === 'success' ? 'rgba(34,197,94,0.35)' : 'rgba(239,68,68,0.35)'}`,
+          boxShadow: '0 8px 32px rgba(0,0,0,0.40)',
+        }}>
+          {toast.type === 'success'
+            ? <CheckCircle size={15} color="#22c55e" />
+            : <AlertCircle size={15} color="#ef4444" />}
+          <span style={{ fontFamily: G.mono, fontSize: 11, letterSpacing: '.06em', color: toast.type === 'success' ? '#22c55e' : '#ef4444' }}>
+            {toast.msg}
+          </span>
+        </div>
+      )}
+
       {/* Header */}
       <div style={{ marginBottom: 32 }}>
         <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
@@ -122,7 +140,7 @@ export default function ClubSettings() {
         {/* Aperçu */}
         <Section title="Aperçu" accent={G.gold}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '28px', background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}` }}>
-            <ClubBadge club={{ ...formData, logo_url: logoPreview || formData.logo_url }} size="xl" showName />
+            <ClubBadge club={{ ...formData, logo_url: formData.logo_url }} size="xl" showName />
           </div>
         </Section>
 
@@ -136,9 +154,9 @@ export default function ClubSettings() {
 
         {/* Logo */}
         <Section title="Logo">
-          {(logoPreview || formData.logo_url) && (
+          {formData.logo_url && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20, padding: '14px 16px', background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}` }}>
-              <img src={logoPreview || formData.logo_url} alt="Logo" style={{ width: 56, height: 56, objectFit: 'contain' }} />
+              <img src={formData.logo_url} alt="Logo" style={{ width: 56, height: 56, objectFit: 'contain' }} />
               <div style={{ flex: 1 }}>
                 <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, marginBottom: 6 }}>Logo actuel</div>
                 <button onClick={handleRemoveLogo} style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
