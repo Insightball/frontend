@@ -47,10 +47,10 @@ function DashboardLayout({ children }) {
   ]
 
   // Entrées réservées plan Club
-  if (user?.plan === 'club') {
-    navigation.push({ name: 'Équipe',   href: '/dashboard/team',    icon: Trophy })
+  if (user?.plan === 'CLUB') {
+    navigation.push({ name: 'Équipe', href: '/dashboard/team', icon: Trophy })
     // Membres uniquement visible pour les admins du club
-    if (user?.role === 'admin') {
+    if (user?.role === 'ADMIN') {
       navigation.push({ name: 'Membres', href: '/dashboard/members', icon: UserCog })
     }
   }
@@ -112,7 +112,7 @@ function DashboardLayout({ children }) {
           )}
         </div>
         {/* Badge rôle pour plan club */}
-        {user?.plan === 'club' && user?.role && (
+        {user?.plan === 'CLUB' && user?.role && (
           <div style={{ marginTop: 6, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted2 }}>Rôle</span>
             <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', padding: '3px 10px', background: 'rgba(255,255,255,0.04)', border: `1px solid rgba(255,255,255,0.08)`, color: G.muted }}>

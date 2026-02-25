@@ -1,19 +1,20 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import { AuthProvider } from './context/AuthContext'
+import { AuthProvider, useAuth } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import { Suspense, lazy } from 'react'
 
-// Pages publiques — chargées immédiatement (critiques pour le SEO et le cold start)
+// Pages publiques — chargées immédiatement
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 
-// Pages lazy — chargées uniquement quand l'utilisateur les visite
+// Pages lazy
 const Dashboard         = lazy(() => import('./pages/Dashboard'))
 const DashboardHome     = lazy(() => import('./pages/DashboardHome'))
 const DashboardMatches  = lazy(() => import('./pages/DashboardMatches'))
 const PlayerManagement  = lazy(() => import('./pages/PlayerManagement'))
 const ClubSettings      = lazy(() => import('./pages/ClubSettings'))
+const CoachSettings     = lazy(() => import('./pages/CoachSettings'))
 const MatchDetail       = lazy(() => import('./pages/MatchDetail'))
 const Statistics        = lazy(() => import('./pages/Statistics'))
 const TeamManagement    = lazy(() => import('./pages/TeamManagement'))
@@ -24,26 +25,25 @@ const SubscriptionPlans = lazy(() => import('./pages/SubscriptionPlans'))
 const UploadMatch       = lazy(() => import('./pages/UploadMatch'))
 const AdminPanel        = lazy(() => import('./pages/AdminPanel'))
 
-// Loader pendant les transitions
 const PageLoader = () => (
   <div style={{
-    minHeight: '100vh',
-    background: '#0a0908',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    minHeight: '100vh', background: '#0a0908',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
   }}>
     <span style={{
       fontFamily: "'JetBrains Mono', monospace",
-      fontSize: 10,
-      letterSpacing: '.2em',
-      textTransform: 'uppercase',
-      color: 'rgba(201,162,39,0.5)',
-    }}>
-      Chargement...
-    </span>
+      fontSize: 10, letterSpacing: '.2em',
+      textTransform: 'uppercase', color: 'rgba(201,162,39,0.5)',
+    }}>Chargement...</span>
   </div>
 )
+
+// Route settings selon le plan
+function SettingsRoute() {
+  const { user } = useAuth()
+  if (!user) return null
+  return user.plan === 'CLUB' ? <ClubSettings /> : <CoachSettings />
+}
 
 function App() {
   return (
@@ -78,7 +78,7 @@ function App() {
             <Route path="/dashboard/stats"            element={<ProtectedRoute><Statistics /></ProtectedRoute>} />
             <Route path="/dashboard/team"             element={<ProtectedRoute><TeamManagement /></ProtectedRoute>} />
             <Route path="/dashboard/members"          element={<ProtectedRoute><ClubMembers /></ProtectedRoute>} />
-            <Route path="/dashboard/settings"         element={<ProtectedRoute><ClubSettings /></ProtectedRoute>} />
+            <Route path="/dashboard/settings"         element={<ProtectedRoute><SettingsRoute /></ProtectedRoute>} />
           </Routes>
         </Suspense>
       </Router>
