@@ -407,6 +407,10 @@ export default function LandingPage() {
     @media (max-width: 1024px) {
       .hero-mobile-mockup { display: block !important; }
     }
+    select option { background: #1a1917; color: #ffffff; }
+    select:focus { outline: none; }
+    .select-wrapper { position: relative; }
+    .select-wrapper::after { content: '▾'; position: absolute; right: 0; top: 50%; transform: translateY(-50%); color: rgba(201,162,39,0.8); pointer-events: none; font-size: 14px; }
     @media (max-width: 480px) {
       .footer-grid  { grid-template-columns: 1fr !important; }
       .wl-grid      { grid-template-columns: 1fr !important; }
@@ -450,7 +454,7 @@ export default function LandingPage() {
     marginBottom: 24, paddingBottom: 10, transition: 'border-color .15s',
   })
   const labelSt = { fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.muted, display: 'block', marginBottom: 6 }
-  const labelStDark = { fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.40)', display: 'block', marginBottom: 6 }
+  const labelStDark = { fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.75)', display: 'block', marginBottom: 6 }
   const inputSt = { width:'100%', background:'transparent', border:'none', outline:'none', fontSize:15, color:G.ink, fontFamily:G.body }
   const inputStDark = { width:'100%', background:'transparent', border:'none', outline:'none', fontSize:15, color:G.white, fontFamily:G.body }
 
@@ -866,25 +870,31 @@ export default function LandingPage() {
                         placeholder="" style={inputStDark}
                         onFocus={() => setWlFocused('club')} onBlur={() => setWlFocused(null)} />
                     </div>
-                    <div style={{ ...inputLine(wlFocused==='role'), marginBottom: 32 }}>
+                    <div style={{ ...inputLineDark(wlFocused==='role'), marginBottom: 32 }}>
                       <label style={labelStDark}>Poste *</label>
-                      <select required value={wlForm.role} onChange={e => setWlForm({...wlForm, role: e.target.value})}
-                        style={{ ...inputStDark, color: wlForm.role ? G.white : 'rgba(255,255,255,0.35)', cursor:'pointer', appearance:'none' }}
-                        onFocus={() => setWlFocused('role')} onBlur={() => setWlFocused(null)}>
-                        <option value="" disabled>Choisir...</option>
-                        <option>Éducateur</option>
-                        <option>Entraîneur</option>
-                        <option>Directeur Sportif</option>
-                      </select>
+                      <div className="select-wrapper">
+                        <select required value={wlForm.role} onChange={e => setWlForm({...wlForm, role: e.target.value})}
+                          style={{ ...inputStDark, color: wlForm.role ? G.white : 'rgba(255,255,255,0.55)', cursor:'pointer', appearance:'none', WebkitAppearance:'none', paddingRight: 20 }}
+                          onFocus={() => setWlFocused('role')} onBlur={() => setWlFocused(null)}>
+                          <option value="" disabled style={{ color: '#888', background: '#1a1917' }}>Choisir...</option>
+                          <option style={{ background: '#1a1917', color: '#fff' }}>Éducateur</option>
+                          <option style={{ background: '#1a1917', color: '#fff' }}>Entraîneur</option>
+                          <option style={{ background: '#1a1917', color: '#fff' }}>Directeur Sportif</option>
+                        </select>
+                      </div>
                     </div>
-                    <div style={{ ...inputLine(wlFocused==='category'), marginBottom: 32 }}>
+                    <div style={{ ...inputLineDark(wlFocused==='category'), marginBottom: 32 }}>
                       <label style={labelStDark}>Catégorie entraînée *</label>
-                      <select required value={wlForm.category} onChange={e => setWlForm({...wlForm, category: e.target.value})}
-                        style={{ ...inputStDark, color: wlForm.category ? G.white : 'rgba(255,255,255,0.35)', cursor:'pointer', appearance:'none' }}
-                        onFocus={() => setWlFocused('category')} onBlur={() => setWlFocused(null)}>
-                        <option value="" disabled>Choisir...</option>
-                        {['U14','U15','U16','U17','U18','U19','Séniors'].map(c => <option key={c}>{c}</option>)}
-                      </select>
+                      <div className="select-wrapper">
+                        <select required value={wlForm.category} onChange={e => setWlForm({...wlForm, category: e.target.value})}
+                          style={{ ...inputStDark, color: wlForm.category ? G.white : 'rgba(255,255,255,0.55)', cursor:'pointer', appearance:'none', WebkitAppearance:'none', paddingRight: 20 }}
+                          onFocus={() => setWlFocused('category')} onBlur={() => setWlFocused(null)}>
+                          <option value="" disabled style={{ color: '#888', background: '#1a1917' }}>Choisir...</option>
+                          {['U14','U15','U16','U17','U18','U19','Séniors'].map(c => (
+                            <option key={c} style={{ background: '#1a1917', color: '#fff' }}>{c}</option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
                   </div>
 
