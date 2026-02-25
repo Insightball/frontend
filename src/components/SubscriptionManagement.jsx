@@ -1,188 +1,234 @@
 import { useState, useEffect } from 'react'
-import { CreditCard, AlertCircle, CheckCircle, ExternalLink } from 'lucide-react'
+import { CreditCard, CheckCircle, AlertCircle, ExternalLink, Zap, Users } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
 
-function SubscriptionManagement() {
+const G = {
+  gold: '#c9a227', goldD: '#a8861f',
+  goldBg: 'rgba(201,162,39,0.08)', goldBdr: 'rgba(201,162,39,0.25)',
+  mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
+  border: 'rgba(255,255,255,0.07)', muted: 'rgba(245,242,235,0.60)',
+  text: '#f5f2eb', bg2: '#0f0e0c',
+  green: '#22c55e', red: '#ef4444', orange: '#f59e0b',
+}
+
+const PLANS = [
+  {
+    id: 'COACH',
+    name: 'Coach',
+    price: 29,
+    icon: Zap,
+    color: G.gold,
+    features: ['5 matchs / mois', 'Rapports PDF', 'Statistiques joueurs', 'Support email'],
+  },
+  {
+    id: 'CLUB',
+    name: 'Club',
+    price: 99,
+    icon: Users,
+    color: '#3b82f6',
+    features: ['20 matchs / mois', 'Multi-coachs', 'Gestion équipe complète', 'Support prioritaire'],
+  },
+]
+
+export default function SubscriptionManagement() {
   const { user } = useAuth()
-  const [subscription, setSubscription] = useState(null)
+  const [sub, setSub]       = useState(null)
   const [loading, setLoading] = useState(true)
+  const [checkoutLoading, setCheckoutLoading] = useState(null)
+  const [portalLoading, setPortalLoading]     = useState(false)
+  const [error, setError]   = useState('')
 
-  useEffect(() => {
-    loadSubscription()
-  }, [])
+  useEffect(() => { loadSub() }, [])
 
-  const loadSubscription = async () => {
+  const loadSub = async () => {
     try {
       setLoading(true)
-      const response = await api.get('/subscription/subscription-status')
-      setSubscription(response.data)
-    } catch (error) {
-      console.error('Error loading subscription:', error)
-    } finally {
-      setLoading(false)
-    }
+      const r = await api.get('/subscription/subscription-status')
+      setSub(r.data)
+    } catch (e) { console.error(e) }
+    finally { setLoading(false) }
   }
 
-  const handleManageSubscription = async () => {
+  const handleCheckout = async (planId) => {
+    setCheckoutLoading(planId)
+    setError('')
     try {
-      const response = await api.post('/subscription/create-portal-session', {
-        return_url: window.location.href
+      const r = await api.post('/subscription/create-checkout-session', {
+        plan: planId.toLowerCase(),
+        success_url: `${window.location.origin}/dashboard?subscribed=true`,
+        cancel_url: window.location.href,
       })
-      
-      // Redirect to Stripe portal
-      window.location.href = response.data.url
-      
-    } catch (error) {
-      console.error('Error opening portal:', error)
-      alert('Erreur lors de l\'ouverture du portail de gestion')
+      window.location.href = r.data.url
+    } catch (e) {
+      setError('Erreur lors de la création du paiement. Réessayez.')
+      setCheckoutLoading(null)
     }
   }
 
-  const handleCancelSubscription = async () => {
-    if (!confirm('Êtes-vous sûr de vouloir annuler votre abonnement ? Il restera actif jusqu\'à la fin de la période de facturation.')) {
-      return
+  const handlePortal = async () => {
+    setPortalLoading(true)
+    try {
+      const r = await api.post('/subscription/create-portal-session', {
+        return_url: window.location.href,
+      })
+      window.location.href = r.data.url
+    } catch (e) {
+      setError('Erreur portail de gestion.')
+      setPortalLoading(false)
     }
+  }
 
+  const handleCancel = async () => {
+    if (!window.confirm('Annuler l\'abonnement ? Il restera actif jusqu\'à la fin de la période.')) return
     try {
       await api.post('/subscription/cancel-subscription')
-      alert('Abonnement annulé avec succès. Il restera actif jusqu\'à la fin de la période.')
-      loadSubscription()
-    } catch (error) {
-      console.error('Error canceling subscription:', error)
-      alert('Erreur lors de l\'annulation')
-    }
+      await loadSub()
+    } catch (e) { setError('Erreur lors de l\'annulation.') }
   }
 
-  const getPlanName = (plan) => {
-    return plan === 'coach' ? 'Coach' : 'Club'
-  }
-
-  const getPlanPrice = (plan) => {
-    return plan === 'coach' ? '29€' : '89€'
-  }
-
-  if (loading) {
-    return (
-      <div className="bg-dark-card border border-dark-border rounded-lg p-6">
-        <div className="flex items-center justify-center py-8">
-          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-        </div>
-      </div>
-    )
-  }
+  if (loading) return (
+    <div style={{ padding: '32px', textAlign: 'center', fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', color: G.muted }}>
+      Chargement...
+    </div>
+  )
 
   return (
-    <div className="bg-dark-card border border-dark-border rounded-lg p-6">
-      <div className="flex items-center gap-3 mb-6">
-        <CreditCard className="w-6 h-6 text-primary" />
-        <h2 className="text-xl font-bold">Abonnement</h2>
-      </div>
+    <div>
+      {error && (
+        <div style={{ marginBottom: 16, padding: '12px 16px', background: 'rgba(239,68,68,0.08)', borderLeft: `2px solid ${G.red}`, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <AlertCircle size={13} color={G.red} />
+          <span style={{ fontFamily: G.mono, fontSize: 11, color: G.red }}>{error}</span>
+        </div>
+      )}
 
-      {subscription?.active ? (
-        <div className="space-y-6">
-          {/* Active subscription info */}
-          <div className="flex items-start gap-4 p-4 bg-green-500/10 border border-green-500/30 rounded-lg">
-            <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
-            <div className="flex-1">
-              <div className="font-semibold text-green-500 mb-1">Abonnement actif</div>
-              <div className="text-sm text-gray-300">
-                Votre abonnement {getPlanName(user?.plan)} est actif et renouvelé automatiquement.
-              </div>
+      {sub?.active ? (
+        /* ── ABONNEMENT ACTIF ── */
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
+
+          {/* Status actif */}
+          <div style={{ background: G.bg2, padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 10, borderLeft: `3px solid ${G.green}` }}>
+            <CheckCircle size={15} color={G.green} />
+            <div>
+              <div style={{ fontFamily: G.mono, fontSize: 11, color: G.green, letterSpacing: '.06em' }}>Abonnement actif</div>
+              {sub.cancel_at_period_end && (
+                <div style={{ fontFamily: G.mono, fontSize: 9, color: G.orange, marginTop: 2, letterSpacing: '.06em' }}>
+                  Annulation programmée en fin de période
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Plan details */}
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="p-4 bg-black border border-dark-border rounded-lg">
-              <div className="text-sm text-gray-400 mb-1">Plan actuel</div>
-              <div className="text-2xl font-bold text-primary">
-                {getPlanName(user?.plan)}
-              </div>
+          {/* Plan + renouvellement */}
+          <div style={{ background: G.bg2, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: G.border }}>
+            <div style={{ background: G.bg2, padding: '16px 20px' }}>
+              <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted, marginBottom: 6 }}>Plan</div>
+              <div style={{ fontFamily: G.display, fontSize: 28, color: G.gold }}>{user?.plan}</div>
             </div>
-
-            <div className="p-4 bg-black border border-dark-border rounded-lg">
-              <div className="text-sm text-gray-400 mb-1">Tarif</div>
-              <div className="text-2xl font-bold">
-                {getPlanPrice(user?.plan)} <span className="text-sm text-gray-400">/mois</span>
-              </div>
-            </div>
-          </div>
-
-          {subscription.current_period_end && (
-            <div className="p-4 bg-black border border-dark-border rounded-lg">
-              <div className="text-sm text-gray-400 mb-1">
-                {subscription.cancel_at_period_end ? 'Actif jusqu\'au' : 'Prochain renouvellement'}
-              </div>
-              <div className="font-semibold">
-                {new Date(subscription.current_period_end * 1000).toLocaleDateString('fr-FR', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric'
-                })}
-              </div>
-            </div>
-          )}
-
-          {subscription.cancel_at_period_end && (
-            <div className="flex items-start gap-4 p-4 bg-orange-500/10 border border-orange-500/30 rounded-lg">
-              <AlertCircle className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" />
-              <div className="flex-1">
-                <div className="font-semibold text-orange-500 mb-1">Annulation programmée</div>
-                <div className="text-sm text-gray-300">
-                  Votre abonnement sera annulé à la fin de la période de facturation.
+            {sub.current_period_end && (
+              <div style={{ background: G.bg2, padding: '16px 20px' }}>
+                <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted, marginBottom: 6 }}>
+                  {sub.cancel_at_period_end ? 'Actif jusqu\'au' : 'Renouvellement'}
+                </div>
+                <div style={{ fontFamily: G.mono, fontSize: 13, color: G.text }}>
+                  {new Date(sub.current_period_end * 1000).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* Actions */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            <button
-              onClick={handleManageSubscription}
-              className="flex-1 px-6 py-3 bg-primary text-black font-semibold rounded-lg hover:shadow-glow transition-all flex items-center justify-center gap-2"
-            >
-              Gérer l'abonnement
-              <ExternalLink className="w-4 h-4" />
+          <div style={{ background: G.bg2, padding: '16px 20px', display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <button onClick={handlePortal} disabled={portalLoading} style={{
+              display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px',
+              background: G.gold, color: '#0f0f0d',
+              fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700,
+              border: 'none', cursor: portalLoading ? 'not-allowed' : 'pointer',
+              opacity: portalLoading ? 0.6 : 1,
+            }}>
+              <ExternalLink size={12} />
+              {portalLoading ? 'Redirection...' : 'Gérer l\'abonnement'}
             </button>
 
-            {!subscription.cancel_at_period_end && (
-              <button
-                onClick={handleCancelSubscription}
-                className="px-6 py-3 border border-red-500/30 text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
-              >
+            {!sub.cancel_at_period_end && (
+              <button onClick={handleCancel} style={{
+                padding: '10px 20px', background: 'transparent',
+                border: `1px solid rgba(239,68,68,0.25)`,
+                fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase',
+                color: 'rgba(239,68,68,0.60)', cursor: 'pointer', transition: 'all .15s',
+              }}
+                onMouseEnter={e => { e.currentTarget.style.color = G.red; e.currentTarget.style.borderColor = G.red }}
+                onMouseLeave={e => { e.currentTarget.style.color = 'rgba(239,68,68,0.60)'; e.currentTarget.style.borderColor = 'rgba(239,68,68,0.25)' }}>
                 Annuler
               </button>
             )}
           </div>
 
-          <p className="text-xs text-gray-500 text-center">
-            La gestion des paiements est sécurisée par Stripe
-          </p>
+          <div style={{ background: G.bg2, padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <CreditCard size={11} color={G.muted} />
+            <span style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em' }}>Paiements sécurisés par Stripe</span>
+          </div>
         </div>
+
       ) : (
-        <div className="space-y-6">
-          {/* No active subscription */}
-          <div className="flex items-start gap-4 p-4 bg-orange-500/10 border border-orange-500/30 rounded-lg">
-            <AlertCircle className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" />
-            <div className="flex-1">
-              <div className="font-semibold text-orange-500 mb-1">Aucun abonnement actif</div>
-              <div className="text-sm text-gray-300">
-                Souscrivez à un plan pour accéder à toutes les fonctionnalités.
-              </div>
-            </div>
+        /* ── PAS D'ABONNEMENT ── */
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+          <div style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.06em', marginBottom: 4 }}>
+            Choisissez le plan adapté à votre structure
           </div>
 
-          <button
-            onClick={() => window.location.href = '/subscription/plans'}
-            className="w-full px-6 py-3 bg-primary text-black font-semibold rounded-lg hover:shadow-glow transition-all"
-          >
-            Choisir un plan
-          </button>
+          {/* Cards plans */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: G.border }}>
+            {PLANS.map(plan => {
+              const Icon = plan.icon
+              const isLoading = checkoutLoading === plan.id
+              const isCurrent = user?.plan === plan.id
+              return (
+                <div key={plan.id} style={{
+                  background: G.bg2, padding: '24px 20px',
+                  borderTop: `2px solid ${isCurrent ? plan.color : G.border}`,
+                  display: 'flex', flexDirection: 'column', gap: 16,
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <Icon size={15} color={plan.color} />
+                      <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: plan.color }}>{plan.name}</span>
+                    </div>
+                    <div style={{ fontFamily: G.display, fontSize: 28, color: G.text, lineHeight: 1 }}>
+                      {plan.price}<span style={{ fontFamily: G.mono, fontSize: 11, color: G.muted }}>€/m</span>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    {plan.features.map(f => (
+                      <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <div style={{ width: 4, height: 4, background: plan.color, flexShrink: 0 }} />
+                        <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.06em', color: G.muted }}>{f}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <button onClick={() => handleCheckout(plan.id)} disabled={isLoading} style={{
+                    padding: '11px', background: isLoading ? 'rgba(201,162,39,0.4)' : plan.color === G.gold ? G.gold : 'rgba(59,130,246,0.15)',
+                    border: plan.color !== G.gold ? `1px solid rgba(59,130,246,0.40)` : 'none',
+                    color: plan.color === G.gold ? '#0f0f0d' : '#3b82f6',
+                    fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700,
+                    cursor: isLoading ? 'not-allowed' : 'pointer', marginTop: 'auto', transition: 'all .15s',
+                  }}>
+                    {isLoading ? 'Redirection...' : `Choisir ${plan.name} →`}
+                  </button>
+                </div>
+              )
+            })}
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <CreditCard size={11} color={G.muted} />
+            <span style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em' }}>Paiement sécurisé Stripe · Résiliable à tout moment</span>
+          </div>
         </div>
       )}
     </div>
   )
 }
-
-export default SubscriptionManagement
