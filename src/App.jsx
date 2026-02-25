@@ -20,6 +20,7 @@ const Statistics        = lazy(() => import('./pages/Statistics'))
 const TeamManagement    = lazy(() => import('./pages/TeamManagement'))
 const ClubMembers       = lazy(() => import('./pages/ClubMembers'))
 const JoinClub          = lazy(() => import('./pages/JoinClub'))
+const ResetPassword     = lazy(() => import('./pages/ResetPassword'))
 const RecoverAccount    = lazy(() => import('./pages/RecoverAccount'))
 const SubscriptionPlans = lazy(() => import('./pages/SubscriptionPlans'))
 const UploadMatch       = lazy(() => import('./pages/UploadMatch'))
@@ -62,6 +63,7 @@ function App() {
 
             {/* Invitation & récupération */}
             <Route path="/join"    element={<JoinClub />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/recover" element={<RecoverAccount />} />
 
             {/* Demo / Plans / Admin */}
