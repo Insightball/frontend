@@ -27,7 +27,7 @@ export default function Signup() {
     if (formData.password.length < 8) { setError('Minimum 8 caractères'); return }
     setLoading(true)
     try {
-      await signup({ name: formData.name, email: formData.email, password: formData.password })
+      await signup({ name: formData.name, email: formData.email, password: formData.password, plan: 'COACH' })
       navigate('/onboarding')
     } catch (err) {
       const msg = err?.response?.data?.detail || err?.message || 'Une erreur est survenue.'
