@@ -68,7 +68,7 @@ export default function JoinClub() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.detail || 'Erreur')
       setStep('success')
-      setTimeout(() => navigate('/dashboard'), 2000)
+      setTimeout(() => { window.location.href = '/dashboard' }, 2000)
     } catch (e) {
       setStep('error')
       setError(e.message)
