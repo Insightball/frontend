@@ -154,15 +154,18 @@ export default function DashboardHome() {
           <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />
           Tableau de bord
         </div>
-        <h1 style={{ fontFamily: G.display, fontSize: 'clamp(36px,3.5vw,52px)', textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.02em', color: G.text, marginBottom: 6 }}>
-          Bonjour,{' '}<span style={{ color: G.gold }}>{user?.name?.split(' ')[0]}</span>
-        </h1>
-        <p style={{ fontFamily: G.mono, fontSize: 12, color: 'rgba(245,242,235,0.75)', letterSpacing: '.08em', marginTop: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
-          {user?.club_logo && <img src={user.club_logo} alt="" style={{ height: 18, width: 18, objectFit: 'contain' }} />}
-          <span>{user?.club_name || 'Votre club'}</span>
-          <span style={{ color: 'rgba(245,242,235,0.35)' }}>·</span>
-          <span>Saison 2025/26</span>
-        </p>
+        <div style={{ fontFamily: G.mono, fontSize: 11, letterSpacing: '.12em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.55)', marginBottom: 6 }}>
+          Bonjour, <span style={{ color: 'rgba(245,242,235,0.80)' }}>{user?.name?.split(' ')[0]}</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 4 }}>
+          {user?.club_logo && <img src={user.club_logo} alt="" style={{ height: 40, width: 40, objectFit: 'contain', flexShrink: 0 }} />}
+          <div>
+            <h1 style={{ fontFamily: G.display, fontSize: 'clamp(28px,3vw,44px)', textTransform: 'uppercase', lineHeight: .9, letterSpacing: '.02em', color: G.text, margin: 0 }}>
+              {user?.club_name || 'Votre club'}
+            </h1>
+            <p style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(245,242,235,0.50)', letterSpacing: '.08em', marginTop: 4 }}>Saison 2025/26</p>
+          </div>
+        </div>
       </div>
 
       {/* ── STAT CARDS ── */}
