@@ -20,8 +20,10 @@ const STEPS = [
   { id: 4, code: '04', label: 'Plan' },
 ]
 
-const ROLES = ['Coach', 'Entraîneur adjoint', 'Président', 'Analyste', 'Directeur sportif', 'Autre']
-const LEVELS = ['National', 'Régional 1', 'Régional 2', 'Régional 3', 'Départemental 1', 'Départemental 2', 'District', 'Jeunes / Académie']
+const ROLES = ['Éducateur', 'Entraîneur', 'Directeur Sportif', 'Analyste Vidéo']
+const LEVELS = ['National', 'Régional', 'Départemental']
+
+const DIPLOMAS = ['CFI', 'DF', 'BMF', 'BEF', 'DES', 'BEPF']
 
 const POSITIONS = ['Gardien', 'Défenseur', 'Milieu', 'Attaquant']
 
@@ -34,7 +36,7 @@ export default function Onboarding() {
   const [error, setError] = useState('')
 
   // Step 0 — Profil
-  const [profileData, setProfileData] = useState({ role: '', level: '', phone: '', city: '' })
+  const [profileData, setProfileData] = useState({ role: '', level: '', phone: '', city: '', diploma: '' })
 
   // Step 1 — Club
   const [clubData, setClubData] = useState({ name: user?.club_name || '', primary_color: '#c9a227', secondary_color: '#0f0f0d' })
@@ -223,7 +225,22 @@ export default function Onboarding() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+
+              <div>
+                <label style={{ display: 'block', fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.4)', marginBottom: 8 }}>Diplôme <span style={{ color: 'rgba(245,242,235,0.2)' }}>(optionnel)</span></label>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {DIPLOMAS.map(d => (
+                    <button key={d} onClick={() => setProfileData(p => ({ ...p, diploma: profileData.diploma === d ? '' : d }))} style={{
+                      padding: '7px 14px', fontFamily: G.mono, fontSize: 9, letterSpacing: '.08em',
+                      background: profileData.diploma === d ? G.goldBg : 'transparent',
+                      border: `1px solid ${profileData.diploma === d ? G.goldBdr : 'rgba(255,255,255,0.1)'}`,
+                      color: profileData.diploma === d ? G.gold : G.muted, cursor: 'pointer',
+                    }}>{d}</button>
+                  ))}
+                </div>
+              </div>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>
                   <label style={{ display: 'block', fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.4)', marginBottom: 8 }}>Téléphone</label>
                   <input value={profileData.phone} onChange={e => setProfileData(p => ({ ...p, phone: e.target.value }))}
@@ -235,7 +252,7 @@ export default function Onboarding() {
                 <div>
                   <label style={{ display: 'block', fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.4)', marginBottom: 8 }}>Ville</label>
                   <input value={profileData.city} onChange={e => setProfileData(p => ({ ...p, city: e.target.value }))}
-                    placeholder="Paris, Lyon..."
+                    placeholder="Ville"
                     style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: `1px solid ${G.border}`, padding: '12px 14px', color: G.text, fontFamily: G.mono, fontSize: 12, outline: 'none', boxSizing: 'border-box' }}
                     onFocus={e => e.target.style.borderColor = G.goldBdr}
                     onBlur={e => e.target.style.borderColor = G.border} />
