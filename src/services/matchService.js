@@ -1,4 +1,5 @@
 import api from './api'
+import uploadService from './uploadService'
 
 const matchService = {
   // Get all matches
@@ -29,6 +30,20 @@ const matchService = {
   // Update match
   async updateMatch(matchId, matchData) {
     const response = await api.patch(`/matches/${matchId}`, matchData)
+    return response.data
+  },
+
+  // Upload match with video
+  async uploadMatch({ matchData, lineup, videoFile, onProgress }) {
+    // Step 1: Upload video to S3
+    const videoUrl = await uploadService.uploadToS3(videoFile, onProgress)
+
+    // Step 2: Create match with video URL
+    const response = await api.post('/matches', {
+      ...matchData,
+      lineup,
+      video_url: videoUrl,
+    })
     return response.data
   },
 
