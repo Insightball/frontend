@@ -762,10 +762,10 @@ export default function LandingPage() {
 
           <div className="price-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, maxWidth: 860 }}>
             {[
-              { id:'coach', plan:'Pour les coachs', name:'Coach', price:'29', featured: false,
-                items:["Jusqu'à 3 matchs analysés / mois",'1 équipe','Rapports collectifs & individuels','Suivi progression sur la saison','Export PDF complet','Support inclus'] },
-              { id:'club',  plan:'Pour les clubs',  name:'Club',  price:'99', featured: true,
-                items:["Jusqu'à 10 matchs analysés / mois",'Multi-équipes illimité','Gestion effectif complète','Vue globale du club','Multi-utilisateurs (staff)','Dashboard club avancé','Support prioritaire dédié'] },
+              { id:'coach', plan:'Pour les coachs', name:'Coach', price:'39', featured: false,
+                items:["Jusqu'à 4 matchs analysés / mois",'1 équipe','Rapports collectifs & individuels','Suivi progression sur la saison','Export PDF complet','Support inclus'] },
+              { id:'club',  plan:'Pour les clubs',  name:'Club',  price:'129', featured: true,
+                items:["Jusqu'à 12 matchs analysés / mois",'Multi-équipes illimité','Gestion effectif complète','Vue globale du club','Multi-utilisateurs (staff)','Dashboard club avancé','Support prioritaire dédié'] },
             ].map((p, i) => (
               <Reveal key={p.id} delay={i * 0.1}>
                 <div style={{ background: G.white, border: `1.5px solid ${p.featured ? G.gold : G.border}`, borderRadius: 8, padding: '36px 32px', position: 'relative', boxShadow: p.featured ? '0 4px 24px rgba(201,162,39,0.12)' : 'none', transition: 'box-shadow .2s', height: '100%' }}
