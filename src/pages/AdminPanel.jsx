@@ -9,7 +9,7 @@ const API = 'https://backend-pued.onrender.com/api/x-admin'
 const G = {
   gold: '#c9a227', goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.25)',
   mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
-  border: 'rgba(255,255,255,0.06)', muted: 'rgba(245,242,235,0.35)',
+  border: 'rgba(255,255,255,0.06)', muted: 'rgba(15,15,13,0.45)',
   green: '#22c55e', red: '#ef4444', blue: '#3b82f6', orange: '#f59e0b',
 }
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');`
@@ -49,12 +49,12 @@ function PlanBadge({ plan }) {
   return <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', padding: '3px 10px', background: color + '15', color, border: `1px solid ${color}25` }}>{plan}</span>
 }
 
-const tableHeader = { fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted, padding: '10px 14px', textAlign: 'left', borderBottom: `1px solid ${G.border}`, whiteSpace: 'nowrap' }
-const tableCell = { fontFamily: G.mono, fontSize: 11, color: '#f5f2eb', padding: '12px 14px', letterSpacing: '.04em', borderBottom: `1px solid rgba(255,255,255,0.03)` }
+const tableHeader = { fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted, padding: '10px 14px', textAlign: 'left', borderBottom: `1px solid rgba(15,15,13,0.09)`, whiteSpace: 'nowrap' }
+const tableCell = { fontFamily: G.mono, fontSize: 11, color: '#0f0f0d', padding: '12px 14px', letterSpacing: '.04em', borderBottom: `1px solid rgba(255,255,255,0.03)` }
 
 const inputStyle = {
-  width: '100%', background: 'rgba(255,255,255,0.04)', border: `1px solid ${G.border}`,
-  padding: '10px 14px', color: '#f5f2eb', fontFamily: G.mono, fontSize: 12,
+  width: '100%', background: 'rgba(15,15,13,0.04)', border: `1px solid rgba(15,15,13,0.09)`,
+  padding: '10px 14px', color: '#0f0f0d', fontFamily: G.mono, fontSize: 12,
   outline: 'none', boxSizing: 'border-box', transition: 'border-color .15s',
 }
 const labelStyle = { fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted, marginBottom: 8, display: 'block' }
@@ -64,12 +64,12 @@ const labelStyle = { fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', te
 
 function Modal({ title, subtitle, onClose, children }) {
   return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}>
-      <div style={{ background: '#0f0f0d', width: '100%', maxWidth: 480, border: `1px solid ${G.border}`, borderTop: `2px solid ${G.gold}` }}>
-        <div style={{ padding: '20px 24px', borderBottom: `1px solid ${G.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}>
+      <div style={{ background: '#ede8df', width: '100%', maxWidth: 480, border: `1px solid rgba(15,15,13,0.09)`, borderTop: `2px solid ${G.gold}` }}>
+        <div style={{ padding: '20px 24px', borderBottom: `1px solid rgba(15,15,13,0.09)`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
             {subtitle && <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, marginBottom: 4 }}>{subtitle}</div>}
-            <div style={{ fontFamily: G.display, fontSize: 22, textTransform: 'uppercase', color: '#f5f2eb', letterSpacing: '.02em' }}>{title}</div>
+            <div style={{ fontFamily: G.display, fontSize: 22, textTransform: 'uppercase', color: '#0f0f0d', letterSpacing: '.02em' }}>{title}</div>
           </div>
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: G.muted, fontSize: 20, lineHeight: 1 }}>×</button>
         </div>
@@ -97,10 +97,10 @@ function DashboardSection() {
   ]
   return (
     <div>
-      <h2 style={{ fontFamily: G.display, fontSize: 32, textTransform: 'uppercase', letterSpacing: '.03em', color: '#f5f2eb', marginBottom: 24 }}>Dashboard</h2>
+      <h2 style={{ fontFamily: G.display, fontSize: 32, textTransform: 'uppercase', letterSpacing: '.03em', color: '#0f0f0d', marginBottom: 24 }}>Dashboard</h2>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(160px,1fr))', gap: 1, background: G.border }}>
         {stats.map(s => (
-          <div key={s.label} style={{ background: '#0a0a08', padding: '20px 18px', borderTop: `2px solid ${s.color}` }}>
+          <div key={s.label} style={{ background: '#f5f2eb', padding: '20px 18px', borderTop: `2px solid ${s.color}` }}>
             <div style={{ fontFamily: G.display, fontSize: 44, lineHeight: 1, color: s.color, marginBottom: 8 }}>{s.value}</div>
             <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>{s.label}</div>
           </div>
@@ -188,7 +188,7 @@ function CreateUserModal({ onClose, onSuccess }) {
         </label>
 
         <div style={{ display: 'flex', gap: 10, paddingTop: 4 }}>
-          <button onClick={onClose} style={{ flex: 1, padding: '11px', background: 'transparent', border: `1px solid ${G.border}`, fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted, cursor: 'pointer' }}>Annuler</button>
+          <button onClick={onClose} style={{ flex: 1, padding: '11px', background: 'transparent', border: `1px solid rgba(15,15,13,0.09)`, fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted, cursor: 'pointer' }}>Annuler</button>
           <button onClick={handleSubmit} disabled={loading} style={{ flex: 2, padding: '11px', background: loading ? 'rgba(201,162,39,0.4)' : G.gold, border: 'none', fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: '#0f0f0d', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer' }}>
             {loading ? 'Création...' : 'Créer le compte'}
           </button>
@@ -261,7 +261,7 @@ function EditPlanModal({ user, onClose, onSuccess }) {
         )}
 
         <div style={{ display: 'flex', gap: 10, paddingTop: 4 }}>
-          <button onClick={onClose} style={{ flex: 1, padding: '11px', background: 'transparent', border: `1px solid ${G.border}`, fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted, cursor: 'pointer' }}>Annuler</button>
+          <button onClick={onClose} style={{ flex: 1, padding: '11px', background: 'transparent', border: `1px solid rgba(15,15,13,0.09)`, fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted, cursor: 'pointer' }}>Annuler</button>
           <button onClick={handleSubmit} disabled={loading} style={{ flex: 2, padding: '11px', background: loading ? 'rgba(201,162,39,0.4)' : G.gold, border: 'none', fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: '#0f0f0d', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer' }}>
             {loading ? 'Sauvegarde...' : 'Confirmer'}
           </button>
@@ -308,7 +308,7 @@ function UsersSection() {
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
-        <h2 style={{ fontFamily: G.display, fontSize: 32, textTransform: 'uppercase', letterSpacing: '.03em', color: '#f5f2eb', margin: 0 }}>Utilisateurs</h2>
+        <h2 style={{ fontFamily: G.display, fontSize: 32, textTransform: 'uppercase', letterSpacing: '.03em', color: '#0f0f0d', margin: 0 }}>Utilisateurs</h2>
         <button onClick={() => setShowCreate(true)} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px', background: G.gold, border: 'none', fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: '#0f0f0d', fontWeight: 700, cursor: 'pointer' }}>
           + Créer un compte
         </button>
@@ -327,10 +327,10 @@ function UsersSection() {
 
       {loading ? <Loader /> : (
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', background: 'rgba(255,255,255,0.01)', border: `1px solid ${G.border}` }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', background: '#faf8f4', border: `1px solid rgba(15,15,13,0.09)` }}>
             <thead>
-              <tr style={{ background: 'rgba(255,255,255,0.03)' }}>
-                {['Nom', 'Email', 'Plan', 'Club', 'Rôle', 'Inscrit', 'Dernière co.', 'Statut', 'Actions'].map(h => <th key={h} style={tableHeader}>{h}</th>)}
+              <tr style={{ background: 'rgba(15,15,13,0.03)' }}>
+                {['Nom', 'Email', 'Plan', 'Club', 'Rôle', 'Poste', 'Niveau', 'Ville', 'Inscrit', 'Dernière co.', 'Statut', 'Actions'].map(h => <th key={h} style={tableHeader}>{h}</th>)}
               </tr>
             </thead>
             <tbody>
@@ -344,6 +344,9 @@ function UsersSection() {
                   <td style={tableCell}><PlanBadge plan={u.plan} /></td>
                   <td style={{ ...tableCell, color: G.muted, fontSize: 10 }}>{u.club_name || '—'}</td>
                   <td style={tableCell}>{u.role}</td>
+                  <td style={{ ...tableCell, color: 'rgba(15,15,13,0.6)', fontSize: 10 }}>{u.profile_role || '—'}</td>
+                  <td style={{ ...tableCell, color: 'rgba(15,15,13,0.6)', fontSize: 10 }}>{u.profile_level || '—'}</td>
+                  <td style={{ ...tableCell, color: 'rgba(15,15,13,0.6)', fontSize: 10 }}>{u.profile_city || '—'}</td>
                   <td style={tableCell}>{formatDate(u.created_at)}</td>
                   <td style={tableCell}>{u.last_login ? formatDate(u.last_login) : '—'}</td>
                   <td style={tableCell}><StatusBadge active={u.is_active} /></td>
@@ -384,11 +387,11 @@ function PaymentsSection() {
   if (loading) return <Loader />
   return (
     <div>
-      <h2 style={{ fontFamily: G.display, fontSize: 32, textTransform: 'uppercase', letterSpacing: '.03em', color: '#f5f2eb', marginBottom: 20 }}>Paiements</h2>
+      <h2 style={{ fontFamily: G.display, fontSize: 32, textTransform: 'uppercase', letterSpacing: '.03em', color: '#0f0f0d', marginBottom: 20 }}>Paiements</h2>
       <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', background: 'rgba(255,255,255,0.01)', border: `1px solid ${G.border}` }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', background: '#faf8f4', border: `1px solid rgba(15,15,13,0.09)` }}>
           <thead>
-            <tr style={{ background: 'rgba(255,255,255,0.03)' }}>
+            <tr style={{ background: 'rgba(15,15,13,0.03)' }}>
               {['Nom', 'Email', 'Plan', 'Stripe Customer', 'Subscription ID', 'Depuis'].map(h => <th key={h} style={tableHeader}>{h}</th>)}
             </tr>
           </thead>
@@ -420,7 +423,7 @@ function LoginsSection() {
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
-        <h2 style={{ fontFamily: G.display, fontSize: 32, textTransform: 'uppercase', letterSpacing: '.03em', color: '#f5f2eb', margin: 0 }}>Connexions</h2>
+        <h2 style={{ fontFamily: G.display, fontSize: 32, textTransform: 'uppercase', letterSpacing: '.03em', color: '#0f0f0d', margin: 0 }}>Connexions</h2>
         <select value={days} onChange={e => setDays(e.target.value)} style={{ ...inputStyle, width: 140, cursor: 'pointer' }}>
           <option value={7}>7 jours</option>
           <option value={30}>30 jours</option>
@@ -428,9 +431,9 @@ function LoginsSection() {
         </select>
       </div>
       {loading ? <Loader /> : (
-        <table style={{ width: '100%', borderCollapse: 'collapse', background: 'rgba(255,255,255,0.01)', border: `1px solid ${G.border}` }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', background: '#faf8f4', border: `1px solid rgba(15,15,13,0.09)` }}>
           <thead>
-            <tr style={{ background: 'rgba(255,255,255,0.03)' }}>
+            <tr style={{ background: 'rgba(15,15,13,0.03)' }}>
               {['Nom', 'Email', 'Plan', 'Dernière connexion', 'Statut'].map(h => <th key={h} style={tableHeader}>{h}</th>)}
             </tr>
           </thead>
@@ -474,17 +477,17 @@ export default function AdminPanel() {
       .catch(() => setAuthorized(false))
   }, [])
 
-  if (authorized === null) return <div style={{ minHeight: '100vh', background: '#0a0a08', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Loader /></div>
+  if (authorized === null) return <div style={{ minHeight: '100vh', background: '#f5f2eb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Loader /></div>
   if (authorized === false) { window.location.href = '/'; return null }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0a0a08', color: '#f5f2eb', display: 'flex', fontFamily: G.mono }}>
+    <div style={{ minHeight: '100vh', background: '#f5f2eb', color: '#0f0f0d', display: 'flex', fontFamily: G.mono }}>
       <style>{`${FONTS} * { box-sizing: border-box; } select option { background: #0a0a08; } ::-webkit-scrollbar { width: 3px; } ::-webkit-scrollbar-thumb { background: rgba(201,162,39,0.2); }`}</style>
 
       {/* Sidebar */}
-      <aside style={{ width: 200, background: '#0f0f0d', borderRight: `1px solid ${G.border}`, padding: '20px 12px', display: 'flex', flexDirection: 'column', gap: 4, flexShrink: 0 }}>
-        <div style={{ padding: '0 12px 20px', borderBottom: `1px solid ${G.border}`, marginBottom: 8 }}>
-          <div style={{ fontFamily: G.display, fontSize: 16, letterSpacing: '.06em', color: '#fff' }}>
+      <aside style={{ width: 200, background: '#ede8df', borderRight: `1px solid rgba(15,15,13,0.12)`, padding: '20px 12px', display: 'flex', flexDirection: 'column', gap: 4, flexShrink: 0 }}>
+        <div style={{ padding: '0 12px 20px', borderBottom: `1px solid rgba(15,15,13,0.09)`, marginBottom: 8 }}>
+          <div style={{ fontFamily: G.display, fontSize: 16, letterSpacing: '.06em', color: '#0f0f0d' }}>
             INSIGHT<span style={{ color: G.gold }}>BALL</span>
           </div>
           <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted, marginTop: 4 }}>Admin</div>
@@ -494,7 +497,7 @@ export default function AdminPanel() {
             width: '100%', textAlign: 'left', padding: '10px 12px',
             background: active === s.id ? G.goldBg : 'transparent',
             borderLeft: `2px solid ${active === s.id ? G.gold : 'transparent'}`,
-            border: 'none', color: active === s.id ? G.gold : G.muted,
+            border: 'none', color: active === s.id ? G.gold : 'rgba(15,15,13,0.5)',
             fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase',
             cursor: 'pointer', transition: 'all .15s',
           }}>
