@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Trash2, AlertTriangle, X, User, Mail, Shield } from 'lucide-react'
+import { Trash2, AlertTriangle, X, User, Mail, Shield, Lock, Eye, EyeOff } from 'lucide-react'
 import DashboardLayout from '../components/DashboardLayout'
 import { useAuth } from '../context/AuthContext'
 import SubscriptionManagement from '../components/SubscriptionManagement'
@@ -27,6 +27,33 @@ function Section({ title, accent, children }) {
 export default function CoachSettings() {
   const { user } = useAuth()
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [showPasswordModal, setShowPasswordModal] = useState(false)
+  const [pwForm, setPwForm] = useState({ current: '', next: '', confirm: '' })
+  const [pwLoading, setPwLoading] = useState(false)
+  const [pwError, setPwError] = useState('')
+  const [pwSuccess, setPwSuccess] = useState(false)
+  const [showPw, setShowPw] = useState(false)
+
+  const handleChangePassword = async () => {
+    setPwError('')
+    if (!pwForm.current || !pwForm.next) return setPwError('Tous les champs sont requis')
+    if (pwForm.next.length < 8) return setPwError('8 caractères minimum')
+    if (pwForm.next !== pwForm.confirm) return setPwError('Les mots de passe ne correspondent pas')
+    setPwLoading(true)
+    try {
+      const token = localStorage.getItem('insightball_token')
+      const res = await fetch('https://backend-pued.onrender.com/api/account/change-password', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ current_password: pwForm.current, new_password: pwForm.next })
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.detail || 'Erreur')
+      setPwSuccess(true)
+      setTimeout(() => { setShowPasswordModal(false); setPwSuccess(false); setPwForm({ current: '', next: '', confirm: '' }) }, 1500)
+    } catch (e) { setPwError(e.message) }
+    finally { setPwLoading(false) }
+  }
   const [deleteConfirm, setDeleteConfirm] = useState('')
   const [deleteLoading, setDeleteLoading] = useState(false)
 
@@ -92,7 +119,17 @@ export default function CoachSettings() {
         </div>
 
         {/* Supprimer compte — discret */}
-        <div style={{ padding: '16px 28px', display: 'flex', justifyContent: 'flex-end', background: G.bg2, border: `1px solid ${G.border}` }}>
+        <div style={{ padding: '16px 28px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 24, background: G.bg2, border: `1px solid ${G.border}` }}>
+          <button onClick={() => setShowPasswordModal(true)} style={{
+            background: 'none', border: 'none', cursor: 'pointer',
+            fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase',
+            color: 'rgba(201,162,39,0.6)', display: 'flex', alignItems: 'center', gap: 6, padding: 0,
+            transition: 'color .15s',
+          }}
+            onMouseEnter={e => e.currentTarget.style.color = G.gold}
+            onMouseLeave={e => e.currentTarget.style.color = 'rgba(201,162,39,0.6)'}>
+            <Lock size={10} /> Changer le mot de passe
+          </button>
           <button onClick={() => setShowDeleteModal(true)} style={{
             background: 'none', border: 'none', cursor: 'pointer',
             fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase',
@@ -105,6 +142,57 @@ export default function CoachSettings() {
           </button>
         </div>
       </div>
+
+      {/* Modale mot de passe */}
+      {showPasswordModal && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}>
+          <div style={{ background: G.bg2, width: '100%', maxWidth: 420, border: `1px solid ${G.goldBdr}`, borderTop: `2px solid ${G.gold}` }}>
+            <div style={{ padding: '20px 24px', borderBottom: `1px solid ${G.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <Lock size={14} color={G.gold} />
+                <span style={{ fontFamily: G.display, fontSize: 18, textTransform: 'uppercase', color: G.text }}>Mot de passe</span>
+              </div>
+              <button onClick={() => { setShowPasswordModal(false); setPwError(''); setPwForm({ current: '', next: '', confirm: '' }) }} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+                <X size={16} color={G.muted} />
+              </button>
+            </div>
+            <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {pwError && <div style={{ padding: '10px 14px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', fontFamily: G.mono, fontSize: 11, color: '#ef4444' }}>{pwError}</div>}
+              {pwSuccess && <div style={{ padding: '10px 14px', background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', fontFamily: G.mono, fontSize: 11, color: '#22c55e' }}>Mot de passe modifié ✓</div>}
+              {[
+                { key: 'current', label: 'Mot de passe actuel' },
+                { key: 'next', label: 'Nouveau mot de passe' },
+                { key: 'confirm', label: 'Confirmer le nouveau' },
+              ].map(({ key, label }) => (
+                <div key={key}>
+                  <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted, marginBottom: 8 }}>{label}</div>
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      type={showPw ? 'text' : 'password'}
+                      value={pwForm[key]}
+                      onChange={e => setPwForm(p => ({ ...p, [key]: e.target.value }))}
+                      style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: `1px solid ${G.border}`, padding: '11px 40px 11px 14px', color: G.text, fontFamily: G.mono, fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
+                      onFocus={e => e.target.style.borderColor = G.goldBdr}
+                      onBlur={e => e.target.style.borderColor = G.border}
+                    />
+                    {key === 'current' && (
+                      <button onClick={() => setShowPw(p => !p)} style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: G.muted, padding: 0 }}>
+                        {showPw ? <EyeOff size={13} /> : <Eye size={13} />}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+              <div style={{ display: 'flex', gap: 10, paddingTop: 4 }}>
+                <button onClick={() => { setShowPasswordModal(false); setPwError(''); setPwForm({ current: '', next: '', confirm: '' }) }} style={{ flex: 1, padding: '11px', background: 'transparent', border: `1px solid ${G.border}`, fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, cursor: 'pointer' }}>Annuler</button>
+                <button onClick={handleChangePassword} disabled={pwLoading} style={{ flex: 2, padding: '11px', background: pwLoading ? 'rgba(201,162,39,0.4)' : G.gold, border: 'none', fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.bg, fontWeight: 700, cursor: pwLoading ? 'not-allowed' : 'pointer' }}>
+                  {pwLoading ? 'Modification...' : 'Confirmer'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modale suppression */}
       {showDeleteModal && (
