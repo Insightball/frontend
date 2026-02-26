@@ -1,0 +1,152 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Lock, Zap, Users, ArrowRight } from 'lucide-react'
+import api from '../services/api'
+
+const G = {
+  bg: '#0a0908', gold: '#c9a227', goldD: '#a8861f',
+  goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.25)',
+  mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
+  text: '#f5f2eb', muted: 'rgba(245,242,235,0.45)', border: 'rgba(255,255,255,0.07)',
+}
+
+export default function TrialExpired() {
+  const navigate = useNavigate()
+  const [loading, setLoading] = useState(null)
+  const [error, setError] = useState('')
+
+  const handleChoosePlan = async (plan) => {
+    setLoading(plan); setError('')
+    try {
+      const r = await api.post('/subscription/create-checkout-session', {
+        plan: plan.toLowerCase(),
+        success_url: `${window.location.origin}/dashboard?subscribed=true`,
+        cancel_url: `${window.location.origin}/dashboard`,
+      })
+      window.location.href = r.data.url
+    } catch (e) {
+      setError('Erreur lors de la redirection vers le paiement')
+      setLoading(null)
+    }
+  }
+
+  const plans = [
+    {
+      id: 'COACH', icon: Zap, color: G.gold,
+      earlyPrice: '29', classicPrice: '39',
+      quota: '4 matchs / mois',
+      features: ['Rapports PDF complets', 'Statistiques joueurs', 'Heatmaps tactiques', 'Support email'],
+    },
+    {
+      id: 'CLUB', icon: Users, color: '#3b82f6',
+      earlyPrice: '99', classicPrice: '129',
+      quota: '12 matchs / mois',
+      features: ['Tout le plan Coach', 'Multi-coachs', 'Gestion équipe complète', 'Support prioritaire'],
+      popular: true,
+    },
+  ]
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 1000,
+      background: 'rgba(10,9,8,0.97)',
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+      padding: '24px',
+    }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');
+        * { box-sizing: border-box; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+      `}</style>
+
+      {/* Icône lock */}
+      <div style={{
+        width: 56, height: 56, background: G.goldBg, border: `1px solid ${G.goldBdr}`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 24,
+      }}>
+        <Lock size={22} color={G.gold} />
+      </div>
+
+      {/* Titre */}
+      <div style={{ textAlign: 'center', marginBottom: 40 }}>
+        <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>
+          Période d'essai terminée
+        </div>
+        <h1 style={{ fontFamily: G.display, fontSize: 'clamp(36px,4vw,52px)', textTransform: 'uppercase', lineHeight: .88, color: G.text, margin: '0 0 16px' }}>
+          Continuez avec<br /><span style={{ color: G.gold }}>INSIGHTBALL.</span>
+        </h1>
+        <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, maxWidth: 420, margin: '0 auto', lineHeight: 1.6 }}>
+          Votre essai de 7 jours est terminé. Choisissez votre plan pour accéder à nouveau à votre dashboard et à toutes vos analyses.
+        </p>
+      </div>
+
+      {error && (
+        <div style={{ marginBottom: 16, padding: '10px 16px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', fontFamily: G.mono, fontSize: 11, color: '#ef4444' }}>
+          {error}
+        </div>
+      )}
+
+      {/* Plans */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 1, background: G.border, width: '100%', maxWidth: 600, marginBottom: 24 }}>
+        {plans.map(plan => {
+          const Icon = plan.icon
+          return (
+            <div key={plan.id} style={{
+              background: plan.popular ? 'rgba(201,162,39,0.04)' : 'rgba(255,255,255,0.02)',
+              borderTop: `2px solid ${plan.color}`,
+              padding: '28px 24px',
+              display: 'flex', flexDirection: 'column', gap: 12,
+            }}>
+              {plan.popular && (
+                <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, border: `1px solid ${G.goldBdr}`, padding: '3px 10px', alignSelf: 'flex-start', background: 'rgba(10,9,8,0.8)' }}>
+                  ⚡ Recommandé
+                </div>
+              )}
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <Icon size={14} color={plan.color} />
+                  <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: plan.color }}>{plan.id}</span>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontFamily: G.display, fontSize: 36, color: G.text, lineHeight: 1 }}>
+                    {plan.earlyPrice}<span style={{ fontFamily: G.mono, fontSize: 11, color: G.muted }}>€</span>
+                  </div>
+                  <div style={{ fontFamily: G.mono, fontSize: 8, color: G.muted }}>early bird · {plan.quota}</div>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                {plan.features.map(f => (
+                  <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div style={{ width: 4, height: 4, background: plan.color, flexShrink: 0 }} />
+                    <span style={{ fontFamily: G.mono, fontSize: 9, color: G.muted }}>{f}</span>
+                  </div>
+                ))}
+              </div>
+
+              <button onClick={() => handleChoosePlan(plan.id)} disabled={!!loading} style={{
+                marginTop: 'auto', padding: '12px',
+                background: plan.color === G.gold ? G.gold : 'rgba(59,130,246,0.12)',
+                border: plan.color !== G.gold ? '1px solid rgba(59,130,246,0.35)' : 'none',
+                color: plan.color === G.gold ? '#0f0f0d' : '#3b82f6',
+                fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase',
+                fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+              }}>
+                {loading === plan.id
+                  ? <span style={{ width: 12, height: 12, border: '2px solid currentColor', borderTopColor: 'transparent', borderRadius: '50%', display: 'inline-block', animation: 'spin .6s linear infinite' }} />
+                  : <>Choisir {plan.id} <ArrowRight size={12} /></>
+                }
+              </button>
+            </div>
+          )
+        })}
+      </div>
+
+      <p style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.2)', letterSpacing: '.08em', textAlign: 'center' }}>
+        Sans engagement · Résiliable à tout moment · Paiement sécurisé Stripe
+      </p>
+    </div>
+  )
+}

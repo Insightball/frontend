@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Home, Film, Users, Settings, LogOut, BarChart3, Trophy, ChevronRight, Menu, X, UserCog } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import TrialBanner from '../components/TrialBanner'
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');`
 
@@ -290,6 +291,7 @@ function DashboardLayout({ children }) {
         background: G.bg,
         padding: isMobile ? '72px 16px 80px' : '36px 40px',
       }}>
+        <TrialBanner />
         {children}
       </main>
     </div>
