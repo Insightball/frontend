@@ -14,10 +14,14 @@ const G = {
 }
 
 const STEPS = [
-  { id: 1, code: '01', label: 'Club' },
-  { id: 2, code: '02', label: 'Effectif' },
-  { id: 3, code: '03', label: 'Plan' },
+  { id: 1, code: '01', label: 'Profil' },
+  { id: 2, code: '02', label: 'Club' },
+  { id: 3, code: '03', label: 'Effectif' },
+  { id: 4, code: '04', label: 'Plan' },
 ]
+
+const ROLES = ['Coach', 'Entraîneur adjoint', 'Président', 'Analyste', 'Directeur sportif', 'Autre']
+const LEVELS = ['National', 'Régional 1', 'Régional 2', 'Régional 3', 'Départemental 1', 'Départemental 2', 'District', 'Jeunes / Académie']
 
 const POSITIONS = ['Gardien', 'Défenseur', 'Milieu', 'Attaquant']
 
@@ -28,6 +32,9 @@ export default function Onboarding() {
   const [step, setStep] = useState(1)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+
+  // Step 0 — Profil
+  const [profileData, setProfileData] = useState({ role: '', level: '', phone: '', city: '' })
 
   // Step 1 — Club
   const [clubData, setClubData] = useState({ name: user?.club_name || '', primary_color: '#c9a227', secondary_color: '#0f0f0d' })
@@ -48,6 +55,23 @@ export default function Onboarding() {
   }
 
   const handleRemovePlayer = (id) => setPlayers(prev => prev.filter(p => p.id !== id))
+
+  const handleSaveProfile = async () => {
+    if (!profileData.role || !profileData.level) { setError('Poste et niveau requis'); return }
+    setSaving(true); setError('')
+    try {
+      await api.patch('/account/profile', {
+        role: profileData.role,
+        level: profileData.level,
+        phone: profileData.phone,
+        city: profileData.city,
+      })
+    } catch (e) {
+      // Non bloquant si l'endpoint n'existe pas encore
+      console.warn('Profile save failed:', e)
+    } finally { setSaving(false) }
+    setStep(2)
+  }
 
   const handleSaveClub = async () => {
     if (!clubData.name.trim()) { setError('Nom du club requis'); return }
@@ -70,7 +94,7 @@ export default function Onboarding() {
           })
         } else throw e
       }
-      setStep(2)
+      setStep(3)
     } catch (e) {
       setError('Erreur lors de la sauvegarde')
     } finally { setSaving(false) }
@@ -82,7 +106,7 @@ export default function Onboarding() {
       for (const p of players) {
         await api.post('/players/', { name: p.name, number: parseInt(p.number) || null, position: p.position })
       }
-      if (hasSubscription) { navigate('/dashboard') } else { setStep(3) }
+      if (hasSubscription) { navigate('/dashboard') } else { setStep(4) }
     } catch (e) {
       setError('Erreur lors de l\'ajout des joueurs')
     } finally { setSaving(false) }
@@ -126,7 +150,7 @@ export default function Onboarding() {
 
       {/* Progress bar */}
       <div style={{ height: 2, background: G.border }}>
-        <div style={{ height: '100%', background: G.gold, width: `${(step / 3) * 100}%`, transition: 'width .4s ease' }} />
+        <div style={{ height: '100%', background: G.gold, width: `${(step / 4) * 100}%`, transition: 'width .4s ease' }} />
       </div>
 
       {/* Steps indicator */}
@@ -155,8 +179,88 @@ export default function Onboarding() {
       {/* Content */}
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 24px' }}>
 
-        {/* ── STEP 1 — CLUB ── */}
+        {/* ── STEP 1 — PROFIL ── */}
         {step === 1 && (
+          <div className="step-card" style={{ width: '100%', maxWidth: 480 }}>
+            <div style={{ marginBottom: 36, textAlign: 'center' }}>
+              <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>Étape 1 sur 4</div>
+              <h1 style={{ fontFamily: G.display, fontSize: 'clamp(40px,5vw,56px)', textTransform: 'uppercase', lineHeight: .88, color: G.text, margin: 0 }}>
+                Votre<br /><span style={{ color: G.gold }}>profil.</span>
+              </h1>
+              <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, marginTop: 14, letterSpacing: '.04em' }}>
+                Dites-nous qui vous êtes
+              </p>
+            </div>
+
+            {error && <div style={{ marginBottom: 16, padding: '10px 14px', background: 'rgba(239,68,68,0.08)', borderLeft: `2px solid ${G.red}`, fontFamily: G.mono, fontSize: 11, color: G.red }}>{error}</div>}
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <div>
+                <label style={{ display: 'block', fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.4)', marginBottom: 8 }}>Votre rôle *</label>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {ROLES.map(r => (
+                    <button key={r} onClick={() => setProfileData(p => ({ ...p, role: r }))} style={{
+                      padding: '7px 14px', fontFamily: G.mono, fontSize: 9, letterSpacing: '.08em',
+                      background: profileData.role === r ? G.goldBg : 'transparent',
+                      border: `1px solid ${profileData.role === r ? G.goldBdr : 'rgba(255,255,255,0.1)'}`,
+                      color: profileData.role === r ? G.gold : G.muted, cursor: 'pointer',
+                    }}>{r}</button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.4)', marginBottom: 8 }}>Niveau de compétition *</label>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {LEVELS.map(l => (
+                    <button key={l} onClick={() => setProfileData(p => ({ ...p, level: l }))} style={{
+                      padding: '7px 14px', fontFamily: G.mono, fontSize: 9, letterSpacing: '.08em',
+                      background: profileData.level === l ? G.goldBg : 'transparent',
+                      border: `1px solid ${profileData.level === l ? G.goldBdr : 'rgba(255,255,255,0.1)'}`,
+                      color: profileData.level === l ? G.gold : G.muted, cursor: 'pointer',
+                    }}>{l}</button>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div>
+                  <label style={{ display: 'block', fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.4)', marginBottom: 8 }}>Téléphone</label>
+                  <input value={profileData.phone} onChange={e => setProfileData(p => ({ ...p, phone: e.target.value }))}
+                    placeholder="+33 6 00 00 00 00" type="tel"
+                    style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: `1px solid ${G.border}`, padding: '12px 14px', color: G.text, fontFamily: G.mono, fontSize: 12, outline: 'none', boxSizing: 'border-box' }}
+                    onFocus={e => e.target.style.borderColor = G.goldBdr}
+                    onBlur={e => e.target.style.borderColor = G.border} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.4)', marginBottom: 8 }}>Ville</label>
+                  <input value={profileData.city} onChange={e => setProfileData(p => ({ ...p, city: e.target.value }))}
+                    placeholder="Paris, Lyon..."
+                    style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: `1px solid ${G.border}`, padding: '12px 14px', color: G.text, fontFamily: G.mono, fontSize: 12, outline: 'none', boxSizing: 'border-box' }}
+                    onFocus={e => e.target.style.borderColor = G.goldBdr}
+                    onBlur={e => e.target.style.borderColor = G.border} />
+                </div>
+              </div>
+            </div>
+
+            <button onClick={handleSaveProfile} disabled={saving} style={{
+              width: '100%', marginTop: 28, padding: '16px',
+              background: saving ? 'rgba(201,162,39,0.4)' : G.gold,
+              color: G.bg, fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em',
+              textTransform: 'uppercase', fontWeight: 700, border: 'none',
+              cursor: saving ? 'not-allowed' : 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+            }}>
+              {saving
+                ? <span style={{ width: 12, height: 12, border: `2px solid ${G.bg}`, borderTopColor: 'transparent', borderRadius: '50%', display: 'inline-block', animation: 'spin .6s linear infinite' }} />
+                : <>Continuer <ArrowRight size={14} /></>
+              }
+            </button>
+          </div>
+        )}
+
+        {/* ── STEP 2 — CLUB ── */}
+        {step === 2 && (
           <div className="step-card" style={{ width: '100%', maxWidth: 480 }}>
             <div style={{ marginBottom: 36, textAlign: 'center' }}>
               <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>Étape 1 sur 3</div>
@@ -220,8 +324,8 @@ export default function Onboarding() {
           </div>
         )}
 
-        {/* ── STEP 2 — EFFECTIF ── */}
-        {step === 2 && (
+        {/* ── STEP 3 — EFFECTIF ── */}
+        {step === 3 && (
           <div className="step-card" style={{ width: '100%', maxWidth: 560 }}>
             <div style={{ marginBottom: 36, textAlign: 'center' }}>
               <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>Étape 2 sur 3</div>
@@ -323,8 +427,8 @@ export default function Onboarding() {
           </div>
         )}
 
-        {/* ── STEP 3 — PLAN ── */}
-        {step === 3 && (
+        {/* ── STEP 4 — PLAN ── */}
+        {step === 4 && (
           <div className="step-card" style={{ width: '100%', maxWidth: 680 }}>
             <div style={{ marginBottom: 36, textAlign: 'center' }}>
               <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>Étape 3 sur 3</div>
