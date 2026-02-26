@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Upload, Calendar, Users, Video, ChevronRight, ChevronLeft, Check, X } from 'lucide-react'
+import { Upload, Calendar, Users, Video, ChevronRight, ChevronLeft, Check, X, Lock, CreditCard } from 'lucide-react'
 import DashboardLayout from '../components/DashboardLayout'
 import matchService from '../services/matchService'
+import api from '../services/api'
 import playerService from '../services/playerService'
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');`
@@ -40,6 +41,8 @@ function Field({ label, children }) {
 function UploadMatch() {
   const navigate = useNavigate()
   const [step, setStep] = useState(1)
+  const [trialStatus, setTrialStatus] = useState(null)
+  const [trialLoading, setTrialLoading] = useState(true)
   const [players, setPlayers] = useState([])
   const [uploading, setUploading] = useState(false)
   const [dragOver, setDragOver] = useState(false)
@@ -53,6 +56,12 @@ function UploadMatch() {
   const [videoFile, setVideoFile] = useState(null)
 
   useEffect(() => { loadPlayers() }, [])
+  useEffect(() => {
+    api.get('/subscription/trial-status')
+      .then(r => setTrialStatus(r.data))
+      .catch(() => setTrialStatus({ access: 'trial' }))
+      .finally(() => setTrialLoading(false))
+  }, [])
   const loadPlayers = async () => {
     try {
       const data = await playerService.getPlayers()
@@ -119,6 +128,10 @@ function UploadMatch() {
     if (!videoFile) { alert('Ajoutez une vidéo'); return }
     setUploading(true)
     try {
+      // Marquer l'analyse trial comme utilisée
+      if (trialStatus?.access === 'trial') {
+        await api.post('/subscription/use-trial-match')
+      }
       await matchService.uploadMatch({ matchData, lineup, videoFile })
       navigate('/dashboard/matches')
     } catch (error) { console.error('Error:', error); alert('Erreur lors de l\'upload') }
@@ -131,6 +144,42 @@ function UploadMatch() {
     { n: '03', label: 'Remplaçants' },
     { n: '04', label: 'Vidéo' },
   ]
+
+
+  // Bloquer si trial expiré OU trial actif sans analyse utilisée
+  const canUpload = trialStatus?.access === 'full' ||
+    (trialStatus?.access === 'trial' && !trialStatus?.match_used)
+
+  if (!trialLoading && !canUpload) {
+    return (
+      <DashboardLayout>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', textAlign: 'center', gap: 24 }}>
+          <div style={{ width: 56, height: 56, background: 'rgba(201,162,39,0.07)', border: '1px solid rgba(201,162,39,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {trialStatus?.access === 'expired' ? <Lock size={22} color="#c9a227" /> : <CreditCard size={22} color="#c9a227" />}
+          </div>
+          <div>
+            <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: '#c9a227', marginBottom: 12 }}>
+              {trialStatus?.access === 'expired' ? 'Essai terminé' : 'Analyse utilisée'}
+            </div>
+            <h2 style={{ fontFamily: G.display, fontSize: 32, textTransform: 'uppercase', color: '#0f0f0d', marginBottom: 12 }}>
+              {trialStatus?.access === 'expired' ? 'Abonnez-vous pour analyser' : 'Analyse gratuite utilisée'}
+            </h2>
+            <p style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(15,15,13,0.45)', maxWidth: 400, lineHeight: 1.6 }}>
+              {trialStatus?.access === 'expired'
+                ? "Votre période d'essai est terminée. Choisissez un plan pour continuer à uploader et analyser vos matchs."
+                : "Vous avez utilisé votre analyse gratuite. Abonnez-vous pour accéder à l'upload illimité."
+              }
+            </p>
+          </div>
+          <button
+            onClick={() => navigate('/dashboard/settings')}
+            style={{ padding: '12px 28px', background: '#c9a227', color: '#0f0f0d', fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
+            Voir les plans →
+          </button>
+        </div>
+      </DashboardLayout>
+    )
+  }
 
   return (
     <DashboardLayout>
