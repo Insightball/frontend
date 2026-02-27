@@ -741,8 +741,8 @@ export default function LandingPage() {
       </div>
 
       {/* ══ PRICING ════════════════════════════════════ */}
-      <div id="pricing" style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <div className="wrap-inner" style={{ padding: '96px 48px' }}>
+      <div id="pricing" style={{ background: G.off }}>
+        <div className="wrap-inner" style={{ maxWidth: 1200, margin: '0 auto', padding: '96px 48px' }}>
           <Reveal>
             <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 10 }}>
               <span style={{ width: 18, height: 1.5, background: G.gold }}/>Tarifs
@@ -750,55 +750,111 @@ export default function LandingPage() {
             <h2 className="sec-h2" style={{ fontFamily: G.display, fontSize: 'clamp(34px,4vw,54px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.ink, marginBottom: 16 }}>
               Simple et<br/><span style={{ color: G.gold }}>sans surprise.</span>
             </h2>
-            {/* Badge Offre limitée */}
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: G.goldL, border: `1px solid ${G.goldLx}`, borderRadius: 4, padding: '6px 14px', marginBottom: 20 }}>
               <span style={{ width: 7, height: 7, background: G.gold, borderRadius: '50%', flexShrink: 0, boxShadow: `0 0 0 3px ${G.goldL}` }}/>
-              <span style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: G.gold }}>Offre limitée</span>
+              <span style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: G.gold }}>Accès anticipé — offre limitée</span>
             </div>
-            <p style={{ fontSize: 17, color: G.muted, lineHeight: 1.65, maxWidth: 440, marginBottom: 56 }}>
-              Deux formules claires.
+            <p style={{ fontSize: 17, color: G.muted, lineHeight: 1.65, maxWidth: 480, marginBottom: 56 }}>
+              Deux formules. Une logique : vous payez pour ce que vous utilisez vraiment.
             </p>
           </Reveal>
 
-          <div className="price-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, maxWidth: 860 }}>
-            {[
-              { id:'coach', plan:'Pour les coachs', name:'Coach', price:'39', featured: false,
-                items:["Jusqu'à 4 matchs analysés / mois",'1 équipe','Rapports collectifs & individuels','Suivi progression sur la saison','Export PDF complet','Support inclus'] },
-              { id:'club',  plan:'Pour les clubs',  name:'Club',  price:'129', featured: true,
-                items:["Jusqu'à 12 matchs analysés / mois",'Multi-équipes illimité','Gestion effectif complète','Vue globale du club','Multi-utilisateurs (staff)','Dashboard club avancé','Support prioritaire dédié'] },
-            ].map((p, i) => (
-              <Reveal key={p.id} delay={i * 0.1}>
-                <div style={{ background: G.white, border: `1.5px solid ${p.featured ? G.gold : G.border}`, borderRadius: 8, padding: '36px 32px', position: 'relative', boxShadow: p.featured ? '0 4px 24px rgba(201,162,39,0.12)' : 'none', transition: 'box-shadow .2s', height: '100%' }}
-                  onMouseEnter={e => !p.featured && (e.currentTarget.style.boxShadow = '0 8px 40px rgba(0,0,0,0.10)')}
-                  onMouseLeave={e => !p.featured && (e.currentTarget.style.boxShadow = 'none')}>
-                  {p.featured && (
-                    <div style={{ position: 'absolute', top: -1, right: 24, background: G.gold, color: G.white, fontFamily: G.mono, fontSize: 9, fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', padding: '4px 12px', borderRadius: '0 0 4px 4px' }}>⚡ Recommandé</div>
-                  )}
-                  <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, marginBottom: 6 }}>{p.plan}</div>
-                  <div style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', color: G.ink, marginBottom: 20 }}>{p.name}</div>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 28 }}>
-                    <span style={{ fontFamily: G.display, fontSize: 68, fontWeight: 800, lineHeight: 1, color: G.ink }}>{p.price}</span>
-                    <span style={{ fontSize: 15, color: G.muted }}>€ / mois</span>
-                  </div>
-                  <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 32 }}>
-                    {p.items.map(item => (
-                      <li key={item} style={{ fontSize: 14, color: G.ink2, display: 'flex', alignItems: 'flex-start', gap: 9, lineHeight: 1.5 }}>
-                        <span style={{ color: G.gold, fontWeight: 700, flexShrink: 0 }}>✓</span>{item}
-                      </li>
-                    ))}
-                  </ul>
-                  <a href="#waitlist" style={{ display: 'block', width: '100%', padding: 13, fontFamily: G.display, fontSize: 15, fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase', textAlign: 'center', textDecoration: 'none', borderRadius: 4, transition: 'all .15s', background: p.featured ? G.gold : 'transparent', color: p.featured ? G.white : G.ink2, border: p.featured ? 'none' : `1.5px solid ${G.border2}` }}
-                    onMouseEnter={e => { e.currentTarget.style.background = p.featured ? G.goldD : G.ink; e.currentTarget.style.color = G.white; e.currentTarget.style.borderColor = p.featured ? G.goldD : G.ink }}
-                    onMouseLeave={e => { e.currentTarget.style.background = p.featured ? G.gold : 'transparent'; e.currentTarget.style.color = p.featured ? G.white : G.ink2; e.currentTarget.style.borderColor = p.featured ? G.gold : G.border2 }}>
-                    Demander l'accès →
-                  </a>
+          <div className="price-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, maxWidth: 940, alignItems: 'start' }}>
+
+            {/* ── COACH ── */}
+            <Reveal delay={0}>
+              <div style={{ background: G.white, border: `1.5px solid ${G.border}`, borderRadius: 8, padding: '36px 32px', transition: 'box-shadow .2s' }}
+                onMouseEnter={e => e.currentTarget.style.boxShadow = '0 8px 40px rgba(0,0,0,0.08)'}
+                onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>
+                <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted, marginBottom: 6 }}>Pour les coachs</div>
+                <div style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', color: G.ink, marginBottom: 4 }}>Coach</div>
+                <div style={{ fontSize: 14, color: G.muted, marginBottom: 20, lineHeight: 1.55 }}>
+                  Analysez vos matchs en quelques minutes.<br/>Arrêtez de perdre des heures en vidéo.
                 </div>
-              </Reveal>
-            ))}
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 28 }}>
+                  <span style={{ fontFamily: G.display, fontSize: 68, fontWeight: 800, lineHeight: 1, color: G.ink }}>39</span>
+                  <span style={{ fontSize: 15, color: G.muted }}>€ / mois</span>
+                </div>
+                <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 32 }}>
+                  {["4 matchs analysés / mois","1 équipe","Stats collectives & individuelles","Heatmaps & rapport PDF export","Suivi progression sur la saison","Support inclus"].map(item => (
+                    <li key={item} style={{ fontSize: 14, color: G.ink2, display: 'flex', alignItems: 'flex-start', gap: 9, lineHeight: 1.5 }}>
+                      <span style={{ color: G.gold, fontWeight: 700, flexShrink: 0 }}>✓</span>{item}
+                    </li>
+                  ))}
+                </ul>
+                <a href="#waitlist" style={{ display: 'block', width: '100%', padding: 13, fontFamily: G.display, fontSize: 15, fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase', textAlign: 'center', textDecoration: 'none', borderRadius: 4, transition: 'all .15s', background: 'transparent', color: G.ink2, border: `1.5px solid ${G.border2}`, boxSizing: 'border-box' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = G.ink; e.currentTarget.style.color = G.white; e.currentTarget.style.borderColor = G.ink }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = G.ink2; e.currentTarget.style.borderColor = G.border2 }}>
+                  Demander l'accès →
+                </a>
+              </div>
+            </Reveal>
+
+            {/* ── CLUB ── */}
+            <Reveal delay={0.1}>
+              <div style={{ background: G.ink, border: `1.5px solid ${G.gold}`, borderRadius: 8, padding: '36px 32px', position: 'relative', boxShadow: '0 8px 48px rgba(201,162,39,0.18)', boxSizing: 'border-box' }}>
+                <div style={{ position: 'absolute', top: -1, right: 24, background: G.gold, color: G.ink, fontFamily: G.mono, fontSize: 9, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', padding: '4px 12px', borderRadius: '0 0 4px 4px' }}>
+                  ⚡ Recommandé
+                </div>
+                <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, marginBottom: 6 }}>Pour les clubs</div>
+                <div style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', color: G.white, marginBottom: 4 }}>Club</div>
+                <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.50)', marginBottom: 20, lineHeight: 1.6, fontStyle: 'italic' }}>
+                  "Pour les clubs qui veulent piloter,<br/>pas juste jouer."
+                </div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 28 }}>
+                  <span style={{ fontFamily: G.display, fontSize: 68, fontWeight: 800, lineHeight: 1, color: G.white }}>129</span>
+                  <span style={{ fontSize: 15, color: 'rgba(255,255,255,0.40)' }}>€ / mois</span>
+                </div>
+
+                {/* 3 blocs valeur */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28 }}>
+                  <div style={{ padding: '14px 16px', background: 'rgba(201,162,39,0.10)', border: '1px solid rgba(201,162,39,0.22)', borderRadius: 6 }}>
+                    <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, marginBottom: 6 }}>👁 Visibilité</div>
+                    <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.78)', lineHeight: 1.6 }}>
+                      Dashboard consolidé — toutes vos équipes, un seul écran. Le directeur sportif voit enfin son club comme un tout.
+                    </div>
+                  </div>
+                  <div style={{ padding: '14px 16px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 6 }}>
+                    <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.50)', marginBottom: 6 }}>📊 Compréhension</div>
+                    <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.62)', lineHeight: 1.6 }}>
+                      Fini les impressions en réunion de staff. Chaque coach arrive avec les mêmes données. Les décisions sont objectives, rapides, assumées.
+                    </div>
+                  </div>
+                  <div style={{ padding: '14px 16px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 6 }}>
+                    <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.50)', marginBottom: 6 }}>🏗 Projet club</div>
+                    <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.62)', lineHeight: 1.6 }}>
+                      Vos principes de jeu mesurés chaque semaine. InsightBall vous dit si vos équipes appliquent vraiment votre style.
+                    </div>
+                  </div>
+                </div>
+
+                <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 32 }}>
+                  {["12 matchs analysés / mois","Multi-équipes illimité","Comparaison inter-équipes","Suivi joueurs cross-équipes","Rapport direction mensuel PDF","Multi-utilisateurs (staff)","Support prioritaire dédié"].map(item => (
+                    <li key={item} style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', display: 'flex', alignItems: 'flex-start', gap: 9, lineHeight: 1.5 }}>
+                      <span style={{ color: G.gold, fontWeight: 700, flexShrink: 0 }}>✓</span>{item}
+                    </li>
+                  ))}
+                </ul>
+
+                <a href="#waitlist" style={{ display: 'block', width: '100%', padding: 14, fontFamily: G.display, fontSize: 15, fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase', textAlign: 'center', textDecoration: 'none', borderRadius: 4, transition: 'background .15s', background: G.gold, color: G.ink, boxSizing: 'border-box' }}
+                  onMouseEnter={e => e.currentTarget.style.background = G.goldD}
+                  onMouseLeave={e => e.currentTarget.style.background = G.gold}>
+                  Demander l'accès →
+                </a>
+              </div>
+            </Reveal>
+
           </div>
+
+          <Reveal delay={0.2}>
+            <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, marginTop: 28, maxWidth: 940 }}>
+              🔒 Paiement sécurisé Stripe · Résiliable à tout moment · Sans engagement
+            </p>
+          </Reveal>
 
         </div>
       </div>
+
 
       {/* ══ WAITLIST ═══════════════════════════════════ */}
       <div id="waitlist" style={{ background: G.ink }}>
