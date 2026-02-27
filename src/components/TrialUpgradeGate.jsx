@@ -1,0 +1,204 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Zap, ArrowRight, Check, Lock, X } from 'lucide-react'
+import api from '../services/api'
+import { useAuth } from '../context/AuthContext'
+
+const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');`
+
+const G = {
+  bg: '#0a0908', bg2: '#0f0e0c',
+  gold: '#c9a227', goldD: '#a8861f',
+  goldBg: 'rgba(201,162,39,0.08)', goldBdr: 'rgba(201,162,39,0.25)',
+  mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
+  border: 'rgba(255,255,255,0.07)', muted: 'rgba(245,242,235,0.50)',
+  text: '#f5f2eb',
+}
+
+function Spinner() {
+  return <span style={{ width: 13, height: 13, border: `2px solid ${G.bg}`, borderTopColor: 'transparent', borderRadius: '50%', display: 'inline-block', animation: 'spin .6s linear infinite' }} />
+}
+
+// ── Composant principal exporté ────────────────────────────────
+// Usage : <TrialUpgradeGate onClose={() => ...} />
+// S'affiche en overlay fullscreen quand l'user trial veut un 2ème match
+
+export default function TrialUpgradeGate({ onClose }) {
+  const { user, refreshUser } = useAuth()
+  const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleConfirmCoach = async () => {
+    setLoading(true); setError('')
+    try {
+      // trial_end='now' → prélevé immédiatement, quota 4/mois débloqué
+      await api.post('/subscription/upgrade-plan', { plan: 'COACH' })
+      setSuccess(true)
+      if (refreshUser) await refreshUser()
+      setTimeout(() => {
+        onClose?.()
+        navigate('/dashboard/matches/upload')
+      }, 2000)
+    } catch (e) {
+      setError(e?.response?.data?.detail || 'Erreur — réessayez')
+      setLoading(false)
+    }
+  }
+
+  const features = [
+    '4 matchs analysés par mois',
+    'Rapports tactiques PDF complets',
+    'Statistiques individuelles joueurs',
+    'Heatmaps & données de performance',
+    'Suivi progression match après match',
+  ]
+
+  return (
+    <>
+      <style>{`
+        ${FONTS}
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+        @keyframes slideUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.6; } }
+      `}</style>
+
+      {/* Overlay */}
+      <div style={{
+        position: 'fixed', inset: 0, zIndex: 1000,
+        background: 'rgba(10,9,8,0.92)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: 20, animation: 'fadeIn .25s ease',
+        backdropFilter: 'blur(6px)',
+      }}>
+
+        <div style={{
+          width: '100%', maxWidth: 480,
+          background: G.bg2,
+          border: `1px solid ${G.goldBdr}`,
+          borderTop: `3px solid ${G.gold}`,
+          animation: 'slideUp .3s ease',
+          position: 'relative',
+        }}>
+
+          {/* Bouton fermer */}
+          {onClose && (
+            <button onClick={onClose} style={{
+              position: 'absolute', top: 16, right: 16,
+              background: 'none', border: 'none', cursor: 'pointer', padding: 4,
+            }}>
+              <X size={14} color={G.muted} />
+            </button>
+          )}
+
+          {/* Header */}
+          <div style={{ padding: '32px 32px 24px' }}>
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              background: G.goldBg, border: `1px solid ${G.goldBdr}`,
+              padding: '6px 14px', marginBottom: 20,
+            }}>
+              <Zap size={11} color={G.gold} />
+              <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold }}>
+                Match offert utilisé
+              </span>
+            </div>
+
+            <h2 style={{
+              fontFamily: G.display, fontSize: 42, textTransform: 'uppercase',
+              lineHeight: .88, letterSpacing: '.01em', color: G.text, margin: '0 0 14px',
+            }}>
+              Continuez à<br /><span style={{ color: G.gold }}>analyser.</span>
+            </h2>
+
+            <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, lineHeight: 1.7, margin: 0 }}>
+              Votre match gratuit a été utilisé. Activez le plan Coach pour débloquer <strong style={{ color: G.text }}>4 matchs par mois</strong> dès maintenant.
+            </p>
+          </div>
+
+          {/* Séparateur */}
+          <div style={{ height: 1, background: G.border }} />
+
+          {/* Prix */}
+          <div style={{ padding: '20px 32px', display: 'flex', alignItems: 'baseline', gap: 8 }}>
+            <span style={{ fontFamily: G.display, fontSize: 56, lineHeight: 1, color: G.text }}>39</span>
+            <div>
+              <div style={{ fontFamily: G.mono, fontSize: 11, color: G.gold }}>€/mois</div>
+              <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em' }}>prélevé aujourd'hui</div>
+            </div>
+          </div>
+
+          {/* Features */}
+          <div style={{ padding: '0 32px 24px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {features.map(f => (
+              <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{
+                  width: 18, height: 18, background: G.goldBg, border: `1px solid ${G.goldBdr}`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                }}>
+                  <Check size={10} color={G.gold} />
+                </div>
+                <span style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.04em' }}>{f}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Séparateur */}
+          <div style={{ height: 1, background: G.border }} />
+
+          {/* CTA */}
+          <div style={{ padding: '20px 32px 28px' }}>
+            {error && (
+              <div style={{ marginBottom: 12, fontFamily: G.mono, fontSize: 10, color: '#ef4444' }}>
+                {error}
+              </div>
+            )}
+
+            {success ? (
+              <div style={{
+                padding: '14px', background: 'rgba(34,197,94,0.08)',
+                border: '1px solid rgba(34,197,94,0.25)',
+                display: 'flex', alignItems: 'center', gap: 10,
+              }}>
+                <Check size={14} color="#22c55e" />
+                <span style={{ fontFamily: G.mono, fontSize: 10, color: '#22c55e', letterSpacing: '.06em' }}>
+                  Plan activé — redirection en cours...
+                </span>
+              </div>
+            ) : (
+              <>
+                <button
+                  onClick={handleConfirmCoach}
+                  disabled={loading}
+                  style={{
+                    width: '100%', padding: '15px',
+                    background: loading ? 'rgba(201,162,39,0.5)' : G.gold,
+                    border: 'none', color: G.bg,
+                    fontFamily: G.mono, fontSize: 11, letterSpacing: '.14em',
+                    textTransform: 'uppercase', fontWeight: 700,
+                    cursor: loading ? 'not-allowed' : 'pointer',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+                    marginBottom: 12, transition: 'background .15s',
+                  }}
+                  onMouseEnter={e => { if (!loading) e.currentTarget.style.background = G.goldD }}
+                  onMouseLeave={e => { if (!loading) e.currentTarget.style.background = G.gold }}
+                >
+                  {loading ? <><Spinner /> Activation...</> : <>Activer le plan Coach <ArrowRight size={13} /></>}
+                </button>
+
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                  <Lock size={10} color={G.muted} />
+                  <span style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.28)', letterSpacing: '.06em' }}>
+                    Paiement sécurisé Stripe · Résiliable à tout moment
+                  </span>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}

@@ -263,6 +263,21 @@ export default function SubscriptionManagement() {
     if (refreshUser) refreshUser()
   }
 
+  const handleConfirmCoach = async () => {
+    if (!window.confirm('Activer le plan Coach (39€/mois) ? Vous serez prélevé immédiatement.')) return
+    setUpgradeLoading(true); setError('')
+    try {
+      await api.post('/subscription/upgrade-plan', { plan: 'COACH' })
+      setSuccess('Plan Coach activé ! 4 matchs/mois débloqués.')
+      await loadAll()
+      if (refreshUser) refreshUser()
+    } catch (e) {
+      setError(e?.response?.data?.detail || "Erreur lors de l'activation")
+    } finally {
+      setUpgradeLoading(false)
+    }
+  }
+
   const handleUpgrade = async () => {
     if (!window.confirm('Passer au plan Club (129€/mois) ? Si vous êtes en essai, vous serez prélevé immédiatement.')) return
     setUpgradeLoading(true); setError('')
@@ -368,6 +383,20 @@ export default function SubscriptionManagement() {
               }}>
                 <ExternalLink size={12} />
                 {portalLoading ? 'Redirection...' : 'Gérer l\'abonnement'}
+              </button>
+            )}
+
+            {/* Confirmer abonnement Coach pendant trial */}
+            {isTrialing && user?.plan === 'COACH' && !sub?.cancel_at_period_end && (
+              <button onClick={handleConfirmCoach} disabled={upgradeLoading} style={{
+                display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px',
+                background: G.gold, color: '#0f0f0d',
+                fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700,
+                border: 'none', cursor: upgradeLoading ? 'not-allowed' : 'pointer', opacity: upgradeLoading ? 0.6 : 1,
+                transition: 'opacity .15s',
+              }}>
+                <Zap size={12} />
+                {upgradeLoading ? 'Activation...' : 'Confirmer plan Coach — 39€/mois'}
               </button>
             )}
 

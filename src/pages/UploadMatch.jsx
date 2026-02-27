@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Upload, ChevronRight, ChevronLeft, Check, X, CreditCard } from 'lucide-react'
 import DashboardLayout from '../components/DashboardLayout'
+import TrialUpgradeGate from '../components/TrialUpgradeGate'
 import matchService from '../services/matchService'
 import api from '../services/api'
 import playerService from '../services/playerService'
@@ -35,6 +36,7 @@ export default function UploadMatch() {
   const [trialLoading, setTrialLoading] = useState(true)
   const [players, setPlayers]       = useState([])
   const [uploading, setUploading]   = useState(false)
+  const [showUpgradeGate, setShowUpgradeGate] = useState(false)
   const [dragOver, setDragOver]     = useState(false)
 
   const [matchData, setMatchData] = useState({
@@ -124,12 +126,10 @@ export default function UploadMatch() {
       console.error(e)
       const status = e?.response?.status
       const detail = e?.response?.data?.detail
-      if (status === 402) {
-        if (detail === 'TRIAL_EXHAUSTED') {
-          navigate('/dashboard/settings')
-        } else {
-          navigate('/dashboard/settings')
-        }
+      if (status === 402 && detail === 'TRIAL_EXHAUSTED') {
+        setShowUpgradeGate(true)
+      } else if (status === 402) {
+        navigate('/dashboard/settings')
       } else {
         alert("Erreur lors de l'upload — veuillez réessayer")
       }
@@ -198,6 +198,9 @@ export default function UploadMatch() {
   // ── FORMULAIRE PRINCIPAL ─────────────────────────────────────
   return (
     <DashboardLayout>
+      {showUpgradeGate && (
+        <TrialUpgradeGate onClose={() => setShowUpgradeGate(false)} />
+      )}
       <style>{`${FONTS} * { box-sizing: border-box; } @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } } @keyframes spin { to { transform: rotate(360deg); } } select option { background: #fff; color: #0f0f0d; }`}</style>
 
       {/* Header */}
