@@ -19,10 +19,10 @@ function SubscriptionPlans() {
   const [selectedPlan, setSelectedPlan] = useState(null)
 
   const plans = [
-    { id:'coach', name:'COACH', price:29, oldPrice:39, tag:'Pour les coachs',
-      features:['3 matchs analysés / mois','1 équipe','Rapports collectifs et individuels','Suivi progression match après match','Tableau de bord complet','Support dédié','Accessible sur tous supports'] },
-    { id:'club', name:'CLUB', price:99, oldPrice:139, tag:'⚡ Recommandé', popular:true,
-      features:['10 matchs analysés / mois','Multi-équipes','Gestion effectif illimitée','Vue globale club','Multi-utilisateurs','Dashboard club avancé','Support prioritaire dédié'] },
+    { id:'coach', name:'COACH', price:39, tag:'Pour les coachs',
+      features:['4 matchs analysés / mois','1 équipe','Rapports collectifs et individuels','Suivi progression match après match','Tableau de bord complet','Support dédié','Accessible sur tous supports'] },
+    { id:'club', name:'CLUB', price:129, tag:'⚡ Recommandé', popular:true,
+      features:['12 matchs analysés / mois','Multi-équipes','Gestion effectif illimitée','Vue globale club','Multi-utilisateurs','Dashboard club avancé','Support prioritaire dédié'] },
   ]
 
   const handleSelectPlan = async (planId) => {
@@ -87,7 +87,7 @@ function SubscriptionPlans() {
               <div style={{ display:'flex', alignItems:'baseline', gap:6, marginBottom:36 }}>
                 <span style={{ fontFamily:G.display, fontSize:80, lineHeight:1, letterSpacing:'-.02em', color:G.ink }}>{plan.price}</span>
                 <div>
-                  <span style={{ fontFamily:G.mono, fontSize:16, color:G.muted, textDecoration:'line-through', display:'block' }}>{plan.oldPrice}€</span>
+
                   <span style={{ fontFamily:G.mono, fontSize:10, color:G.muted, letterSpacing:'.08em' }}>€/mois</span>
                 </div>
               </div>

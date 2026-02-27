@@ -91,7 +91,7 @@ export default function JoinClub() {
           name: signupForm.name,
           email: signupForm.email,
           password: signupForm.password,
-          plan: 'coach', // plan par défaut, sera rattaché au club
+          plan: 'COACH', // plan par défaut, sera rattaché au club
         })
       })
       const signupData = await signupRes.json()
