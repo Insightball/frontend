@@ -207,6 +207,7 @@ export default function SubscriptionManagement() {
   const [showCancelModal, setShowCancelModal] = useState(false)
   const [success, setSuccess]         = useState('')
   const [error, setError]             = useState('')
+  const [upgradeLoading, setUpgradeLoading] = useState(false)
 
   useEffect(() => { loadAll() }, [])
 
@@ -262,6 +263,21 @@ export default function SubscriptionManagement() {
     if (refreshUser) refreshUser()
   }
 
+  const handleUpgrade = async () => {
+    if (!window.confirm('Passer au plan Club (129€/mois) ? Si vous êtes en essai, vous serez prélevé immédiatement.')) return
+    setUpgradeLoading(true); setError('')
+    try {
+      await api.post('/subscription/upgrade-plan', { plan: 'CLUB' })
+      setSuccess('Upgrade effectué ! Vous êtes maintenant sur le plan Club.')
+      await loadAll()
+      if (refreshUser) refreshUser()
+    } catch (e) {
+      setError(e?.response?.data?.detail || "Erreur lors de l'upgrade")
+    } finally {
+      setUpgradeLoading(false)
+    }
+  }
+
   if (loading) return (
     <div style={{ padding: '24px', textAlign: 'center', fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', color: G.muted }}>
       Chargement...
@@ -282,9 +298,8 @@ export default function SubscriptionManagement() {
     )
   }
 
-  const isTrial   = trialData?.access === 'trial'
-  const isExpired = trialData?.access === 'expired'
-  const hasSub    = sub?.active
+  const isExpired  = trialData?.access === 'expired'
+  const hasSub     = sub?.active
   const isTrialing = sub?.status === 'trialing'
 
   return (
@@ -353,6 +368,24 @@ export default function SubscriptionManagement() {
               }}>
                 <ExternalLink size={12} />
                 {portalLoading ? 'Redirection...' : 'Gérer l\'abonnement'}
+              </button>
+            )}
+
+            {/* Upgrade COACH → CLUB */}
+            {user?.plan === 'COACH' && !sub?.cancel_at_period_end && (
+              <button onClick={handleUpgrade} disabled={upgradeLoading} style={{
+                display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px',
+                background: 'rgba(59,130,246,0.12)', color: '#3b82f6',
+                border: '1px solid rgba(59,130,246,0.35)',
+                fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700,
+                cursor: upgradeLoading ? 'not-allowed' : 'pointer', opacity: upgradeLoading ? 0.6 : 1,
+                transition: 'all .15s',
+              }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(59,130,246,0.22)' }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(59,130,246,0.12)' }}
+              >
+                <Zap size={12} />
+                {upgradeLoading ? 'Upgrade...' : 'Passer au plan Club — 129€/mois'}
               </button>
             )}
 
