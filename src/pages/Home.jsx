@@ -792,44 +792,43 @@ export default function LandingPage() {
 
             {/* ── CLUB ── */}
             <Reveal delay={0.1}>
-              <div style={{ background: G.ink, border: `1.5px solid ${G.gold}`, borderRadius: 8, padding: '36px 32px', position: 'relative', boxShadow: '0 8px 48px rgba(201,162,39,0.18)', boxSizing: 'border-box' }}>
-                <div style={{ position: 'absolute', top: -1, right: 24, background: G.gold, color: G.ink, fontFamily: G.mono, fontSize: 9, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', padding: '4px 12px', borderRadius: '0 0 4px 4px' }}>
-                  ⚡ Recommandé
-                </div>
+              <div style={{ background: G.ink, border: `1.5px solid ${G.gold}`, borderRadius: 8, padding: '36px 32px', boxShadow: '0 8px 48px rgba(201,162,39,0.15)', boxSizing: 'border-box' }}>
                 <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, marginBottom: 6 }}>Pour les clubs</div>
                 <div style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', color: G.white, marginBottom: 4 }}>Club</div>
-                <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.50)', marginBottom: 20, lineHeight: 1.6, fontStyle: 'italic' }}>
-                  "Pour les clubs qui veulent piloter,<br/>pas juste jouer."
+                <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', marginBottom: 20, lineHeight: 1.6 }}>
+                  Toutes vos équipes. Une seule vision.
                 </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 28 }}>
                   <span style={{ fontFamily: G.display, fontSize: 68, fontWeight: 800, lineHeight: 1, color: G.white }}>129</span>
                   <span style={{ fontSize: 15, color: 'rgba(255,255,255,0.40)' }}>€ / mois</span>
                 </div>
 
-                {/* 3 blocs valeur */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28 }}>
-                  <div style={{ padding: '14px 16px', background: 'rgba(201,162,39,0.10)', border: '1px solid rgba(201,162,39,0.22)', borderRadius: 6 }}>
-                    <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, marginBottom: 6 }}>👁 Visibilité</div>
-                    <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.78)', lineHeight: 1.6 }}>
-                      Dashboard consolidé — toutes vos équipes, un seul écran. Le directeur sportif voit enfin son club comme un tout.
+                {/* 2 blocs valeur */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
+                  <div style={{ padding: '13px 15px', background: 'rgba(201,162,39,0.10)', border: '1px solid rgba(201,162,39,0.20)', borderRadius: 6 }}>
+                    <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, marginBottom: 5 }}>👁 Visibilité</div>
+                    <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', lineHeight: 1.6 }}>
+                      Dashboard consolidé — toutes vos équipes, un seul écran. Le directeur sportif voit son club comme un tout.
                     </div>
                   </div>
-                  <div style={{ padding: '14px 16px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 6 }}>
-                    <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.50)', marginBottom: 6 }}>📊 Compréhension</div>
-                    <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.62)', lineHeight: 1.6 }}>
+                  <div style={{ padding: '13px 15px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 6 }}>
+                    <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', marginBottom: 5 }}>📊 Compréhension</div>
+                    <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.60)', lineHeight: 1.6 }}>
                       Fini les impressions en réunion de staff. Chaque coach arrive avec les mêmes données. Les décisions sont objectives, rapides, assumées.
-                    </div>
-                  </div>
-                  <div style={{ padding: '14px 16px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 6 }}>
-                    <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.50)', marginBottom: 6 }}>🏗 Projet club</div>
-                    <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.62)', lineHeight: 1.6 }}>
-                      Vos principes de jeu mesurés chaque semaine. InsightBall vous dit si vos équipes appliquent vraiment votre style.
                     </div>
                   </div>
                 </div>
 
                 <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 32 }}>
-                  {["12 matchs analysés / mois","Multi-équipes illimité","Comparaison inter-équipes","Suivi joueurs cross-équipes","Rapport direction mensuel PDF","Multi-utilisateurs (staff)","Support prioritaire dédié"].map(item => (
+                  {[
+                    "12 matchs analysés / mois",
+                    "Multi-équipes",
+                    "Accès multi-utilisateurs",
+                    "Comparaison inter-équipes",
+                    "Suivi joueurs cross-équipes",
+                    "Rapport direction mensuel PDF",
+                    "Support prioritaire dédié",
+                  ].map(item => (
                     <li key={item} style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', display: 'flex', alignItems: 'flex-start', gap: 9, lineHeight: 1.5 }}>
                       <span style={{ color: G.gold, fontWeight: 700, flexShrink: 0 }}>✓</span>{item}
                     </li>
