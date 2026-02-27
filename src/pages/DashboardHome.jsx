@@ -149,26 +149,26 @@ export default function DashboardHome() {
 
         <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
           <div>
-            <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.22em', textTransform: 'uppercase', color: 'rgba(201,162,39,0.7)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.18em', textTransform: 'uppercase', color: 'rgba(201,162,39,0.9)', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />
               Tableau de bord · Saison 2025/26
             </div>
             <h1 style={{ fontFamily: G.display, fontSize: 'clamp(32px,4vw,52px)', textTransform: 'uppercase', lineHeight: .88, margin: 0, color: G.cream }}>
               {user?.club_name || 'Votre club'}
             </h1>
-            <p style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(245,242,235,0.45)', letterSpacing: '.08em', marginTop: 8 }}>
+            <p style={{ fontFamily: G.mono, fontSize: 13, color: 'rgba(245,242,235,0.70)', letterSpacing: '.06em', marginTop: 10 }}>
               Bonjour, <span style={{ color: G.gold }}>{user?.name?.split(' ')[0]}</span>
             </p>
           </div>
 
           {/* Quota visuel dans le header */}
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.18em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.35)', marginBottom: 8 }}>
+            <div style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.65)', marginBottom: 8 }}>
               Quota ce mois
             </div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, justifyContent: 'flex-end', marginBottom: 8 }}>
               <span style={{ fontFamily: G.display, fontSize: 40, lineHeight: 1, color: quotaColor }}>{quota - quotaUsed}</span>
-              <span style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(245,242,235,0.35)' }}>/ {quota} restants</span>
+              <span style={{ fontFamily: G.mono, fontSize: 12, color: 'rgba(245,242,235,0.65)' }}>/ {quota} restants</span>
             </div>
             <div style={{ width: 160, height: 3, background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
               <div style={{
@@ -211,13 +211,13 @@ export default function DashboardHome() {
               <div style={{ width: 28, height: 28, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <s.icon size={12} color={G.gold} />
               </div>
-              <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted }}>{s.sub}</span>
+              <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted2 }}>{s.sub}</span>
             </div>
             {loading
               ? <div style={{ height: 44, background: G.rule, marginBottom: 8, opacity: 0.4 }} />
               : <div style={{ fontFamily: G.display, fontSize: 44, lineHeight: 1, color: G.ink, marginBottom: 4 }}>{s.value}</div>
             }
-            <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em' }}>{s.label}</div>
+            <div style={{ fontFamily: G.mono, fontSize: 10, color: G.ink, letterSpacing: '.06em', fontWeight: 600 }}>{s.label}</div>
           </div>
         ))}
       </div>
