@@ -204,6 +204,7 @@ export default function SubscriptionManagement() {
   const [selectedPlan, setSelectedPlan] = useState(null)
   const [portalLoading, setPortalLoading] = useState(false)
   const [cancelLoading, setCancelLoading] = useState(false)
+  const [showCancelModal, setShowCancelModal] = useState(false)
   const [success, setSuccess]         = useState('')
   const [error, setError]             = useState('')
 
@@ -242,9 +243,10 @@ export default function SubscriptionManagement() {
   }
 
   // Résiliation pendant le trial (avant premier débit)
-  const handleCancelTrial = async () => {
-    if (!window.confirm("Annuler votre essai ? Votre CB ne sera pas débitée. Vous perdrez l'accès à la fin des 7 jours.")) return
-    setCancelLoading(true); setError('')
+  const handleCancelTrial = () => setShowCancelModal(true)
+
+  const confirmCancelTrial = async () => {
+    setCancelLoading(true); setError(''); setShowCancelModal(false)
     try {
       await api.post('/subscription/cancel-subscription')
       setSuccess('Essai annulé. Aucun débit ne sera effectué.')
