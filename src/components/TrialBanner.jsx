@@ -89,9 +89,6 @@ export default function TrialBanner() {
           <span style={{ fontFamily: G.mono, fontSize: 11, letterSpacing: '.06em', color, fontWeight: 700, display: 'block' }}>
             {mainMsg}
           </span>
-          <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.06em', color: color + 'bb', display: 'block', marginTop: 2 }}>
-            {subMsg}
-          </span>
         </div>
       </div>
 

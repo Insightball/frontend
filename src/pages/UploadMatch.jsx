@@ -43,6 +43,7 @@ function UploadMatch() {
   const [step, setStep] = useState(1)
   const [trialStatus, setTrialStatus] = useState(null)
   const [trialLoading, setTrialLoading] = useState(true)
+  const [hasPaymentMethod, setHasPaymentMethod] = useState(false)
   const [players, setPlayers] = useState([])
   const [uploading, setUploading] = useState(false)
   const [dragOver, setDragOver] = useState(false)
@@ -57,10 +58,16 @@ function UploadMatch() {
 
   useEffect(() => { loadPlayers() }, [])
   useEffect(() => {
-    api.get('/subscription/trial-status')
-      .then(r => setTrialStatus(r.data))
-      .catch(() => setTrialStatus({ access: 'trial' }))
-      .finally(() => setTrialLoading(false))
+    Promise.all([
+      api.get('/subscription/trial-status'),
+      api.get('/subscription/has-payment-method'),
+    ]).then(([trialRes, pmRes]) => {
+      setTrialStatus(trialRes.data)
+      setHasPaymentMethod(pmRes.data?.has_payment_method ?? false)
+    }).catch(() => {
+      setTrialStatus({ access: 'trial' })
+      setHasPaymentMethod(false)
+    }).finally(() => setTrialLoading(false))
   }, [])
   const loadPlayers = async () => {
     try {
@@ -146,36 +153,49 @@ function UploadMatch() {
   ]
 
 
-  // Bloquer si trial expiré OU trial actif sans analyse utilisée
+  // Bloquer si :
+  // - pas de CB enregistrée (jamais passé par le checkout)
+  // - trial expiré sans abonnement
+  // - analyse trial déjà utilisée sans abonnement
+  const needsPayment = !hasPaymentMethod && trialStatus?.access !== 'full'
   const canUpload = trialStatus?.access === 'full' ||
-    (trialStatus?.access === 'trial' && !trialStatus?.match_used)
+    (trialStatus?.access === 'trial' && !trialStatus?.match_used && hasPaymentMethod)
 
-  if (!trialLoading && !canUpload) {
+  if (!trialLoading && (needsPayment || !canUpload)) {
+    const isNoCB      = needsPayment
+    const isExpired   = trialStatus?.access === 'expired'
+    const isUsed      = trialStatus?.access === 'trial' && trialStatus?.match_used
+
     return (
       <DashboardLayout>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', textAlign: 'center', gap: 24 }}>
           <div style={{ width: 56, height: 56, background: 'rgba(201,162,39,0.07)', border: '1px solid rgba(201,162,39,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {trialStatus?.access === 'expired' ? <Lock size={22} color="#c9a227" /> : <CreditCard size={22} color="#c9a227" />}
+            <CreditCard size={22} color="#c9a227" />
           </div>
           <div>
             <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: '#c9a227', marginBottom: 12 }}>
-              {trialStatus?.access === 'expired' ? 'Essai terminé' : 'Analyse utilisée'}
+              {isNoCB ? 'Carte bancaire requise' : isExpired ? 'Essai terminé' : 'Analyse utilisée'}
             </div>
             <h2 style={{ fontFamily: G.display, fontSize: 32, textTransform: 'uppercase', color: '#0f0f0d', marginBottom: 12 }}>
-              {trialStatus?.access === 'expired' ? 'Abonnez-vous pour analyser' : 'Analyse gratuite utilisée'}
+              {isNoCB ? 'Activez votre essai' : isExpired ? 'Abonnez-vous pour continuer' : 'Analyse gratuite utilisée'}
             </h2>
-            <p style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(15,15,13,0.45)', maxWidth: 400, lineHeight: 1.6 }}>
-              {trialStatus?.access === 'expired'
-                ? "Votre période d'essai est terminée. Choisissez un plan pour continuer à uploader et analyser vos matchs."
-                : "Vous avez utilisé votre analyse gratuite. Abonnez-vous pour accéder à l'upload illimité."
+            <p style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(15,15,13,0.45)', maxWidth: 420, lineHeight: 1.7, margin: '0 auto' }}>
+              {isNoCB
+                ? "Enregistrez votre carte bancaire pour démarrer votre essai gratuit de 7 jours. Aucun débit aujourd'hui."
+                : isExpired
+                  ? "Votre période d'essai est terminée. Choisissez un plan pour continuer à analyser vos matchs."
+                  : "Vous avez utilisé votre analyse gratuite. Abonnez-vous pour uploader vos prochains matchs."
               }
             </p>
           </div>
           <button
             onClick={() => navigate('/dashboard/settings')}
-            style={{ padding: '12px 28px', background: '#c9a227', color: '#0f0f0d', fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
-            Voir les plans →
+            style={{ padding: '13px 32px', background: '#c9a227', color: '#0f0f0d', fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
+            {isNoCB ? 'Activer mon essai gratuit →' : 'Voir les plans →'}
           </button>
+          <p style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(15,15,13,0.30)', letterSpacing: '.06em' }}>
+            🔒 Paiement sécurisé Stripe · Résiliable avant le premier débit
+          </p>
         </div>
       </DashboardLayout>
     )
