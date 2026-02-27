@@ -120,7 +120,20 @@ export default function UploadMatch() {
     try {
       await matchService.uploadMatch({ matchData, lineup, videoFile })
       navigate('/dashboard/matches')
-    } catch (e) { console.error(e); alert("Erreur lors de l'upload") }
+    } catch (e) {
+      console.error(e)
+      const status = e?.response?.status
+      const detail = e?.response?.data?.detail
+      if (status === 402) {
+        if (detail === 'TRIAL_EXHAUSTED') {
+          navigate('/dashboard/settings')
+        } else {
+          navigate('/dashboard/settings')
+        }
+      } else {
+        alert("Erreur lors de l'upload — veuillez réessayer")
+      }
+    }
     finally { setUploading(false) }
   }
 
