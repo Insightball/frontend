@@ -50,7 +50,7 @@ function DashboardLayout({ children }) {
   ]
 
   if (user?.plan === 'CLUB') {
-    navigation.push({ name: 'Équipe', href: '/dashboard/team', icon: Trophy })
+    navigation.push({ name: 'Vue Club', href: '/dashboard/club', icon: Trophy })
     if (user?.role === 'ADMIN') {
       navigation.push({ name: 'Membres', href: '/dashboard/members', icon: UserCog })
     }
