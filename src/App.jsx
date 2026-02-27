@@ -26,6 +26,7 @@ const SubscriptionPlans = lazy(() => import('./pages/SubscriptionPlans'))
 const UploadMatch       = lazy(() => import('./pages/UploadMatch'))
 const Onboarding        = lazy(() => import('./pages/Onboarding'))
 const AdminPanel        = lazy(() => import('./pages/AdminPanel'))
+const ClubDashboard     = lazy(() => import('./pages/ClubDashboard'))
 
 const PageLoader = () => (
   <div style={{
@@ -83,6 +84,7 @@ function App() {
             <Route path="/dashboard/players"          element={<ProtectedRoute><PlayerManagement /></ProtectedRoute>} />
             <Route path="/dashboard/stats"            element={<ProtectedRoute><Statistics /></ProtectedRoute>} />
             <Route path="/dashboard/team"             element={<ProtectedRoute><TeamManagement /></ProtectedRoute>} />
+            <Route path="/dashboard/club"             element={<ProtectedRoute><ClubDashboard /></ProtectedRoute>} />
             <Route path="/dashboard/members"          element={<ProtectedRoute><ClubMembers /></ProtectedRoute>} />
             <Route path="/dashboard/settings"         element={<ProtectedRoute><SettingsRoute /></ProtectedRoute>} />
           </Routes>
