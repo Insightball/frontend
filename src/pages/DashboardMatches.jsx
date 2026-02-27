@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Video, Calendar, Clock, TrendingUp, MapPin, Plus, ChevronRight } from 'lucide-react'
 import DashboardLayout from '../components/DashboardLayout'
+import TrialUpgradeGate from '../components/TrialUpgradeGate'
 import matchService from '../services/matchService'
+import api from '../services/api'
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');`
 
@@ -73,10 +75,13 @@ function StatusBadge({ status }) {
 }
 
 function DashboardMatches() {
-  const [matches, setMatches] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [filter, setFilter]   = useState('all')
-  const [isMobile, setIsMobile] = useState(false)
+  const navigate = useNavigate()
+  const [matches, setMatches]           = useState([])
+  const [loading, setLoading]           = useState(true)
+  const [filter, setFilter]             = useState('all')
+  const [isMobile, setIsMobile]         = useState(false)
+  const [showUpgradeGate, setShowUpgradeGate] = useState(false)
+  const [trialStatus, setTrialStatus]   = useState(null)
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -85,11 +90,26 @@ function DashboardMatches() {
     return () => window.removeEventListener('resize', check)
   }, [])
 
-  useEffect(() => { loadMatches() }, [])
+  useEffect(() => {
+    loadMatches()
+    api.get('/subscription/trial-status')
+      .then(r => setTrialStatus(r.data))
+      .catch(() => {})
+  }, [])
 
   const loadMatches = async () => {
     try { setLoading(true); const data = await matchService.getMatches(); setMatches(data) }
     catch (e) { console.error(e) } finally { setLoading(false) }
+  }
+
+  const handleNewMatch = (e) => {
+    e.preventDefault()
+    // Bloquer si trial actif ET match déjà utilisé
+    if (trialStatus?.trial_active && trialStatus?.match_used) {
+      setShowUpgradeGate(true)
+      return
+    }
+    navigate('/dashboard/matches/upload')
   }
 
   const formatDate = (d) => new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
@@ -117,19 +137,23 @@ function DashboardMatches() {
         @keyframes spin { to { transform:rotate(360deg); } }
       `}</style>
 
+      {/* Overlay upgrade si trial exhausted */}
+      {showUpgradeGate && (
+        <TrialUpgradeGate onClose={() => setShowUpgradeGate(false)} />
+      )}
+
       {/* ── HEADER ── */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28, paddingBottom: 24, borderBottom: `1px solid ${G.border}` }}>
         <div>
           <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
             <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />Mes matchs
           </div>
-          {/* "Historique" plein et visible */}
           <h1 style={{ fontFamily: G.display, fontSize: 52, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', margin: 0 }}>
             <span style={{ color: G.text }}>Historique</span><br />
             <span style={{ color: G.gold }}>& analyses.</span>
           </h1>
         </div>
-        <Link to="/dashboard/matches/upload" style={{
+        <a href="#" onClick={handleNewMatch} style={{
           display: 'inline-flex', alignItems: 'center', gap: 8,
           padding: '12px 24px', background: G.gold, color: '#0a0908',
           fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700,
@@ -139,7 +163,7 @@ function DashboardMatches() {
           onMouseLeave={e => e.currentTarget.style.background = G.gold}
         >
           <Plus size={14} /> Nouveau match
-        </Link>
+        </a>
       </div>
 
       {/* ── STAT CARDS ── */}
@@ -168,7 +192,6 @@ function DashboardMatches() {
           <p style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted }}>Chargement...</p>
         </div>
       ) : filteredMatches.length === 0 ? (
-        /* ── EMPTY STATE full dark ── */
         <div style={{ background: G.card, border: `1px solid ${G.border}`, borderTop: `2px solid ${G.goldBdr}`, padding: '80px 24px', textAlign: 'center' }}>
           <div style={{ width: 56, height: 56, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
             <Video size={24} color={G.gold} />
@@ -179,9 +202,9 @@ function DashboardMatches() {
           <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, marginBottom: 28, letterSpacing: '.06em', lineHeight: 1.7 }}>
             {filter === 'all' ? 'Uploadez votre premier match pour le faire analyser' : 'Aucun match dans cette catégorie'}
           </p>
-          <Link to="/dashboard/matches/upload" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 28px', background: G.gold, color: '#0a0908', fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', fontWeight: 700, textDecoration: 'none' }}>
+          <a href="#" onClick={handleNewMatch} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 28px', background: G.gold, color: '#0a0908', fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', fontWeight: 700, textDecoration: 'none' }}>
             <Plus size={14} /> Ajouter un match
-          </Link>
+          </a>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
@@ -204,7 +227,6 @@ function DashboardMatches() {
                     </div>
                     {match.location && <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}><MapPin size={10} />{match.location}</div>}
                   </div>
-
                   {match.score_home !== null && match.score_away !== null && (
                     <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 10 }}>
                       <span style={{ fontFamily: G.display, fontSize: 28, lineHeight: 1, color: G.text }}>{match.score_home}</span>
@@ -221,7 +243,6 @@ function DashboardMatches() {
                       </span>
                     </div>
                   )}
-
                   {match.status === 'processing' && match.progress > 0 && (
                     <div style={{ marginTop: 12 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: G.mono, fontSize: 8, color: G.muted, marginBottom: 5, letterSpacing: '.08em' }}>
