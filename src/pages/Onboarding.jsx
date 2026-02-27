@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowRight, Check, Users, Zap, ChevronRight, Plus, X, Video, Smartphone, Camera, CreditCard, Lock } from 'lucide-react'
+import { ArrowRight, Check, ChevronRight, Smartphone, Camera, Video, Zap } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
 
@@ -13,113 +13,118 @@ const G = {
   text: '#f5f2eb', red: '#ef4444', green: '#22c55e',
 }
 
-// 5 étapes désormais : Profil / Club / Effectif / Filming / Plan
+// 4 étapes + écran bienvenue (step 5)
 const STEPS = [
   { id: 1, code: '01', label: 'Profil'   },
   { id: 2, code: '02', label: 'Club'     },
-  { id: 3, code: '03', label: 'Effectif' },
+  { id: 3, code: '03', label: 'Équipe'   },
   { id: 4, code: '04', label: 'Tournage' },
-  { id: 5, code: '05', label: 'Plan'     },
 ]
 
-const ROLES     = ['Éducateur', 'Entraîneur', 'Directeur Sportif', 'Analyste Vidéo']
-const LEVELS    = ['National', 'Régional', 'Départemental']
-const DIPLOMAS  = ['CFI', 'DF', 'BMF', 'BEF', 'DES', 'BEPF']
-const POSITIONS = ['Gardien', 'Défenseur', 'Milieu', 'Attaquant']
+const ROLES    = ['Éducateur', 'Entraîneur', 'Directeur Sportif', 'Analyste Vidéo']
+const LEVELS   = ['National', 'Régional', 'Départemental']
+const DIPLOMAS = ['CFI', 'DF', 'BMF', 'BEF', 'DES', 'BEPF']
+
+// Indicatifs pays avec drapeaux
+const COUNTRIES = [
+  { code: 'FR', flag: '🇫🇷', dial: '+33', label: 'France' },
+  { code: 'BE', flag: '🇧🇪', dial: '+32', label: 'Belgique' },
+  { code: 'CH', flag: '🇨🇭', dial: '+41', label: 'Suisse' },
+  { code: 'LU', flag: '🇱🇺', dial: '+352', label: 'Luxembourg' },
+  { code: 'MA', flag: '🇲🇦', dial: '+212', label: 'Maroc' },
+  { code: 'DZ', flag: '🇩🇿', dial: '+213', label: 'Algérie' },
+  { code: 'TN', flag: '🇹🇳', dial: '+216', label: 'Tunisie' },
+  { code: 'SN', flag: '🇸🇳', dial: '+221', label: 'Sénégal' },
+  { code: 'CI', flag: '🇨🇮', dial: '+225', label: "Côte d'Ivoire" },
+  { code: 'CM', flag: '🇨🇲', dial: '+237', label: 'Cameroun' },
+  { code: 'ES', flag: '🇪🇸', dial: '+34', label: 'Espagne' },
+  { code: 'PT', flag: '🇵🇹', dial: '+351', label: 'Portugal' },
+  { code: 'DE', flag: '🇩🇪', dial: '+49', label: 'Allemagne' },
+  { code: 'IT', flag: '🇮🇹', dial: '+39', label: 'Italie' },
+  { code: 'GB', flag: '🇬🇧', dial: '+44', label: 'Royaume-Uni' },
+  { code: 'NL', flag: '🇳🇱', dial: '+31', label: 'Pays-Bas' },
+  { code: 'OTHER', flag: '🌍', dial: '+', label: 'Autre' },
+]
+
+const TEAM_CATEGORIES = ['Séniors', 'U19', 'U18', 'U17', 'U16', 'U15', 'U14']
+const TEAM_LEVELS     = ['National', 'Régional', 'Départemental']
+
+const NB_TEAMS_OPTIONS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10+']
 
 const FILMING_OPTIONS = [
-  {
-    id: 'smartphone_hand',
-    icon: Smartphone,
-    label: 'Smartphone à la main',
-    desc: 'Quelqu\'un filme en suivant le jeu depuis le bord du terrain',
-  },
-  {
-    id: 'smartphone_fixed',
-    icon: Smartphone,
-    label: 'Smartphone fixe',
-    desc: 'Posé sur trépied ou tribunes, plan large, sans bougé',
-  },
-  {
-    id: 'camera_fixed',
-    icon: Camera,
-    label: 'Caméra / GoPro fixe',
-    desc: 'Caméra dédiée sur pied ou tribune, plan large stable',
-  },
-  {
-    id: 'drone',
-    icon: Video,
-    label: 'Drone',
-    desc: 'Vue du dessus, plan d\'ensemble du terrain',
-  },
-  {
-    id: 'multiple',
-    icon: Video,
-    label: 'Plusieurs angles',
-    desc: 'Plusieurs caméras ou combinaison de sources',
-  },
-  {
-    id: 'no_setup',
-    icon: Video,
-    label: 'Pas encore de setup',
-    desc: 'Je cherche comment filmer, j\'ai besoin de conseils',
-  },
+  { id: 'smartphone_hand',  icon: Smartphone, label: 'Smartphone à la main',   desc: 'Quelqu\'un filme en suivant le jeu depuis le bord du terrain' },
+  { id: 'smartphone_fixed', icon: Smartphone, label: 'Smartphone fixe',         desc: 'Posé sur trépied ou tribunes, plan large, sans bougé' },
+  { id: 'ai_camera',        icon: Camera,     label: 'Caméra intelligente',      desc: 'Avec suivi automatique du ballon (Pixellot, Veo, etc.)' },
+  { id: 'drone',            icon: Video,      label: 'Drone',                    desc: 'Vue du dessus, plan d\'ensemble du terrain' },
+  { id: 'multiple',         icon: Video,      label: 'Plusieurs angles',         desc: 'Plusieurs caméras ou combinaison de sources' },
+  { id: 'no_setup',         icon: Zap,        label: 'Pas encore de setup',      desc: 'Je cherche comment filmer, j\'ai besoin de conseils' },
 ]
 
-const inputStyle = (focused) => ({
-  width: '100%',
-  background: 'rgba(255,255,255,0.03)',
+const inputStyle = (focused = false) => ({
+  width: '100%', background: 'rgba(255,255,255,0.03)',
   border: `1px solid ${focused ? G.goldBdr : G.border}`,
-  padding: '12px 14px',
-  color: G.text,
-  fontFamily: G.mono,
-  fontSize: 12,
-  outline: 'none',
-  boxSizing: 'border-box',
-  transition: 'border-color .15s',
+  padding: '12px 14px', color: G.text,
+  fontFamily: G.mono, fontSize: 12, outline: 'none',
+  boxSizing: 'border-box', transition: 'border-color .15s',
 })
 
+const labelStyle = {
+  display: 'block', fontFamily: G.mono, fontSize: 8,
+  letterSpacing: '.2em', textTransform: 'uppercase',
+  color: 'rgba(245,242,235,0.4)', marginBottom: 8,
+}
+
 export default function Onboarding() {
-  const navigate = useNavigate()
-  const { user } = useAuth()
+  const navigate   = useNavigate()
+  const { user }   = useAuth()
 
   const [step, setStep]     = useState(1)
   const [saving, setSaving] = useState(false)
   const [error, setError]   = useState('')
 
   // Step 1 — Profil
-  const [profileData, setProfileData] = useState({ role: '', level: '', phone: '', city: '', diploma: '' })
+  const [profileData, setProfileData] = useState({
+    role: '', level: '', diploma: '',
+    dialCode: 'FR', phone: '', city: '', country: 'FR',
+  })
 
   // Step 2 — Club
-  const [clubData, setClubData] = useState({ name: user?.club_name || '', primary_color: '#c9a227', secondary_color: '#0f0f0d' })
+  const [clubData, setClubData] = useState({
+    name: user?.club_name || '',
+    nb_teams: '',
+  })
 
-  // Step 3 — Joueurs
-  const [players, setPlayers]         = useState([])
-  const [newPlayer, setNewPlayer]     = useState({ name: '', number: '', position: 'Milieu' })
-  const [addingPlayer, setAddingPlayer] = useState(false)
+  // Step 3 — Équipe principale
+  const [teamData, setTeamData] = useState({
+    category: '',
+    level: '',
+  })
 
-  // Step 4 — Filming
-  const [filmingSetup, setFilmingSetup] = useState('')
+  // Step 4 — Filming (multi-sélection)
+  const [filmingSetup, setFilmingSetup] = useState([])
 
-  // Step 5 — Plan
-  const hasSubscription = user?.plan && user.plan !== 'FREE'
+  const toggleFilming = (id) => {
+    setFilmingSetup(prev =>
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    )
+  }
+
+  const selectedCountry = COUNTRIES.find(c => c.code === profileData.dialCode) || COUNTRIES[0]
 
   /* ── Handlers ── */
-  const handleAddPlayer = () => {
-    if (!newPlayer.name.trim()) return
-    setPlayers(prev => [...prev, { ...newPlayer, id: Date.now() }])
-    setNewPlayer({ name: '', number: '', position: 'Milieu' })
-    setAddingPlayer(false)
-  }
-  const handleRemovePlayer = (id) => setPlayers(prev => prev.filter(p => p.id !== id))
-
   const handleSaveProfile = async () => {
     if (!profileData.role || !profileData.level) { setError('Poste et niveau requis'); return }
+    if (!profileData.phone.trim()) { setError('Téléphone requis'); return }
+    if (!profileData.city.trim()) { setError('Ville requise'); return }
     setSaving(true); setError('')
     try {
       await api.patch('/account/profile', {
-        role: profileData.role, level: profileData.level,
-        phone: profileData.phone, city: profileData.city,
+        role: profileData.role,
+        level: profileData.level,
+        phone: `${selectedCountry.dial} ${profileData.phone}`,
+        city: profileData.city,
+        country: profileData.dialCode,
+        diploma: profileData.diploma,
       })
     } catch (e) { console.warn('Profile save failed:', e) }
     finally { setSaving(false) }
@@ -128,21 +133,14 @@ export default function Onboarding() {
 
   const handleSaveClub = async () => {
     if (!clubData.name.trim()) { setError('Nom du club requis'); return }
+    if (!clubData.nb_teams)    { setError('Nombre d\'équipes requis'); return }
     setSaving(true); setError('')
     try {
       try {
-        await api.patch('/club/me', {
-          name: clubData.name,
-          primary_color: clubData.primary_color,
-          secondary_color: clubData.secondary_color,
-        })
+        await api.patch('/club/me', { name: clubData.name, nb_teams: clubData.nb_teams })
       } catch (e) {
         if (e?.response?.status === 404) {
-          await api.post('/club/', {
-            name: clubData.name,
-            primary_color: clubData.primary_color,
-            secondary_color: clubData.secondary_color,
-          })
+          await api.post('/club/', { name: clubData.name, nb_teams: clubData.nb_teams })
         } else throw e
       }
       setStep(3)
@@ -150,38 +148,33 @@ export default function Onboarding() {
     finally { setSaving(false) }
   }
 
-  const handleSavePlayers = async () => {
+  const handleSaveTeam = async () => {
+    if (!teamData.category || !teamData.level) { setError('Catégorie et niveau requis'); return }
     setSaving(true); setError('')
     try {
-      for (const p of players) {
-        await api.post('/players/', { name: p.name, number: parseInt(p.number) || null, position: p.position })
-      }
-      setStep(4)
-    } catch (e) { setError("Erreur lors de l'ajout des joueurs") }
+      await api.patch('/account/profile', {
+        team_category: teamData.category,
+        team_level: teamData.level,
+      })
+    } catch (e) { console.warn('Team save failed:', e) }
     finally { setSaving(false) }
+    setStep(4)
   }
 
   const handleSaveFilming = async () => {
-    // Sauvegarde non bloquante — si l'endpoint n'existe pas encore c'est ok
+    if (filmingSetup.length === 0) { setError('Sélectionnez au moins un setup de tournage'); return }
+    setSaving(true); setError('')
     try {
-      await api.patch('/account/profile', { filming_setup: filmingSetup })
-    } catch (e) { console.warn('filming save failed', e) }
-    if (hasSubscription) { navigate('/dashboard') } else { setStep(5) }
+      await api.patch('/account/profile', { filming_setup: filmingSetup.join(',') })
+    } catch (e) { console.warn('Filming save failed:', e) }
+    finally { setSaving(false) }
+    setStep(5) // écran bienvenue
   }
 
-  const handleChoosePlan = async (plan) => {
-    setSaving(true)
-    try {
-      const r = await api.post('/subscription/create-checkout-session', {
-        plan: plan.toLowerCase(),
-        success_url: `${window.location.origin}/dashboard?subscribed=true`,
-        cancel_url:  `${window.location.origin}/onboarding`,
-      })
-      window.location.href = r.data.url
-    } catch (e) { setError('Erreur Stripe'); setSaving(false) }
+  // Écran bienvenue (step 5) — pas dans les STEPS
+  if (step === 5) {
+    return <WelcomeScreen navigate={navigate} />
   }
-
-  const totalSteps = 5
 
   return (
     <div style={{ minHeight: '100vh', background: G.bg, display: 'flex', flexDirection: 'column' }}>
@@ -192,6 +185,7 @@ export default function Onboarding() {
         @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
         @keyframes spin { to { transform: rotate(360deg); } }
         .step-card { animation: fadeUp .3s ease forwards; }
+        select option { background: #0f0e0c; color: #f5f2eb; }
       `}</style>
 
       {/* Header */}
@@ -206,11 +200,11 @@ export default function Onboarding() {
 
       {/* Progress bar */}
       <div style={{ height: 2, background: G.border }}>
-        <div style={{ height: '100%', background: G.gold, width: `${(step / totalSteps) * 100}%`, transition: 'width .4s ease' }} />
+        <div style={{ height: '100%', background: G.gold, width: `${(step / 4) * 100}%`, transition: 'width .4s ease' }} />
       </div>
 
       {/* Steps indicator */}
-      <div style={{ display: 'flex', justifyContent: 'center', padding: '28px 24px 0', gap: 0, flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', padding: '28px 24px 0', flexWrap: 'wrap' }}>
         {STEPS.map((s, i) => (
           <div key={s.id} style={{ display: 'flex', alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -239,74 +233,103 @@ export default function Onboarding() {
         {step === 1 && (
           <div className="step-card" style={{ width: '100%', maxWidth: 480 }}>
             <div style={{ marginBottom: 32, textAlign: 'center' }}>
-              <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>Étape 1 sur 5</div>
+              <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>Étape 1 sur 4</div>
               <h1 style={{ fontFamily: G.display, fontSize: 'clamp(38px,5vw,52px)', textTransform: 'uppercase', lineHeight: .88, color: G.text, margin: 0 }}>
                 Votre<br /><span style={{ color: G.gold }}>profil.</span>
               </h1>
               <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, marginTop: 14, letterSpacing: '.04em' }}>Dites-nous qui vous êtes</p>
             </div>
 
-            {error && <div style={{ marginBottom: 16, padding: '10px 14px', background: 'rgba(239,68,68,0.08)', borderLeft: `2px solid ${G.red}`, fontFamily: G.mono, fontSize: 11, color: G.red }}>{error}</div>}
+            {error && <ErrBox msg={error} onClose={() => setError('')} />}
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+              {/* Rôle */}
               <div>
-                <label style={{ display: 'block', fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.4)', marginBottom: 8 }}>Votre rôle *</label>
+                <label style={labelStyle}>Votre rôle *</label>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                   {ROLES.map(r => (
-                    <button key={r} onClick={() => setProfileData(p => ({ ...p, role: r }))} style={{
-                      padding: '7px 14px', fontFamily: G.mono, fontSize: 9, letterSpacing: '.08em',
-                      background: profileData.role === r ? G.goldBg : 'transparent',
-                      border: `1px solid ${profileData.role === r ? G.goldBdr : 'rgba(255,255,255,0.1)'}`,
-                      color: profileData.role === r ? G.gold : G.muted, cursor: 'pointer',
-                    }}>{r}</button>
+                    <ChipBtn key={r} label={r} active={profileData.role === r} onClick={() => setProfileData(p => ({ ...p, role: r }))} />
                   ))}
                 </div>
               </div>
 
+              {/* Niveau */}
               <div>
-                <label style={{ display: 'block', fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.4)', marginBottom: 8 }}>Niveau de compétition *</label>
+                <label style={labelStyle}>Niveau de compétition *</label>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                   {LEVELS.map(l => (
-                    <button key={l} onClick={() => setProfileData(p => ({ ...p, level: l }))} style={{
-                      padding: '7px 14px', fontFamily: G.mono, fontSize: 9, letterSpacing: '.08em',
-                      background: profileData.level === l ? G.goldBg : 'transparent',
-                      border: `1px solid ${profileData.level === l ? G.goldBdr : 'rgba(255,255,255,0.1)'}`,
-                      color: profileData.level === l ? G.gold : G.muted, cursor: 'pointer',
-                    }}>{l}</button>
+                    <ChipBtn key={l} label={l} active={profileData.level === l} onClick={() => setProfileData(p => ({ ...p, level: l }))} />
                   ))}
                 </div>
               </div>
 
+              {/* Diplôme optionnel */}
               <div>
-                <label style={{ display: 'block', fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.4)', marginBottom: 8 }}>Diplôme <span style={{ color: 'rgba(245,242,235,0.2)' }}>(optionnel)</span></label>
+                <label style={labelStyle}>Diplôme <span style={{ color: 'rgba(245,242,235,0.2)' }}>(optionnel)</span></label>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                   {DIPLOMAS.map(d => (
-                    <button key={d} onClick={() => setProfileData(p => ({ ...p, diploma: profileData.diploma === d ? '' : d }))} style={{
-                      padding: '7px 14px', fontFamily: G.mono, fontSize: 9, letterSpacing: '.08em',
-                      background: profileData.diploma === d ? G.goldBg : 'transparent',
-                      border: `1px solid ${profileData.diploma === d ? G.goldBdr : 'rgba(255,255,255,0.1)'}`,
-                      color: profileData.diploma === d ? G.gold : G.muted, cursor: 'pointer',
-                    }}>{d}</button>
+                    <ChipBtn key={d} label={d} active={profileData.diploma === d} onClick={() => setProfileData(p => ({ ...p, diploma: p.diploma === d ? '' : d }))} />
                   ))}
                 </div>
               </div>
 
+              {/* Téléphone avec indicatif */}
+              <div>
+                <label style={labelStyle}>Téléphone *</label>
+                <div style={{ display: 'flex', gap: 0 }}>
+                  {/* Sélecteur pays */}
+                  <select
+                    value={profileData.dialCode}
+                    onChange={e => setProfileData(p => ({ ...p, dialCode: e.target.value }))}
+                    style={{
+                      background: 'rgba(255,255,255,0.04)', border: `1px solid ${G.border}`,
+                      borderRight: 'none', padding: '12px 10px', color: G.text,
+                      fontFamily: G.mono, fontSize: 12, outline: 'none', cursor: 'pointer',
+                      minWidth: 90, flexShrink: 0,
+                    }}
+                  >
+                    {COUNTRIES.map(c => (
+                      <option key={c.code} value={c.code}>{c.flag} {c.dial}</option>
+                    ))}
+                  </select>
+                  {/* Numéro */}
+                  <input
+                    value={profileData.phone}
+                    onChange={e => setProfileData(p => ({ ...p, phone: e.target.value }))}
+                    placeholder="6 00 00 00 00"
+                    type="tel"
+                    style={{ ...inputStyle(), flex: 1, borderRadius: 0 }}
+                    onFocus={e => e.target.style.borderColor = G.goldBdr}
+                    onBlur={e => e.target.style.borderColor = G.border}
+                  />
+                </div>
+              </div>
+
+              {/* Ville + Pays */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>
-                  <label style={{ display: 'block', fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.4)', marginBottom: 8 }}>Téléphone</label>
-                  <input value={profileData.phone} onChange={e => setProfileData(p => ({ ...p, phone: e.target.value }))}
-                    placeholder="+33 6 00 00 00 00" type="tel"
-                    style={inputStyle(false)}
+                  <label style={labelStyle}>Ville *</label>
+                  <input
+                    value={profileData.city}
+                    onChange={e => setProfileData(p => ({ ...p, city: e.target.value }))}
+                    placeholder="Lyon"
+                    style={inputStyle()}
                     onFocus={e => e.target.style.borderColor = G.goldBdr}
-                    onBlur={e => e.target.style.borderColor = G.border} />
+                    onBlur={e => e.target.style.borderColor = G.border}
+                  />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.4)', marginBottom: 8 }}>Ville</label>
-                  <input value={profileData.city} onChange={e => setProfileData(p => ({ ...p, city: e.target.value }))}
-                    placeholder="Ville"
-                    style={inputStyle(false)}
-                    onFocus={e => e.target.style.borderColor = G.goldBdr}
-                    onBlur={e => e.target.style.borderColor = G.border} />
+                  <label style={labelStyle}>Pays *</label>
+                  <select
+                    value={profileData.country}
+                    onChange={e => setProfileData(p => ({ ...p, country: e.target.value, dialCode: e.target.value }))}
+                    style={{ ...inputStyle(), cursor: 'pointer' }}
+                  >
+                    {COUNTRIES.filter(c => c.code !== 'OTHER').map(c => (
+                      <option key={c.code} value={c.code}>{c.flag} {c.label}</option>
+                    ))}
+                    <option value="OTHER">🌍 Autre</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -319,142 +342,116 @@ export default function Onboarding() {
         {step === 2 && (
           <div className="step-card" style={{ width: '100%', maxWidth: 480 }}>
             <div style={{ marginBottom: 32, textAlign: 'center' }}>
-              <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>Étape 2 sur 5</div>
+              <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>Étape 2 sur 4</div>
               <h1 style={{ fontFamily: G.display, fontSize: 'clamp(38px,5vw,52px)', textTransform: 'uppercase', lineHeight: .88, color: G.text, margin: 0 }}>
                 Votre<br /><span style={{ color: G.gold }}>club.</span>
               </h1>
               <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, marginTop: 14, letterSpacing: '.04em' }}>Quelques infos sur votre structure</p>
             </div>
 
-            {error && <ErrBox msg={error} />}
+            {error && <ErrBox msg={error} onClose={() => setError('')} />}
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+              {/* Nom */}
               <div>
-                <label style={{ display: 'block', fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.4)', marginBottom: 8 }}>Nom du club *</label>
-                <input value={clubData.name} onChange={e => setClubData(p => ({ ...p, name: e.target.value }))}
+                <label style={labelStyle}>Nom du club *</label>
+                <input
+                  value={clubData.name}
+                  onChange={e => setClubData(p => ({ ...p, name: e.target.value }))}
                   placeholder="Ex : FC Lyon Nord"
-                  style={inputStyle(false)}
+                  style={inputStyle()}
                   onFocus={e => e.target.style.borderColor = G.goldBdr}
-                  onBlur={e => e.target.style.borderColor = G.border} />
+                  onBlur={e => e.target.style.borderColor = G.border}
+                />
+              </div>
+
+              {/* Nombre d'équipes foot à 11 */}
+              <div>
+                <label style={labelStyle}>Nombre d'équipes foot à 11 *</label>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {NB_TEAMS_OPTIONS.map(n => (
+                    <ChipBtn key={n} label={n} active={clubData.nb_teams === n} onClick={() => setClubData(p => ({ ...p, nb_teams: n }))} />
+                  ))}
+                </div>
               </div>
             </div>
 
             <div style={{ display: 'flex', gap: 10, marginTop: 28 }}>
-              <BtnBack onClick={() => setStep(1)} />
-              <BtnPrimary onClick={handleSaveClub} saving={saving} label="Continuer" flex />
+              <BtnBack onClick={() => { setError(''); setStep(1) }} />
+              <BtnPrimary onClick={handleSaveClub} saving={saving} flex label="Continuer" />
             </div>
           </div>
         )}
 
-        {/* ── STEP 3 — EFFECTIF ── */}
+        {/* ── STEP 3 — ÉQUIPE PRINCIPALE ── */}
         {step === 3 && (
-          <div className="step-card" style={{ width: '100%', maxWidth: 520 }}>
+          <div className="step-card" style={{ width: '100%', maxWidth: 480 }}>
             <div style={{ marginBottom: 32, textAlign: 'center' }}>
-              <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>Étape 3 sur 5</div>
+              <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>Étape 3 sur 4</div>
               <h1 style={{ fontFamily: G.display, fontSize: 'clamp(38px,5vw,52px)', textTransform: 'uppercase', lineHeight: .88, color: G.text, margin: 0 }}>
-                Votre<br /><span style={{ color: G.gold }}>effectif.</span>
+                Votre<br /><span style={{ color: G.gold }}>équipe.</span>
               </h1>
-              <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, marginTop: 14, letterSpacing: '.04em' }}>Optionnel — vous pouvez ajouter vos joueurs plus tard</p>
+              <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, marginTop: 14, letterSpacing: '.04em' }}>
+                Votre équipe principale — les joueurs s'ajoutent dans le dashboard
+              </p>
             </div>
 
-            {error && <ErrBox msg={error} />}
+            {error && <ErrBox msg={error} onClose={() => setError('')} />}
 
-            {players.length > 0 && (
-              <div style={{ background: G.bg2, border: `1px solid ${G.border}`, marginBottom: 12 }}>
-                {players.map((p, i) => (
-                  <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderBottom: i < players.length - 1 ? `1px solid ${G.border}` : 'none' }}>
-                    <div style={{ width: 28, height: 28, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <span style={{ fontFamily: G.mono, fontSize: 9, color: G.gold }}>{p.number || '—'}</span>
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontFamily: G.mono, fontSize: 11, color: G.text }}>{p.name}</div>
-                      <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted }}>{p.position}</div>
-                    </div>
-                    <button onClick={() => handleRemovePlayer(p.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
-                      <X size={12} color={G.muted} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {addingPlayer ? (
-              <div style={{ background: 'rgba(201,162,39,0.04)', border: `1px solid ${G.goldBdr}`, padding: '16px', marginBottom: 16 }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 80px', gap: 10, marginBottom: 10 }}>
-                  <input value={newPlayer.name} onChange={e => setNewPlayer(p => ({ ...p, name: e.target.value }))}
-                    placeholder="Nom du joueur" autoFocus
-                    style={inputStyle(false)}
-                    onFocus={e => e.target.style.borderColor = G.goldBdr}
-                    onBlur={e => e.target.style.borderColor = G.border}
-                    onKeyDown={e => e.key === 'Enter' && handleAddPlayer()} />
-                  <input value={newPlayer.number} onChange={e => setNewPlayer(p => ({ ...p, number: e.target.value }))}
-                    placeholder="N°" type="number"
-                    style={{ ...inputStyle(false), textAlign: 'center' }}
-                    onFocus={e => e.target.style.borderColor = G.goldBdr}
-                    onBlur={e => e.target.style.borderColor = G.border} />
-                </div>
-                <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
-                  {POSITIONS.map(pos => (
-                    <button key={pos} onClick={() => setNewPlayer(p => ({ ...p, position: pos }))} style={{
-                      padding: '5px 10px', fontFamily: G.mono, fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase',
-                      background: newPlayer.position === pos ? G.goldBg : 'transparent',
-                      border: `1px solid ${newPlayer.position === pos ? G.goldBdr : 'rgba(255,255,255,0.1)'}`,
-                      color: newPlayer.position === pos ? G.gold : G.muted, cursor: 'pointer',
-                    }}>{pos}</button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              {/* Catégorie */}
+              <div>
+                <label style={labelStyle}>Catégorie *</label>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {TEAM_CATEGORIES.map(c => (
+                    <ChipBtn key={c} label={c} active={teamData.category === c} onClick={() => setTeamData(p => ({ ...p, category: c }))} />
                   ))}
                 </div>
-                <div style={{ display: 'flex', gap: 8 }}>
-                  <button onClick={() => setAddingPlayer(false)} style={{ flex: 1, padding: '9px', background: 'transparent', border: `1px solid ${G.border}`, fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, cursor: 'pointer' }}>Annuler</button>
-                  <button onClick={handleAddPlayer} style={{ flex: 2, padding: '9px', background: G.gold, border: 'none', fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.bg, fontWeight: 700, cursor: 'pointer' }}>Ajouter</button>
+              </div>
+
+              {/* Niveau */}
+              <div>
+                <label style={labelStyle}>Niveau *</label>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {TEAM_LEVELS.map(l => (
+                    <ChipBtn key={l} label={l} active={teamData.level === l} onClick={() => setTeamData(p => ({ ...p, level: l }))} />
+                  ))}
                 </div>
               </div>
-            ) : (
-              <button onClick={() => setAddingPlayer(true)} style={{
-                width: '100%', padding: '12px', marginBottom: 16,
-                background: 'transparent', border: `1px dashed ${G.goldBdr}`,
-                fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase',
-                color: G.gold, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                transition: 'background .15s',
-              }}
-                onMouseEnter={e => e.currentTarget.style.background = G.goldBg}
-                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                <Plus size={12} /> Ajouter un joueur
-              </button>
-            )}
+            </div>
 
-            <div style={{ display: 'flex', gap: 10 }}>
-              <BtnBack onClick={() => setStep(2)} />
-              <BtnPrimary onClick={handleSavePlayers} saving={saving} flex
-                label={players.length > 0 ? `Enregistrer ${players.length} joueur${players.length > 1 ? 's' : ''}` : 'Passer cette étape'} />
+            <div style={{ display: 'flex', gap: 10, marginTop: 28 }}>
+              <BtnBack onClick={() => { setError(''); setStep(2) }} />
+              <BtnPrimary onClick={handleSaveTeam} saving={saving} flex label="Continuer" />
             </div>
           </div>
         )}
 
-        {/* ── STEP 4 — FILMING SETUP ── */}
+        {/* ── STEP 4 — FILMING ── */}
         {step === 4 && (
           <div className="step-card" style={{ width: '100%', maxWidth: 580 }}>
             <div style={{ marginBottom: 32, textAlign: 'center' }}>
-              <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>Étape 4 sur 5</div>
+              <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>Étape 4 sur 4</div>
               <h1 style={{ fontFamily: G.display, fontSize: 'clamp(38px,5vw,52px)', textTransform: 'uppercase', lineHeight: .88, color: G.text, margin: 0 }}>
                 Comment vous<br /><span style={{ color: G.gold }}>filmez ?</span>
               </h1>
               <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, marginTop: 14, letterSpacing: '.04em', lineHeight: 1.6 }}>
                 Ça nous aide à optimiser l'analyse pour votre setup.<br />
-                <span style={{ color: 'rgba(245,242,235,0.3)' }}>Optionnel — vous pouvez répondre plus tard</span>
+                <span style={{ color: 'rgba(245,242,235,0.4)' }}>Plusieurs réponses possibles.</span>
               </p>
             </div>
+
+            {error && <ErrBox msg={error} onClose={() => setError('')} />}
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1, background: G.border, marginBottom: 20 }}>
               {FILMING_OPTIONS.map(opt => {
                 const Icon = opt.icon
-                const selected = filmingSetup === opt.id
+                const selected = filmingSetup.includes(opt.id)
                 return (
-                  <button key={opt.id} onClick={() => setFilmingSetup(selected ? '' : opt.id)} style={{
+                  <button key={opt.id} onClick={() => toggleFilming(opt.id)} style={{
                     padding: '18px 16px', background: selected ? 'rgba(201,162,39,0.06)' : G.bg2,
-                    border: 'none',
-                    borderLeft: selected ? `3px solid ${G.gold}` : '3px solid transparent',
-                    cursor: 'pointer', textAlign: 'left',
-                    transition: 'background .15s',
+                    border: 'none', borderLeft: `3px solid ${selected ? G.gold : 'transparent'}`,
+                    cursor: 'pointer', textAlign: 'left', transition: 'background .15s',
                     display: 'flex', flexDirection: 'column', gap: 8,
                   }}
                     onMouseEnter={e => { if (!selected) e.currentTarget.style.background = 'rgba(255,255,255,0.03)' }}
@@ -473,140 +470,25 @@ export default function Onboarding() {
                         </div>
                       )}
                     </div>
-                    <p style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.35)', lineHeight: 1.5, margin: 0 }}>
-                      {opt.desc}
-                    </p>
+                    <p style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.35)', lineHeight: 1.5, margin: 0 }}>{opt.desc}</p>
                   </button>
                 )
               })}
             </div>
 
-            {/* Conseil si "pas encore de setup" */}
-            {filmingSetup === 'no_setup' && (
+            {/* Conseil si "pas encore de setup" sélectionné */}
+            {filmingSetup.includes('no_setup') && (
               <div style={{ padding: '14px 16px', background: G.goldBg, border: `1px solid ${G.goldBdr}`, marginBottom: 16 }}>
                 <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, marginBottom: 6 }}>💡 Notre recommandation</div>
                 <p style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(245,242,235,0.65)', lineHeight: 1.6, margin: 0 }}>
-                  Un smartphone posé sur un trépied en tribune, à 5-7m de hauteur, plan large centré sur le terrain. C'est le setup le plus simple et celui qui donne les meilleurs résultats avec InsightBall.
+                  Un smartphone posé sur un trépied en tribune, à 5-7m de hauteur, plan large centré. C'est le setup le plus simple et celui qui donne les meilleurs résultats avec InsightBall.
                 </p>
               </div>
             )}
 
             <div style={{ display: 'flex', gap: 10 }}>
-              <BtnBack onClick={() => setStep(3)} />
-              <BtnPrimary onClick={handleSaveFilming} saving={saving} flex
-                label={filmingSetup ? 'Continuer' : 'Passer cette étape'} />
-            </div>
-          </div>
-        )}
-
-        {/* ── STEP 5 — PLAN ── */}
-        {step === 5 && (
-          <div className="step-card" style={{ width: '100%', maxWidth: 680 }}>
-            <div style={{ marginBottom: 32, textAlign: 'center' }}>
-              <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>Étape 5 sur 5</div>
-              <h1 style={{ fontFamily: G.display, fontSize: 'clamp(38px,5vw,52px)', textTransform: 'uppercase', lineHeight: .88, color: G.text, margin: 0 }}>
-                Votre<br /><span style={{ color: G.gold }}>plan.</span>
-              </h1>
-              <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, marginTop: 14, letterSpacing: '.04em', lineHeight: 1.7 }}>
-                7 jours d'essai gratuit · 1 match analysé offert · Sans engagement
-              </p>
-            </div>
-
-            {/* Bloc rassurant CB */}
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '12px 16px', background: 'rgba(34,197,94,0.05)', border: '1px solid rgba(34,197,94,0.15)', marginBottom: 24 }}>
-              <Lock size={13} color={G.green} style={{ flexShrink: 0, marginTop: 2 }} />
-              <div>
-                <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.green, marginBottom: 4 }}>Carte bancaire requise — aucun prélèvement aujourd'hui</div>
-                <p style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(245,242,235,0.50)', lineHeight: 1.6, margin: 0 }}>
-                  Votre CB ne sera débitée qu'au bout de 7 jours. Vous recevrez un rappel e-mail 2 jours avant. Résiliable en 1 clic depuis votre compte, aucune question posée.
-                </p>
-              </div>
-            </div>
-
-            {error && <ErrBox msg={error} />}
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: G.border, marginBottom: 16 }}>
-              {[
-                {
-                  id: 'COACH', icon: Zap, color: G.gold,
-                  price: '39', trialLabel: 'Puis 39€/mois',
-                  quota: '4 matchs / mois',
-                  features: ['Rapports PDF complets', 'Statistiques joueurs', 'Heatmaps tactiques', 'Support email'],
-                },
-                {
-                  id: 'CLUB', icon: Users, color: '#3b82f6',
-                  price: '129', trialLabel: 'Puis 129€/mois',
-                  quota: '12 matchs / mois',
-                  features: ['Tout le plan Coach', 'Multi-équipes', 'Dashboard directeur sportif', 'Support prioritaire'],
-                  popular: true,
-                },
-              ].map(plan => {
-                const Icon = plan.icon
-                return (
-                  <div key={plan.id} style={{
-                    background: plan.popular ? 'rgba(201,162,39,0.04)' : G.bg2,
-                    borderTop: `2px solid ${plan.color}`,
-                    padding: '24px 20px',
-                    display: 'flex', flexDirection: 'column', gap: 12,
-                  }}>
-                    {plan.popular && (
-                      <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, border: `1px solid ${G.goldBdr}`, padding: '3px 10px', alignSelf: 'flex-start', background: 'rgba(10,9,8,0.8)' }}>
-                        ⚡ Recommandé
-                      </div>
-                    )}
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <Icon size={14} color={plan.color} />
-                        <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: plan.color }}>{plan.id}</span>
-                      </div>
-                      <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontFamily: G.display, fontSize: 34, color: G.text, lineHeight: 1 }}>
-                          0<span style={{ fontFamily: G.mono, fontSize: 11, color: G.muted }}>€</span>
-                        </div>
-                        <div style={{ fontFamily: G.mono, fontSize: 8, color: 'rgba(245,242,235,0.35)' }}>7 jours · {plan.quota}</div>
-                      </div>
-                    </div>
-
-                    <div style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.35)', padding: '6px 10px', background: 'rgba(255,255,255,0.025)', border: `1px solid ${G.border}` }}>
-                      {plan.trialLabel} après l'essai
-                    </div>
-
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-                      {plan.features.map(f => (
-                        <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <div style={{ width: 4, height: 4, background: plan.color, flexShrink: 0 }} />
-                          <span style={{ fontFamily: G.mono, fontSize: 9, color: G.muted }}>{f}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    <button onClick={() => handleChoosePlan(plan.id)} disabled={!!saving} style={{
-                      marginTop: 'auto', padding: '12px',
-                      background: plan.color === G.gold ? G.gold : 'rgba(59,130,246,0.12)',
-                      border: plan.color !== G.gold ? '1px solid rgba(59,130,246,0.35)' : 'none',
-                      color: plan.color === G.gold ? G.bg : '#3b82f6',
-                      fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase',
-                      fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                    }}>
-                      {saving
-                        ? <Spinner />
-                        : <><CreditCard size={11} /> Démarrer l'essai gratuit</>
-                      }
-                    </button>
-                  </div>
-                )
-              })}
-            </div>
-
-            <p style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.25)', letterSpacing: '.06em', textAlign: 'center', lineHeight: 1.6 }}>
-              🔒 Paiement sécurisé Stripe · Résiliable à tout moment depuis votre compte · Rappel e-mail J-2
-            </p>
-
-            <div style={{ textAlign: 'center', marginTop: 12 }}>
-              <button onClick={() => navigate('/dashboard')} style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.20)', background: 'none', border: 'none', cursor: 'pointer' }}>
-                Continuer sans abonnement →
-              </button>
+              <BtnBack onClick={() => { setError(''); setStep(3) }} />
+              <BtnPrimary onClick={handleSaveFilming} saving={saving} flex label="Terminer" />
             </div>
           </div>
         )}
@@ -616,7 +498,129 @@ export default function Onboarding() {
   )
 }
 
+/* ── ÉCRAN BIENVENUE ─────────────────────────────────────────── */
+function WelcomeScreen({ navigate }) {
+  const [visible, setVisible] = useState(false)
+
+  // Petit délai pour l'animation d'entrée
+  useState(() => {
+    setTimeout(() => setVisible(true), 50)
+  })
+
+  return (
+    <div style={{
+      minHeight: '100vh', background: G.bg,
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+      padding: '40px 24px', textAlign: 'center',
+      opacity: visible ? 1 : 0, transition: 'opacity .6s ease',
+    }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .w1 { animation: fadeUp .5s ease .1s both; }
+        .w2 { animation: fadeUp .5s ease .35s both; }
+        .w3 { animation: fadeUp .5s ease .6s both; }
+        .w4 { animation: fadeUp .5s ease .85s both; }
+        .w5 { animation: fadeUp .5s ease 1.1s both; }
+      `}</style>
+
+      {/* Logo animé */}
+      <div className="w1" style={{
+        width: 72, height: 72, background: G.goldBg, border: `1px solid ${G.goldBdr}`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        marginBottom: 32, animation: 'fadeUp .5s ease .1s both, pulse 2s ease 1s infinite',
+      }}>
+        <span style={{ fontFamily: G.display, fontSize: 28, color: G.gold }}>IB</span>
+      </div>
+
+      {/* Headline */}
+      <h1 className="w2" style={{
+        fontFamily: G.display, fontSize: 'clamp(42px,7vw,72px)',
+        textTransform: 'uppercase', lineHeight: .88, color: G.text,
+        margin: '0 0 8px', letterSpacing: '.01em',
+      }}>
+        C'est parti.<br />
+        <span style={{ color: G.gold }}>On révolutionne</span><br />
+        le foot.
+      </h1>
+
+      {/* Sous-titre */}
+      <p className="w3" style={{
+        fontFamily: G.mono, fontSize: 12, color: 'rgba(245,242,235,0.5)',
+        lineHeight: 1.8, marginTop: 24, maxWidth: 460, letterSpacing: '.04em',
+      }}>
+        Votre profil est configuré. Analysez votre premier match,<br />
+        découvrez ce que les données révèlent sur votre jeu.
+      </p>
+
+      {/* Stats teaser */}
+      <div className="w4" style={{
+        display: 'flex', gap: 1, background: 'rgba(255,255,255,0.05)',
+        marginTop: 40, marginBottom: 40,
+      }}>
+        {[
+          { val: '87%', label: 'Précision analyse' },
+          { val: '< 24h', label: 'Rapport livré' },
+          { val: '1 match', label: 'Offert dès maintenant' },
+        ].map(({ val, label }) => (
+          <div key={label} style={{ padding: '20px 28px', background: G.bg2, borderTop: `2px solid ${G.goldBdr}` }}>
+            <div style={{ fontFamily: G.display, fontSize: 28, color: G.gold, lineHeight: 1 }}>{val}</div>
+            <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.35)', marginTop: 6 }}>{label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* CTA */}
+      <button
+        className="w5"
+        onClick={() => navigate('/dashboard/matches/upload')}
+        style={{
+          display: 'flex', alignItems: 'center', gap: 12,
+          padding: '16px 36px', background: G.gold, color: G.bg,
+          fontFamily: G.mono, fontSize: 11, letterSpacing: '.16em',
+          textTransform: 'uppercase', fontWeight: 700, border: 'none',
+          cursor: 'pointer', transition: 'opacity .15s',
+        }}
+        onMouseEnter={e => e.currentTarget.style.opacity = '.85'}
+        onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+      >
+        Analyser mon premier match <ChevronRight size={16} />
+      </button>
+
+      {/* Lien discret dashboard */}
+      <button
+        className="w5"
+        onClick={() => navigate('/dashboard')}
+        style={{
+          marginTop: 16, fontFamily: G.mono, fontSize: 9,
+          letterSpacing: '.1em', textTransform: 'uppercase',
+          color: 'rgba(245,242,235,0.2)', background: 'none',
+          border: 'none', cursor: 'pointer',
+        }}
+      >
+        Explorer le dashboard d'abord →
+      </button>
+    </div>
+  )
+}
+
 /* ── Composants utilitaires ── */
+function ChipBtn({ label, active, onClick }) {
+  return (
+    <button onClick={onClick} style={{
+      padding: '7px 14px', fontFamily: G.mono, fontSize: 9, letterSpacing: '.08em',
+      background: active ? G.goldBg : 'transparent',
+      border: `1px solid ${active ? G.goldBdr : 'rgba(255,255,255,0.1)'}`,
+      color: active ? G.gold : G.muted, cursor: 'pointer',
+      transition: 'all .12s',
+    }}>
+      {label}
+    </button>
+  )
+}
+
 function BtnPrimary({ onClick, saving, label, flex }) {
   return (
     <button onClick={onClick} disabled={saving} style={{
@@ -637,13 +641,21 @@ function BtnPrimary({ onClick, saving, label, flex }) {
 
 function BtnBack({ onClick }) {
   return (
-    <button onClick={onClick} style={{ padding: '14px 20px', background: 'transparent', border: `1px solid ${G.border}`, fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, cursor: 'pointer' }}>←</button>
+    <button onClick={onClick} style={{
+      padding: '14px 20px', background: 'transparent',
+      border: `1px solid ${G.border}`, fontFamily: G.mono,
+      fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase',
+      color: G.muted, cursor: 'pointer',
+    }}>←</button>
   )
 }
 
-function ErrBox({ msg }) {
+function ErrBox({ msg, onClose }) {
   return (
-    <div style={{ marginBottom: 16, padding: '10px 14px', background: 'rgba(239,68,68,0.08)', borderLeft: '2px solid #ef4444', fontFamily: G.mono, fontSize: 11, color: '#ef4444' }}>{msg}</div>
+    <div style={{ marginBottom: 16, padding: '10px 14px', background: 'rgba(239,68,68,0.08)', borderLeft: '2px solid #ef4444', fontFamily: G.mono, fontSize: 11, color: '#ef4444', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      {msg}
+      {onClose && <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444', padding: 0, fontSize: 14, lineHeight: 1 }}>×</button>}
+    </div>
   )
 }
 
