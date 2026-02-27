@@ -117,8 +117,8 @@ export default function DashboardHome() {
         @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
         @keyframes growBar { from { width: 0%; } to { } }
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-        .match-row:hover { background: ${G.cream} !important; }
-        .player-row:hover { background: ${G.cream} !important; }
+        .match-row:hover { background: rgba(201,162,39,0.04) !important; }
+        .player-row:hover { background: rgba(201,162,39,0.04) !important; }
       `}</style>
 
       {/* ── HERO HEADER ── */}
@@ -196,7 +196,7 @@ export default function DashboardHome() {
           { label: 'Victoire / match',   value: `${completed > 0 ? Math.round((matches.filter(m=>m.score_home > m.score_away).length/completed)*100) : 0}%`, sub: 'Saison', icon: Target, accent: G.gold, delay: 180, isString: true },
         ].map((s, i) => (
           <div key={s.label} style={{
-            background: G.white,
+            background: 'transparent',
             border: `1px solid ${G.rule}`,
             borderTop: `2px solid ${s.accent}`,
             padding: '18px 16px',
@@ -233,7 +233,7 @@ export default function DashboardHome() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
 
           {/* Derniers matchs */}
-          <div style={{ background: G.white, border: `1px solid ${G.rule}`, animation: 'fadeUp .4s ease 200ms both' }}>
+          <div style={{ background: 'transparent', border: 'none', borderBottom: `1px solid ${G.rule}`, animation: 'fadeUp .4s ease 200ms both' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px', borderBottom: `1px solid ${G.rule}` }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ width: 2, height: 14, background: G.gold, display: 'inline-block' }} />
@@ -248,9 +248,9 @@ export default function DashboardHome() {
             </div>
 
             {loading ? (
-              [1,2,3].map(i => <div key={i} style={{ height: 58, background: G.cream, margin: '1px 0', opacity: 0.6 }} />)
+              [1,2,3].map(i => <div key={i} style={{ height: 58, background: G.rule, margin: '1px 0', opacity: 0.4 }} />)
             ) : matches.length === 0 ? (
-              <div style={{ padding: '48px 20px', textAlign: 'center' }}>
+              <div style={{ padding: '48px 20px', textAlign: 'center', background: 'transparent' }}>
                 <div style={{ width: 48, height: 48, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
                   <Film size={20} color={G.gold} />
                 </div>
@@ -264,7 +264,7 @@ export default function DashboardHome() {
                 <Link key={m.id} to={`/dashboard/matches/${m.id}`} className="match-row"
                   style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 18px', borderBottom: i < 3 ? `1px solid ${G.rule}` : 'none', textDecoration: 'none', transition: 'background .12s', background: 'transparent' }}
                 >
-                  <div style={{ width: 40, flexShrink: 0, textAlign: 'center', padding: '6px 0', background: G.cream, border: `1px solid ${G.rule}` }}>
+                  <div style={{ width: 40, flexShrink: 0, textAlign: 'center', padding: '6px 0', background: G.goldBg, border: `1px solid ${G.goldBdr}` }}>
                     <div style={{ fontFamily: G.display, fontSize: 18, lineHeight: 1, color: G.ink }}>{new Date(m.date).getDate()}</div>
                     <div style={{ fontFamily: G.mono, fontSize: 7, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>
                       {new Date(m.date).toLocaleDateString('fr-FR', { month: 'short' })}
@@ -298,7 +298,7 @@ export default function DashboardHome() {
           </div>
 
           {/* Top joueurs */}
-          <div style={{ background: G.white, border: `1px solid ${G.rule}`, animation: 'fadeUp .4s ease 280ms both' }}>
+          <div style={{ background: 'transparent', border: 'none', borderBottom: `1px solid ${G.rule}`, animation: 'fadeUp .4s ease 280ms both' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px', borderBottom: `1px solid ${G.rule}` }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ width: 2, height: 14, background: G.gold, display: 'inline-block' }} />
@@ -313,7 +313,7 @@ export default function DashboardHome() {
             </div>
             <div style={{ padding: '4px 0' }}>
               {loading ? [1,2,3,4,5].map(i => (
-                <div key={i} style={{ height: 52, background: G.cream, margin: '1px 0', opacity: 0.5 }} />
+                <div key={i} style={{ height: 52, background: G.rule, margin: '1px 0', opacity: 0.4 }} />
               )) : topPlayers.length === 0 ? (
                 <p style={{ padding: '28px 18px', fontFamily: G.mono, fontSize: 11, color: G.muted, textAlign: 'center' }}>Aucun joueur enregistré</p>
               ) : (
@@ -382,14 +382,14 @@ export default function DashboardHome() {
           </div>
 
           {/* Prochains matchs */}
-          <div style={{ background: G.white, border: `1px solid ${G.rule}`, animation: 'fadeUp .4s ease 160ms both' }}>
+          <div style={{ background: 'transparent', border: 'none', borderBottom: `1px solid ${G.rule}`, animation: 'fadeUp .4s ease 160ms both' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '14px 18px', borderBottom: `1px solid ${G.rule}` }}>
               <span style={{ width: 2, height: 14, background: G.gold, display: 'inline-block' }} />
               <h2 style={{ fontFamily: G.display, fontSize: 13, letterSpacing: '.06em', textTransform: 'uppercase', color: G.ink }}>Prochains matchs</h2>
             </div>
             {upcoming.map((m, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', borderBottom: i < upcoming.length-1 ? `1px solid ${G.rule}` : 'none' }}>
-                <div style={{ width: 36, textAlign: 'center', padding: '5px 0', background: G.cream, border: `1px solid ${G.rule}`, flexShrink: 0 }}>
+                <div style={{ width: 36, textAlign: 'center', padding: '5px 0', background: G.goldBg, border: `1px solid ${G.goldBdr}`, flexShrink: 0 }}>
                   <div style={{ fontFamily: G.display, fontSize: 16, lineHeight: 1, color: G.ink }}>{new Date(m.date).getDate()}</div>
                   <div style={{ fontFamily: G.mono, fontSize: 7, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>
                     {new Date(m.date).toLocaleDateString('fr-FR', { month: 'short' })}
@@ -405,7 +405,7 @@ export default function DashboardHome() {
           </div>
 
           {/* Alertes */}
-          <div style={{ background: G.white, border: `1px solid ${G.rule}`, animation: 'fadeUp .4s ease 220ms both' }}>
+          <div style={{ background: 'transparent', border: 'none', borderBottom: `1px solid ${G.rule}`, animation: 'fadeUp .4s ease 220ms both' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '14px 18px', borderBottom: `1px solid ${G.rule}` }}>
               <span style={{ width: 2, height: 14, background: G.gold, display: 'inline-block' }} />
               <h2 style={{ fontFamily: G.display, fontSize: 13, letterSpacing: '.06em', textTransform: 'uppercase', color: G.ink }}>Alertes</h2>
@@ -431,12 +431,12 @@ export default function DashboardHome() {
           {userPlan === 'CLUB' && (
             <Link to="/dashboard/club" style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              padding: '14px 16px', background: G.white, border: `1px solid ${G.rule}`,
+              padding: '14px 16px', background: 'transparent', border: `1px solid ${G.rule}`,
               borderLeft: `3px solid ${G.gold}`, textDecoration: 'none',
               transition: 'background .15s',
             }}
-              onMouseEnter={e => e.currentTarget.style.background = G.cream}
-              onMouseLeave={e => e.currentTarget.style.background = G.white}
+              onMouseEnter={e => e.currentTarget.style.background = G.goldBg}
+              onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
             >
               <div>
                 <div style={{ fontFamily: G.display, fontSize: 13, letterSpacing: '.06em', textTransform: 'uppercase', color: G.ink, marginBottom: 3 }}>Vue Club</div>
