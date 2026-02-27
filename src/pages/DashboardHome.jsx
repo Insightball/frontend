@@ -186,20 +186,21 @@ export default function DashboardHome() {
       <div style={{
         display: 'grid',
         gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)',
-        gap: 8,
+        gap: 0,
         marginBottom: 24,
+        border: `1px solid ${G.rule}`,
       }}>
         {[
           { label: 'Matchs analysés',    value: completed,      sub: 'Ce mois',  icon: Film,     accent: G.gold,   delay: 0   },
-          { label: "En cours d'analyse", value: processing,     sub: 'Actif',    icon: Activity, accent: G.blue,   delay: 60  },
+          { label: "En cours d'analyse", value: processing,     sub: 'Actif',    icon: Activity, accent: G.gold,  delay: 60  },
           { label: 'Joueurs effectif',   value: players.length, sub: 'Total',    icon: Users,    accent: G.gold,   delay: 120 },
           { label: 'Victoire / match',   value: `${completed > 0 ? Math.round((matches.filter(m=>m.score_home > m.score_away).length/completed)*100) : 0}%`, sub: 'Saison', icon: Target, accent: G.gold, delay: 180, isString: true },
         ].map((s, i) => (
           <div key={s.label} style={{
             background: 'transparent',
-            border: `1px solid ${G.rule}`,
-            borderTop: `2px solid ${s.accent}`,
-            padding: '18px 16px',
+            borderRight: `1px solid ${G.rule}`,
+            borderTop: `2px solid ${G.gold}`,
+            padding: '20px 18px',
             animation: `fadeUp .4s ease ${s.delay}ms both`,
             transition: 'box-shadow .15s, transform .15s',
           }}
@@ -207,8 +208,8 @@ export default function DashboardHome() {
             onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-              <div style={{ width: 28, height: 28, background: s.accent + '12', border: `1px solid ${s.accent}25`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <s.icon size={12} color={s.accent} />
+              <div style={{ width: 28, height: 28, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <s.icon size={12} color={G.gold} />
               </div>
               <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted }}>{s.sub}</span>
             </div>
