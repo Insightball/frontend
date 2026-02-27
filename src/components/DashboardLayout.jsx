@@ -73,15 +73,15 @@ function DashboardLayout({ children }) {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
 
       {/* Logo */}
-      <div style={{ padding: '20px 18px 16px', borderBottom: `1px solid ${G.rule}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ padding: '20px 18px 16px', background: '#0a0908', borderBottom: `1px solid rgba(201,162,39,0.15)`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
           <img src="/logo.svg" alt="InsightBall" style={{ width: 26, height: 26 }} />
-          <span style={{ fontFamily: G.display, fontSize: 15, letterSpacing: '.08em', color: G.ink }}>
+          <span style={{ fontFamily: G.display, fontSize: 15, letterSpacing: '.08em', color: '#f5f2eb' }}>
             INSIGHT<span style={{ color: G.gold }}>BALL</span>
           </span>
         </Link>
         {isMobile && (
-          <button onClick={() => setMobileOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: G.muted, padding: 4 }}>
+          <button onClick={() => setMobileOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(245,242,235,0.5)', padding: 4 }}>
             <X size={18} />
           </button>
         )}
