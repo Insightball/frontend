@@ -118,9 +118,6 @@ export default function UploadMatch() {
     if (!videoFile) { alert('Ajoutez une vidéo'); return }
     setUploading(true)
     try {
-      if (trialStatus?.access === 'full' && trialStatus?.trial_active) {
-        await api.post('/subscription/use-trial-match')
-      }
       await matchService.uploadMatch({ matchData, lineup, videoFile })
       navigate('/dashboard/matches')
     } catch (e) { console.error(e); alert("Erreur lors de l'upload") }
@@ -132,13 +129,10 @@ export default function UploadMatch() {
   // - pas de CB (no_trial)
   // - trial expiré sans abonnement
   // - analyse trial déjà utilisée
-  const access         = trialStatus?.access
-  const matchUsed      = trialStatus?.match_used
-  const isFullActive   = access === 'full' && !matchUsed
-  const isTrialNoCB    = !hasPaymentMethod && access !== 'full'
-  const isExpired      = access === 'expired'
-  const isMatchUsed    = access === 'full' && matchUsed && trialStatus?.trial_active
-  const canUpload      = isFullActive
+  const access       = trialStatus?.access
+  const isTrialNoCB  = !hasPaymentMethod && access !== 'full'
+  const isExpired    = access === 'expired'
+  const canUpload    = access === 'full'
 
   if (!trialLoading && !canUpload) {
     const title = isTrialNoCB
