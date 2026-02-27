@@ -10,17 +10,17 @@ const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&famil
 
 /* ─── Palette CLAIRE — cohérente avec DashboardLayout ─── */
 const G = {
-  cream:   '#faf8f4',
+  cream:   '#f5f2eb',
   white:   '#ffffff',
-  ink:     '#0f0f0d',
+  ink:     '#1a1916',
   ink2:    '#2a2a26',
-  muted:   'rgba(15,15,13,0.42)',
-  muted2:  'rgba(15,15,13,0.62)',
-  rule:    'rgba(15,15,13,0.09)',
+  muted:   'rgba(26,25,22,0.45)',
+  muted2:  'rgba(26,25,22,0.62)',
+  rule:    'rgba(26,25,22,0.09)',
   gold:    '#c9a227',
   goldD:   '#a8861f',
   goldBg:  'rgba(201,162,39,0.07)',
-  goldBdr: 'rgba(201,162,39,0.25)',
+  goldBdr: 'rgba(201,162,39,0.22)',
   green:   '#16a34a',
   red:     '#dc2626',
   blue:    '#2563eb',
@@ -43,7 +43,7 @@ function StatCard({ icon: Icon, label, value, sub, accent, loading }) {
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
         <div style={{ width: 30, height: 30, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Icon size={13} color={accent || G.gold} />
+          <Icon size={13} color={G.gold} />
         </div>
         <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted }}>{sub}</span>
       </div>
@@ -173,7 +173,7 @@ export default function DashboardHome() {
       {/* ── STAT CARDS ── */}
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 1, background: G.rule, marginBottom: 24 }}>
         <StatCard icon={Film}  label="Matchs analysés"    value={completed}      sub="Ce mois" accent={G.gold}   loading={loading} />
-        <StatCard icon={Clock} label="En cours d'analyse" value={processing}     sub="Actif"   accent={G.blue}   loading={loading} />
+        <StatCard icon={Clock} label="En cours d'analyse" value={processing}     sub="Actif"   accent={G.gold}   loading={loading} />
         <StatCard icon={Users} label="Joueurs effectif"   value={players.length} sub="Total"   loading={loading} />
         {/* Quota */}
         <div style={{ background: G.white, border: `1px solid ${G.rule}`, borderTop: `2px solid ${completed/quota > 0.8 ? G.red : G.gold}`, padding: '20px 18px' }}>

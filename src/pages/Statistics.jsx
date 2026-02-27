@@ -12,17 +12,17 @@ const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&famil
 
 const G = {
   paper:   '#f5f2eb',
-  cream:   '#faf8f4',
+  cream:   '#f5f2eb',
   white:   '#ffffff',
-  ink:     '#0f0f0d',
+  ink:     '#1a1916',
   ink2:    '#2a2a26',
-  muted:   'rgba(15,15,13,0.42)',
-  muted2:  'rgba(15,15,13,0.62)',
-  rule:    'rgba(15,15,13,0.09)',
+  muted:   'rgba(26,25,22,0.45)',
+  muted2:  'rgba(26,25,22,0.62)',
+  rule:    'rgba(26,25,22,0.09)',
   gold:    '#c9a227',
   goldD:   '#a8861f',
   goldBg:  'rgba(201,162,39,0.07)',
-  goldBdr: 'rgba(201,162,39,0.25)',
+  goldBdr: 'rgba(201,162,39,0.22)',
   green:   '#16a34a',
   red:     '#dc2626',
   blue:    '#2563eb',
@@ -175,8 +175,8 @@ function ProgressionView({ matches }) {
   const [metric, setMetric] = useState('possession')
   const metrics = [
     { id: 'possession', label: 'Possession', color: G.gold,   key: m => m.stats?.possession || 58, suffix: '%' },
-    { id: 'passes',     label: 'Passes',     color: G.blue,   key: m => m.stats?.passes     || 178, suffix: '' },
-    { id: 'shots',      label: 'Tirs',       color: G.orange, key: m => m.stats?.shots       || 8,  suffix: '' },
+    { id: 'passes',     label: 'Passes',     color: G.ink2,   key: m => m.stats?.passes     || 178, suffix: '' },
+    { id: 'shots',      label: 'Tirs',       color: G.ink2,   key: m => m.stats?.shots       || 8,  suffix: '' },
   ]
   const current = metrics.find(m => m.id === metric)
   const data = matches.length > 0

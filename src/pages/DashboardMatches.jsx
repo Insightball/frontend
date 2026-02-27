@@ -9,16 +9,16 @@ import api from '../services/api'
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');`
 
 const G = {
-  bg:      '#0a0908',
-  card:    'rgba(255,255,255,0.025)',
-  border:  'rgba(255,255,255,0.07)',
-  text:    '#f5f2eb',
-  muted:   'rgba(245,242,235,0.38)',
-  muted2:  'rgba(245,242,235,0.18)',
+  cream:   '#f5f2eb',
+  white:   '#ffffff',
+  ink:     '#1a1916',
+  muted:   'rgba(26,25,22,0.45)',
+  muted2:  'rgba(26,25,22,0.62)',
+  rule:    'rgba(26,25,22,0.09)',
   gold:    '#c9a227',
   goldD:   '#a8861f',
-  goldBg:  'rgba(201,162,39,0.08)',
-  goldBdr: 'rgba(201,162,39,0.25)',
+  goldBg:  'rgba(201,162,39,0.07)',
+  goldBdr: 'rgba(201,162,39,0.22)',
   mono:    "'JetBrains Mono', monospace",
   display: "'Anton', sans-serif",
 }
@@ -45,16 +45,19 @@ function StatCard({ label, value, icon: Icon, color, delay = 0 }) {
     <div style={{
       opacity: vis ? 1 : 0, transform: vis ? 'translateY(0)' : 'translateY(14px)',
       transition: 'all .45s cubic-bezier(.34,1.56,.64,1)',
-      background: G.card, border: `1px solid ${G.border}`,
-      borderTop: `2px solid ${color}`, padding: '20px 18px',
-    }}>
+      background: G.white, border: `1px solid ${G.rule}`,
+      borderTop: `2px solid ${G.gold}`, padding: '20px 18px',
+    }}
+      onMouseEnter={e => e.currentTarget.style.boxShadow = '0 2px 12px rgba(26,25,22,0.07)'}
+      onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
+    >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
         <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted }}>{label}</span>
-        <div style={{ width: 28, height: 28, background: color + '15', border: `1px solid ${color}25`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Icon size={13} color={color} />
+        <div style={{ width: 28, height: 28, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Icon size={13} color={G.gold} />
         </div>
       </div>
-      <div style={{ fontFamily: G.display, fontSize: 44, lineHeight: 1, color: G.text, letterSpacing: '.01em' }}>{count}</div>
+      <div style={{ fontFamily: G.display, fontSize: 44, lineHeight: 1, color: G.ink, letterSpacing: '.01em' }}>{count}</div>
     </div>
   )
 }
@@ -116,17 +119,17 @@ function DashboardMatches() {
   const filteredMatches = matches.filter(m => filter === 'all' || m.status === filter)
 
   const stats = [
-    { label: 'Total matchs', value: matches.length,                                        icon: Video,      color: G.gold,    delay: 0   },
-    { label: 'En attente',   value: matches.filter(m => m.status === 'pending').length,    icon: Clock,      color: '#f59e0b', delay: 70  },
-    { label: 'En cours',     value: matches.filter(m => m.status === 'processing').length, icon: TrendingUp, color: '#3b82f6', delay: 140 },
-    { label: 'Terminés',     value: matches.filter(m => m.status === 'completed').length,  icon: TrendingUp, color: '#22c55e', delay: 210 },
+    { label: 'Total matchs', value: matches.length,                                        icon: Video,      color: G.gold, delay: 0   },
+    { label: 'En attente',   value: matches.filter(m => m.status === 'pending').length,    icon: Clock,      color: G.gold, delay: 70  },
+    { label: 'En cours',     value: matches.filter(m => m.status === 'processing').length, icon: TrendingUp, color: G.gold, delay: 140 },
+    { label: 'Terminés',     value: matches.filter(m => m.status === 'completed').length,  icon: TrendingUp, color: G.gold, delay: 210 },
   ]
 
   const filters = [
     { key: 'all',        label: 'Tous',       color: G.gold },
-    { key: 'pending',    label: 'En attente', color: '#f59e0b' },
-    { key: 'processing', label: 'En cours',   color: '#3b82f6' },
-    { key: 'completed',  label: 'Terminés',   color: '#22c55e' },
+    { key: 'pending',    label: 'En attente', color: G.gold },
+    { key: 'processing', label: 'En cours',   color: G.gold },
+    { key: 'completed',  label: 'Terminés',   color: G.gold },
   ]
 
   return (
@@ -143,13 +146,13 @@ function DashboardMatches() {
       )}
 
       {/* ── HEADER ── */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28, paddingBottom: 24, borderBottom: `1px solid ${G.border}` }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28, paddingBottom: 24, borderBottom: `1px solid ${G.rule}` }}>
         <div>
           <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
             <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />Mes matchs
           </div>
           <h1 style={{ fontFamily: G.display, fontSize: 52, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', margin: 0 }}>
-            <span style={{ color: G.text }}>Historique</span><br />
+            <span style={{ color: G.ink }}>Historique</span><br />
             <span style={{ color: G.gold }}>& analyses.</span>
           </h1>
         </div>
@@ -167,18 +170,18 @@ function DashboardMatches() {
       </div>
 
       {/* ── STAT CARDS ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 1, background: G.border, marginBottom: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 1, background: G.rule, marginBottom: 24 }}>
         {stats.map(s => <StatCard key={s.label} {...s} />)}
       </div>
 
       {/* ── FILTRES ── */}
-      <div style={{ display: 'flex', gap: 1, marginBottom: 24, background: G.border }}>
+      <div style={{ display: 'flex', gap: 1, marginBottom: 24, background: G.rule }}>
         {filters.map(({ key, label, color }) => (
           <button key={key} onClick={() => setFilter(key)} style={{
             flex: 1, padding: '10px 0',
             fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase',
-            background: filter === key ? color + '18' : G.card,
-            color: filter === key ? color : G.muted,
+            background: filter === key ? G.goldBg : G.white,
+            color: filter === key ? G.gold : G.muted,
             borderTop: `2px solid ${filter === key ? color : 'transparent'}`,
             border: 'none', cursor: 'pointer', transition: 'all .15s',
           }}>{label}</button>
@@ -192,11 +195,11 @@ function DashboardMatches() {
           <p style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted }}>Chargement...</p>
         </div>
       ) : filteredMatches.length === 0 ? (
-        <div style={{ background: G.card, border: `1px solid ${G.border}`, borderTop: `2px solid ${G.goldBdr}`, padding: '80px 24px', textAlign: 'center' }}>
+        <div style={{ background: G.white, border: `1px solid ${G.rule}`, borderTop: `2px solid ${G.gold}`, padding: '80px 24px', textAlign: 'center' }}>
           <div style={{ width: 56, height: 56, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
             <Video size={24} color={G.gold} />
           </div>
-          <h3 style={{ fontFamily: G.display, fontSize: 28, textTransform: 'uppercase', letterSpacing: '.03em', marginBottom: 10, color: G.text }}>
+          <h3 style={{ fontFamily: G.display, fontSize: 28, textTransform: 'uppercase', letterSpacing: '.03em', marginBottom: 10, color: G.ink }}>
             {filter === 'all' ? 'Aucun match' : 'Aucun résultat'}
           </h3>
           <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, marginBottom: 28, letterSpacing: '.06em', lineHeight: 1.7 }}>
@@ -207,19 +210,19 @@ function DashboardMatches() {
           </a>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: G.rule }}>
           {filteredMatches.map((match, i) => (
             <Link key={match.id} to={`/dashboard/matches/${match.id}`}
-              style={{ display: 'block', background: G.card, padding: '20px 24px', textDecoration: 'none', transition: 'background .15s, border-left .15s', animation: `fadeIn .35s ease ${i * 50}ms both`, borderLeft: '2px solid transparent' }}
+              style={{ display: 'block', background: G.white, padding: '20px 24px', textDecoration: 'none', transition: 'background .15s, border-left .15s', animation: `fadeIn .35s ease ${i * 50}ms both`, borderLeft: '2px solid transparent' }}
               onMouseEnter={e => { e.currentTarget.style.background = G.goldBg; e.currentTarget.style.borderLeft = `2px solid ${G.gold}` }}
-              onMouseLeave={e => { e.currentTarget.style.background = G.card;   e.currentTarget.style.borderLeft = '2px solid transparent' }}
+              onMouseLeave={e => { e.currentTarget.style.background = G.white;  e.currentTarget.style.borderLeft = '2px solid transparent' }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8, flexWrap: 'wrap' }}>
-                    <h3 style={{ fontFamily: G.display, fontSize: 20, textTransform: 'uppercase', letterSpacing: '.03em', color: G.text, margin: 0 }}>vs {match.opponent}</h3>
+                    <h3 style={{ fontFamily: G.display, fontSize: 20, textTransform: 'uppercase', letterSpacing: '.03em', color: G.ink, margin: 0 }}>vs {match.opponent}</h3>
                     <StatusBadge status={match.status} />
-                    {match.category && <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.1em', padding: '2px 8px', border: `1px solid ${G.border}`, color: G.muted }}>{match.category}</span>}
+                    {match.category && <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.1em', padding: '2px 8px', border: `1px solid ${G.rule}`, color: G.muted }}>{match.category}</span>}
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.06em' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
@@ -229,15 +232,15 @@ function DashboardMatches() {
                   </div>
                   {match.score_home !== null && match.score_away !== null && (
                     <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <span style={{ fontFamily: G.display, fontSize: 28, lineHeight: 1, color: G.text }}>{match.score_home}</span>
+                      <span style={{ fontFamily: G.display, fontSize: 28, lineHeight: 1, color: G.ink }}>{match.score_home}</span>
                       <span style={{ fontFamily: G.mono, fontSize: 14, color: G.muted }}>–</span>
-                      <span style={{ fontFamily: G.display, fontSize: 28, lineHeight: 1, color: G.text }}>{match.score_away}</span>
+                      <span style={{ fontFamily: G.display, fontSize: 28, lineHeight: 1, color: G.ink }}>{match.score_away}</span>
                       <span style={{
                         fontFamily: G.mono, fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase',
                         marginLeft: 6, padding: '3px 10px',
                         background: match.score_home > match.score_away ? 'rgba(34,197,94,0.1)' : match.score_home < match.score_away ? 'rgba(239,68,68,0.1)' : 'rgba(245,242,235,0.05)',
                         color: match.score_home > match.score_away ? '#22c55e' : match.score_home < match.score_away ? '#ef4444' : G.muted,
-                        border: `1px solid ${match.score_home > match.score_away ? 'rgba(34,197,94,0.2)' : match.score_home < match.score_away ? 'rgba(239,68,68,0.2)' : G.border}`,
+                        border: `1px solid ${match.score_home > match.score_away ? 'rgba(34,197,94,0.2)' : match.score_home < match.score_away ? 'rgba(239,68,68,0.2)' : G.rule}`,
                       }}>
                         {match.score_home > match.score_away ? 'Victoire' : match.score_home < match.score_away ? 'Défaite' : 'Nul'}
                       </span>
@@ -248,7 +251,7 @@ function DashboardMatches() {
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: G.mono, fontSize: 8, color: G.muted, marginBottom: 5, letterSpacing: '.08em' }}>
                         <span>Analyse en cours...</span><span>{match.progress}%</span>
                       </div>
-                      <div style={{ height: 2, background: G.border }}>
+                      <div style={{ height: 2, background: G.rule }}>
                         <div style={{ height: '100%', width: `${match.progress}%`, background: G.gold, transition: 'width .3s' }} />
                       </div>
                     </div>
