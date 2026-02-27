@@ -16,18 +16,18 @@ const PLANS = [
   {
     id: 'COACH',
     name: 'Coach',
-    price: 29,
+    price: 39,
     icon: Zap,
     color: G.gold,
-    features: ['5 matchs / mois', 'Rapports PDF', 'Statistiques joueurs', 'Support email'],
+    features: ['4 matchs / mois', 'Rapports PDF', 'Statistiques joueurs', 'Support email'],
   },
   {
     id: 'CLUB',
     name: 'Club',
-    price: 99,
+    price: 129,
     icon: Users,
     color: '#3b82f6',
-    features: ['20 matchs / mois', 'Multi-coachs', 'Gestion équipe complète', 'Support prioritaire'],
+    features: ['12 matchs / mois', 'Multi-coachs', 'Gestion équipe complète', 'Support prioritaire'],
   },
 ]
 
