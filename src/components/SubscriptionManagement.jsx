@@ -204,7 +204,6 @@ export default function SubscriptionManagement() {
   const [selectedPlan, setSelectedPlan] = useState(null)
   const [portalLoading, setPortalLoading] = useState(false)
   const [cancelLoading, setCancelLoading] = useState(false)
-  const [showCancelModal, setShowCancelModal] = useState(false)
   const [success, setSuccess]         = useState('')
   const [error, setError]             = useState('')
 
@@ -242,12 +241,10 @@ export default function SubscriptionManagement() {
     finally { setCancelLoading(false) }
   }
 
-  // Résiliation pendant le trial — ouvre modale de confirmation
-  const handleCancelTrial = () => setShowCancelModal(true)
-
-  // Confirmation effective après modale
-  const confirmCancelTrial = async () => {
-    setCancelLoading(true); setError(''); setShowCancelModal(false)
+  // Résiliation pendant le trial (avant premier débit)
+  const handleCancelTrial = async () => {
+    if (!window.confirm("Annuler votre essai ? Votre CB ne sera pas débitée. Vous perdrez l'accès à la fin des 7 jours.")) return
+    setCancelLoading(true); setError('')
     try {
       await api.post('/subscription/cancel-subscription')
       setSuccess('Essai annulé. Aucun débit ne sera effectué.')
@@ -390,79 +387,6 @@ export default function SubscriptionManagement() {
           </div>
         </div>
 
-      {/* ── MODALE ANNULATION TRIAL ── */}
-      {showCancelModal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}>
-          <div style={{ background: G.bg2, width: '100%', maxWidth: 460, border: `1px solid ${G.border}`, borderTop: `2px solid ${G.orange}` }}>
-
-            {/* Header */}
-            <div style={{ padding: '20px 24px', borderBottom: `1px solid ${G.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontFamily: G.display, fontSize: 18, textTransform: 'uppercase', color: G.text }}>
-                Annuler l'essai
-              </span>
-              <button onClick={() => setShowCancelModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
-                <X size={16} color={G.muted} />
-              </button>
-            </div>
-
-            {/* Contenu — conditionnel selon match analysé ou non */}
-            <div style={{ padding: '24px' }}>
-              {!trialData?.match_used ? (
-                /* Match pas encore analysé → avertissement */
-                <div style={{ marginBottom: 24 }}>
-                  <div style={{ padding: '16px', background: 'rgba(245,158,11,0.07)', border: `1px solid rgba(245,158,11,0.2)`, marginBottom: 16, display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-                    <AlertCircle size={16} color={G.orange} style={{ flexShrink: 0, marginTop: 1 }} />
-                    <p style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(245,242,235,0.75)', lineHeight: 1.7, margin: 0 }}>
-                      Vous n'avez pas encore analysé votre match offert. Si vous annulez maintenant, vous perdez cet avantage définitivement.
-                    </p>
-                  </div>
-                  <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, lineHeight: 1.7, margin: 0 }}>
-                    Votre carte bancaire ne sera <strong style={{ color: G.text }}>pas débitée</strong> si vous annulez avant le {getDebitDate()}.
-                  </p>
-                </div>
-              ) : (
-                /* Match déjà analysé → message simple */
-                <div style={{ marginBottom: 24 }}>
-                  <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, lineHeight: 1.7, margin: 0 }}>
-                    Votre essai sera annulé. Vous conservez l'accès jusqu'à la fin des 7 jours.<br />
-                    <strong style={{ color: G.text }}>Aucun débit ne sera effectué.</strong>
-                  </p>
-                </div>
-              )}
-
-              <div style={{ display: 'flex', gap: 10 }}>
-                <button
-                  onClick={() => setShowCancelModal(false)}
-                  style={{
-                    flex: 1, padding: '11px', background: 'transparent',
-                    border: `1px solid ${G.border}`, fontFamily: G.mono, fontSize: 9,
-                    letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, cursor: 'pointer',
-                  }}
-                >
-                  {!trialData?.match_used ? 'Analyser mon match' : 'Retour'}
-                </button>
-                <button
-                  onClick={confirmCancelTrial}
-                  disabled={cancelLoading}
-                  style={{
-                    flex: 1, padding: '11px',
-                    background: 'transparent',
-                    border: `1px solid rgba(239,68,68,0.35)`,
-                    fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase',
-                    color: 'rgba(239,68,68,0.70)', cursor: cancelLoading ? 'not-allowed' : 'pointer',
-                    transition: 'all .15s',
-                  }}
-                  onMouseEnter={e => { e.currentTarget.style.color = G.red; e.currentTarget.style.borderColor = G.red }}
-                  onMouseLeave={e => { e.currentTarget.style.color = 'rgba(239,68,68,0.70)'; e.currentTarget.style.borderColor = 'rgba(239,68,68,0.35)' }}
-                >
-                  {cancelLoading ? 'Annulation...' : 'Confirmer l'annulation'}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       ) : (
         /* ── PAS D'ABONNEMENT — choisir un plan ── */
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -528,6 +452,74 @@ export default function SubscriptionManagement() {
             <span style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em' }}>
               Paiement sécurisé Stripe · 7 jours gratuits · Aucun débit aujourd'hui
             </span>
+          </div>
+        </div>
+      )}
+
+      {/* ── MODALE ANNULATION TRIAL ── */}
+      {showCancelModal && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}>
+          <div style={{ background: G.bg2, width: '100%', maxWidth: 460, border: `1px solid ${G.border}`, borderTop: `2px solid ${G.orange}` }}>
+
+            <div style={{ padding: '20px 24px', borderBottom: `1px solid ${G.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ fontFamily: G.display, fontSize: 18, textTransform: 'uppercase', color: G.text }}>
+                Annuler l'essai
+              </span>
+              <button onClick={() => setShowCancelModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+                <X size={16} color={G.muted} />
+              </button>
+            </div>
+
+            <div style={{ padding: '24px' }}>
+              {!trialData?.match_used ? (
+                <div style={{ marginBottom: 24 }}>
+                  <div style={{ padding: '16px', background: 'rgba(245,158,11,0.07)', border: `1px solid rgba(245,158,11,0.2)`, marginBottom: 16, display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                    <AlertCircle size={16} color={G.orange} style={{ flexShrink: 0, marginTop: 1 }} />
+                    <p style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(245,242,235,0.75)', lineHeight: 1.7, margin: 0 }}>
+                      Vous n'avez pas encore analysé votre match offert. Si vous annulez maintenant, vous perdez cet avantage définitivement.
+                    </p>
+                  </div>
+                  <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, lineHeight: 1.7, margin: 0 }}>
+                    Votre carte bancaire ne sera <strong style={{ color: G.text }}>pas débitée</strong> si vous annulez avant le {getDebitDate()}.
+                  </p>
+                </div>
+              ) : (
+                <div style={{ marginBottom: 24 }}>
+                  <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, lineHeight: 1.7, margin: 0 }}>
+                    Votre essai sera annulé. Vous conservez l'accès jusqu'à la fin des 7 jours.<br />
+                    <strong style={{ color: G.text }}>Aucun débit ne sera effectué.</strong>
+                  </p>
+                </div>
+              )}
+
+              <div style={{ display: 'flex', gap: 10 }}>
+                <button
+                  onClick={() => setShowCancelModal(false)}
+                  style={{
+                    flex: 1, padding: '11px', background: 'transparent',
+                    border: `1px solid ${G.border}`, fontFamily: G.mono, fontSize: 9,
+                    letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, cursor: 'pointer',
+                  }}
+                >
+                  {!trialData?.match_used ? 'Analyser mon match' : 'Retour'}
+                </button>
+                <button
+                  onClick={confirmCancelTrial}
+                  disabled={cancelLoading}
+                  style={{
+                    flex: 1, padding: '11px', background: 'transparent',
+                    border: `1px solid rgba(239,68,68,0.35)`,
+                    fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase',
+                    color: 'rgba(239,68,68,0.70)', cursor: cancelLoading ? 'not-allowed' : 'pointer',
+                    transition: 'all .15s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.color = G.red; e.currentTarget.style.borderColor = G.red }}
+                  onMouseLeave={e => { e.currentTarget.style.color = 'rgba(239,68,68,0.70)'; e.currentTarget.style.borderColor = 'rgba(239,68,68,0.35)' }}
+                >
+                  {cancelLoading ? 'Annulation...' : "Confirmer l'annulation"}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
