@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Calendar, TrendingUp, TrendingDown, Users, Film, CheckCircle, Clock, ArrowRight, AlertCircle, Upload } from 'lucide-react'
+import { Calendar, TrendingUp, TrendingDown, Users, Film, CheckCircle, Clock, ArrowRight, AlertCircle, Upload, Zap, Target, Activity } from 'lucide-react'
 import DashboardLayout from '../components/DashboardLayout'
 import { useAuth } from '../context/AuthContext'
 import matchService from '../services/matchService'
@@ -8,7 +8,6 @@ import playerService from '../services/playerService'
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');`
 
-/* ─── Palette CLAIRE — cohérente avec DashboardLayout ─── */
 const G = {
   cream:   '#f5f2eb',
   white:   '#ffffff',
@@ -29,33 +28,6 @@ const G = {
   display: "'Anton', sans-serif",
 }
 
-function StatCard({ icon: Icon, label, value, sub, accent, loading }) {
-  return (
-    <div style={{
-      background: G.white,
-      border: `1px solid ${G.rule}`,
-      borderTop: `2px solid ${accent || G.rule}`,
-      padding: '20px 18px',
-      transition: 'box-shadow .15s',
-    }}
-      onMouseEnter={e => e.currentTarget.style.boxShadow = '0 2px 12px rgba(15,15,13,0.07)'}
-      onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
-    >
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-        <div style={{ width: 30, height: 30, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Icon size={13} color={G.gold} />
-        </div>
-        <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted }}>{sub}</span>
-      </div>
-      {loading
-        ? <div style={{ height: 46, background: G.rule, marginBottom: 8, opacity: 0.5 }} />
-        : <div style={{ fontFamily: G.display, fontSize: 48, lineHeight: 1, color: G.ink, marginBottom: 6 }}>{value}</div>
-      }
-      <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.08em' }}>{label}</div>
-    </div>
-  )
-}
-
 function StatusBadge({ status }) {
   const cfg = {
     completed:  { label: 'Terminé',    color: G.green },
@@ -74,31 +46,13 @@ function StatusBadge({ status }) {
   )
 }
 
-function CardHead({ title, linkLabel, linkTo }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px', borderBottom: `1px solid ${G.rule}` }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <span style={{ width: 2, height: 14, background: G.gold, display: 'inline-block', flexShrink: 0 }} />
-        <h2 style={{ fontFamily: G.display, fontSize: 13, letterSpacing: '.06em', textTransform: 'uppercase', color: G.ink }}>{title}</h2>
-      </div>
-      {linkLabel && (
-        <Link to={linkTo} style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4, transition: 'color .15s' }}
-          onMouseEnter={e => e.currentTarget.style.color = G.gold}
-          onMouseLeave={e => e.currentTarget.style.color = G.muted}
-        >
-          {linkLabel} <ArrowRight size={10} />
-        </Link>
-      )}
-    </div>
-  )
-}
-
 export default function DashboardHome() {
   const { user } = useAuth()
   const [matches, setMatches]   = useState([])
   const [players, setPlayers]   = useState([])
   const [loading, setLoading]   = useState(true)
   const [isMobile, setIsMobile] = useState(false)
+  const [tick, setTick]         = useState(0)
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -120,11 +74,20 @@ export default function DashboardHome() {
     })()
   }, [])
 
+  // Animation compteur
+  useEffect(() => {
+    const t = setTimeout(() => setTick(1), 100)
+    return () => clearTimeout(t)
+  }, [])
+
   const completed  = matches.filter(m => m.status === 'completed').length
   const processing = matches.filter(m => m.status === 'processing').length
   const PLAN_QUOTAS = { COACH: 4, CLUB: 12 }
   const userPlan   = (user?.plan || 'COACH').toUpperCase()
   const quota      = PLAN_QUOTAS[userPlan] ?? 4
+  const quotaUsed  = completed
+  const quotaPct   = Math.min((quotaUsed / quota) * 100, 100)
+  const quotaColor = quotaPct >= 80 ? G.red : quotaPct >= 50 ? G.orange : G.gold
 
   const topPlayers = players.slice(0, 5).map((p, i) => ({
     ...p,
@@ -139,92 +102,170 @@ export default function DashboardHome() {
   ]
 
   const alerts = [
-    { type: 'success', msg: 'Dernier match analysé avec succès',             time: 'Il y a 2h' },
-    { type: 'warning', msg: `Quota ${completed}/${quota} matchs ce mois`,    time: 'Hier'      },
-    { type: 'info',    msg: '3 joueurs en progression ce mois',              time: 'Il y a 2j' },
+    { type: 'success', msg: 'Dernier match analysé avec succès', time: 'Il y a 2h' },
+    { type: 'warning', msg: `Quota ${completed}/${quota} matchs ce mois`,    time: 'Hier' },
+    { type: 'info',    msg: '3 joueurs en progression ce mois', time: 'Il y a 2j' },
   ]
   const alertColor = { success: G.green, warning: G.orange, info: G.blue }
   const alertIcon  = { success: CheckCircle, warning: AlertCircle, info: TrendingUp }
 
   return (
     <DashboardLayout>
-      <style>{`${FONTS} * { box-sizing: border-box; } @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }`}</style>
+      <style>{`
+        ${FONTS}
+        * { box-sizing: border-box; }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes growBar { from { width: 0%; } to { } }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+        .match-row:hover { background: ${G.cream} !important; }
+        .player-row:hover { background: ${G.cream} !important; }
+      `}</style>
 
-      {/* ── HEADER ── */}
-      <div style={{ marginBottom: 28, paddingBottom: 22, borderBottom: `1px solid ${G.rule}` }}>
-        <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-          <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />Tableau de bord
+      {/* ── HERO HEADER ── */}
+      <div style={{
+        marginBottom: 28,
+        padding: '28px 32px',
+        background: G.ink,
+        position: 'relative',
+        overflow: 'hidden',
+        animation: 'fadeUp .4s ease both',
+      }}>
+        {/* Fond décoratif — grille tactique subtile */}
+        <div style={{
+          position: 'absolute', inset: 0, opacity: 0.04,
+          backgroundImage: 'linear-gradient(rgba(201,162,39,1) 1px, transparent 1px), linear-gradient(90deg, rgba(201,162,39,1) 1px, transparent 1px)',
+          backgroundSize: '40px 40px',
+          pointerEvents: 'none',
+        }} />
+        {/* Grand texte décoratif en arrière plan */}
+        <div style={{
+          position: 'absolute', right: -20, top: -10,
+          fontFamily: G.display, fontSize: 120, color: 'rgba(201,162,39,0.06)',
+          textTransform: 'uppercase', letterSpacing: '-.02em',
+          lineHeight: 1, pointerEvents: 'none', userSelect: 'none',
+        }}>
+          DATA
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          {user?.club_logo && (
-            <img src={user.club_logo} alt="" style={{ height: 44, width: 44, objectFit: 'contain', flexShrink: 0 }} />
-          )}
+
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
           <div>
-            <h1 style={{ fontFamily: G.display, fontSize: 'clamp(28px,3vw,44px)', textTransform: 'uppercase', lineHeight: .9, color: G.ink, margin: 0 }}>
+            <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.22em', textTransform: 'uppercase', color: 'rgba(201,162,39,0.7)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />
+              Tableau de bord · Saison 2025/26
+            </div>
+            <h1 style={{ fontFamily: G.display, fontSize: 'clamp(32px,4vw,52px)', textTransform: 'uppercase', lineHeight: .88, margin: 0, color: G.cream }}>
               {user?.club_name || 'Votre club'}
             </h1>
-            <p style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.1em', marginTop: 5 }}>
-              Saison 2025/26 · Bonjour, <span style={{ color: G.ink2 }}>{user?.name?.split(' ')[0]}</span>
+            <p style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(245,242,235,0.45)', letterSpacing: '.08em', marginTop: 8 }}>
+              Bonjour, <span style={{ color: G.gold }}>{user?.name?.split(' ')[0]}</span>
             </p>
+          </div>
+
+          {/* Quota visuel dans le header */}
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.18em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.35)', marginBottom: 8 }}>
+              Quota ce mois
+            </div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, justifyContent: 'flex-end', marginBottom: 8 }}>
+              <span style={{ fontFamily: G.display, fontSize: 40, lineHeight: 1, color: quotaColor }}>{quota - quotaUsed}</span>
+              <span style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(245,242,235,0.35)' }}>/ {quota} restants</span>
+            </div>
+            <div style={{ width: 160, height: 3, background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
+              <div style={{
+                height: '100%',
+                width: `${quotaPct}%`,
+                background: quotaColor,
+                transition: 'width 1s cubic-bezier(.4,0,.2,1)',
+              }} />
+            </div>
           </div>
         </div>
       </div>
 
       {/* ── STAT CARDS ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 1, background: G.rule, marginBottom: 24 }}>
-        <StatCard icon={Film}  label="Matchs analysés"    value={completed}      sub="Ce mois" accent={G.gold}   loading={loading} />
-        <StatCard icon={Clock} label="En cours d'analyse" value={processing}     sub="Actif"   accent={G.gold}   loading={loading} />
-        <StatCard icon={Users} label="Joueurs effectif"   value={players.length} sub="Total"   loading={loading} />
-        {/* Quota */}
-        <div style={{ background: G.white, border: `1px solid ${G.rule}`, borderTop: `2px solid ${completed/quota > 0.8 ? G.red : G.gold}`, padding: '20px 18px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-            <div style={{ width: 30, height: 30, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Film size={13} color={G.gold} />
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)',
+        gap: 8,
+        marginBottom: 24,
+      }}>
+        {[
+          { label: 'Matchs analysés',    value: completed,      sub: 'Ce mois',  icon: Film,     accent: G.gold,   delay: 0   },
+          { label: "En cours d'analyse", value: processing,     sub: 'Actif',    icon: Activity, accent: G.blue,   delay: 60  },
+          { label: 'Joueurs effectif',   value: players.length, sub: 'Total',    icon: Users,    accent: G.gold,   delay: 120 },
+          { label: 'Victoire / match',   value: `${completed > 0 ? Math.round((matches.filter(m=>m.score_home > m.score_away).length/completed)*100) : 0}%`, sub: 'Saison', icon: Target, accent: G.gold, delay: 180, isString: true },
+        ].map((s, i) => (
+          <div key={s.label} style={{
+            background: G.white,
+            border: `1px solid ${G.rule}`,
+            borderTop: `2px solid ${s.accent}`,
+            padding: '18px 16px',
+            animation: `fadeUp .4s ease ${s.delay}ms both`,
+            transition: 'box-shadow .15s, transform .15s',
+          }}
+            onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(26,25,22,0.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+            onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+              <div style={{ width: 28, height: 28, background: s.accent + '12', border: `1px solid ${s.accent}25`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <s.icon size={12} color={s.accent} />
+              </div>
+              <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted }}>{s.sub}</span>
             </div>
-            <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted }}>Quota</span>
+            {loading
+              ? <div style={{ height: 44, background: G.rule, marginBottom: 8, opacity: 0.4 }} />
+              : <div style={{ fontFamily: G.display, fontSize: 44, lineHeight: 1, color: G.ink, marginBottom: 4 }}>{s.value}</div>
+            }
+            <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em' }}>{s.label}</div>
           </div>
-          <div style={{ fontFamily: G.display, fontSize: 48, lineHeight: 1, color: G.ink, marginBottom: 4 }}>
-            {quota - completed}
-          </div>
-          <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, marginBottom: 10, letterSpacing: '.06em' }}>
-            restants / {quota}
-          </div>
-          <div style={{ height: 2, background: G.rule }}>
-            <div style={{ height: '100%', width: `${Math.min((completed/quota)*100, 100)}%`, background: completed/quota > 0.8 ? G.red : G.gold, transition: 'width .6s' }} />
-          </div>
-        </div>
+        ))}
       </div>
 
       {/* ── BODY ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 260px', gap: 1, background: G.rule, alignItems: 'start' }}>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: isMobile ? '1fr' : '1fr 300px',
+        gap: 8,
+        alignItems: 'start',
+      }}>
 
-        {/* ── Col gauche + centre ── */}
-        <div style={{ gridColumn: isMobile ? '1' : '1/3', display: 'flex', flexDirection: 'column', gap: 1, background: G.rule }}>
+        {/* ── Colonne principale ── */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
 
           {/* Derniers matchs */}
-          <div style={{ background: G.white, border: `1px solid ${G.rule}` }}>
-            <CardHead title="Derniers matchs" linkLabel="Voir tout" linkTo="/dashboard/matches" />
+          <div style={{ background: G.white, border: `1px solid ${G.rule}`, animation: 'fadeUp .4s ease 200ms both' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px', borderBottom: `1px solid ${G.rule}` }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ width: 2, height: 14, background: G.gold, display: 'inline-block' }} />
+                <h2 style={{ fontFamily: G.display, fontSize: 13, letterSpacing: '.06em', textTransform: 'uppercase', color: G.ink }}>Derniers matchs</h2>
+              </div>
+              <Link to="/dashboard/matches" style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}
+                onMouseEnter={e => e.currentTarget.style.color = G.gold}
+                onMouseLeave={e => e.currentTarget.style.color = G.muted}
+              >
+                Voir tout <ArrowRight size={10} />
+              </Link>
+            </div>
+
             {loading ? (
-              [1,2,3].map(i => (
-                <div key={i} style={{ height: 58, background: G.cream, margin: '1px 0', opacity: 0.6 }} />
-              ))
+              [1,2,3].map(i => <div key={i} style={{ height: 58, background: G.cream, margin: '1px 0', opacity: 0.6 }} />)
             ) : matches.length === 0 ? (
-              <div style={{ padding: '40px 20px', textAlign: 'center' }}>
-                <Film size={28} color={G.rule} style={{ marginBottom: 12 }} />
+              <div style={{ padding: '48px 20px', textAlign: 'center' }}>
+                <div style={{ width: 48, height: 48, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                  <Film size={20} color={G.gold} />
+                </div>
                 <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, marginBottom: 18 }}>Aucun match uploadé</p>
-                <Link to="/dashboard/matches" style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', padding: '10px 22px', background: G.gold, color: G.ink, textDecoration: 'none', fontWeight: 700 }}>
-                  Uploader →
+                <Link to="/dashboard/matches" style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', padding: '10px 22px', background: G.gold, color: G.ink, textDecoration: 'none', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <Upload size={11} /> Uploader →
                 </Link>
               </div>
             ) : (
               matches.slice(0, 4).map((m, i) => (
-                <Link key={m.id} to={`/dashboard/matches/${m.id}`}
-                  style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 18px', borderBottom: i < 3 ? `1px solid ${G.rule}` : 'none', textDecoration: 'none', transition: 'background .12s' }}
-                  onMouseEnter={e => e.currentTarget.style.background = G.cream}
-                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                <Link key={m.id} to={`/dashboard/matches/${m.id}`} className="match-row"
+                  style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 18px', borderBottom: i < 3 ? `1px solid ${G.rule}` : 'none', textDecoration: 'none', transition: 'background .12s', background: 'transparent' }}
                 >
-                  <div style={{ width: 38, flexShrink: 0, textAlign: 'center', padding: '5px 0', background: G.cream, border: `1px solid ${G.rule}` }}>
-                    <div style={{ fontFamily: G.display, fontSize: 17, lineHeight: 1, color: G.ink }}>{new Date(m.date).getDate()}</div>
+                  <div style={{ width: 40, flexShrink: 0, textAlign: 'center', padding: '6px 0', background: G.cream, border: `1px solid ${G.rule}` }}>
+                    <div style={{ fontFamily: G.display, fontSize: 18, lineHeight: 1, color: G.ink }}>{new Date(m.date).getDate()}</div>
                     <div style={{ fontFamily: G.mono, fontSize: 7, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>
                       {new Date(m.date).toLocaleDateString('fr-FR', { month: 'short' })}
                     </div>
@@ -257,8 +298,19 @@ export default function DashboardHome() {
           </div>
 
           {/* Top joueurs */}
-          <div style={{ background: G.white, border: `1px solid ${G.rule}` }}>
-            <CardHead title="Top joueurs du mois" linkLabel="Voir tout" linkTo="/dashboard/players" />
+          <div style={{ background: G.white, border: `1px solid ${G.rule}`, animation: 'fadeUp .4s ease 280ms both' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px', borderBottom: `1px solid ${G.rule}` }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ width: 2, height: 14, background: G.gold, display: 'inline-block' }} />
+                <h2 style={{ fontFamily: G.display, fontSize: 13, letterSpacing: '.06em', textTransform: 'uppercase', color: G.ink }}>Top joueurs du mois</h2>
+              </div>
+              <Link to="/dashboard/players" style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}
+                onMouseEnter={e => e.currentTarget.style.color = G.gold}
+                onMouseLeave={e => e.currentTarget.style.color = G.muted}
+              >
+                Voir tout <ArrowRight size={10} />
+              </Link>
+            </div>
             <div style={{ padding: '4px 0' }}>
               {loading ? [1,2,3,4,5].map(i => (
                 <div key={i} style={{ height: 52, background: G.cream, margin: '1px 0', opacity: 0.5 }} />
@@ -266,7 +318,7 @@ export default function DashboardHome() {
                 <p style={{ padding: '28px 18px', fontFamily: G.mono, fontSize: 11, color: G.muted, textAlign: 'center' }}>Aucun joueur enregistré</p>
               ) : (
                 topPlayers.map((p, i) => (
-                  <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '11px 18px', borderBottom: i < topPlayers.length-1 ? `1px solid ${G.rule}` : 'none' }}>
+                  <div key={p.id} className="player-row" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '11px 18px', borderBottom: i < topPlayers.length-1 ? `1px solid ${G.rule}` : 'none', background: 'transparent', transition: 'background .12s' }}>
                     <div style={{ fontFamily: G.display, fontSize: 15, color: i===0 ? G.gold : G.muted, width: 20, textAlign: 'center', flexShrink: 0 }}>{i+1}</div>
                     {p.photo_url
                       ? <img src={p.photo_url} alt={p.name} style={{ width: 32, height: 32, objectFit: 'cover', flexShrink: 0, border: `1px solid ${G.rule}` }} />
@@ -290,36 +342,55 @@ export default function DashboardHome() {
           </div>
         </div>
 
-        {/* ── Col droite ── */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+        {/* ── Colonne droite ── */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
 
-          {/* Alertes */}
-          <div style={{ background: G.white, border: `1px solid ${G.rule}` }}>
-            <CardHead title="Alertes" />
-            {alerts.map((a, i) => {
-              const Icon  = alertIcon[a.type]
-              const color = alertColor[a.type]
-              return (
-                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '13px 16px', borderBottom: i < alerts.length-1 ? `1px solid ${G.rule}` : 'none' }}>
-                  <div style={{ width: 26, height: 26, background: color + '12', border: `1px solid ${color}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Icon size={11} color={color} />
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <p style={{ fontFamily: G.mono, fontSize: 11, color: G.ink2, lineHeight: 1.5, marginBottom: 3 }}>{a.msg}</p>
-                    <p style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.08em', color: G.muted }}>{a.time}</p>
-                  </div>
-                </div>
-              )
-            })}
+          {/* CTA Upload — dark, impactant */}
+          <div style={{
+            background: G.ink, padding: '24px 20px',
+            position: 'relative', overflow: 'hidden',
+            animation: 'fadeUp .4s ease 100ms both',
+          }}>
+            <div style={{
+              position: 'absolute', inset: 0, opacity: 0.05,
+              backgroundImage: 'linear-gradient(rgba(201,162,39,1) 1px, transparent 1px), linear-gradient(90deg, rgba(201,162,39,1) 1px, transparent 1px)',
+              backgroundSize: '24px 24px', pointerEvents: 'none',
+            }} />
+            <div style={{ position: 'relative' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+                <Zap size={14} color={G.gold} />
+                <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.18em', textTransform: 'uppercase', color: 'rgba(201,162,39,0.7)' }}>Nouvelle analyse</span>
+              </div>
+              <div style={{ fontFamily: G.display, fontSize: 28, letterSpacing: '.02em', textTransform: 'uppercase', color: G.cream, lineHeight: .9, marginBottom: 12 }}>
+                Analyser<br /><span style={{ color: G.gold }}>un match.</span>
+              </div>
+              <p style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(245,242,235,0.4)', lineHeight: 1.6, marginBottom: 18, letterSpacing: '.03em' }}>
+                Uploadez votre vidéo, obtenez un rapport tactique complet.
+              </p>
+              <Link to="/dashboard/matches" style={{
+                fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase',
+                padding: '11px 20px', background: G.gold, color: G.ink,
+                textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6, fontWeight: 700,
+                transition: 'background .15s',
+              }}
+                onMouseEnter={e => e.currentTarget.style.background = G.goldD}
+                onMouseLeave={e => e.currentTarget.style.background = G.gold}
+              >
+                <Upload size={11} /> Uploader
+              </Link>
+            </div>
           </div>
 
           {/* Prochains matchs */}
-          <div style={{ background: G.white, border: `1px solid ${G.rule}` }}>
-            <CardHead title="Prochains matchs" />
+          <div style={{ background: G.white, border: `1px solid ${G.rule}`, animation: 'fadeUp .4s ease 160ms both' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '14px 18px', borderBottom: `1px solid ${G.rule}` }}>
+              <span style={{ width: 2, height: 14, background: G.gold, display: 'inline-block' }} />
+              <h2 style={{ fontFamily: G.display, fontSize: 13, letterSpacing: '.06em', textTransform: 'uppercase', color: G.ink }}>Prochains matchs</h2>
+            </div>
             {upcoming.map((m, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 16px', borderBottom: i < upcoming.length-1 ? `1px solid ${G.rule}` : 'none' }}>
-                <div style={{ width: 36, textAlign: 'center', padding: '4px 0', background: G.cream, border: `1px solid ${G.rule}`, flexShrink: 0 }}>
-                  <div style={{ fontFamily: G.display, fontSize: 15, lineHeight: 1, color: G.ink }}>{new Date(m.date).getDate()}</div>
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', borderBottom: i < upcoming.length-1 ? `1px solid ${G.rule}` : 'none' }}>
+                <div style={{ width: 36, textAlign: 'center', padding: '5px 0', background: G.cream, border: `1px solid ${G.rule}`, flexShrink: 0 }}>
+                  <div style={{ fontFamily: G.display, fontSize: 16, lineHeight: 1, color: G.ink }}>{new Date(m.date).getDate()}</div>
                   <div style={{ fontFamily: G.mono, fontSize: 7, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>
                     {new Date(m.date).toLocaleDateString('fr-FR', { month: 'short' })}
                   </div>
@@ -333,28 +404,30 @@ export default function DashboardHome() {
             ))}
           </div>
 
-          {/* CTA upload */}
-          <div style={{ background: G.gold, padding: '22px 18px' }}>
-            <div style={{ fontFamily: G.display, fontSize: 22, letterSpacing: '.03em', textTransform: 'uppercase', color: G.ink, lineHeight: 1, marginBottom: 8 }}>
-              Analyser<br />un match
+          {/* Alertes */}
+          <div style={{ background: G.white, border: `1px solid ${G.rule}`, animation: 'fadeUp .4s ease 220ms both' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '14px 18px', borderBottom: `1px solid ${G.rule}` }}>
+              <span style={{ width: 2, height: 14, background: G.gold, display: 'inline-block' }} />
+              <h2 style={{ fontFamily: G.display, fontSize: 13, letterSpacing: '.06em', textTransform: 'uppercase', color: G.ink }}>Alertes</h2>
             </div>
-            <p style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(15,15,13,0.65)', lineHeight: 1.6, marginBottom: 18, letterSpacing: '.04em' }}>
-              Uploadez votre vidéo, obtenez un rapport complet.
-            </p>
-            <Link to="/dashboard/matches" style={{
-              fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase',
-              padding: '10px 20px', background: G.ink, color: '#fff',
-              textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6, fontWeight: 700,
-              transition: 'opacity .15s',
-            }}
-              onMouseEnter={e => e.currentTarget.style.opacity = '.85'}
-              onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-            >
-              <Upload size={11} /> Uploader
-            </Link>
+            {alerts.map((a, i) => {
+              const Icon  = alertIcon[a.type]
+              const color = alertColor[a.type]
+              return (
+                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '12px 16px', borderBottom: i < alerts.length-1 ? `1px solid ${G.rule}` : 'none' }}>
+                  <div style={{ width: 24, height: 24, background: color + '12', border: `1px solid ${color}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Icon size={10} color={color} />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <p style={{ fontFamily: G.mono, fontSize: 10, color: G.ink2, lineHeight: 1.5, marginBottom: 2 }}>{a.msg}</p>
+                    <p style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.08em', color: G.muted }}>{a.time}</p>
+                  </div>
+                </div>
+              )
+            })}
           </div>
 
-          {/* Lien Vue Club si plan CLUB */}
+          {/* Vue Club si plan CLUB */}
           {userPlan === 'CLUB' && (
             <Link to="/dashboard/club" style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
