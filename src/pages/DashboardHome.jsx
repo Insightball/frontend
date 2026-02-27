@@ -153,10 +153,15 @@ export default function DashboardHome() {
               <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />
               Tableau de bord · Saison 2025/26
             </div>
-            <h1 style={{ fontFamily: G.display, fontSize: 'clamp(32px,4vw,52px)', textTransform: 'uppercase', lineHeight: .88, margin: 0, color: G.cream }}>
-              {user?.club_name || 'Votre club'}
-            </h1>
-            <p style={{ fontFamily: G.mono, fontSize: 13, color: 'rgba(245,242,235,0.70)', letterSpacing: '.06em', marginTop: 10 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 8 }}>
+              {user?.club_logo && (
+                <img src={user.club_logo} alt={user.club_name} style={{ width: 44, height: 44, objectFit: 'contain', flexShrink: 0 }} />
+              )}
+              <h1 style={{ fontFamily: G.display, fontSize: user?.club_name && user.club_name.length > 12 ? 'clamp(24px,3vw,38px)' : 'clamp(28px,4vw,48px)', textTransform: 'uppercase', lineHeight: .88, margin: 0, color: G.cream }}>
+                {user?.club_name || 'Votre club'}
+              </h1>
+            </div>
+            <p style={{ fontFamily: G.mono, fontSize: 13, color: 'rgba(245,242,235,0.70)', letterSpacing: '.06em', marginTop: 4 }}>
               Bonjour, <span style={{ color: G.gold }}>{user?.name?.split(' ')[0]}</span>
             </p>
           </div>

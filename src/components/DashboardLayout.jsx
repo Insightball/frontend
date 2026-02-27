@@ -87,39 +87,33 @@ function DashboardLayout({ children }) {
         )}
       </div>
 
-      {/* User card */}
-      <div style={{ padding: '14px 16px', borderBottom: `1px solid ${G.rule}` }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 34, height: 34, flexShrink: 0, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      {/* User card — fond noir */}
+      <div style={{ background: '#1a1916', padding: '14px 16px', borderBottom: `1px solid rgba(201,162,39,0.15)` }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+          <div style={{ width: 34, height: 34, flexShrink: 0, background: 'rgba(201,162,39,0.12)', border: `1px solid rgba(201,162,39,0.3)`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <span style={{ fontFamily: G.display, fontSize: 12, color: G.gold }}>{initials}</span>
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{ fontFamily: G.mono, fontSize: 11, color: G.ink, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '.02em' }}>
+            <p style={{ fontFamily: G.mono, fontSize: 11, color: '#f5f2eb', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '.02em' }}>
               {user?.name}
             </p>
-            <p style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '.04em', marginTop: 1 }}>
+            <p style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.45)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '.04em', marginTop: 1 }}>
               {user?.email}
             </p>
           </div>
         </div>
-        <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
           {user?.plan && (
-            <>
-              <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted }}>Plan</span>
-              <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', padding: '3px 10px', background: G.goldBg, border: `1px solid ${G.goldBdr}`, color: G.gold }}>
-                {user.plan}
-              </span>
-            </>
+            <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', padding: '3px 10px', background: 'rgba(201,162,39,0.15)', border: `1px solid rgba(201,162,39,0.3)`, color: G.gold }}>
+              {user.plan}
+            </span>
           )}
-        </div>
-        {user?.plan === 'CLUB' && user?.role && (
-          <div style={{ marginTop: 6, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted }}>Rôle</span>
-            <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', padding: '3px 10px', background: G.rule, border: `1px solid ${G.rule}`, color: G.muted2 }}>
+          {user?.plan === 'CLUB' && user?.role && (
+            <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', padding: '3px 10px', background: 'rgba(245,242,235,0.06)', border: `1px solid rgba(245,242,235,0.12)`, color: 'rgba(245,242,235,0.5)' }}>
               {user.role}
             </span>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Nav */}
@@ -154,17 +148,12 @@ function DashboardLayout({ children }) {
       {/* Footer */}
       <div style={{ borderTop: `1px solid ${G.rule}`, padding: '10px 8px' }}>
         {user?.club_name && (
-          <div style={{ padding: '6px 10px 10px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              {user?.club_logo
-                ? <img src={user.club_logo} alt={user.club_name} style={{ width: 28, height: 28, objectFit: 'contain', flexShrink: 0 }} />
-                : <span style={{ width: 5, height: 5, background: G.gold, borderRadius: '50%', display: 'inline-block', flexShrink: 0 }} />
-              }
-              <div>
-                <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted }}>Club</div>
-                <p style={{ fontFamily: G.mono, fontSize: 12, color: G.ink, letterSpacing: '.04em', fontWeight: 600 }}>{user.club_name}</p>
-              </div>
-            </div>
+          <div style={{ padding: '8px 10px 10px', display: 'flex', alignItems: 'center', gap: 8 }}>
+            {user?.club_logo
+              ? <img src={user.club_logo} alt={user.club_name} style={{ width: 24, height: 24, objectFit: 'contain', flexShrink: 0 }} />
+              : <span style={{ width: 5, height: 5, background: G.gold, borderRadius: '50%', display: 'inline-block', flexShrink: 0 }} />
+            }
+            <p style={{ fontFamily: G.mono, fontSize: 11, color: G.ink, letterSpacing: '.03em', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.club_name}</p>
           </div>
         )}
         <button onClick={handleLogout} style={{
