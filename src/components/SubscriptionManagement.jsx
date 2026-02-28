@@ -345,7 +345,7 @@ function InlineCardForm({ plan, onSuccess, onCancel }) {
 }
 
 // ── Composant principal ───────────────────────────────────────
-export default function SubscriptionManagement() {
+export default function SubscriptionManagement({ onTrialStatusChange }) {
   const { user, refreshUser } = useAuth()
   const [sub, setSub]                   = useState(null)
   const [trialData, setTrialData]       = useState(null)
@@ -374,6 +374,10 @@ export default function SubscriptionManagement() {
       ])
       setSub(subRes.data)
       setTrialData(trialRes.data)
+      // Notifier CoachSettings du statut réel pour le libellé du plan
+      if (onTrialStatusChange) {
+        onTrialStatusChange(trialRes.data?.trial_active === true)
+      }
     } catch (e) { console.error(e) }
     finally { setLoading(false) }
   }

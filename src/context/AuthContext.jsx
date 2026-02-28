@@ -15,25 +15,20 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  // Check if user is logged in on mount
   useEffect(() => {
     const initAuth = async () => {
       try {
         const token = localStorage.getItem('insightball_token')
-        
         if (token) {
-          // Verify token is still valid by fetching user
           const userData = await authService.getCurrentUser()
           setUser(userData)
         }
       } catch (error) {
-        // Token invalid or expired
         authService.logout()
       } finally {
         setLoading(false)
       }
     }
-    
     initAuth()
   }, [])
 
@@ -62,11 +57,23 @@ export function AuthProvider({ children }) {
     setUser(null)
   }
 
+  // Recharge les données user depuis /me — appelé après toute action Stripe
+  const refreshUser = async () => {
+    try {
+      const userData = await authService.getCurrentUser()
+      setUser(userData)
+      return userData
+    } catch (error) {
+      console.error('refreshUser failed:', error)
+    }
+  }
+
   const value = {
     user,
     login,
     signup,
     logout,
+    refreshUser,
     isAuthenticated: !!user,
     loading
   }

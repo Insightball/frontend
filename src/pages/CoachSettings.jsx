@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { Trash2, AlertTriangle, X, User, Mail, Shield, AlertCircle } from 'lucide-react'
 import DashboardLayout from '../components/DashboardLayout'
 import { useAuth } from '../context/AuthContext'
 import SubscriptionManagement from '../components/SubscriptionManagement'
+import api from '../services/api'
 import { T, globalStyles } from '../theme'
 
 // CoachSettings : fond CREAM (pages), modales restent dark via SubscriptionManagement
@@ -37,6 +38,29 @@ export default function CoachSettings() {
   const [deleteConfirm, setDeleteConfirm] = useState('')
   const [deleteLoading, setDeleteLoading] = useState(false)
 
+  // Statut Stripe réel — source de vérité pour le libellé du plan
+  const [isTrialing, setIsTrialing] = useState(null) // null = chargement
+
+  useEffect(() => {
+    const fetchTrialStatus = async () => {
+      try {
+        const { data } = await api.get('/subscription/trial-status')
+        setIsTrialing(data.trial_active === true)
+      } catch {
+        setIsTrialing(false)
+      }
+    }
+    fetchTrialStatus()
+  }, [])
+
+  const getPlanLabel = () => {
+    const p = (user?.plan || 'COACH').toUpperCase()
+    if (p === 'CLUB') return 'Club — Offre sur mesure'
+    // isTrialing null = encore en chargement → on affiche rien de faux
+    if (isTrialing === null) return 'Coach'
+    return isTrialing ? 'Coach — Essai en cours' : 'Coach — 39 €/mois · 4 matchs'
+  }
+
   const handleDeleteAccount = async () => {
     if (deleteConfirm !== 'SUPPRIMER') return
     setDeleteLoading(true)
@@ -55,7 +79,7 @@ export default function CoachSettings() {
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
     check(); window.addEventListener('resize', check)
     return () => window.removeEventListener('resize', check)
@@ -87,9 +111,9 @@ export default function CoachSettings() {
         <Section title="Informations" accent={G.gold}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {[
-              { icon: User, label: 'Nom', value: user?.name || '—' },
-              { icon: Mail, label: 'Email', value: user?.email || '—' },
-              { icon: Shield, label: 'Plan', value: (() => { const p = (user?.plan || 'COACH').toUpperCase(); if (p === 'CLUB') return 'Club — Offre sur mesure'; const trialEnd = user?.trial_ends_at; const inTrial = trialEnd && new Date(trialEnd) > new Date(); return inTrial ? 'Coach — Essai en cours' : 'Coach — 39 €/mois · 4 matchs'; })() },
+              { icon: User,   label: 'Nom',   value: user?.name  || '—' },
+              { icon: Mail,   label: 'Email', value: user?.email || '—' },
+              { icon: Shield, label: 'Plan',  value: getPlanLabel() },
             ].map(({ icon: Icon, label, value }) => (
               <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}` }}>
                 <div style={{ width: 32, height: 32, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -109,7 +133,7 @@ export default function CoachSettings() {
           <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
             <span style={{ width: 12, height: 1, background: G.gold, display: 'inline-block' }} />Abonnement
           </div>
-          <SubscriptionManagement />
+          <SubscriptionManagement onTrialStatusChange={setIsTrialing} />
         </div>
 
         {/* Supprimer compte — discret */}
