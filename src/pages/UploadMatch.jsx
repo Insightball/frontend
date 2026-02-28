@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Upload, ChevronRight, ChevronLeft, Check, X, CreditCard } from 'lucide-react'
+import { Upload, ChevronRight, ChevronLeft, Check, X, CreditCard, AlertCircle } from 'lucide-react'
 import DashboardLayout from '../components/DashboardLayout'
 import TrialUpgradeGate from '../components/TrialUpgradeGate'
 import matchService from '../services/matchService'
@@ -14,37 +14,57 @@ const G = {
   goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.25)',
   mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
   muted: 'rgba(15,15,13,0.42)', border: 'rgba(15,15,13,0.09)',
+  red: '#ef4444', redBg: 'rgba(239,68,68,0.08)', redBdr: 'rgba(239,68,68,0.2)',
 }
 
 const S = {
-  card:  { background: 'rgba(255,255,255,0.02)', border: `1px solid rgba(15,15,13,0.09)`, padding: 28 },
-  label: { display: 'block', fontFamily: "'JetBrains Mono',monospace", fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(15,15,13,0.45)', marginBottom: 8 },
-  input: { width: '100%', background: '#ffffff', border: '1px solid rgba(15,15,13,0.09)', padding: '12px 16px', color: '#0f0f0d', fontFamily: "'JetBrains Mono',monospace", fontSize: 13, outline: 'none', transition: 'border-color .15s', boxSizing: 'border-box' },
+  card:   { background: 'rgba(255,255,255,0.02)', border: `1px solid rgba(15,15,13,0.09)`, padding: 28 },
+  label:  { display: 'block', fontFamily: "'JetBrains Mono',monospace", fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(15,15,13,0.45)', marginBottom: 8 },
+  input:  { width: '100%', background: '#ffffff', border: '1px solid rgba(15,15,13,0.09)', padding: '12px 16px', color: '#0f0f0d', fontFamily: "'JetBrains Mono',monospace", fontSize: 13, outline: 'none', transition: 'border-color .15s', boxSizing: 'border-box' },
   select: { width: '100%', background: '#ffffff', border: '1px solid rgba(15,15,13,0.09)', padding: '12px 16px', color: '#0f0f0d', fontFamily: "'JetBrains Mono',monospace", fontSize: 13, outline: 'none', cursor: 'pointer', boxSizing: 'border-box' },
 }
+
+// Limite vidéo : 8GB (adapté aux vidéos match full HD)
+const MAX_VIDEO_SIZE = 8 * 1024 * 1024 * 1024
 
 function Field({ label, children }) {
   return <div><label style={S.label}>{label}</label>{children}</div>
 }
 
+function ErrorBanner({ message }) {
+  if (!message) return null
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', gap: 10,
+      padding: '12px 16px', marginBottom: 16,
+      background: G.redBg, border: `1px solid ${G.redBdr}`,
+    }}>
+      <AlertCircle size={14} color={G.red} />
+      <p style={{ fontFamily: G.mono, fontSize: 10, color: G.red, letterSpacing: '.06em' }}>{message}</p>
+    </div>
+  )
+}
+
 export default function UploadMatch() {
   const navigate = useNavigate()
 
-  const [step, setStep]             = useState(1)
-  const [trialStatus, setTrialStatus] = useState(null)
+  const [step, setStep]                       = useState(1)
+  const [trialStatus, setTrialStatus]         = useState(null)
   const [hasPaymentMethod, setHasPaymentMethod] = useState(false)
-  const [trialLoading, setTrialLoading] = useState(true)
-  const [players, setPlayers]       = useState([])
-  const [uploading, setUploading]   = useState(false)
+  const [trialLoading, setTrialLoading]       = useState(true)
+  const [players, setPlayers]                 = useState([])
+  const [uploading, setUploading]             = useState(false)
+  const [uploadProgress, setUploadProgress]   = useState(0)
   const [showUpgradeGate, setShowUpgradeGate] = useState(false)
-  const [dragOver, setDragOver]     = useState(false)
+  const [dragOver, setDragOver]               = useState(false)
+  const [error, setError]                     = useState('')
 
   const [matchData, setMatchData] = useState({
     date: '', opponent: '', competition: '', location: '',
     score_home: '', score_away: '', category: 'N3',
     weather: 'Ensoleillé', pitch_type: 'Naturel',
   })
-  const [lineup, setLineup]       = useState({ starters: [], substitutes: [] })
+  const [lineup, setLineup]     = useState({ starters: [], substitutes: [] })
   const [videoFile, setVideoFile] = useState(null)
 
   const positions = ['GB', 'DD', 'DC', 'DG', 'MDC', 'MIL', 'MOF', 'AD', 'AG', 'AVT']
@@ -103,24 +123,53 @@ export default function UploadMatch() {
     return players.filter(p => !usedIds.includes(p.id))
   }
 
-  const handleVideoChange = (e) => { if (e.target.files[0]) setVideoFile(e.target.files[0]) }
+  // FIX — validation taille vidéo : limite à 8GB
+  const handleVideoChange = (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+    if (file.size > MAX_VIDEO_SIZE) {
+      setError('Fichier trop volumineux — limite 8GB. Compressez votre vidéo avant upload.')
+      return
+    }
+    setError('')
+    setVideoFile(file)
+  }
+
   const handleDrop = (e) => {
     e.preventDefault(); setDragOver(false)
     const file = e.dataTransfer.files[0]
-    if (file?.type.startsWith('video/')) setVideoFile(file)
+    if (!file?.type.startsWith('video/')) return
+    if (file.size > MAX_VIDEO_SIZE) {
+      setError('Fichier trop volumineux — limite 8GB. Compressez votre vidéo avant upload.')
+      return
+    }
+    setError('')
+    setVideoFile(file)
   }
 
+  // FIX — erreurs inline au lieu d'alert()
   const nextStep = () => {
-    if (step === 1 && (!matchData.date || !matchData.opponent)) { alert("Remplissez la date et l'adversaire"); return }
+    if (step === 1 && (!matchData.date || !matchData.opponent)) {
+      setError("Remplissez la date et l'adversaire")
+      return
+    }
+    setError('')
     setStep(s => Math.min(s + 1, 4))
   }
-  const prevStep = () => setStep(s => Math.max(s - 1, 1))
+  const prevStep = () => { setError(''); setStep(s => Math.max(s - 1, 1)) }
 
   const handleSubmit = async () => {
-    if (!videoFile) { alert('Ajoutez une vidéo'); return }
+    if (!videoFile) { setError('Ajoutez une vidéo avant de lancer l\'analyse'); return }
+    setError('')
     setUploading(true)
+    setUploadProgress(0)
     try {
-      await matchService.uploadMatch({ matchData, lineup, videoFile })
+      await matchService.uploadMatch({
+        matchData,
+        lineup,
+        videoFile,
+        onProgress: setUploadProgress,
+      })
       navigate('/dashboard/matches')
     } catch (e) {
       console.error(e)
@@ -131,23 +180,37 @@ export default function UploadMatch() {
       } else if (status === 402) {
         navigate('/dashboard/settings')
       } else {
-        alert("Erreur lors de l'upload — veuillez réessayer")
+        setError("Erreur lors de l'upload — veuillez réessayer")
       }
+    } finally {
+      setUploading(false)
+      setUploadProgress(0)
     }
-    finally { setUploading(false) }
   }
 
   // ── PAYWALL ──────────────────────────────────────────────────
-  // Bloquer si :
-  // - pas de CB (no_trial)
-  // - trial expiré sans abonnement
-  // - analyse trial déjà utilisée
-  const access       = trialStatus?.access
-  const isTrialNoCB  = !hasPaymentMethod && access !== 'full'
-  const isExpired    = access === 'expired'
-  const canUpload    = access === 'full'
+  const access      = trialStatus?.access
+  const isTrialNoCB = !hasPaymentMethod && access !== 'full'
+  const isExpired   = access === 'expired'
+  const canUpload   = access === 'full'
 
-  if (!trialLoading && !canUpload) {
+  // Loading state pendant vérification trial — évite le flash du formulaire
+  if (trialLoading) {
+    return (
+      <DashboardLayout>
+        <style>{FONTS}</style>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ width: 28, height: 28, border: `2px solid ${G.goldBdr}`, borderTopColor: G.gold, borderRadius: '50%', animation: 'spin .7s linear infinite', margin: '0 auto 14px' }} />
+            <p style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted }}>Vérification...</p>
+          </div>
+          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+        </div>
+      </DashboardLayout>
+    )
+  }
+
+  if (!canUpload) {
     const title = isTrialNoCB
       ? 'Activez votre essai gratuit'
       : isExpired
@@ -233,6 +296,9 @@ export default function UploadMatch() {
 
       <div style={{ maxWidth: 680 }}>
 
+        {/* Erreur inline */}
+        <ErrorBanner message={error} />
+
         {/* ── STEP 1 — Match ── */}
         {step === 1 && (
           <div style={{ ...S.card, animation: 'fadeIn .3s ease', borderTop: `2px solid ${G.gold}` }}>
@@ -312,7 +378,7 @@ export default function UploadMatch() {
                   <select value={starter.position} onChange={e => updateStarter(i, 'position', e.target.value)} style={{ ...S.select, width: 80 }}>
                     {positions.map(pos => <option key={pos}>{pos}</option>)}
                   </select>
-                  <button onClick={() => removeStarter(i)} style={{ padding: 6, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', cursor: 'pointer', color: '#ef4444', display: 'flex' }}>
+                  <button onClick={() => removeStarter(i)} style={{ padding: 6, background: G.redBg, border: `1px solid ${G.redBdr}`, cursor: 'pointer', color: G.red, display: 'flex' }}>
                     <X size={14} />
                   </button>
                 </div>
@@ -350,7 +416,7 @@ export default function UploadMatch() {
                   </select>
                   <input type="number" value={sub.number} onChange={e => updateSubstitute(i, 'number', e.target.value)}
                     style={{ ...S.input, width: 64, textAlign: 'center', padding: '10px 8px' }} placeholder="N°" min="1" max="99" />
-                  <button onClick={() => removeSubstitute(i)} style={{ padding: 6, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', cursor: 'pointer', color: '#ef4444', display: 'flex' }}>
+                  <button onClick={() => removeSubstitute(i)} style={{ padding: 6, background: G.redBg, border: `1px solid ${G.redBdr}`, cursor: 'pointer', color: G.red, display: 'flex' }}>
                     <X size={14} />
                   </button>
                 </div>
@@ -386,7 +452,7 @@ export default function UploadMatch() {
                     <Check size={20} color="#22c55e" />
                   </div>
                   <p style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 700, color: G.ink, marginBottom: 4, letterSpacing: '.04em' }}>{videoFile.name}</p>
-                  <p style={{ fontFamily: G.mono, fontSize: 10, color: '#22c55e', letterSpacing: '.08em' }}>{(videoFile.size / 1024 / 1024).toFixed(2)} MB</p>
+                  <p style={{ fontFamily: G.mono, fontSize: 10, color: '#22c55e', letterSpacing: '.08em' }}>{(videoFile.size / 1024 / 1024 / 1024).toFixed(2)} GB</p>
                   <p style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, marginTop: 6, letterSpacing: '.06em' }}>Cliquez pour changer</p>
                 </div>
               ) : (
@@ -396,11 +462,28 @@ export default function UploadMatch() {
                   </div>
                   <p style={{ fontFamily: G.mono, fontSize: 12, fontWeight: 700, color: G.ink, marginBottom: 4, letterSpacing: '.06em', textTransform: 'uppercase' }}>Déposez votre vidéo</p>
                   <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.06em' }}>ou cliquez pour sélectionner</p>
-                  <p style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(15,15,13,0.25)', marginTop: 6, letterSpacing: '.06em' }}>MP4, MOV, AVI — max 2GB</p>
+                  <p style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(15,15,13,0.25)', marginTop: 6, letterSpacing: '.06em' }}>MP4, MOV, AVI — max 8GB</p>
                 </div>
               )}
             </label>
-            {videoFile && (
+
+            {/* Barre de progression upload */}
+            {uploading && (
+              <div style={{ marginTop: 16 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: G.mono, fontSize: 8, color: G.muted, marginBottom: 6, letterSpacing: '.08em' }}>
+                  <span>Upload en cours...</span>
+                  <span>{uploadProgress}%</span>
+                </div>
+                <div style={{ height: 3, background: 'rgba(15,15,13,0.08)' }}>
+                  <div style={{ height: '100%', width: `${uploadProgress}%`, background: G.gold, transition: 'width .3s ease' }} />
+                </div>
+                <p style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, marginTop: 8, letterSpacing: '.06em' }}>
+                  Ne fermez pas cette page pendant l'upload
+                </p>
+              </div>
+            )}
+
+            {videoFile && !uploading && (
               <div style={{ marginTop: 16, padding: '14px 18px', background: G.goldBg, border: `1px solid ${G.goldBdr}`, fontFamily: G.mono, fontSize: 10, color: G.gold, letterSpacing: '.06em', lineHeight: 1.6 }}>
                 L'analyse démarrera après l'upload. Vous serez notifié(e) dès que le rapport sera prêt.
               </div>
@@ -427,7 +510,7 @@ export default function UploadMatch() {
           ) : (
             <button onClick={handleSubmit} disabled={uploading} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 28px', background: uploading ? 'rgba(201,162,39,0.4)' : G.gold, color: G.ink, fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700, border: 'none', cursor: uploading ? 'not-allowed' : 'pointer' }}>
               {uploading
-                ? <><div style={{ width: 14, height: 14, border: '2px solid rgba(15,15,13,0.3)', borderTopColor: G.ink, borderRadius: '50%', animation: 'spin .7s linear infinite' }} /> Upload...</>
+                ? <><div style={{ width: 14, height: 14, border: '2px solid rgba(15,15,13,0.3)', borderTopColor: G.ink, borderRadius: '50%', animation: 'spin .7s linear infinite' }} /> Upload {uploadProgress}%</>
                 : <><Check size={16} /> Lancer l'analyse</>
               }
             </button>
