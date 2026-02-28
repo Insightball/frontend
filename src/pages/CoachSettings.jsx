@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Trash2, AlertTriangle, X, User, Mail, Shield } from 'lucide-react'
+import { useLocation } from 'react-router-dom'
+import { Trash2, AlertTriangle, X, User, Mail, Shield, AlertCircle } from 'lucide-react'
 import DashboardLayout from '../components/DashboardLayout'
 import { useAuth } from '../context/AuthContext'
 import SubscriptionManagement from '../components/SubscriptionManagement'
@@ -29,6 +30,8 @@ function Section({ title, accent, children }) {
 
 export default function CoachSettings() {
   const { user } = useAuth()
+  const location = useLocation()
+  const flashMessage = location.state?.flash || ''
   const [isMobile, setIsMobile] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleteConfirm, setDeleteConfirm] = useState('')
@@ -71,6 +74,13 @@ export default function CoachSettings() {
         </h1>
       </div>
 
+      {flashMessage && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', marginBottom: 16, background: 'rgba(201,162,39,0.07)', border: '1px solid rgba(201,162,39,0.25)', maxWidth: isMobile ? '100%' : 600 }}>
+          <AlertCircle size={13} color={G.gold} style={{ flexShrink: 0 }} />
+          <span style={{ fontFamily: G.mono, fontSize: 10, color: G.gold, letterSpacing: '.04em' }}>{flashMessage}</span>
+        </div>
+      )}
+
       <div style={{ maxWidth: isMobile ? '100%' : 600, display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
 
         {/* Infos compte */}
@@ -79,7 +89,7 @@ export default function CoachSettings() {
             {[
               { icon: User, label: 'Nom', value: user?.name || '—' },
               { icon: Mail, label: 'Email', value: user?.email || '—' },
-              { icon: Shield, label: 'Plan', value: (() => { const p = (user?.plan || 'COACH').toUpperCase(); return p === 'CLUB' ? 'Club — 129 €/mois · 12 matchs' : 'Coach — 39 €/mois · 4 matchs' })() },
+              { icon: Shield, label: 'Plan', value: (() => { const p = (user?.plan || 'COACH').toUpperCase(); return p === 'CLUB' ? 'Club — Offre sur mesure' : 'Coach — 39 €/mois · 4 matchs' })() },
             ].map(({ icon: Icon, label, value }) => (
               <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}` }}>
                 <div style={{ width: 32, height: 32, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
