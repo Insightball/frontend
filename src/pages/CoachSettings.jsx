@@ -89,7 +89,7 @@ export default function CoachSettings() {
             {[
               { icon: User, label: 'Nom', value: user?.name || '—' },
               { icon: Mail, label: 'Email', value: user?.email || '—' },
-              { icon: Shield, label: 'Plan', value: (() => { const p = (user?.plan || 'COACH').toUpperCase(); return p === 'CLUB' ? 'Club — Offre sur mesure' : 'Coach — 39 €/mois · 4 matchs' })() },
+              { icon: Shield, label: 'Plan', value: (() => { const p = (user?.plan || 'COACH').toUpperCase(); if (p === 'CLUB') return 'Club — Offre sur mesure'; const trialEnd = user?.trial_ends_at; const inTrial = trialEnd && new Date(trialEnd) > new Date(); return inTrial ? 'Coach — Essai en cours' : 'Coach — 39 €/mois · 4 matchs'; })() },
             ].map(({ icon: Icon, label, value }) => (
               <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}` }}>
                 <div style={{ width: 32, height: 32, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
