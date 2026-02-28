@@ -200,10 +200,11 @@ export default function UploadMatch() {
   }
 
   // ── PAYWALL ──────────────────────────────────────────────────
-  const access      = trialStatus?.access
-  const isTrialNoCB = !hasPaymentMethod && access !== 'full'
-  const isExpired   = access === 'expired'
-  const canUpload   = access === 'full'
+  const access             = trialStatus?.access
+  const isTrialNoCB        = !hasPaymentMethod && access !== 'full'
+  const isExpired          = access === 'expired'
+  const trialMatchExhausted = access === 'full' && trialStatus?.trial_active && trialStatus?.match_used === true
+  const canUpload          = access === 'full' && !trialMatchExhausted
 
   // Loading state pendant vérification trial — évite le flash du formulaire
   if (trialLoading) {
@@ -226,15 +227,29 @@ export default function UploadMatch() {
       ? 'Activez votre essai gratuit'
       : isExpired
         ? 'Abonnez-vous pour continuer'
-        : 'Analyse gratuite utilisée'
+        : trialMatchExhausted
+          ? 'Analyse gratuite utilisée'
+          : 'Analyse gratuite utilisée'
 
     const sub = isTrialNoCB
       ? "Enregistrez votre carte bancaire pour démarrer votre essai de 7 jours. Aucun débit aujourd'hui."
       : isExpired
         ? "Votre période d'essai est terminée. Choisissez un plan pour continuer à analyser vos matchs."
-        : "Vous avez utilisé votre analyse gratuite incluse. Abonnez-vous pour uploader vos prochains matchs."
+        : trialMatchExhausted
+          ? "Vous avez utilisé votre analyse gratuite. Activez le plan Coach pour uploader jusqu'à 4 matchs par mois."
+          : "Vous avez utilisé votre analyse gratuite incluse. Abonnez-vous pour uploader vos prochains matchs."
 
-    const cta = isTrialNoCB ? 'Activer mon essai gratuit →' : 'Voir les plans →'
+    const cta = isTrialNoCB
+      ? 'Activer mon essai gratuit →'
+      : trialMatchExhausted
+        ? 'Activer le plan Coach — 39€/mois →'
+        : 'Voir les plans →'
+
+    const label = isTrialNoCB
+      ? 'Carte bancaire requise'
+      : isExpired
+        ? 'Essai terminé'
+        : 'Analyse utilisée'
 
     return (
       <DashboardLayout>
@@ -245,7 +260,7 @@ export default function UploadMatch() {
           </div>
           <div>
             <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>
-              {isTrialNoCB ? 'Carte bancaire requise' : isExpired ? 'Essai terminé' : 'Analyse utilisée'}
+              {label}
             </div>
             <h2 style={{ fontFamily: G.display, fontSize: 32, textTransform: 'uppercase', color: G.ink, marginBottom: 12 }}>
               {title}
