@@ -143,15 +143,6 @@ function ConfirmCoachModal({ isTrialing, onConfirm, onCancel, loading }) {
                 </div>
               </div>
 
-              {isTrialing && !sub?.cancel_at_period_end && (
-                <div style={{ padding: '12px 14px', background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.2)', marginBottom: 16, display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                  <AlertCircle size={13} color={G.orange} style={{ flexShrink: 0, marginTop: 1 }} />
-                  <p style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(245,242,235,0.70)', lineHeight: 1.6, margin: 0 }}>
-                    Cette action met fin à votre essai gratuit et déclenche un prélèvement de <strong style={{ color: G.text }}>39€ immédiatement</strong>.
-                  </p>
-                </div>
-              )}
-
               <div style={{ display: 'flex', gap: 10 }}>
                 <button onClick={onCancel} style={{
                   flex: 1, padding: '11px', background: 'transparent',
