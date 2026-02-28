@@ -6,23 +6,23 @@ import TrialUpgradeGate from '../components/TrialUpgradeGate'
 import matchService from '../services/matchService'
 import api from '../services/api'
 import playerService from '../services/playerService'
-
-const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');`
+import { T, globalStyles } from '../theme'
 
 const G = {
-  ink: '#0f0f0d', gold: '#c9a227',
-  goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.25)',
-  mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
-  muted: 'rgba(15,15,13,0.42)', border: 'rgba(15,15,13,0.09)',
-  red: '#ef4444', redBg: 'rgba(239,68,68,0.08)', redBdr: 'rgba(239,68,68,0.2)',
+  ink:    T.ink,    gold:   T.gold,
+  goldBg: T.goldBg, goldBdr:T.goldBdr,
+  mono:   T.mono,   display:T.display,
+  muted:  T.muted,  border: T.rule,
+  red:    T.red,    redBg:  T.redBg,   redBdr: T.redBdr,
 }
 
 const S = {
-  card:   { background: 'rgba(255,255,255,0.02)', border: `1px solid rgba(15,15,13,0.09)`, padding: 28 },
-  label:  { display: 'block', fontFamily: "'JetBrains Mono',monospace", fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(15,15,13,0.45)', marginBottom: 8 },
-  input:  { width: '100%', background: '#ffffff', border: '1px solid rgba(15,15,13,0.09)', padding: '12px 16px', color: '#0f0f0d', fontFamily: "'JetBrains Mono',monospace", fontSize: 13, outline: 'none', transition: 'border-color .15s', boxSizing: 'border-box' },
-  select: { width: '100%', background: '#ffffff', border: '1px solid rgba(15,15,13,0.09)', padding: '12px 16px', color: '#0f0f0d', fontFamily: "'JetBrains Mono',monospace", fontSize: 13, outline: 'none', cursor: 'pointer', boxSizing: 'border-box' },
+  card:   { background: T.surface, border: `1px solid ${T.rule}`, padding: 28 },
+  label:  { display: 'block', fontFamily: T.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: T.muted, marginBottom: 8 },
+  input:  { width: '100%', background: T.surface, border: `1px solid ${T.rule}`, padding: '12px 16px', color: T.ink, fontFamily: T.mono, fontSize: 13, outline: 'none', transition: 'border-color .15s', boxSizing: 'border-box' },
+  select: { width: '100%', background: T.surface, border: `1px solid ${T.rule}`, padding: '12px 16px', color: T.ink, fontFamily: T.mono, fontSize: 13, outline: 'none', cursor: 'pointer', boxSizing: 'border-box' },
 }
+
 
 // Limite vidéo : 8GB (adapté aux vidéos match full HD)
 const MAX_VIDEO_SIZE = 8 * 1024 * 1024 * 1024
@@ -198,7 +198,7 @@ export default function UploadMatch() {
   if (trialLoading) {
     return (
       <DashboardLayout>
-        <style>{FONTS}</style>
+        <style>{globalStyles}</style>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
           <div style={{ textAlign: 'center' }}>
             <div style={{ width: 28, height: 28, border: `2px solid ${G.goldBdr}`, borderTopColor: G.gold, borderRadius: '50%', animation: 'spin .7s linear infinite', margin: '0 auto 14px' }} />
@@ -227,7 +227,7 @@ export default function UploadMatch() {
 
     return (
       <DashboardLayout>
-        <style>{FONTS}</style>
+        <style>{globalStyles}</style>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', textAlign: 'center', gap: 24 }}>
           <div style={{ width: 56, height: 56, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <CreditCard size={22} color={G.gold} />
@@ -264,7 +264,7 @@ export default function UploadMatch() {
       {showUpgradeGate && (
         <TrialUpgradeGate onClose={() => setShowUpgradeGate(false)} />
       )}
-      <style>{`${FONTS} * { box-sizing: border-box; } @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } } @keyframes spin { to { transform: rotate(360deg); } } select option { background: #fff; color: #0f0f0d; }`}</style>
+      <style>{`${globalStyles} * { box-sizing: border-box; } @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } } @keyframes spin { to { transform: rotate(360deg); } } select option { background: #fff; color: #0f0f0d; }`}</style>
 
       {/* Header */}
       <div style={{ marginBottom: 32 }}>
@@ -367,7 +367,7 @@ export default function UploadMatch() {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {lineup.starters.map((starter, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', background: '#ffffff', border: `1px solid ${G.border}`, animation: 'fadeIn .2s ease' }}>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', background: T.surface, border: `1px solid ${G.border}`, animation: 'fadeIn .2s ease' }}>
                   <div style={{ fontFamily: G.display, fontSize: 16, color: G.gold, width: 28, textAlign: 'center', flexShrink: 0 }}>{i + 1}</div>
                   <select value={starter.player_id} onChange={e => updateStarter(i, 'player_id', e.target.value)} style={{ ...S.select, flex: 1 }}>
                     <option value="">Sélectionner joueur</option>
@@ -408,7 +408,7 @@ export default function UploadMatch() {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {lineup.substitutes.map((sub, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', background: '#ffffff', border: `1px solid ${G.border}`, animation: 'fadeIn .2s ease' }}>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', background: T.surface, border: `1px solid ${G.border}`, animation: 'fadeIn .2s ease' }}>
                   <div style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, width: 28, textAlign: 'center', flexShrink: 0, letterSpacing: '.08em' }}>R{i + 1}</div>
                   <select value={sub.player_id} onChange={e => updateSubstitute(i, 'player_id', e.target.value)} style={{ ...S.select, flex: 1 }}>
                     <option value="">Sélectionner joueur</option>
@@ -443,16 +443,16 @@ export default function UploadMatch() {
                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                 minHeight: 200, cursor: 'pointer', transition: 'all .2s',
                 border: dragOver ? `2px dashed ${G.gold}` : videoFile ? `2px solid rgba(34,197,94,0.4)` : `2px dashed rgba(15,15,13,0.12)`,
-                background: dragOver ? G.goldBg : videoFile ? 'rgba(34,197,94,0.04)' : 'rgba(255,255,255,0.01)',
+                background: dragOver ? G.goldBg : videoFile ? T.greenBg : T.bgAlt,
               }}
             >
               {videoFile ? (
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ width: 48, height: 48, margin: '0 auto 14px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Check size={20} color="#22c55e" />
+                    <Check size={20} color={T.green} />
                   </div>
                   <p style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 700, color: G.ink, marginBottom: 4, letterSpacing: '.04em' }}>{videoFile.name}</p>
-                  <p style={{ fontFamily: G.mono, fontSize: 10, color: '#22c55e', letterSpacing: '.08em' }}>{(videoFile.size / 1024 / 1024 / 1024).toFixed(2)} GB</p>
+                  <p style={{ fontFamily: G.mono, fontSize: 10, color: T.green, letterSpacing: '.08em' }}>{(videoFile.size / 1024 / 1024 / 1024).toFixed(2)} GB</p>
                   <p style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, marginTop: 6, letterSpacing: '.06em' }}>Cliquez pour changer</p>
                 </div>
               ) : (
@@ -462,7 +462,7 @@ export default function UploadMatch() {
                   </div>
                   <p style={{ fontFamily: G.mono, fontSize: 12, fontWeight: 700, color: G.ink, marginBottom: 4, letterSpacing: '.06em', textTransform: 'uppercase' }}>Déposez votre vidéo</p>
                   <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.06em' }}>ou cliquez pour sélectionner</p>
-                  <p style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(15,15,13,0.25)', marginTop: 6, letterSpacing: '.06em' }}>MP4, MOV, AVI — max 8GB</p>
+                  <p style={{ fontFamily: G.mono, fontSize: 9, color: T.muted3, marginTop: 6, letterSpacing: '.06em' }}>MP4, MOV, AVI — max 8GB</p>
                 </div>
               )}
             </label>
@@ -474,7 +474,7 @@ export default function UploadMatch() {
                   <span>Upload en cours...</span>
                   <span>{uploadProgress}%</span>
                 </div>
-                <div style={{ height: 3, background: 'rgba(15,15,13,0.08)' }}>
+                <div style={{ height: 3, background: T.rule }}>
                   <div style={{ height: '100%', width: `${uploadProgress}%`, background: G.gold, transition: 'width .3s ease' }} />
                 </div>
                 <p style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, marginTop: 8, letterSpacing: '.06em' }}>
@@ -498,7 +498,7 @@ export default function UploadMatch() {
               <ChevronLeft size={16} /> Précédent
             </button>
           ) : (
-            <button onClick={() => navigate('/dashboard/matches')} style={{ padding: '12px 22px', background: 'transparent', border: 'none', color: 'rgba(15,15,13,0.2)', cursor: 'pointer', fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase' }}>
+            <button onClick={() => navigate('/dashboard/matches')} style={{ padding: '12px 22px', background: 'transparent', border: 'none', color: T.muted, cursor: 'pointer', fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase' }}>
               Annuler
             </button>
           )}
