@@ -35,7 +35,7 @@ export default function TrialUpgradeGate({ onClose }) {
     setLoading(true); setError('')
     try {
       // trial_end='now' → prélevé immédiatement, quota 4/mois débloqué
-      await api.post('/subscription/upgrade-plan', { plan: 'COACH' })
+      await api.post('/subscription/end-trial')
       setSuccess(true)
       if (refreshUser) await refreshUser()
       setTimeout(() => {
@@ -43,7 +43,8 @@ export default function TrialUpgradeGate({ onClose }) {
         navigate('/dashboard/matches/upload')
       }, 2000)
     } catch (e) {
-      setError(e?.response?.data?.detail || 'Erreur — réessayez')
+      const detail = e?.response?.data?.detail
+      setError(typeof detail === 'string' ? detail : 'Erreur — réessayez')
       setLoading(false)
     }
   }
