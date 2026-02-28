@@ -550,21 +550,21 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
               </button>
             )}
 
-            {/* Upgrade COACH → CLUB : devis sur demande */}
+            {/* Upgrade COACH → CLUB : contact direct par email */}
             {user?.plan === 'COACH' && !sub?.cancel_at_period_end && (
-              <button onClick={() => setShowClubQuoteModal(true)} disabled={upgradeLoading} style={{
+              <a href="mailto:contact@insightball.com?subject=Demande%20de%20devis%20Club&body=Bonjour%2C%0A%0AJe%20souhaite%20passer%20au%20plan%20Club.%0A%0AMerci" style={{
                 display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px',
                 background: G.goldBg, color: G.gold,
                 border: `1px solid ${G.goldBdr}`,
                 fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700,
-                cursor: upgradeLoading ? 'not-allowed' : 'pointer', opacity: upgradeLoading ? 0.6 : 1,
+                cursor: 'pointer', textDecoration: 'none',
               }}
                 onMouseEnter={e => e.currentTarget.style.opacity = '.80'}
                 onMouseLeave={e => e.currentTarget.style.opacity = '1'}
               >
                 <Users size={12} />
                 Passer au plan Club — Demander un devis
-              </button>
+              </a>
             )}
 
             {/* Réactivation — annulation en cours mais user change d'avis */}
@@ -667,17 +667,18 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
                   </div>
 
                   {plan.id === 'CLUB' ? (
-                    <button onClick={() => setShowClubQuoteModal(true)} style={{
+                    <a href="mailto:contact@insightball.com?subject=Demande%20de%20devis%20Club&body=Bonjour%2C%0A%0AJe%20souhaite%20en%20savoir%20plus%20sur%20le%20plan%20Club.%0A%0AMerci" style={{
                       padding: '11px', background: G.goldBg, border: `1px solid ${G.goldBdr}`,
                       color: G.gold, fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em',
                       textTransform: 'uppercase', fontWeight: 700, cursor: 'pointer', marginTop: 'auto',
                       display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                      textDecoration: 'none',
                     }}
                       onMouseEnter={e => e.currentTarget.style.opacity = '.85'}
                       onMouseLeave={e => e.currentTarget.style.opacity = '1'}
                     >
                       <Users size={11} /> Demander un devis →
-                    </button>
+                    </a>
                   ) : (
                     <button onClick={() => setSelectedPlan(plan)} style={{
                       padding: '11px', background: G.gold, border: 'none',
@@ -796,36 +797,7 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
         />
       )}
 
-      {/* ── MODALE DEVIS CLUB ── */}
-      {showClubQuoteModal && (
-        <ConfirmModal
-          title="Demander un devis Club"
-          body={
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <div style={{ padding: '14px', background: G.goldBg, border: `1px solid ${G.goldBdr}` }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                  {[
-                    '🏟️ Offre sur mesure pour votre club',
-                    '📊 Nombre de matchs adapté à vos besoins',
-                    '👥 Multi-équipes illimité',
-                    '📞 Nous vous contacterons sous 24h',
-                  ].map(item => (
-                    <div key={item} style={{ fontFamily: G.mono, fontSize: 10, color: G.muted }}>{item}</div>
-                  ))}
-                </div>
-              </div>
-              <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, lineHeight: 1.6, margin: 0 }}>
-                Un membre de l'équipe InsightBall vous contactera à l'adresse associée à votre compte.
-              </p>
-            </div>
-          }
-          confirmLabel="Envoyer la demande"
-          confirmColor={G.gold}
-          onConfirm={handleRequestClubQuote}
-          onCancel={() => setShowClubQuoteModal(false)}
-          loading={upgradeLoading}
-        />
-      )}
+      {/* Modale devis CLUB supprimée — remplacé par mailto direct */}
     </div>
   )
 }
