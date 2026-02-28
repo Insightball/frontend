@@ -360,8 +360,8 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
   // Modales — plus de window.confirm()
   const [showCancelModal, setShowCancelModal]       = useState(false)
   const [showCoachModal, setShowCoachModal]         = useState(false)
-  const [showClubQuoteModal, setShowClubQuoteModal] = useState(false)
   const [showCancelSubModal, setShowCancelSubModal] = useState(false)
+  const [copied, setCopied]                         = useState(false)
 
   useEffect(() => { loadAll() }, [])
 
@@ -550,21 +550,35 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
               </button>
             )}
 
-            {/* Upgrade COACH → CLUB : contact direct par email */}
+            {/* Upgrade COACH → CLUB : contact direct */}
             {user?.plan === 'COACH' && !sub?.cancel_at_period_end && (
-              <a href="mailto:contact@insightball.com?subject=Demande%20de%20devis%20Club&body=Bonjour%2C%0A%0AJe%20souhaite%20passer%20au%20plan%20Club.%0A%0AMerci" style={{
-                display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px',
-                background: G.goldBg, color: G.gold,
+              <div style={{
+                padding: '14px 20px', background: G.goldBg,
                 border: `1px solid ${G.goldBdr}`,
-                fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700,
-                cursor: 'pointer', textDecoration: 'none',
-              }}
-                onMouseEnter={e => e.currentTarget.style.opacity = '.80'}
-                onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-              >
-                <Users size={12} />
-                Passer au plan Club — Demander un devis
-              </a>
+                display: 'flex', flexDirection: 'column', gap: 8,
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <Users size={12} color={G.gold} />
+                  <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.gold, fontWeight: 700 }}>
+                    Passer au plan Club
+                  </span>
+                </div>
+                <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, lineHeight: 1.6, margin: 0 }}>
+                  Offre sur mesure pour votre club. Contactez-nous :
+                </p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span style={{ fontFamily: G.mono, fontSize: 13, color: G.text, fontWeight: 700, letterSpacing: '.04em' }}>
+                    contact@insightball.com
+                  </span>
+                  <button onClick={() => { navigator.clipboard.writeText('contact@insightball.com'); setCopied(true); setTimeout(() => setCopied(false), 2000) }} style={{
+                    padding: '4px 10px', background: 'transparent', border: `1px solid ${G.border}`,
+                    fontFamily: G.mono, fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase',
+                    color: copied ? G.green : G.muted, cursor: 'pointer', transition: 'color .15s',
+                  }}>
+                    {copied ? '✓ Copié' : 'Copier'}
+                  </button>
+                </div>
+              </div>
             )}
 
             {/* Réactivation — annulation en cours mais user change d'avis */}
@@ -667,18 +681,19 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
                   </div>
 
                   {plan.id === 'CLUB' ? (
-                    <a href="mailto:contact@insightball.com?subject=Demande%20de%20devis%20Club&body=Bonjour%2C%0A%0AJe%20souhaite%20en%20savoir%20plus%20sur%20le%20plan%20Club.%0A%0AMerci" style={{
-                      padding: '11px', background: G.goldBg, border: `1px solid ${G.goldBdr}`,
-                      color: G.gold, fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em',
-                      textTransform: 'uppercase', fontWeight: 700, cursor: 'pointer', marginTop: 'auto',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                      textDecoration: 'none',
-                    }}
-                      onMouseEnter={e => e.currentTarget.style.opacity = '.85'}
-                      onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-                    >
-                      <Users size={11} /> Demander un devis →
-                    </a>
+                    <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                      <p style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, margin: 0 }}>Contactez-nous :</p>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <span style={{ fontFamily: G.mono, fontSize: 11, color: G.text, fontWeight: 700 }}>contact@insightball.com</span>
+                        <button onClick={() => { navigator.clipboard.writeText('contact@insightball.com'); setCopied(true); setTimeout(() => setCopied(false), 2000) }} style={{
+                          padding: '3px 8px', background: 'transparent', border: `1px solid ${G.border}`,
+                          fontFamily: G.mono, fontSize: 7, letterSpacing: '.1em', textTransform: 'uppercase',
+                          color: copied ? G.green : G.muted, cursor: 'pointer',
+                        }}>
+                          {copied ? '✓' : 'Copier'}
+                        </button>
+                      </div>
+                    </div>
                   ) : (
                     <button onClick={() => setSelectedPlan(plan)} style={{
                       padding: '11px', background: G.gold, border: 'none',
