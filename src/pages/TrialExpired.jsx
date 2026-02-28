@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Lock, Zap, Users, ArrowRight, CreditCard, Shield } from 'lucide-react'
+import { Lock, Zap, Users, ArrowRight, CreditCard, Shield, CheckCircle } from 'lucide-react'
 import api from '../services/api'
 
 const G = {
@@ -8,42 +8,45 @@ const G = {
   goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.25)',
   mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
   text: '#f5f2eb', muted: 'rgba(245,242,235,0.45)', border: 'rgba(255,255,255,0.07)',
-  green: '#22c55e',
+  green: '#22c55e', greenBg: 'rgba(34,197,94,0.06)', greenBdr: 'rgba(34,197,94,0.18)',
 }
 
 export default function TrialExpired() {
-  const navigate       = useNavigate()
-  const [loading, setLoading] = useState(null)
-  const [error, setError]     = useState('')
+  const navigate = useNavigate()
+  const [coachLoading, setCoachLoading] = useState(false)
+  const [quoteLoading, setQuoteLoading] = useState(false)
+  const [quoteSuccess, setQuoteSuccess] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleChoosePlan = async (plan) => {
-    setLoading(plan); setError('')
+  // Flow COACH — Stripe Checkout
+  const handleChooseCoach = async () => {
+    setCoachLoading(true); setError('')
     try {
       const r = await api.post('/subscription/create-checkout-session', {
-        plan: plan.toLowerCase(),
+        plan: 'coach',
         success_url: `${window.location.origin}/dashboard?subscribed=true`,
         cancel_url:  `${window.location.origin}/dashboard`,
       })
       window.location.href = r.data.url
     } catch (e) {
       setError('Erreur lors de la redirection vers le paiement')
-      setLoading(null)
+      setCoachLoading(false)
     }
   }
 
-  const plans = [
-    {
-      id: 'COACH', icon: Zap, color: G.gold,
-      price: '39', quota: '4 matchs / mois',
-      features: ['Rapports PDF complets', 'Statistiques joueurs', 'Heatmaps tactiques', 'Support email'],
-    },
-    {
-      id: 'CLUB', icon: Users, color: '#3b82f6',
-      price: '129', quota: '12 matchs / mois',
-      features: ['Tout le plan Coach', 'Multi-équipes illimité', 'Dashboard directeur sportif', 'Support prioritaire'],
-      popular: true,
-    },
-  ]
+  // Flow CLUB — demande de devis, pas de Stripe
+  const handleRequestQuote = async () => {
+    if (quoteSuccess) return
+    setQuoteLoading(true); setError('')
+    try {
+      await api.post('/subscription/request-club-quote', { message: '' })
+      setQuoteSuccess(true)
+    } catch (e) {
+      setError("Erreur lors de l'envoi. Contactez-nous : contact@insightball.com")
+    } finally {
+      setQuoteLoading(false)
+    }
+  }
 
   return (
     <div style={{
@@ -77,7 +80,7 @@ export default function TrialExpired() {
       </div>
 
       {/* Bloc rassurant */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px', background: 'rgba(34,197,94,0.06)', border: '1px solid rgba(34,197,94,0.18)', marginBottom: 24, maxWidth: 560, width: '100%' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px', background: G.greenBg, border: `1px solid ${G.greenBdr}`, marginBottom: 24, maxWidth: 560, width: '100%' }}>
         <Shield size={13} color={G.green} style={{ flexShrink: 0 }} />
         <p style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.55)', lineHeight: 1.6, margin: 0, letterSpacing: '.04em' }}>
           Paiement sécurisé Stripe · Premier débit au démarrage · Résiliable en 1 clic depuis vos paramètres, aucune question posée.
@@ -90,66 +93,111 @@ export default function TrialExpired() {
         </div>
       )}
 
+      {quoteSuccess && (
+        <div style={{ marginBottom: 14, padding: '10px 16px', background: G.greenBg, border: `1px solid ${G.greenBdr}`, fontFamily: G.mono, fontSize: 10, color: G.green, maxWidth: 560, width: '100%', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <CheckCircle size={13} color={G.green} />
+          Demande envoyée ✓ — Nous vous contacterons sous 24h pour votre offre sur mesure.
+        </div>
+      )}
+
       {/* Plans */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 1, background: G.border, width: '100%', maxWidth: 560, marginBottom: 20 }}>
-        {plans.map(plan => {
-          const Icon = plan.icon
-          return (
-            <div key={plan.id} style={{
-              background: plan.popular ? 'rgba(201,162,39,0.04)' : 'rgba(255,255,255,0.02)',
-              borderTop: `2px solid ${plan.color}`,
-              padding: '24px 20px',
-              display: 'flex', flexDirection: 'column', gap: 12,
-            }}>
-              {plan.popular && (
-                <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, border: `1px solid ${G.goldBdr}`, padding: '3px 10px', alignSelf: 'flex-start' }}>
-                  ⚡ Recommandé
-                </div>
-              )}
 
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <Icon size={13} color={plan.color} />
-                  <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: plan.color }}>{plan.id}</span>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontFamily: G.display, fontSize: 34, color: G.text, lineHeight: 1 }}>
-                    {plan.price}<span style={{ fontFamily: G.mono, fontSize: 11, color: G.muted }}>€</span>
-                  </div>
-                  <div style={{ fontFamily: G.mono, fontSize: 8, color: G.muted }}>/mois · {plan.quota}</div>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-                {plan.features.map(f => (
-                  <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <div style={{ width: 4, height: 4, background: plan.color, flexShrink: 0 }} />
-                    <span style={{ fontFamily: G.mono, fontSize: 9, color: G.muted }}>{f}</span>
-                  </div>
-                ))}
-              </div>
-
-              <button onClick={() => handleChoosePlan(plan.id)} disabled={!!loading} style={{
-                marginTop: 'auto', padding: '12px',
-                background: plan.color === G.gold ? G.gold : 'rgba(59,130,246,0.12)',
-                border: plan.color !== G.gold ? '1px solid rgba(59,130,246,0.35)' : 'none',
-                color: plan.color === G.gold ? '#0f0f0d' : '#3b82f6',
-                fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase',
-                fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                transition: 'opacity .15s',
-              }}
-                onMouseEnter={e => { if (!loading) e.currentTarget.style.opacity = '.85' }}
-                onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-              >
-                {loading === plan.id
-                  ? <span style={{ width: 12, height: 12, border: '2px solid currentColor', borderTopColor: 'transparent', borderRadius: '50%', display: 'inline-block', animation: 'spin .6s linear infinite' }} />
-                  : <><CreditCard size={11} /> Choisir {plan.id} <ArrowRight size={11} /></>
-                }
-              </button>
+        {/* COACH — Stripe Checkout */}
+        <div style={{ background: 'rgba(255,255,255,0.02)', borderTop: `2px solid ${G.gold}`, padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Zap size={13} color={G.gold} />
+              <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold }}>COACH</span>
             </div>
-          )
-        })}
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontFamily: G.display, fontSize: 34, color: G.text, lineHeight: 1 }}>
+                39<span style={{ fontFamily: G.mono, fontSize: 11, color: G.muted }}>€</span>
+              </div>
+              <div style={{ fontFamily: G.mono, fontSize: 8, color: G.muted }}>/mois · 4 matchs</div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+            {['Rapports PDF complets', 'Statistiques joueurs', 'Heatmaps tactiques', 'Support email'].map(f => (
+              <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ width: 4, height: 4, background: G.gold, flexShrink: 0 }} />
+                <span style={{ fontFamily: G.mono, fontSize: 9, color: G.muted }}>{f}</span>
+              </div>
+            ))}
+          </div>
+
+          <button onClick={handleChooseCoach} disabled={coachLoading} style={{
+            marginTop: 'auto', padding: '12px',
+            background: G.gold, border: 'none',
+            color: '#0f0f0d',
+            fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase',
+            fontWeight: 700, cursor: coachLoading ? 'not-allowed' : 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+            transition: 'opacity .15s',
+          }}
+            onMouseEnter={e => { if (!coachLoading) e.currentTarget.style.opacity = '.85' }}
+            onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+          >
+            {coachLoading
+              ? <span style={{ width: 12, height: 12, border: '2px solid currentColor', borderTopColor: 'transparent', borderRadius: '50%', display: 'inline-block', animation: 'spin .6s linear infinite' }} />
+              : <><CreditCard size={11} /> Choisir COACH <ArrowRight size={11} /></>
+            }
+          </button>
+        </div>
+
+        {/* CLUB — Demande de devis, pas Stripe */}
+        <div style={{ background: 'rgba(201,162,39,0.04)', borderTop: `2px solid ${G.gold}`, padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, border: `1px solid ${G.goldBdr}`, padding: '3px 10px', alignSelf: 'flex-start' }}>
+            Sur devis
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Users size={13} color={G.gold} />
+              <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold }}>CLUB</span>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontFamily: G.display, fontSize: 22, color: G.text, lineHeight: 1.1 }}>
+                Sur devis
+              </div>
+              <div style={{ fontFamily: G.mono, fontSize: 8, color: G.muted }}>à partir de 99€/mois</div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+            {['Multi-équipes illimité', 'Dashboard club', 'Matchs selon vos besoins', 'Support prioritaire'].map(f => (
+              <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ width: 4, height: 4, background: G.gold, flexShrink: 0 }} />
+                <span style={{ fontFamily: G.mono, fontSize: 9, color: G.muted }}>{f}</span>
+              </div>
+            ))}
+          </div>
+
+          {quoteSuccess ? (
+            <div style={{ marginTop: 'auto', padding: '12px', background: G.greenBg, border: `1px solid ${G.greenBdr}`, fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.green, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+              <CheckCircle size={11} color={G.green} /> Demande envoyée
+            </div>
+          ) : (
+            <button onClick={handleRequestQuote} disabled={quoteLoading} style={{
+              marginTop: 'auto', padding: '12px',
+              background: 'rgba(201,162,39,0.12)', border: `1px solid ${G.goldBdr}`,
+              color: G.gold,
+              fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase',
+              fontWeight: 700, cursor: quoteLoading ? 'not-allowed' : 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+              transition: 'opacity .15s',
+            }}
+              onMouseEnter={e => { if (!quoteLoading) e.currentTarget.style.opacity = '.85' }}
+              onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+            >
+              {quoteLoading
+                ? <span style={{ width: 12, height: 12, border: '2px solid currentColor', borderTopColor: 'transparent', borderRadius: '50%', display: 'inline-block', animation: 'spin .6s linear infinite' }} />
+                : <>Demander un devis <ArrowRight size={11} /></>
+              }
+            </button>
+          )}
+        </div>
       </div>
 
       <p style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.18)', letterSpacing: '.06em', textAlign: 'center' }}>
