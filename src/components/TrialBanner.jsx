@@ -27,6 +27,8 @@ export default function TrialBanner() {
 
   if (!user || !trialData) return null
   if (dismissed) return null
+  // Banner trial COACH uniquement — le plan CLUB est sur devis, pas de trial
+  if ((user?.plan || '').toUpperCase() !== 'COACH') return null
 
   // Afficher uniquement si trial en cours (trialing) ou expiré
   const isTrialing = trialData.access === 'full' && trialData.trial_active
