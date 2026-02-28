@@ -79,12 +79,13 @@ function StatusBadge({ status }) {
 
 function DashboardMatches() {
   const navigate = useNavigate()
-  const [matches, setMatches]           = useState([])
-  const [loading, setLoading]           = useState(true)
-  const [filter, setFilter]             = useState('all')
-  const [isMobile, setIsMobile]         = useState(false)
+  const [matches, setMatches]                 = useState([])
+  const [loading, setLoading]                 = useState(true)
+  const [filter, setFilter]                   = useState('all')
+  const [isMobile, setIsMobile]               = useState(false)
   const [showUpgradeGate, setShowUpgradeGate] = useState(false)
-  const [trialStatus, setTrialStatus]   = useState(null)
+  const [trialStatus, setTrialStatus]         = useState(null)
+  const [trialLoading, setTrialLoading]       = useState(true)
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -98,6 +99,7 @@ function DashboardMatches() {
     api.get('/subscription/trial-status')
       .then(r => setTrialStatus(r.data))
       .catch(() => {})
+      .finally(() => setTrialLoading(false))
   }, [])
 
   const loadMatches = async () => {
@@ -107,11 +109,32 @@ function DashboardMatches() {
 
   const handleNewMatch = (e) => {
     e.preventDefault()
-    // Bloquer si trial actif ET match déjà utilisé
-    if (trialStatus?.trial_active && trialStatus?.match_used) {
+
+    // FIX — Attendre que le statut soit chargé avant d'autoriser
+    if (trialLoading) return
+
+    const access       = trialStatus?.access
+    const trial_active = trialStatus?.trial_active
+    const match_used   = trialStatus?.match_used
+
+    // Trial expiré → rediriger vers les paramètres pour s'abonner
+    if (access === 'expired') {
+      navigate('/dashboard/settings')
+      return
+    }
+
+    // Pas encore de CB enregistrée → rediriger vers les paramètres
+    if (access === 'no_trial') {
+      navigate('/dashboard/settings')
+      return
+    }
+
+    // Trial actif mais match déjà utilisé → overlay upgrade
+    if (trial_active && match_used) {
       setShowUpgradeGate(true)
       return
     }
+
     navigate('/dashboard/matches/upload')
   }
 
@@ -131,6 +154,9 @@ function DashboardMatches() {
     { key: 'processing', label: 'En cours',   color: G.gold },
     { key: 'completed',  label: 'Terminés',   color: G.gold },
   ]
+
+  // Bouton désactivé pendant le chargement du statut trial
+  const newMatchDisabled = trialLoading
 
   return (
     <DashboardLayout>
@@ -158,12 +184,16 @@ function DashboardMatches() {
         </div>
         <a href="#" onClick={handleNewMatch} style={{
           display: 'inline-flex', alignItems: 'center', gap: 8,
-          padding: '12px 24px', background: G.gold, color: '#0a0908',
+          padding: '12px 24px',
+          background: newMatchDisabled ? 'rgba(201,162,39,0.4)' : G.gold,
+          color: '#0a0908',
           fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700,
           textDecoration: 'none', transition: 'background .15s', marginTop: 8,
+          cursor: newMatchDisabled ? 'not-allowed' : 'pointer',
+          opacity: newMatchDisabled ? 0.6 : 1,
         }}
-          onMouseEnter={e => e.currentTarget.style.background = G.goldD}
-          onMouseLeave={e => e.currentTarget.style.background = G.gold}
+          onMouseEnter={e => { if (!newMatchDisabled) e.currentTarget.style.background = G.goldD }}
+          onMouseLeave={e => { if (!newMatchDisabled) e.currentTarget.style.background = G.gold }}
         >
           <Plus size={14} /> Nouveau match
         </a>
