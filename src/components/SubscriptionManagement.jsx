@@ -296,7 +296,7 @@ function InlineCardForm({ plan, onSuccess, onCancel }) {
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginTop: 4 }}>
             <span style={{ fontFamily: G.display, fontSize: 26, color: G.gold, lineHeight: 1 }}>0€</span>
-            <span style={{ fontFamily: G.mono, fontSize: 9, color: G.muted }}>aujourd'hui</span>
+            <span style={{ fontFamily: G.mono, fontSize: 9, color: G.muted }}>aujourd&apos;hui</span>
             <span style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.25)' }}>·</span>
             <span style={{ fontFamily: G.mono, fontSize: 9, color: G.muted }}>puis {plan.price}€/mois après 7 jours</span>
           </div>
@@ -309,7 +309,7 @@ function InlineCardForm({ plan, onSuccess, onCancel }) {
       <div style={{ background: G.bg2, padding: '12px 20px', borderTop: `1px solid ${G.border}`, display: 'flex', alignItems: 'center', gap: 8 }}>
         <Clock size={12} color={G.gold} style={{ flexShrink: 0 }} />
         <span style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.55)', lineHeight: 1.6 }}>
-          Essai gratuit 7 jours · Aucun débit aujourd'hui · Rappel email J-3 · Résiliable en 1 clic
+          Essai gratuit 7 jours · Aucun débit aujourd&apos;hui · Rappel email J-3 · Résiliable en 1 clic
         </span>
       </div>
 
@@ -340,7 +340,7 @@ function InlineCardForm({ plan, onSuccess, onCancel }) {
           cursor: paying || !ready ? 'not-allowed' : 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
         }}>
-          {paying ? <><Spinner /> Activation en cours...</> : !ready ? 'Chargement...' : <><CreditCard size={13} /> Démarrer l'essai gratuit</>}
+          {paying ? <><Spinner /> Activation en cours...</> : !ready ? 'Chargement...' : <><CreditCard size={13} /> Démarrer l&apos;essai gratuit</>}
         </button>
         <p style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.25)', textAlign: 'center', marginTop: 10, lineHeight: 1.6 }}>
           Premier débit le {getDebitDate()} · Annulable avant depuis ce menu
@@ -397,7 +397,7 @@ export default function SubscriptionManagement() {
     setCancelLoading(true); setError(''); setShowCancelSubModal(false)
     try {
       await api.post('/subscription/cancel-subscription')
-      setSuccess("Abonnement résilié. Actif jusqu'à la fin de la période.")
+      setSuccess("Abonnement résilié. Actif jusqu&apos;à la fin de la période.")
       await loadAll()
     } catch { setError('Erreur lors de la résiliation.') }
     finally { setCancelLoading(false) }
@@ -410,7 +410,7 @@ export default function SubscriptionManagement() {
       await api.post('/subscription/cancel-subscription')
       setSuccess('Essai annulé. Aucun débit ne sera effectué.')
       await loadAll()
-    } catch { setError("Erreur lors de l'annulation.") }
+    } catch { setError("Erreur lors de l&apos;annulation.") }
     finally { setCancelLoading(false) }
   }
 
@@ -515,7 +515,7 @@ export default function SubscriptionManagement() {
             {sub.current_period_end && (
               <div style={{ background: G.bg2, padding: '16px 20px' }}>
                 <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted, marginBottom: 6 }}>
-                  {isTrialing && !sub?.cancel_at_period_end ? 'Premier débit le' : sub?.cancel_at_period_end ? "Accès jusqu'au" : 'Renouvellement'}
+                  {isTrialing && !sub?.cancel_at_period_end ? 'Premier débit le' : sub?.cancel_at_period_end ? "Accès jusqu&apos;au" : 'Renouvellement'}
                 </div>
                 <div style={{ fontFamily: G.mono, fontSize: 13, color: G.text }}>
                   {new Date(sub.current_period_end * 1000).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
@@ -534,7 +534,7 @@ export default function SubscriptionManagement() {
                 border: 'none', cursor: portalLoading ? 'not-allowed' : 'pointer', opacity: portalLoading ? 0.6 : 1,
               }}>
                 <ExternalLink size={12} />
-                {portalLoading ? 'Redirection...' : "Gérer l'abonnement"}
+                {portalLoading ? 'Redirection...' : "Gérer l&apos;abonnement"}
               </button>
             )}
 
@@ -599,7 +599,7 @@ export default function SubscriptionManagement() {
                 onMouseEnter={e => { e.currentTarget.style.color = G.red; e.currentTarget.style.borderColor = G.red }}
                 onMouseLeave={e => { e.currentTarget.style.color = 'rgba(239,68,68,0.60)'; e.currentTarget.style.borderColor = 'rgba(239,68,68,0.25)' }}
               >
-                {cancelLoading ? 'Annulation...' : isTrialing ? "Annuler l'essai" : 'Résilier'}
+                {cancelLoading ? 'Annulation...' : isTrialing ? "Annuler l&apos;essai" : 'Résilier'}
               </button>
             )}
 
@@ -689,7 +689,7 @@ export default function SubscriptionManagement() {
                       onMouseEnter={e => e.currentTarget.style.opacity = '.85'}
                       onMouseLeave={e => e.currentTarget.style.opacity = '1'}
                     >
-                      <CreditCard size={11} /> Démarrer l'essai →
+                      <CreditCard size={11} /> Démarrer l&apos;essai →
                     </button>
                   )}
                 </div>
@@ -700,7 +700,7 @@ export default function SubscriptionManagement() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <Lock size={11} color={G.muted} />
             <span style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em' }}>
-              Paiement sécurisé Stripe · 7 jours gratuits · Aucun débit aujourd'hui
+              Paiement sécurisé Stripe · 7 jours gratuits · Aucun débit aujourd&apos;hui
             </span>
           </div>
         </div>
@@ -711,7 +711,7 @@ export default function SubscriptionManagement() {
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}>
           <div style={{ background: G.bg2, width: '100%', maxWidth: 460, border: `1px solid ${G.border}`, borderTop: `2px solid ${G.orange}` }}>
             <div style={{ padding: '20px 24px', borderBottom: `1px solid ${G.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontFamily: G.display, fontSize: 18, textTransform: 'uppercase', color: G.text }}>Annuler l'essai</span>
+              <span style={{ fontFamily: G.display, fontSize: 18, textTransform: 'uppercase', color: G.text }}>Annuler l&apos;essai</span>
               <button onClick={() => setShowCancelModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
                 <X size={16} color={G.muted} />
               </button>
@@ -736,7 +736,7 @@ export default function SubscriptionManagement() {
                   <div style={{ padding: '16px', background: 'rgba(245,158,11,0.07)', border: `1px solid rgba(245,158,11,0.2)`, marginBottom: 16, display: 'flex', gap: 12, alignItems: 'flex-start' }}>
                     <AlertCircle size={16} color={G.orange} style={{ flexShrink: 0, marginTop: 1 }} />
                     <p style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(245,242,235,0.75)', lineHeight: 1.7, margin: 0 }}>
-                      Votre match est en cours d'analyse. Si vous annulez, vous conservez l'accès au rapport jusqu'à la fin des 7 jours.
+                      Votre match est en cours d&apos;analyse. Si vous annulez, vous conservez l&apos;accès au rapport jusqu&apos;à la fin des 7 jours.
                     </p>
                   </div>
                   <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, lineHeight: 1.7, margin: 0 }}>
@@ -761,7 +761,7 @@ export default function SubscriptionManagement() {
                   onMouseEnter={e => { e.currentTarget.style.color = G.red; e.currentTarget.style.borderColor = G.red }}
                   onMouseLeave={e => { e.currentTarget.style.color = 'rgba(239,68,68,0.70)'; e.currentTarget.style.borderColor = 'rgba(239,68,68,0.35)' }}
                 >
-                  {cancelLoading ? 'Annulation...' : "Confirmer l'annulation"}
+                  {cancelLoading ? 'Annulation...' : "Confirmer l&apos;annulation"}
                 </button>
               </div>
             </div>
@@ -772,11 +772,11 @@ export default function SubscriptionManagement() {
       {/* ── MODALE RÉSILIATION ABONNEMENT ACTIF ── */}
       {showCancelSubModal && (
         <ConfirmModal
-          title="Résilier l'abonnement"
+          title="Résilier l&apos;abonnement"
           body={
             <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, lineHeight: 1.7, margin: 0 }}>
               Votre abonnement sera résilié à la fin de la période en cours.<br />
-              <strong style={{ color: G.text }}>Vous conservez l'accès jusqu'à cette date.</strong>
+              <strong style={{ color: G.text }}>Vous conservez l&apos;accès jusqu&apos;à cette date.</strong>
             </p>
           }
           confirmLabel="Confirmer la résiliation"
@@ -816,7 +816,7 @@ export default function SubscriptionManagement() {
                 </div>
               </div>
               <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, lineHeight: 1.6, margin: 0 }}>
-                Un membre de l'équipe InsightBall vous contactera à l'adresse associée à votre compte.
+                Un membre de l'équipe InsightBall vous contactera à l&apos;adresse associée à votre compte.
               </p>
             </div>
           }
