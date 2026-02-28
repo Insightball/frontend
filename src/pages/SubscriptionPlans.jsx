@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, AlertCircle } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
 
@@ -10,6 +10,7 @@ const G = {
   ink:'#0f0f0d', muted:'rgba(15,15,13,0.42)', rule:'rgba(15,15,13,0.09)',
   gold:'#c9a227', goldD:'#a8861f', goldBg:'rgba(201,162,39,0.07)', goldBdr:'rgba(201,162,39,0.25)',
   mono:"'JetBrains Mono', monospace", display:"'Anton', sans-serif",
+  red:'#dc2626', redBg:'rgba(220,38,38,0.06)', redBdr:'rgba(220,38,38,0.2)',
 }
 
 function SubscriptionPlans() {
@@ -17,6 +18,7 @@ function SubscriptionPlans() {
   const { user } = useAuth()
   const [loading, setLoading]           = useState(false)
   const [selectedPlan, setSelectedPlan] = useState(null)
+  const [error, setError]               = useState('')
 
   const plans = [
     { id:'coach', name:'COACH', price:39, tag:'Pour les coachs',
@@ -27,6 +29,7 @@ function SubscriptionPlans() {
 
   const handleSelectPlan = async (planId) => {
     if (!user) { navigate('/signup'); return }
+    setError('')
     try {
       setLoading(true); setSelectedPlan(planId)
       const response = await api.post('/subscription/create-checkout-session', {
@@ -37,7 +40,7 @@ function SubscriptionPlans() {
       window.location.href = response.data.url
     } catch (error) {
       console.error('Error:', error)
-      alert('Erreur lors de la création de la session de paiement')
+      setError('Erreur lors de la redirection vers le paiement. Réessayez ou contactez le support.')
       setLoading(false); setSelectedPlan(null)
     }
   }
@@ -71,7 +74,19 @@ function SubscriptionPlans() {
           <h1 style={{ fontFamily:G.display, fontSize:'clamp(52px,7vw,88px)', textTransform:'uppercase', lineHeight:.85, letterSpacing:'.01em', margin:0, color:G.ink }}>
             Choisissez<br /><span style={{ color:G.gold }}>votre offre.</span>
           </h1>
+          <div style={{ marginTop:20, display:'inline-flex', alignItems:'center', gap:8, padding:'8px 18px', background:G.goldBg, border:`1px solid ${G.goldBdr}` }}>
+            <span style={{ fontFamily:G.mono, fontSize:10, color:G.gold, letterSpacing:'.06em' }}>
+              🎁 7 jours gratuits · Aucun débit aujourd'hui · Résiliable avant le premier prélèvement
+            </span>
+          </div>
         </div>
+
+        {error && (
+          <div style={{ display:'flex', alignItems:'center', gap:10, padding:'12px 16px', background:G.redBg, border:`1px solid ${G.redBdr}`, marginBottom:24 }}>
+            <AlertCircle size={14} color={G.red} style={{ flexShrink:0 }} />
+            <span style={{ fontFamily:G.mono, fontSize:10, color:G.red, letterSpacing:'.04em' }}>{error}</span>
+          </div>
+        )}
 
         {/* Plans */}
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:1, background:G.rule, marginBottom:1 }}>
@@ -113,13 +128,16 @@ function SubscriptionPlans() {
               >
                 {loading && selectedPlan===plan.id
                   ? <><div style={{ width:12, height:12, border:`2px solid ${G.ink}`, borderTopColor:'transparent', borderRadius:'50%', animation:'spin .7s linear infinite' }} />Chargement...</>
-                  : <>Choisir {plan.name} <ArrowRight size={13} /></>
+                  : <>Essayer {plan.name} gratuitement <ArrowRight size={13} /></>
                 }
               </button>
+              <p style={{ fontFamily:G.mono, fontSize:8, color:G.muted, textAlign:'center', margin:'10px 0 0', letterSpacing:'.06em' }}>
+                7 jours gratuits · puis {plan.price}€/mois
+              </p>
             </div>
           ))}
         </div>
-        <p style={{ textAlign:'center', fontFamily:G.mono, fontSize:9, letterSpacing:'.1em', textTransform:'uppercase', color:G.muted, marginTop:16 }}>Sans engagement</p>
+        <p style={{ textAlign:'center', fontFamily:G.mono, fontSize:9, letterSpacing:'.1em', textTransform:'uppercase', color:G.muted, marginTop:16 }}>Sans engagement · 7 jours gratuits · Aucun débit aujourd'hui</p>
 
         {/* FAQ */}
         <div style={{ marginTop:56, background:G.paper, border:`1px solid ${G.rule}`, borderTop:`2px solid ${G.rule}`, padding:'40px' }}>
