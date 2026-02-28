@@ -460,7 +460,7 @@ export default function Onboarding() {
                         </div>
                       )}
                     </div>
-                    <p style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.35)', lineHeight: 1.5, margin: 0 }}>{opt.desc}</p>
+                    <p style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(245,242,235,0.65)', lineHeight: 1.5, margin: 0 }}>{opt.desc}</p>
                   </button>
                 )
               })}
@@ -546,21 +546,24 @@ function WelcomeScreen({ navigate }) {
         découvrez ce que les données révèlent sur votre jeu.
       </p>
 
-      {/* Stats teaser */}
+      {/* Match offert — mise en avant */}
       <div className="w4" style={{
-        display: 'flex', gap: 1, background: 'rgba(255,255,255,0.05)',
-        marginTop: 40, marginBottom: 40,
+        marginTop: 36, marginBottom: 36,
+        padding: '20px 32px',
+        background: 'rgba(201,162,39,0.07)',
+        border: '1px solid rgba(201,162,39,0.25)',
+        borderLeft: '3px solid #c9a227',
+        maxWidth: 400, width: '100%',
       }}>
-        {[
-          { val: '87%', label: 'Précision analyse' },
-          { val: '< 24h', label: 'Rapport livré' },
-          { val: '1 match', label: 'Offert dès maintenant' },
-        ].map(({ val, label }) => (
-          <div key={label} style={{ padding: '20px 28px', background: G.bg2, borderTop: `2px solid ${G.goldBdr}` }}>
-            <div style={{ fontFamily: G.display, fontSize: 28, color: G.gold, lineHeight: 1 }}>{val}</div>
-            <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.35)', marginTop: 6 }}>{label}</div>
-          </div>
-        ))}
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: '#c9a227', marginBottom: 8 }}>
+          🎁 Offre de bienvenue
+        </div>
+        <div style={{ fontFamily: "'Anton', sans-serif", fontSize: 28, color: '#f5f2eb', textTransform: 'uppercase', lineHeight: 1, marginBottom: 8 }}>
+          1 match offert
+        </div>
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'rgba(245,242,235,0.60)', lineHeight: 1.6, margin: 0 }}>
+          Votre première analyse est incluse. Uploadez votre vidéo, recevez votre rapport tactique complet.
+        </p>
       </div>
 
       {/* CTA */}
