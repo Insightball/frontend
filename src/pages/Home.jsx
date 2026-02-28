@@ -815,7 +815,7 @@ export default function LandingPage() {
                 <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, marginBottom: 6 }}>Pour les clubs</div>
                 <div style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', color: G.white, marginBottom: 4 }}>Club</div>
                 <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', marginBottom: 20, lineHeight: 1.6 }}>
-                  Toutes vos équipes. Une seule vision.
+                  Toutes vos équipes, un projet club.
                 </div>
                 <div style={{ marginBottom: 28 }}>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 6 }}>
@@ -838,9 +838,9 @@ export default function LandingPage() {
 
                 <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 32 }}>
                   {[
-                    "12 matchs analysés / mois",
-                    "Multi-équipes",
-                    "Accès multi-utilisateurs",
+                    "Nombre de matchs adapté à vos besoins",
+                    "Multi-équipes & multi-utilisateurs",
+                    "Vue consolidée du club",
                     "Comparaison inter-équipes",
                     "Suivi joueurs cross-équipes",
                     "Rapport direction mensuel PDF",
