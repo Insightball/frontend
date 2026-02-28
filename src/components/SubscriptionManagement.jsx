@@ -605,22 +605,6 @@ export default function SubscriptionManagement() {
               </button>
             )}
 
-            {/* Réactivation — annulation en cours mais user change d'avis */}
-            {sub?.cancel_at_period_end && (
-              <button onClick={handlePortal} disabled={portalLoading} style={{
-                display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px',
-                background: G.goldBg, color: G.gold,
-                border: `1px solid ${G.goldBdr}`,
-                fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700,
-                cursor: portalLoading ? 'not-allowed' : 'pointer', opacity: portalLoading ? 0.6 : 1,
-              }}
-                onMouseEnter={e => e.currentTarget.style.opacity = '.80'}
-                onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-              >
-                <ArrowRight size={12} />
-                {portalLoading ? 'Redirection...' : 'Réactiver mon abonnement'}
-              </button>
-            )}
           </div>
 
           {isTrialing && (
