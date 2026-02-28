@@ -589,6 +589,23 @@ export default function SubscriptionManagement() {
                 {cancelLoading ? 'Annulation...' : isTrialing ? "Annuler l'essai" : 'Résilier'}
               </button>
             )}
+
+            {/* Réactivation — annulation en cours mais user change d'avis */}
+            {sub.cancel_at_period_end && (
+              <button onClick={handlePortal} disabled={portalLoading} style={{
+                display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px',
+                background: G.goldBg, color: G.gold,
+                border: `1px solid ${G.goldBdr}`,
+                fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700,
+                cursor: portalLoading ? 'not-allowed' : 'pointer', opacity: portalLoading ? 0.6 : 1,
+              }}
+                onMouseEnter={e => e.currentTarget.style.opacity = '.80'}
+                onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+              >
+                <ArrowRight size={12} />
+                {portalLoading ? 'Redirection...' : 'Réactiver mon abonnement'}
+              </button>
+            )}
           </div>
 
           {isTrialing && (
@@ -684,11 +701,12 @@ export default function SubscriptionManagement() {
             </div>
             <div style={{ padding: '24px' }}>
               {!trialData?.match_used ? (
+                // Match offert pas encore uploadé
                 <div style={{ marginBottom: 24 }}>
                   <div style={{ padding: '16px', background: 'rgba(245,158,11,0.07)', border: `1px solid rgba(245,158,11,0.2)`, marginBottom: 16, display: 'flex', gap: 12, alignItems: 'flex-start' }}>
                     <AlertCircle size={16} color={G.orange} style={{ flexShrink: 0, marginTop: 1 }} />
                     <p style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(245,242,235,0.75)', lineHeight: 1.7, margin: 0 }}>
-                      Vous n'avez pas encore analysé votre match offert. Si vous annulez maintenant, vous perdez cet avantage définitivement.
+                      Vous n'avez pas encore uploadé votre match offert. Si vous annulez maintenant, vous perdez cet avantage définitivement.
                     </p>
                   </div>
                   <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, lineHeight: 1.7, margin: 0 }}>
@@ -696,10 +714,16 @@ export default function SubscriptionManagement() {
                   </p>
                 </div>
               ) : (
+                // Match uploadé — analyse en cours ou terminée
                 <div style={{ marginBottom: 24 }}>
-                  <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, lineHeight: 1.7, margin: 0 }}>
-                    Votre essai sera annulé. Vous conservez l'accès jusqu'à la fin des 7 jours.<br />
-                    <strong style={{ color: G.text }}>Aucun débit ne sera effectué.</strong>
+                  <div style={{ padding: '16px', background: 'rgba(245,158,11,0.07)', border: `1px solid rgba(245,158,11,0.2)`, marginBottom: 16, display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                    <AlertCircle size={16} color={G.orange} style={{ flexShrink: 0, marginTop: 1 }} />
+                    <p style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(245,242,235,0.75)', lineHeight: 1.7, margin: 0 }}>
+                      Votre match est en cours d'analyse. Si vous annulez, vous conservez l'accès au rapport jusqu'à la fin des 7 jours.
+                    </p>
+                  </div>
+                  <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, lineHeight: 1.7, margin: 0 }}>
+                    Votre carte bancaire ne sera <strong style={{ color: G.text }}>pas débitée</strong> si vous annulez avant le {getDebitDate()}.
                   </p>
                 </div>
               )}
@@ -709,7 +733,7 @@ export default function SubscriptionManagement() {
                   border: `1px solid ${G.border}`, fontFamily: G.mono, fontSize: 9,
                   letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, cursor: 'pointer',
                 }}>
-                  {!trialData?.match_used ? 'Analyser mon match' : 'Retour'}
+                  {!trialData?.match_used ? 'Uploader mon match' : 'Retour'}
                 </button>
                 <button onClick={confirmCancelTrial} disabled={cancelLoading} style={{
                   flex: 1, padding: '11px', background: 'transparent',
