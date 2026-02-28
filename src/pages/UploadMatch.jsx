@@ -175,12 +175,23 @@ export default function UploadMatch() {
       console.error(e)
       const status = e?.response?.status
       const detail = e?.response?.data?.detail
-      if (status === 402 && detail === 'TRIAL_EXHAUSTED') {
-        setShowUpgradeGate(true)
-      } else if (status === 402) {
-        navigate('/dashboard/settings')
+
+      if (status === 402) {
+        if (detail === 'TRIAL_EXHAUSTED') {
+          setShowUpgradeGate(true)
+        } else if (detail === 'QUOTA_EXCEEDED') {
+          setError('Quota mensuel atteint — votre prochain match sera disponible le 1er du mois.')
+        } else if (detail === 'NO_SUBSCRIPTION') {
+          navigate('/dashboard/settings', { state: { flash: 'Abonnement requis pour analyser un match.' } })
+        } else {
+          navigate('/dashboard/settings')
+        }
+      } else if (status === 413) {
+        setError('Fichier trop volumineux pour le serveur — compressez votre vidéo et réessayez.')
+      } else if (!status) {
+        setError("Connexion interrompue pendant l'upload. Vérifiez votre réseau et réessayez — votre match n'a pas été enregistré.")
       } else {
-        setError("Erreur lors de l'upload — veuillez réessayer")
+        setError("Erreur lors de l'upload (code " + status + ") — réessayez ou contactez le support.")
       }
     } finally {
       setUploading(false)
