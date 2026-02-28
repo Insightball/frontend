@@ -817,9 +817,13 @@ export default function LandingPage() {
                 <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', marginBottom: 20, lineHeight: 1.6 }}>
                   Toutes vos équipes. Une seule vision.
                 </div>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 28 }}>
-                  <span style={{ fontFamily: G.display, fontSize: 68, fontWeight: 800, lineHeight: 1, color: G.white }}>129</span>
-                  <span style={{ fontSize: 15, color: 'rgba(255,255,255,0.40)' }}>€ / mois</span>
+                <div style={{ marginBottom: 28 }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 6 }}>
+                    <span style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(255,255,255,0.35)', letterSpacing: '.1em', textTransform: 'uppercase' }}>À partir de</span>
+                    <span style={{ fontFamily: G.display, fontSize: 52, fontWeight: 800, lineHeight: 1, color: G.white }}>99</span>
+                    <span style={{ fontSize: 15, color: 'rgba(255,255,255,0.40)' }}>€ / mois</span>
+                  </div>
+                  <p style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(255,255,255,0.35)', letterSpacing: '.04em', margin: 0 }}>Offre adaptée à la taille de votre club</p>
                 </div>
 
                 {/* 2 blocs valeur */}
@@ -854,13 +858,13 @@ export default function LandingPage() {
                   ))}
                 </ul>
 
-                <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)', fontFamily: G.mono, letterSpacing: '.04em', marginBottom: 16, textAlign: 'center' }}>
-                  Pas de trial — démo personnalisée sur demande
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', fontFamily: G.mono, letterSpacing: '.04em', marginBottom: 16, textAlign: 'center' }}>
+                  Démo gratuite · Sans engagement · Sur mesure
                 </div>
                 <a href="#contact" style={{ display: 'block', width: '100%', padding: 14, fontFamily: G.display, fontSize: 15, fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase', textAlign: 'center', textDecoration: 'none', borderRadius: 4, transition: 'background .15s', background: G.gold, color: G.ink, boxSizing: 'border-box' }}
                   onMouseEnter={e => e.currentTarget.style.background = G.goldD}
                   onMouseLeave={e => e.currentTarget.style.background = G.gold}>
-                  Demander une démo →
+                  Demander un devis →
                 </a>
               </div>
             </Reveal>
