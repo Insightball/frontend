@@ -574,9 +574,9 @@ export default function LandingPage() {
 
           <div className="feat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 1, background: G.border, border: `1px solid ${G.border}` }}>
             {[
-              { n:'01', title:'Stats Collectives', desc:'Vue complète de votre équipe sur chaque match. Comprenez comment vous jouez, pressez et défendez.', items:['Possession de balle','Précision des passes','Distance totale & sprints'] },
-              { n:'02', title:'Stats Individuelles', desc:'Une fiche pour chaque joueur. Évaluez objectivement, identifiez les axes de progression.', items:['Heatmap de position individuelle','Ballons touchés / perdus / gagnés','Duels aériens & terrestres','Comparaison match-à-match'] },
-              { n:'03', title:'Rapport Complet', desc:'Un PDF professionnel exportable en un clic. À partager avec votre staff, vos joueurs, votre direction.', items:['Export PDF mis en page','Top performers du match','Graphiques & heatmaps inclus','Logo et couleurs de votre club'] },
+              { n:'01', title:'Stats Collectives', desc:'Vue complète de votre équipe sur chaque match. Comprenez comment vous jouez, pressez et défendez.', items:['Possession de balle','Nombre & % de passes réussies','Nombre & % de tirs réussis','Courbe de suivi des matchs','Distance totale parcourue','Heatmap collective'] },
+              { n:'02', title:'Stats Individuelles', desc:'Une fiche pour chaque joueur. Évaluez objectivement, identifiez les axes de progression.', items:['Heatmap de position individuelle','Ballons touchés / perdus / gagnés','Nombre de tirs','Passes réussies / ratées','Distance totale parcourue','Heatmap individuelle'] },
+              { n:'03', title:'Rapport Complet', desc:'Un PDF professionnel exportable en un clic. À partager avec votre staff, vos joueurs, votre direction.', items:['Tableau de bord en ligne','Export PDF à partager','Graphiques & heatmaps inclus','Comparaison entre 2 joueurs'] },
             ].map((f, i) => (
               <Reveal key={f.n} delay={i * 0.1}>
                 <div style={{ background: G.white, padding: '36px 32px', height: '100%', transition: 'background .18s', cursor: 'default' }}
