@@ -176,7 +176,7 @@ function DashboardMatches() {
             flex: isMobile ? 1 : 'initial',
             padding: isMobile ? '9px 4px' : '9px 20px',
             fontSize: isMobile ? 8 : 9,
-            fontFamily: T.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase',
+            fontFamily: T.mono, letterSpacing: '.1em', textTransform: 'uppercase',
             background: filter === key ? T.goldBg : T.surface,
             color: filter === key ? T.gold : T.muted,
             borderTop: `2px solid ${filter === key ? T.gold : 'transparent'}`,

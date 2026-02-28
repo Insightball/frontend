@@ -148,7 +148,7 @@ function MatchDetail() {
   return (
     <DashboardLayout>
       <style>{globalStyles}</style>
-      {/* Header */
+      {/* Header */}
       <div style={{ marginBottom: 28 }}>
         <button onClick={() => navigate(-1)} style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', cursor: 'pointer', fontFamily: T.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: T.muted, marginBottom: 20, padding: 0, transition: 'color .15s' }}
           onMouseEnter={e => e.currentTarget.style.color = G.gold}
