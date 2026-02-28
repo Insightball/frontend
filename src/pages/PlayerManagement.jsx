@@ -5,22 +5,23 @@ import PlayerCard from '../components/PlayerCard'
 import PlayerForm from '../components/PlayerForm'
 import playerService from '../services/playerService'
 import { useAuth } from '../context/AuthContext'
+import { T } from '../theme'
 
-const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');`
 
 const G = {
-  bg:      '#0a0908',
-  card:    'rgba(255,255,255,0.025)',
-  border:  'rgba(255,255,255,0.07)',
-  text:    '#f5f2eb',
-  muted:   'rgba(245,242,235,0.38)',
-  muted2:  'rgba(245,242,235,0.18)',
-  gold:    '#c9a227',
-  goldD:   '#a8861f',
-  goldBg:  'rgba(201,162,39,0.08)',
-  goldBdr: 'rgba(201,162,39,0.25)',
-  mono:    "'JetBrains Mono', monospace",
-  display: "'Anton', sans-serif",
+  // Alias vers T — source de vérité unique
+  bg:      T.bg,
+  card:    T.surface,
+  border:  T.rule,
+  text:    T.ink,       // FIX: était '#f5f2eb' blanc → invisible sur fond cream
+  muted:   T.muted,
+  muted2:  T.muted,
+  gold:    T.gold,
+  goldD:   T.goldD,
+  goldBg:  T.goldBg,
+  goldBdr: T.goldBdr,
+  mono:    T.mono,
+  display: T.display,
 }
 
 function useCountUp(target, duration = 700) {
@@ -121,7 +122,6 @@ function PlayerManagement() {
         ${FONTS} * { box-sizing:border-box; }
         @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
         @keyframes spin { to { transform:rotate(360deg); } }
-        option { background: #0f0e0c; color: #f5f2eb; }
         ::placeholder { color: rgba(245,242,235,0.2); }
       `}</style>
 
@@ -139,7 +139,7 @@ function PlayerManagement() {
         </div>
         <button onClick={() => setIsFormOpen(true)} style={{
           display: 'flex', alignItems: 'center', gap: 8,
-          padding: '12px 24px', background: G.gold, color: '#0a0908',
+          padding: '12px 24px', background: G.gold, color: T.dark,
           fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700,
           border: 'none', cursor: 'pointer', transition: 'background .15s', marginTop: 8,
         }}
@@ -194,7 +194,7 @@ function PlayerManagement() {
             {players.length === 0 ? 'Commencez par ajouter vos joueurs à l\'effectif' : 'Modifiez vos critères de filtre'}
           </p>
           {players.length === 0 && (
-            <button onClick={() => setIsFormOpen(true)} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 28px', background: G.gold, color: '#0a0908', fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
+            <button onClick={() => setIsFormOpen(true)} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 28px', background: G.gold, color: T.dark, fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
               <Plus size={14} /> Ajouter un joueur
             </button>
           )}

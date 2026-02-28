@@ -2,14 +2,18 @@ import { useState, useEffect, useRef } from 'react'
 import { CreditCard, CheckCircle, AlertCircle, ExternalLink, Zap, Users, Lock, X, Clock, ArrowRight } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
+import { T } from '../theme'
 
+// Les modales restent dark (overlays plein écran) → on garde bg2/border/text/muted dark intentionnellement
 const G = {
-  gold: '#c9a227', goldD: '#a8861f',
-  goldBg: 'rgba(201,162,39,0.08)', goldBdr: 'rgba(201,162,39,0.25)',
-  mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
-  border: 'rgba(255,255,255,0.07)', muted: 'rgba(245,242,235,0.60)',
-  text: '#f5f2eb', bg2: '#0f0e0c',
-  green: '#22c55e', red: '#ef4444', orange: '#f59e0b',
+  gold:    T.gold,    goldD:  T.goldD,
+  goldBg:  T.goldBg2, goldBdr: T.goldBdr,
+  mono:    T.mono,    display: T.display,
+  border:  'rgba(255,255,255,0.07)',  // dark — intentionnel pour modales
+  muted:   'rgba(245,242,235,0.60)', // dark — intentionnel pour modales
+  text:    '#f5f2eb',                 // dark — intentionnel pour modales
+  bg2:     T.dark,
+  green:   T.green, red: T.red, orange: T.orange,
 }
 
 const PLANS = [
