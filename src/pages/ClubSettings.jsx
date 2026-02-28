@@ -4,27 +4,29 @@ import DashboardLayout from '../components/DashboardLayout'
 import ClubBadge from '../components/ClubBadge'
 import SubscriptionManagement from '../components/SubscriptionManagement'
 import clubService from '../services/clubService'
+import { T, globalStyles } from '../theme'
 
 const G = {
-  bg: '#0a0908', bg2: '#0f0e0c',
-  gold: '#c9a227', goldD: '#a8861f',
-  goldBg: 'rgba(201,162,39,0.08)', goldBdr: 'rgba(201,162,39,0.25)',
-  mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
-  border: 'rgba(255,255,255,0.07)', muted: 'rgba(245,242,235,0.62)',
-  text: '#f5f2eb',
+  bg:     T.bg,       bg2:    T.surface,
+  gold:   T.gold,     goldD:  T.goldD,
+  goldBg: T.goldBg,   goldBdr:T.goldBdr,
+  mono:   T.mono,     display:T.display,
+  border: T.ruleDark,
+  muted:  T.muted2,
+  text:   T.ink,
 }
 
 const inputStyle = {
-  width: '100%', background: 'rgba(255,255,255,0.04)',
-  border: '1px solid rgba(255,255,255,0.08)',
-  padding: '12px 16px', color: '#f5f2eb',
-  fontFamily: G.mono, fontSize: 13,
+  width: '100%', background: T.surface,
+  border: `1px solid ${T.ruleDark}`,
+  padding: '12px 16px', color: T.ink,
+  fontFamily: T.mono, fontSize: 13,
   outline: 'none', boxSizing: 'border-box', transition: 'border-color .15s',
 }
 
 function Section({ title, children, accent }) {
   return (
-    <div style={{ background: G.bg2, border: `1px solid ${G.border}`, borderTop: `2px solid ${accent || G.border}`, padding: '28px' }}>
+    <div style={{ background: G.bg2, border: `1px solid ${G.border}`, borderTop: `2px solid ${accent || G.border}`, padding: isMobile ? '20px 16px' : '28px' }}>
       <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
         <span style={{ width: 12, height: 1, background: G.gold, display: 'inline-block' }} />{title}
       </div>
@@ -34,6 +36,7 @@ function Section({ title, children, accent }) {
 }
 
 export default function ClubSettings() {
+  const [isMobile, setIsMobile] = useState(false)
   const [club, setClub] = useState(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -44,6 +47,11 @@ export default function ClubSettings() {
   const [toast, setToast] = useState(null)
 
   useEffect(() => { loadClub() }, [])
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check(); window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   const loadClub = async () => {
     try {
@@ -106,6 +114,7 @@ export default function ClubSettings() {
 
   return (
     <DashboardLayout>
+      <style>{globalStyles}</style>
       {/* Toast */}
       {toast && (
         <div style={{
@@ -114,12 +123,12 @@ export default function ClubSettings() {
           padding: '14px 20px',
           background: toast.type === 'success' ? 'rgba(34,197,94,0.12)' : 'rgba(239,68,68,0.12)',
           border: `1px solid ${toast.type === 'success' ? 'rgba(34,197,94,0.35)' : 'rgba(239,68,68,0.35)'}`,
-          boxShadow: '0 8px 32px rgba(0,0,0,0.40)',
+          background: T.dark, boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
         }}>
           {toast.type === 'success'
             ? <CheckCircle size={15} color="#22c55e" />
             : <AlertCircle size={15} color="#ef4444" />}
-          <span style={{ fontFamily: G.mono, fontSize: 11, letterSpacing: '.06em', color: toast.type === 'success' ? '#22c55e' : '#ef4444' }}>
+          <span style={{ fontFamily: G.mono, fontSize: 11, letterSpacing: '.06em', color: toast.type === 'success' ? T.green : T.red }}>
             {toast.msg}
           </span>
         </div>
@@ -130,16 +139,16 @@ export default function ClubSettings() {
         <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
           <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />Paramètres du club
         </div>
-        <h1 style={{ fontFamily: G.display, fontSize: 52, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: G.text, margin: 0 }}>
+        <h1 style={{ fontFamily: G.display, fontSize: isMobile ? 32 : 52, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: G.text, margin: 0 }}>
           Identité<br /><span style={{ color: G.gold }}>du club.</span>
         </h1>
       </div>
 
-      <div style={{ maxWidth: 680, display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
+      <div style={{ maxWidth: isMobile ? '100%' : 680, display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
 
         {/* Aperçu */}
         <Section title="Aperçu" accent={G.gold}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '28px', background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}` }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '28px', background: T.bgAlt, border: `1px solid ${G.border}` }}>
             <ClubBadge club={{ ...formData, logo_url: formData.logo_url }} size="xl" showName />
           </div>
         </Section>
@@ -149,13 +158,13 @@ export default function ClubSettings() {
           <input type="text" name="name" value={formData.name} onChange={handleChange}
             placeholder="Mon Club FC" style={inputStyle}
             onFocus={e => e.target.style.borderColor = G.goldBdr}
-            onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'} />
+            onBlur={e => e.target.style.borderColor = T.ruleDark} />
         </Section>
 
         {/* Logo */}
         <Section title="Logo">
           {formData.logo_url && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20, padding: '14px 16px', background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}` }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20, padding: '14px 16px', background: T.bgAlt, border: `1px solid ${G.border}` }}>
               <img src={formData.logo_url} alt="Logo" style={{ width: 56, height: 56, objectFit: 'contain' }} />
               <div style={{ flex: 1 }}>
                 <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, marginBottom: 4 }}>Aperçu</div>
@@ -170,8 +179,8 @@ export default function ClubSettings() {
             placeholder="https://monclub.fr/logo.png"
             style={inputStyle}
             onFocus={e => e.target.style.borderColor = G.goldBdr}
-            onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'} />
-          <div style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.45)', marginTop: 8 }}>
+            onBlur={e => e.target.style.borderColor = T.ruleDark} />
+          <div style={{ fontFamily: G.mono, fontSize: 9, color: T.muted, marginTop: 8 }}>
             Colle l'URL de ton logo — PNG, SVG ou JPG recommandé
           </div>
         </Section>
@@ -181,13 +190,13 @@ export default function ClubSettings() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
             {[{ label: 'Couleur principale', name: 'primary_color' }, { label: 'Couleur secondaire', name: 'secondary_color' }].map(({ label, name }) => (
               <div key={name}>
-                <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.18em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.65)', marginBottom: 10 }}>{label}</div>
+                <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.18em', textTransform: 'uppercase', color: T.muted2, marginBottom: 10 }}>{label}</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <input type="color" name={name} value={formData[name]} onChange={handleChange}
                     style={{ width: 44, height: 44, border: `1px solid ${G.border}`, background: 'transparent', cursor: 'pointer', padding: 2 }} />
                   <input type="text" name={name} value={formData[name]} onChange={handleChange} style={{ ...inputStyle, flex: 1 }}
                     onFocus={e => e.target.style.borderColor = G.goldBdr}
-                    onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'} />
+                    onBlur={e => e.target.style.borderColor = T.ruleDark} />
                 </div>
               </div>
             ))}
@@ -237,12 +246,12 @@ export default function ClubSettings() {
       {/* Modale suppression */}
       {showDeleteModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}>
-          <div style={{ background: G.bg2, width: '100%', maxWidth: 440, border: `1px solid rgba(239,68,68,0.3)`, borderTop: `2px solid #ef4444` }}>
+          <div style={{ background: T.dark, width: '100%', maxWidth: 440, border: `1px solid rgba(239,68,68,0.3)`, borderTop: `2px solid #ef4444` }}>
 
             <div style={{ padding: '20px 24px', borderBottom: `1px solid ${G.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <AlertTriangle size={16} color="#ef4444" />
-                <span style={{ fontFamily: G.display, fontSize: 18, textTransform: 'uppercase', color: G.text }}>Supprimer le compte</span>
+                <span style={{ fontFamily: G.display, fontSize: 18, textTransform: 'uppercase', color: '#f5f2eb' }}>Supprimer le compte</span>
               </div>
               <button onClick={() => { setShowDeleteModal(false); setDeleteConfirm('') }} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
                 <X size={16} color={G.muted} />
@@ -252,7 +261,7 @@ export default function ClubSettings() {
             <div style={{ padding: '24px' }}>
               <div style={{ padding: '14px 16px', background: 'rgba(239,68,68,0.06)', border: `1px solid rgba(239,68,68,0.15)`, marginBottom: 24 }}>
                 <p style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(245,242,235,0.7)', lineHeight: 1.7, margin: 0 }}>
-                  Votre compte sera désactivé immédiatement. Toutes vos données seront conservées pendant <strong style={{ color: G.text }}>30 jours</strong> et vous recevrez un email pour récupérer votre compte si vous changez d'avis.
+                  Votre compte sera désactivé immédiatement. Toutes vos données seront conservées pendant <strong style={{ color: '#f5f2eb' }}>30 jours</strong> et vous recevrez un email pour récupérer votre compte si vous changez d'avis.
                 </p>
               </div>
 
@@ -268,8 +277,8 @@ export default function ClubSettings() {
                   style={{
                     width: '100%', background: 'rgba(239,68,68,0.04)',
                     border: `1px solid ${deleteConfirm === 'SUPPRIMER' ? '#ef4444' : 'rgba(239,68,68,0.15)'}`,
-                    padding: '12px 16px', color: G.text,
-                    fontFamily: G.mono, fontSize: 13,
+                    padding: '12px 16px', color: '#f5f2eb',
+                    fontFamily: T.mono, fontSize: 13,
                     outline: 'none', boxSizing: 'border-box', letterSpacing: '.06em',
                   }}
                 />
@@ -298,7 +307,6 @@ export default function ClubSettings() {
         </div>
       )}
 
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </DashboardLayout>
   )
 }
