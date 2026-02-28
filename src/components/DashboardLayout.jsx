@@ -3,35 +3,16 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Home, Film, Users, Settings, LogOut, BarChart3, Trophy, ChevronRight, Menu, X, UserCog } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import TrialBanner from '../components/TrialBanner'
+import { T, globalStyles } from '../theme'
 
-const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');`
-
-const G = {
-  paper:   '#f5f2eb',
-  cream:   '#faf8f4',
-  white:   '#ffffff',
-  ink:     '#0f0f0d',
-  ink2:    '#2a2a26',
-  muted:   'rgba(15,15,13,0.42)',
-  muted2:  'rgba(15,15,13,0.60)',
-  rule:    'rgba(15,15,13,0.09)',
-  shadow:  'rgba(15,15,13,0.06)',
-  gold:    '#c9a227',
-  goldD:   '#a8861f',
-  goldBg:  'rgba(201,162,39,0.07)',
-  goldBdr: 'rgba(201,162,39,0.25)',
-  mono:    "'JetBrains Mono', monospace",
-  display: "'Anton', sans-serif",
-}
-
-const SIDEBAR_W = 224
+const W = T.sidebarW
 
 function DashboardLayout({ children }) {
   const location = useLocation()
-  const navigate = useNavigate()
+  const navigate  = useNavigate()
   const { user, logout } = useAuth()
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile,   setIsMobile]   = useState(false)
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -48,14 +29,11 @@ function DashboardLayout({ children }) {
     { name: 'Effectif',     href: '/dashboard/players', icon: Users },
     { name: 'Statistiques', href: '/dashboard/stats',   icon: BarChart3 },
   ]
-
   if (user?.plan === 'CLUB') {
     navigation.push({ name: 'Vue Club', href: '/dashboard/club', icon: Trophy })
-    if (user?.role === 'ADMIN') {
+    if (user?.role === 'ADMIN')
       navigation.push({ name: 'Membres', href: '/dashboard/members', icon: UserCog })
-    }
   }
-
   navigation.push({ name: 'Paramètres', href: '/dashboard/settings', icon: Settings })
 
   const handleLogout = () => { logout(); navigate('/login') }
@@ -70,46 +48,61 @@ function DashboardLayout({ children }) {
       : location.pathname.startsWith(href)
 
   const SidebarContent = () => (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: T.dark }}>
 
       {/* Logo */}
-      <div style={{ padding: '20px 18px 16px', background: '#0a0908', borderBottom: `1px solid rgba(201,162,39,0.15)`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{
+        padding: '18px 16px',
+        borderBottom: `1px solid rgba(201,162,39,0.12)`,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      }}>
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <img src="/logo.svg" alt="InsightBall" style={{ width: 26, height: 26 }} />
-          <span style={{ fontFamily: G.display, fontSize: 15, letterSpacing: '.08em', color: '#f5f2eb' }}>
-            INSIGHT<span style={{ color: G.gold }}>BALL</span>
+          <img src="/logo.svg" alt="InsightBall" style={{ width: 24, height: 24 }} />
+          <span style={{ fontFamily: T.display, fontSize: 14, letterSpacing: '.08em', color: '#f5f2eb' }}>
+            INSIGHT<span style={{ color: T.gold }}>BALL</span>
           </span>
         </Link>
         {isMobile && (
-          <button onClick={() => setMobileOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(245,242,235,0.5)', padding: 4 }}>
-            <X size={18} />
+          <button onClick={() => setMobileOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(245,242,235,0.4)', padding: 4 }}>
+            <X size={16} />
           </button>
         )}
       </div>
 
-      {/* User card — fond noir */}
-      <div style={{ background: '#0a0908', padding: '14px 16px', borderBottom: `1px solid rgba(201,162,39,0.15)` }}>
+      {/* User card */}
+      <div style={{ padding: '14px 16px', borderBottom: `1px solid rgba(255,255,255,0.05)` }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-          <div style={{ width: 34, height: 34, flexShrink: 0, background: 'rgba(201,162,39,0.12)', border: `1px solid rgba(201,162,39,0.3)`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ fontFamily: G.display, fontSize: 12, color: G.gold }}>{initials}</span>
+          <div style={{
+            width: 32, height: 32, flexShrink: 0,
+            background: T.goldBg2, border: `1px solid ${T.goldBdr}`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <span style={{ fontFamily: T.display, fontSize: 11, color: T.gold }}>{initials}</span>
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{ fontFamily: G.mono, fontSize: 11, color: '#f5f2eb', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '.02em' }}>
+            <p style={{ fontFamily: T.mono, fontSize: 11, color: '#f5f2eb', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '.02em' }}>
               {user?.name}
             </p>
-            <p style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.45)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '.04em', marginTop: 1 }}>
+            <p style={{ fontFamily: T.mono, fontSize: 9, color: 'rgba(245,242,235,0.38)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '.03em', marginTop: 1 }}>
               {user?.email}
             </p>
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           {user?.plan && (
-            <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', padding: '3px 10px', background: 'rgba(201,162,39,0.15)', border: `1px solid rgba(201,162,39,0.3)`, color: G.gold }}>
+            <span style={{
+              fontFamily: T.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase',
+              padding: '3px 9px', background: T.goldBg2, border: `1px solid ${T.goldBdr}`, color: T.gold,
+            }}>
               {user.plan}
             </span>
           )}
           {user?.plan === 'CLUB' && user?.role && (
-            <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', padding: '3px 10px', background: 'rgba(245,242,235,0.06)', border: `1px solid rgba(245,242,235,0.12)`, color: 'rgba(245,242,235,0.5)' }}>
+            <span style={{
+              fontFamily: T.mono, fontSize: 8, letterSpacing: '.12em', textTransform: 'uppercase',
+              padding: '3px 9px', background: 'rgba(245,242,235,0.06)', border: `1px solid rgba(245,242,235,0.1)`, color: 'rgba(245,242,235,0.4)',
+            }}>
               {user.role}
             </span>
           )}
@@ -117,56 +110,58 @@ function DashboardLayout({ children }) {
       </div>
 
       {/* Nav */}
-      <nav style={{ padding: '10px 8px', flex: 1, overflowY: 'auto' }}>
-        <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.muted, padding: '8px 10px 6px', marginBottom: 2 }}>
+      <nav style={{ padding: '8px 8px', flex: 1, overflowY: 'auto' }}>
+        <p style={{ fontFamily: T.mono, fontSize: 7, letterSpacing: '.22em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.22)', padding: '10px 10px 6px' }}>
           Navigation
-        </div>
+        </p>
         {navigation.map(item => {
           const active = isActive(item.href)
           return (
             <Link key={item.name} to={item.href} style={{
               display: 'flex', alignItems: 'center', gap: 10,
-              padding: '10px 10px', marginBottom: 2,
-              background: active ? G.goldBg : 'transparent',
-              borderLeft: `2px solid ${active ? G.gold : 'transparent'}`,
-              color: active ? G.gold : G.muted2,
-              fontFamily: G.mono, fontSize: 10,
+              padding: '9px 10px', marginBottom: 1,
+              background: active ? 'rgba(201,162,39,0.10)' : 'transparent',
+              borderLeft: `2px solid ${active ? T.gold : 'transparent'}`,
+              color: active ? T.gold : 'rgba(245,242,235,0.45)',
+              fontFamily: T.mono, fontSize: 9,
               letterSpacing: '.1em', textTransform: 'uppercase',
-              textDecoration: 'none', transition: 'all .15s',
+              textDecoration: 'none', transition: 'all .12s',
             }}
-              onMouseEnter={e => { if (!active) { e.currentTarget.style.background = G.paper; e.currentTarget.style.color = G.ink } }}
-              onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = G.muted2 } }}
+              onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(245,242,235,0.04)'; e.currentTarget.style.color = 'rgba(245,242,235,0.75)' } }}
+              onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(245,242,235,0.45)' } }}
             >
-              <item.icon size={13} strokeWidth={active ? 2 : 1.5} />
+              <item.icon size={12} strokeWidth={active ? 2 : 1.5} />
               <span style={{ flex: 1 }}>{item.name}</span>
-              {active && <ChevronRight size={10} />}
+              {active && <ChevronRight size={9} style={{ opacity: 0.6 }} />}
             </Link>
           )
         })}
       </nav>
 
-      {/* Footer */}
-      <div style={{ borderTop: `1px solid ${G.rule}`, padding: '10px 8px' }}>
+      {/* Footer sidebar */}
+      <div style={{ borderTop: `1px solid rgba(255,255,255,0.05)`, padding: '8px 8px' }}>
         {user?.club_name && (
           <div style={{ padding: '8px 10px 10px', display: 'flex', alignItems: 'center', gap: 8 }}>
             {user?.club_logo
-              ? <img src={user.club_logo} alt={user.club_name} style={{ width: 24, height: 24, objectFit: 'contain', flexShrink: 0 }} />
-              : <span style={{ width: 5, height: 5, background: G.gold, borderRadius: '50%', display: 'inline-block', flexShrink: 0 }} />
+              ? <img src={user.club_logo} alt={user.club_name} style={{ width: 22, height: 22, objectFit: 'contain', flexShrink: 0 }} />
+              : <span style={{ width: 4, height: 4, background: T.gold, borderRadius: '50%', display: 'inline-block', flexShrink: 0 }} />
             }
-            <p style={{ fontFamily: G.mono, fontSize: 11, color: G.ink, letterSpacing: '.03em', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.club_name}</p>
+            <p style={{ fontFamily: T.mono, fontSize: 10, color: 'rgba(245,242,235,0.55)', letterSpacing: '.03em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {user.club_name}
+            </p>
           </div>
         )}
         <button onClick={handleLogout} style={{
           width: '100%', display: 'flex', alignItems: 'center', gap: 10,
-          padding: '10px 10px', background: 'transparent', border: 'none',
-          color: G.muted, fontFamily: G.mono, fontSize: 10,
+          padding: '9px 10px', background: 'transparent', border: 'none',
+          color: 'rgba(245,242,235,0.35)', fontFamily: T.mono, fontSize: 9,
           letterSpacing: '.1em', textTransform: 'uppercase',
-          cursor: 'pointer', transition: 'all .15s',
+          cursor: 'pointer', transition: 'all .12s',
         }}
-          onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.background = 'rgba(239,68,68,0.05)' }}
-          onMouseLeave={e => { e.currentTarget.style.color = G.muted; e.currentTarget.style.background = 'transparent' }}
+          onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.background = 'rgba(239,68,68,0.06)' }}
+          onMouseLeave={e => { e.currentTarget.style.color = 'rgba(245,242,235,0.35)'; e.currentTarget.style.background = 'transparent' }}
         >
-          <LogOut size={13} strokeWidth={1.5} />
+          <LogOut size={12} strokeWidth={1.5} />
           Déconnexion
         </button>
       </div>
@@ -174,25 +169,14 @@ function DashboardLayout({ children }) {
   )
 
   return (
-    <div style={{ minHeight: '100vh', background: G.cream, display: 'flex' }}>
-      <style>{`
-        ${FONTS}
-        * { box-sizing: border-box; margin: 0; }
-        ::-webkit-scrollbar { width: 3px; background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(15,15,13,0.12); border-radius: 2px; }
-        select, input { -webkit-appearance: none; }
-        select option { background: #ffffff; color: #0f0f0d; }
-      `}</style>
+    <div style={{ minHeight: '100vh', background: T.bg, display: 'flex' }}>
+      <style>{globalStyles}</style>
 
       {/* Desktop sidebar */}
       {!isMobile && (
         <aside style={{
           position: 'fixed', top: 0, left: 0, bottom: 0,
-          width: SIDEBAR_W,
-          background: G.white,
-          borderRight: `1px solid ${G.rule}`,
-          zIndex: 50,
-          overflowY: 'auto',
+          width: W, zIndex: 50, overflowY: 'auto',
         }}>
           <SidebarContent />
         </aside>
@@ -203,15 +187,13 @@ function DashboardLayout({ children }) {
         <>
           {mobileOpen && (
             <div onClick={() => setMobileOpen(false)}
-              style={{ position: 'fixed', inset: 0, background: 'rgba(15,15,13,0.45)', zIndex: 90 }} />
+              style={{ position: 'fixed', inset: 0, background: 'rgba(10,9,8,0.6)', zIndex: 90 }} />
           )}
           <aside style={{
-            position: 'fixed', top: 0, left: 0, bottom: 0,
-            width: 280, background: G.white,
-            borderRight: `1px solid ${G.rule}`,
+            position: 'fixed', top: 0, left: 0, bottom: 0, width: 260,
             zIndex: 100,
             transform: mobileOpen ? 'translateX(0)' : 'translateX(-100%)',
-            transition: 'transform .25s cubic-bezier(.4,0,.2,1)',
+            transition: 'transform .22s cubic-bezier(.4,0,.2,1)',
             overflowY: 'auto',
           }}>
             <SidebarContent />
@@ -219,29 +201,32 @@ function DashboardLayout({ children }) {
 
           {/* Mobile top bar */}
           <header style={{
-            position: 'fixed', top: 0, left: 0, right: 0, height: 54,
-            background: G.white, borderBottom: `1px solid ${G.rule}`,
+            position: 'fixed', top: 0, left: 0, right: 0, height: 52,
+            background: T.dark, borderBottom: `1px solid rgba(201,162,39,0.12)`,
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             padding: '0 16px', zIndex: 80,
           }}>
-            <button onClick={() => setMobileOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: G.ink, padding: 6 }}>
-              <Menu size={20} />
+            <button onClick={() => setMobileOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(245,242,235,0.6)', padding: 6 }}>
+              <Menu size={18} />
             </button>
             <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
-              <img src="/logo.svg" alt="InsightBall" style={{ width: 22, height: 22 }} />
-              <span style={{ fontFamily: G.display, fontSize: 14, letterSpacing: '.08em', color: G.ink }}>
-                INSIGHT<span style={{ color: G.gold }}>BALL</span>
+              <img src="/logo.svg" alt="" style={{ width: 20, height: 20 }} />
+              <span style={{ fontFamily: T.display, fontSize: 13, letterSpacing: '.08em', color: '#f5f2eb' }}>
+                INSIGHT<span style={{ color: T.gold }}>BALL</span>
               </span>
             </Link>
-            <div style={{ width: 32, height: 32, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ fontFamily: G.display, fontSize: 11, color: G.gold }}>{initials}</span>
+            <div style={{
+              width: 30, height: 30, background: T.goldBg2, border: `1px solid ${T.goldBdr}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <span style={{ fontFamily: T.display, fontSize: 10, color: T.gold }}>{initials}</span>
             </div>
           </header>
 
           {/* Mobile bottom nav */}
           <nav style={{
             position: 'fixed', bottom: 0, left: 0, right: 0,
-            background: G.white, borderTop: `1px solid ${G.rule}`,
+            background: T.dark, borderTop: `1px solid rgba(201,162,39,0.10)`,
             display: 'flex', zIndex: 80,
             paddingBottom: 'env(safe-area-inset-bottom)',
           }}>
@@ -250,15 +235,15 @@ function DashboardLayout({ children }) {
               return (
                 <Link key={item.name} to={item.href} style={{
                   flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center',
-                  padding: '10px 4px 8px',
-                  color: active ? G.gold : G.muted,
+                  padding: '10px 4px 8px', gap: 4,
+                  color: active ? T.gold : 'rgba(245,242,235,0.35)',
                   textDecoration: 'none',
-                  borderTop: `2px solid ${active ? G.gold : 'transparent'}`,
-                  transition: 'all .15s', gap: 4,
-                  background: active ? G.goldBg : 'transparent',
+                  borderTop: `2px solid ${active ? T.gold : 'transparent'}`,
+                  background: active ? 'rgba(201,162,39,0.06)' : 'transparent',
+                  transition: 'all .12s',
                 }}>
-                  <item.icon size={18} strokeWidth={active ? 2 : 1.5} />
-                  <span style={{ fontFamily: G.mono, fontSize: 7, letterSpacing: '.1em', textTransform: 'uppercase' }}>
+                  <item.icon size={16} strokeWidth={active ? 2 : 1.5} />
+                  <span style={{ fontFamily: T.mono, fontSize: 7, letterSpacing: '.1em', textTransform: 'uppercase' }}>
                     {item.name}
                   </span>
                 </Link>
@@ -268,13 +253,13 @@ function DashboardLayout({ children }) {
         </>
       )}
 
-      {/* Main content */}
+      {/* Main */}
       <main style={{
         flex: 1,
-        marginLeft: isMobile ? 0 : SIDEBAR_W,
+        marginLeft: isMobile ? 0 : W,
         minHeight: '100vh',
-        background: G.cream,
-        padding: isMobile ? '66px 14px 84px' : '36px 40px',
+        background: T.bg,
+        padding: isMobile ? '64px 16px 88px' : '32px 36px 48px',
       }}>
         <TrialBanner />
         {children}
