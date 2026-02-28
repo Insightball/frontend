@@ -474,9 +474,9 @@ export default function LandingPage() {
         transition: 'box-shadow .2s',
       }}>
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <img src="/logo.svg" alt="INSIGHTBALL" style={{ height: 36, width: 'auto', display: 'block', mixBlendMode: 'screen' }} />
+          <img src="/logo.svg" alt="Insightball" style={{ height: 36, width: 'auto', display: 'block', mixBlendMode: 'screen' }} />
           <span style={{ fontFamily: G.display, fontSize: 18, fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase', color: G.white }}>
-            INSIGHT<span style={{ color: G.gold }}>BALL</span>
+            INSIGHT<span style={{ color: G.gold }}>ball</span>
           </span>
         </Link>
 
@@ -1065,9 +1065,9 @@ export default function LandingPage() {
         <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr', gap: 40, marginBottom: 48 }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-              <img src="/logo.svg" alt="INSIGHTBALL" style={{ height: 36, width: 'auto', display: 'block', mixBlendMode: 'screen' }} />
+              <img src="/logo.svg" alt="Insightball" style={{ height: 36, width: 'auto', display: 'block', mixBlendMode: 'screen' }} />
               <span style={{ fontFamily: G.display, fontSize: 18, fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase', color: G.white }}>
-                INSIGHT<span style={{ color: G.gold }}>BALL</span>
+                INSIGHT<span style={{ color: G.gold }}>ball</span>
               </span>
             </div>
             <p style={{ fontFamily: G.mono, fontSize: 11, color: G.gold, marginBottom: 14, letterSpacing: '.04em' }}>
@@ -1077,7 +1077,7 @@ export default function LandingPage() {
           {[
             { title:'Produit', links:[['#features','Fonctionnalités'],['#pricing','Tarifs'],['#rapport','Exemple rapport'],['#waitlist','Accès anticipé']] },
             { title:'Ressources', links:[['#','Documentation'],['#','Blog tactique'],['#',"Guides d'analyse"],['#','Support']] },
-            { title:'Légal', links:[['#','Mentions légales'],['#','CGV'],['#','Confidentialité'],['#','Cookies']] },
+            { title:'Légal', links:[['/mentions-legales','Mentions légales'],['/cgv','CGV'],['/confidentialite','Confidentialité'],['/cookies','Cookies']] },
           ].map(col => (
             <div key={col.title}>
               <div style={{ fontFamily: G.mono, fontSize: 10, fontWeight: 600, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 14 }}>{col.title}</div>
@@ -1095,7 +1095,7 @@ export default function LandingPage() {
         </div>
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.10)', paddingTop: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, fontSize: 13, color: 'rgba(255,255,255,0.75)', textAlign: 'center' }}>
           <span>Made in 🇫🇷 with ❤️</span>
-          <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12 }}>© 2026 INSIGHTBALL — Tous droits réservés</span>
+          <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12 }}>© 2026 Insightball — Tous droits réservés</span>
         </div>
       </footer>
     </div>
