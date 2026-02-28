@@ -549,7 +549,7 @@ export default function SubscriptionManagement() {
                 border: 'none', cursor: upgradeLoading ? 'not-allowed' : 'pointer', opacity: upgradeLoading ? 0.6 : 1,
               }}>
                 <Zap size={12} />
-                {upgradeLoading ? 'Activation...' : 'Confirmer plan Coach — 39€/mois'}
+                {upgradeLoading ? 'Activation...' : 'Analyser 4 matchs — 39€/mois'}
               </button>
             )}
 
