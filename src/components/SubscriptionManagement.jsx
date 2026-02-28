@@ -500,7 +500,7 @@ export default function SubscriptionManagement() {
               <div style={{ fontFamily: G.mono, fontSize: 11, color: isTrialing ? G.gold : G.green, letterSpacing: '.06em' }}>
                 {isTrialing ? `Essai en cours — ${trialData?.days_left ?? '?'} jour${(trialData?.days_left ?? 0) > 1 ? 's' : ''} restant${(trialData?.days_left ?? 0) > 1 ? 's' : ''}` : 'Abonnement actif'}
               </div>
-              {sub.cancel_at_period_end && (
+              {sub?.cancel_at_period_end && (
                 <div style={{ fontFamily: G.mono, fontSize: 9, color: G.orange, marginTop: 2, letterSpacing: '.06em' }}>
                   {isTrialing ? 'Essai annulé — aucun débit ne sera effectué' : 'Annulation programmée en fin de période'}
                 </div>
@@ -517,7 +517,7 @@ export default function SubscriptionManagement() {
             {sub.current_period_end && (
               <div style={{ background: G.bg2, padding: '16px 20px' }}>
                 <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted, marginBottom: 6 }}>
-                  {isTrialing ? 'Premier débit le' : sub.cancel_at_period_end ? "Actif jusqu'au" : 'Renouvellement'}
+                  {isTrialing ? 'Premier débit le' : sub?.cancel_at_period_end ? "Actif jusqu'au" : 'Renouvellement'}
                 </div>
                 <div style={{ fontFamily: G.mono, fontSize: 13, color: G.text }}>
                   {new Date(sub.current_period_end * 1000).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
@@ -571,7 +571,7 @@ export default function SubscriptionManagement() {
             )}
 
             {/* Réactivation — annulation en cours mais user change d'avis */}
-            {sub.cancel_at_period_end && (
+            {sub?.cancel_at_period_end && (
               <button onClick={handlePortal} disabled={portalLoading} style={{
                 display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px',
                 background: G.goldBg, color: G.gold,
@@ -588,7 +588,7 @@ export default function SubscriptionManagement() {
             )}
 
             {/* Résilier — modale selon contexte */}
-            {!sub.cancel_at_period_end && (
+            {!sub?.cancel_at_period_end && (
               <button
                 onClick={() => isTrialing ? setShowCancelModal(true) : setShowCancelSubModal(true)}
                 disabled={cancelLoading}
@@ -606,7 +606,7 @@ export default function SubscriptionManagement() {
             )}
 
             {/* Réactivation — annulation en cours mais user change d'avis */}
-            {sub.cancel_at_period_end && (
+            {sub?.cancel_at_period_end && (
               <button onClick={handlePortal} disabled={portalLoading} style={{
                 display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px',
                 background: G.goldBg, color: G.gold,
