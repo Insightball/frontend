@@ -58,6 +58,7 @@ export default function UploadMatch() {
   const [showUpgradeGate, setShowUpgradeGate] = useState(false)
   const [dragOver, setDragOver]               = useState(false)
   const [error, setError]                     = useState('')
+  const [quotaData, setQuotaData]             = useState(null)
 
   const [matchData, setMatchData] = useState({
     date: '', opponent: '', competition: '', location: '',
@@ -76,12 +77,15 @@ export default function UploadMatch() {
     Promise.all([
       api.get('/subscription/trial-status'),
       api.get('/subscription/has-payment-method'),
-    ]).then(([trialRes, pmRes]) => {
+      api.get('/matches/quota'),
+    ]).then(([trialRes, pmRes, quotaRes]) => {
       setTrialStatus(trialRes.data)
       setHasPaymentMethod(pmRes.data?.has_payment_method ?? false)
+      setQuotaData(quotaRes.data)
     }).catch(() => {
       setTrialStatus({ access: 'no_trial' })
       setHasPaymentMethod(false)
+      setQuotaData(null)
     }).finally(() => setTrialLoading(false))
   }, [])
 
@@ -177,11 +181,13 @@ export default function UploadMatch() {
       const detail = e?.response?.data?.detail
 
       if (status === 402) {
-        if (detail === 'TRIAL_EXHAUSTED') {
+        const detailCode = typeof detail === 'object' ? detail?.code : detail
+        if (detailCode === 'TRIAL_EXHAUSTED') {
           setShowUpgradeGate(true)
-        } else if (detail === 'QUOTA_EXCEEDED') {
-          setError('Quota mensuel atteint — votre prochain match sera disponible le 1er du mois.')
-        } else if (detail === 'NO_SUBSCRIPTION') {
+        } else if (detailCode === 'QUOTA_EXCEEDED') {
+          const resetDate = detail?.resets_at ? new Date(detail.resets_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' }) : 'le mois prochain'
+          setError(`Quota atteint (${detail?.used || '?'}/${detail?.quota || '?'} matchs). Renouvellement le ${resetDate}.`)
+        } else if (detailCode === 'NO_SUBSCRIPTION') {
           navigate('/dashboard/settings', { state: { flash: 'Abonnement requis pour analyser un match.' } })
         } else {
           navigate('/dashboard/settings')
@@ -204,7 +210,8 @@ export default function UploadMatch() {
   const isTrialNoCB        = !hasPaymentMethod && access !== 'full'
   const isExpired          = access === 'expired'
   const trialMatchExhausted = access === 'full' && trialStatus?.trial_active && trialStatus?.match_used === true
-  const canUpload          = access === 'full' && !trialMatchExhausted
+  const quotaExhausted     = quotaData && quotaData.remaining === 0 && quotaData.plan !== 'TRIAL' && quotaData.plan !== 'NO_SUBSCRIPTION'
+  const canUpload          = access === 'full' && !trialMatchExhausted && !quotaExhausted
 
   // Loading state pendant vérification trial — évite le flash du formulaire
   if (trialLoading) {
@@ -227,29 +234,39 @@ export default function UploadMatch() {
       ? 'Activez votre essai gratuit'
       : isExpired
         ? 'Abonnez-vous pour continuer'
-        : trialMatchExhausted
-          ? 'Analyse gratuite utilisée'
-          : 'Analyse gratuite utilisée'
+        : quotaExhausted
+          ? 'Quota atteint'
+          : trialMatchExhausted
+            ? 'Analyse gratuite utilisée'
+            : 'Analyse gratuite utilisée'
+
+    const resetDate = quotaData?.resets_at ? new Date(quotaData.resets_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : ''
 
     const sub = isTrialNoCB
       ? "Enregistrez votre carte bancaire pour démarrer votre essai de 7 jours. Aucun débit aujourd'hui."
       : isExpired
         ? "Votre période d'essai est terminée. Choisissez un plan pour continuer à analyser vos matchs."
-        : trialMatchExhausted
-          ? "Vous avez utilisé votre analyse gratuite. Activez le plan Coach pour uploader jusqu'à 4 matchs par mois."
-          : "Vous avez utilisé votre analyse gratuite incluse. Abonnez-vous pour uploader vos prochains matchs."
+        : quotaExhausted
+          ? `Vous avez utilisé vos ${quotaData?.quota} matchs pour cette période. Prochain renouvellement le ${resetDate}.`
+          : trialMatchExhausted
+            ? "Vous avez utilisé votre analyse gratuite. Activez le plan Coach pour uploader jusqu'à 4 matchs par mois."
+            : "Vous avez utilisé votre analyse gratuite incluse. Abonnez-vous pour uploader vos prochains matchs."
 
     const cta = isTrialNoCB
       ? 'Activer mon essai gratuit →'
-      : trialMatchExhausted
-        ? 'Activer le plan Coach — 39€/mois →'
-        : 'Voir les plans →'
+      : quotaExhausted
+        ? 'Gérer mon abonnement →'
+        : trialMatchExhausted
+          ? 'Activer le plan Coach — 39€/mois →'
+          : 'Voir les plans →'
 
     const label = isTrialNoCB
       ? 'Carte bancaire requise'
       : isExpired
         ? 'Essai terminé'
-        : 'Analyse utilisée'
+        : quotaExhausted
+          ? `${quotaData?.used}/${quotaData?.quota} matchs utilisés`
+          : 'Analyse utilisée'
 
     return (
       <DashboardLayout>

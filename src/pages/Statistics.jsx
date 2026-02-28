@@ -32,12 +32,8 @@ export default function Statistics() {
   useEffect(() => {
     ;(async () => {
       try {
-        const { data } = await api.get('/subscription/trial-status')
-        // Bloqué UNIQUEMENT si : trial actif avec match déjà utilisé, ou trial expiré
-        // no_trial (pas de CB) → on laisse passer, le backend gère le 402 à l'upload
-        const expired   = data.access === 'expired'
-        const trialUsed = data.trial_active && data.match_used === true
-        setQuotaBlocked(expired || trialUsed)
+        const { data } = await api.get('/matches/quota')
+        setQuotaBlocked(data.remaining === 0)
       } catch {
         setQuotaBlocked(false)
       }
@@ -167,7 +163,7 @@ export default function Statistics() {
                   fontFamily: T.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase',
                   color: 'rgba(201,162,39,0.45)', cursor: 'not-allowed',
                 }}>
-                  <Lock size={11} /> Match offert utilisé
+                  <Lock size={11} /> Quota atteint
                 </div>
               ) : (
                 <Link to="/dashboard/matches/upload" style={{

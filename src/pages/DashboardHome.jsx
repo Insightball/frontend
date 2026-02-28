@@ -314,6 +314,17 @@ export default function DashboardHome() {
               <p style={{ fontFamily: T.mono, fontSize: 10, color: 'rgba(245,242,235,0.38)', lineHeight: 1.65, marginBottom: 18, letterSpacing: '.03em' }}>
                 Uploadez votre vidéo, obtenez un rapport tactique complet.
               </p>
+              {quotaLeft === 0 ? (
+                <div style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  padding: '10px 18px', background: 'rgba(201,162,39,0.12)',
+                  border: `1px solid rgba(201,162,39,0.22)`,
+                  fontFamily: T.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase',
+                  color: 'rgba(201,162,39,0.45)', cursor: 'not-allowed',
+                }}>
+                  Quota atteint
+                </div>
+              ) : (
               <Link to="/dashboard/matches/upload" style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6,
                 padding: '10px 18px', background: T.gold, color: T.dark,
@@ -325,6 +336,7 @@ export default function DashboardHome() {
               >
                 <Upload size={11} /> Uploader
               </Link>
+              )}
             </div>
           </div>
 
