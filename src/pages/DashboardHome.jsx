@@ -5,6 +5,7 @@ import DashboardLayout from '../components/DashboardLayout'
 import { useAuth } from '../context/AuthContext'
 import matchService from '../services/matchService'
 import playerService from '../services/playerService'
+import api from '../services/api'
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');`
 
@@ -48,11 +49,11 @@ function StatusBadge({ status }) {
 
 export default function DashboardHome() {
   const { user } = useAuth()
-  const [matches, setMatches]   = useState([])
-  const [players, setPlayers]   = useState([])
-  const [loading, setLoading]   = useState(true)
-  const [isMobile, setIsMobile] = useState(false)
-  const [tick, setTick]         = useState(0)
+  const [matches, setMatches]     = useState([])
+  const [players, setPlayers]     = useState([])
+  const [quotaData, setQuotaData] = useState(null)
+  const [loading, setLoading]     = useState(true)
+  const [isMobile, setIsMobile]   = useState(false)
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -64,50 +65,48 @@ export default function DashboardHome() {
   useEffect(() => {
     ;(async () => {
       try {
-        const [m, p] = await Promise.all([
+        const [m, p, q] = await Promise.all([
           matchService.getMatches({ limit: 5 }),
           playerService.getPlayers(),
+          api.get('/matches/quota'),
         ])
-        setMatches(m); setPlayers(p)
+        setMatches(m)
+        setPlayers(p)
+        setQuotaData(q.data)
       } catch (e) { console.error(e) }
       finally { setLoading(false) }
     })()
   }, [])
 
-  // Animation compteur
-  useEffect(() => {
-    const t = setTimeout(() => setTick(1), 100)
-    return () => clearTimeout(t)
-  }, [])
-
   const completed  = matches.filter(m => m.status === 'completed').length
   const processing = matches.filter(m => m.status === 'processing').length
-  const PLAN_QUOTAS = { COACH: 4, CLUB: 12 }
-  const userPlan   = (user?.plan || 'COACH').toUpperCase()
-  const quota      = PLAN_QUOTAS[userPlan] ?? 4
-  const quotaUsed  = completed
+
+  // FIX P0 — quota depuis l'API, pas calculé localement
+  const quota      = quotaData?.quota ?? 4
+  const quotaUsed  = quotaData?.used  ?? 0
   const quotaPct   = Math.min((quotaUsed / quota) * 100, 100)
   const quotaColor = quotaPct >= 80 ? G.red : quotaPct >= 50 ? G.orange : G.gold
 
-  const topPlayers = players.slice(0, 5).map((p, i) => ({
-    ...p,
-    rating: (8.5 - i * 0.3).toFixed(1),
-    trend:  i % 2 === 0 ? 'up' : 'down',
-  }))
+  const userPlan = (user?.plan || 'COACH').toUpperCase()
 
+  // Top joueurs — sans rating ni trend fakés
+  const topPlayers = players.slice(0, 5)
+
+  // Alertes dynamiques basées sur les vraies données
+  const alerts = [
+    ...(completed > 0 ? [{ type: 'success', msg: `${completed} match${completed > 1 ? 's' : ''} analysé${completed > 1 ? 's' : ''} ce mois`, time: 'Ce mois' }] : []),
+    { type: 'warning', msg: `Quota : ${quotaUsed}/${quota} matchs utilisés ce mois`, time: 'En temps réel' },
+    ...(processing > 0 ? [{ type: 'info', msg: `${processing} analyse${processing > 1 ? 's' : ''} en cours`, time: 'Maintenant' }] : []),
+  ]
+  const alertColor = { success: G.green, warning: G.orange, info: G.blue }
+  const alertIcon  = { success: CheckCircle, warning: AlertCircle, info: Activity }
+
+  // Prochains matchs — section conservée avec données mock, à connecter post-lancement
   const upcoming = [
     { date: '2026-03-01', opponent: 'FC Bastia-Borgo', cat: 'N3' },
     { date: '2026-03-08', opponent: 'UF Zonza',        cat: 'N3' },
     { date: '2026-03-15', opponent: 'AS Furiani',      cat: 'N3' },
   ]
-
-  const alerts = [
-    { type: 'success', msg: 'Dernier match analysé avec succès', time: 'Il y a 2h' },
-    { type: 'warning', msg: `Quota ${completed}/${quota} matchs ce mois`,    time: 'Hier' },
-    { type: 'info',    msg: '3 joueurs en progression ce mois', time: 'Il y a 2j' },
-  ]
-  const alertColor = { success: G.green, warning: G.orange, info: G.blue }
-  const alertIcon  = { success: CheckCircle, warning: AlertCircle, info: TrendingUp }
 
   return (
     <DashboardLayout>
@@ -115,7 +114,6 @@ export default function DashboardHome() {
         ${FONTS}
         * { box-sizing: border-box; }
         @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
-        @keyframes growBar { from { width: 0%; } to { } }
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
         .match-row:hover { background: rgba(201,162,39,0.04) !important; }
         .player-row:hover { background: rgba(201,162,39,0.04) !important; }
@@ -130,14 +128,12 @@ export default function DashboardHome() {
         overflow: 'hidden',
         animation: 'fadeUp .4s ease both',
       }}>
-        {/* Fond décoratif — grille tactique subtile */}
         <div style={{
           position: 'absolute', inset: 0, opacity: 0.04,
           backgroundImage: 'linear-gradient(rgba(201,162,39,1) 1px, transparent 1px), linear-gradient(90deg, rgba(201,162,39,1) 1px, transparent 1px)',
           backgroundSize: '40px 40px',
           pointerEvents: 'none',
         }} />
-        {/* Grand texte décoratif en arrière plan */}
         <div style={{
           position: 'absolute', right: -20, top: -10,
           fontFamily: G.display, fontSize: 120, color: 'rgba(201,162,39,0.06)',
@@ -166,13 +162,15 @@ export default function DashboardHome() {
             </p>
           </div>
 
-          {/* Quota visuel dans le header */}
+          {/* Quota visuel dans le header — données réelles */}
           <div style={{ textAlign: 'right' }}>
             <div style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.65)', marginBottom: 8 }}>
               Quota ce mois
             </div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, justifyContent: 'flex-end', marginBottom: 8 }}>
-              <span style={{ fontFamily: G.display, fontSize: 40, lineHeight: 1, color: quotaColor }}>{quota - quotaUsed}</span>
+              <span style={{ fontFamily: G.display, fontSize: 40, lineHeight: 1, color: quotaColor }}>
+                {loading ? '—' : quota - quotaUsed}
+              </span>
               <span style={{ fontFamily: G.mono, fontSize: 12, color: 'rgba(245,242,235,0.65)' }}>/ {quota} restants</span>
             </div>
             <div style={{ width: 160, height: 3, background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
@@ -196,10 +194,10 @@ export default function DashboardHome() {
         border: `1px solid ${G.rule}`,
       }}>
         {[
-          { label: 'Matchs analysés',    value: completed,      sub: 'Ce mois',  icon: Film,     accent: G.gold,   delay: 0   },
-          { label: "En cours d'analyse", value: processing,     sub: 'Actif',    icon: Activity, accent: G.gold,  delay: 60  },
-          { label: 'Joueurs effectif',   value: players.length, sub: 'Total',    icon: Users,    accent: G.gold,   delay: 120 },
-          { label: 'Victoire / match',   value: `${completed > 0 ? Math.round((matches.filter(m=>m.score_home > m.score_away).length/completed)*100) : 0}%`, sub: 'Saison', icon: Target, accent: G.gold, delay: 180, isString: true },
+          { label: 'Matchs analysés',    value: completed,      sub: 'Ce mois',  icon: Film,     delay: 0   },
+          { label: "En cours d'analyse", value: processing,     sub: 'Actif',    icon: Activity, delay: 60  },
+          { label: 'Joueurs effectif',   value: players.length, sub: 'Total',    icon: Users,    delay: 120 },
+          { label: 'Matchs restants',    value: loading ? '—' : quota - quotaUsed, sub: 'Ce mois', icon: Target, delay: 180 },
         ].map((s, i) => (
           <div key={s.label} style={{
             background: 'transparent',
@@ -303,12 +301,12 @@ export default function DashboardHome() {
             )}
           </div>
 
-          {/* Top joueurs */}
+          {/* Top joueurs — sans rating ni trend fakés */}
           <div style={{ background: 'transparent', border: 'none', borderBottom: `1px solid ${G.rule}`, animation: 'fadeUp .4s ease 280ms both' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px', borderBottom: `1px solid ${G.rule}` }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ width: 2, height: 14, background: G.gold, display: 'inline-block' }} />
-                <h2 style={{ fontFamily: G.display, fontSize: 13, letterSpacing: '.06em', textTransform: 'uppercase', color: G.ink }}>Top joueurs du mois</h2>
+                <h2 style={{ fontFamily: G.display, fontSize: 13, letterSpacing: '.06em', textTransform: 'uppercase', color: G.ink }}>Effectif</h2>
               </div>
               <Link to="/dashboard/players" style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}
                 onMouseEnter={e => e.currentTarget.style.color = G.gold}
@@ -336,11 +334,6 @@ export default function DashboardHome() {
                       <div style={{ fontFamily: G.mono, fontSize: 11, color: G.ink, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</div>
                       <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>{p.position}</div>
                     </div>
-                    <div style={{ fontFamily: G.display, fontSize: 22, color: G.gold, flexShrink: 0 }}>{p.rating}</div>
-                    {p.trend === 'up'
-                      ? <TrendingUp size={12} color={G.green} />
-                      : <TrendingDown size={12} color={G.muted} />
-                    }
                   </div>
                 ))
               )}
@@ -351,7 +344,7 @@ export default function DashboardHome() {
         {/* ── Colonne droite ── */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
 
-          {/* CTA Upload — dark, impactant */}
+          {/* CTA Upload */}
           <div style={{
             background: G.ink, padding: '24px 20px',
             position: 'relative', overflow: 'hidden',
@@ -387,7 +380,7 @@ export default function DashboardHome() {
             </div>
           </div>
 
-          {/* Prochains matchs */}
+          {/* Prochains matchs — TODO: connecter à l'API post-lancement */}
           <div style={{ background: 'transparent', border: 'none', borderBottom: `1px solid ${G.rule}`, animation: 'fadeUp .4s ease 160ms both' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '14px 18px', borderBottom: `1px solid ${G.rule}` }}>
               <span style={{ width: 2, height: 14, background: G.gold, display: 'inline-block' }} />
@@ -410,13 +403,17 @@ export default function DashboardHome() {
             ))}
           </div>
 
-          {/* Alertes */}
+          {/* Alertes dynamiques */}
           <div style={{ background: 'transparent', border: 'none', borderBottom: `1px solid ${G.rule}`, animation: 'fadeUp .4s ease 220ms both' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '14px 18px', borderBottom: `1px solid ${G.rule}` }}>
               <span style={{ width: 2, height: 14, background: G.gold, display: 'inline-block' }} />
-              <h2 style={{ fontFamily: G.display, fontSize: 13, letterSpacing: '.06em', textTransform: 'uppercase', color: G.ink }}>Alertes</h2>
+              <h2 style={{ fontFamily: G.display, fontSize: 13, letterSpacing: '.06em', textTransform: 'uppercase', color: G.ink }}>Activité</h2>
             </div>
-            {alerts.map((a, i) => {
+            {loading ? (
+              [1,2].map(i => <div key={i} style={{ height: 48, background: G.rule, margin: '1px 0', opacity: 0.4 }} />)
+            ) : alerts.length === 0 ? (
+              <p style={{ padding: '20px 16px', fontFamily: G.mono, fontSize: 11, color: G.muted }}>Aucune activité récente</p>
+            ) : alerts.map((a, i) => {
               const Icon  = alertIcon[a.type]
               const color = alertColor[a.type]
               return (
