@@ -437,19 +437,6 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
     }
   }
 
-  // Demande devis CLUB — pas d'upgrade automatique Stripe
-  const handleRequestClubQuote = async () => {
-    setUpgradeLoading(true); setError(''); setShowClubQuoteModal(false)
-    try {
-      await api.post('/subscription/request-club-quote', { message: '' })
-      setSuccess('Demande envoyée ✓ — Nous vous contacterons sous 24h pour votre offre sur mesure.')
-    } catch (e) {
-      setError("Erreur lors de l'envoi. Contactez-nous : contact@insightball.com")
-    } finally {
-      setUpgradeLoading(false)
-    }
-  }
-
   const handlePaymentSuccess = async () => {
     setSelectedPlan(null)
     setSuccess('Essai activé ! Bienvenue sur InsightBall.')
