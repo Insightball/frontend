@@ -368,7 +368,7 @@ export default function SubscriptionManagement() {
   // Modales — plus de window.confirm()
   const [showCancelModal, setShowCancelModal]       = useState(false)
   const [showCoachModal, setShowCoachModal]         = useState(false)
-  const [showUpgradeClubModal, setShowUpgradeClubModal] = useState(false)
+  const [showClubQuoteModal, setShowClubQuoteModal] = useState(false)
   const [showCancelSubModal, setShowCancelSubModal] = useState(false)
 
   useEffect(() => { loadAll() }, [])
@@ -433,16 +433,14 @@ export default function SubscriptionManagement() {
     }
   }
 
-  // Upgrade COACH → CLUB — via modale
-  const confirmUpgradeClub = async () => {
-    setUpgradeLoading(true); setError(''); setShowUpgradeClubModal(false)
+  // Demande devis CLUB — pas d'upgrade automatique Stripe
+  const handleRequestClubQuote = async () => {
+    setUpgradeLoading(true); setError(''); setShowClubQuoteModal(false)
     try {
-      await api.post('/subscription/upgrade-plan', { plan: 'CLUB' })
-      setSuccess('Upgrade effectué ! Vous êtes maintenant sur le plan Club.')
-      await loadAll()
-      if (refreshUser) refreshUser()
+      await api.post('/subscription/request-club-quote', { message: '' })
+      setSuccess('Demande envoyée ✓ — Nous vous contacterons sous 24h pour votre offre sur mesure.')
     } catch (e) {
-      setError(e?.response?.data?.detail || "Erreur lors de l'upgrade")
+      setError("Erreur lors de l'envoi. Contactez-nous : contact@insightball.com")
     } finally {
       setUpgradeLoading(false)
     }
@@ -555,20 +553,37 @@ export default function SubscriptionManagement() {
               </button>
             )}
 
-            {/* Upgrade COACH → CLUB → modale */}
+            {/* Upgrade COACH → CLUB : devis sur demande */}
             {user?.plan === 'COACH' && !sub?.cancel_at_period_end && (
-              <button onClick={() => setShowUpgradeClubModal(true)} disabled={upgradeLoading} style={{
+              <button onClick={() => setShowClubQuoteModal(true)} disabled={upgradeLoading} style={{
                 display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px',
-                background: 'rgba(59,130,246,0.12)', color: '#3b82f6',
-                border: '1px solid rgba(59,130,246,0.35)',
+                background: G.goldBg, color: G.gold,
+                border: `1px solid ${G.goldBdr}`,
                 fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700,
                 cursor: upgradeLoading ? 'not-allowed' : 'pointer', opacity: upgradeLoading ? 0.6 : 1,
               }}
-                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(59,130,246,0.22)' }}
-                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(59,130,246,0.12)' }}
+                onMouseEnter={e => e.currentTarget.style.opacity = '.80'}
+                onMouseLeave={e => e.currentTarget.style.opacity = '1'}
               >
-                <Zap size={12} />
-                {upgradeLoading ? 'Upgrade...' : 'Passer au plan Club — 129€/mois'}
+                <Users size={12} />
+                Passer au plan Club — Demander un devis
+              </button>
+            )}
+
+            {/* Réactivation — annulation en cours mais user change d'avis */}
+            {sub.cancel_at_period_end && (
+              <button onClick={handlePortal} disabled={portalLoading} style={{
+                display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px',
+                background: G.goldBg, color: G.gold,
+                border: `1px solid ${G.goldBdr}`,
+                fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700,
+                cursor: portalLoading ? 'not-allowed' : 'pointer', opacity: portalLoading ? 0.6 : 1,
+              }}
+                onMouseEnter={e => e.currentTarget.style.opacity = '.80'}
+                onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+              >
+                <ArrowRight size={12} />
+                {portalLoading ? 'Redirection...' : 'Réactiver mon abonnement'}
               </button>
             )}
 
@@ -645,10 +660,19 @@ export default function SubscriptionManagement() {
                       <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: plan.color }}>{plan.name}</span>
                     </div>
                     <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontFamily: G.display, fontSize: 28, color: G.text, lineHeight: 1 }}>
-                        0<span style={{ fontFamily: G.mono, fontSize: 11, color: G.muted }}>€</span>
-                      </div>
-                      <div style={{ fontFamily: G.mono, fontSize: 8, color: G.muted }}>7 jours · puis {plan.price}€</div>
+                      {plan.id === 'CLUB' ? (
+                        <>
+                          <div style={{ fontFamily: G.display, fontSize: 20, color: G.text, lineHeight: 1.1 }}>Sur devis</div>
+                          <div style={{ fontFamily: G.mono, fontSize: 8, color: G.muted }}>à partir de 99€/mois</div>
+                        </>
+                      ) : (
+                        <>
+                          <div style={{ fontFamily: G.display, fontSize: 28, color: G.text, lineHeight: 1 }}>
+                            0<span style={{ fontFamily: G.mono, fontSize: 11, color: G.muted }}>€</span>
+                          </div>
+                          <div style={{ fontFamily: G.mono, fontSize: 8, color: G.muted }}>7 jours · puis {plan.price}€</div>
+                        </>
+                      )}
                     </div>
                   </div>
 
@@ -661,20 +685,31 @@ export default function SubscriptionManagement() {
                     ))}
                   </div>
 
-                  <button onClick={() => setSelectedPlan(plan)} style={{
-                    padding: '11px',
-                    background: plan.color === G.gold ? G.gold : 'rgba(59,130,246,0.15)',
-                    border: plan.color !== G.gold ? `1px solid rgba(59,130,246,0.40)` : 'none',
-                    color: plan.color === G.gold ? '#0f0f0d' : '#3b82f6',
-                    fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700,
-                    cursor: 'pointer', marginTop: 'auto',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                  }}
-                    onMouseEnter={e => e.currentTarget.style.opacity = '.85'}
-                    onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-                  >
-                    <CreditCard size={11} /> Démarrer l'essai →
-                  </button>
+                  {plan.id === 'CLUB' ? (
+                    <button onClick={() => setShowClubQuoteModal(true)} style={{
+                      padding: '11px', background: G.goldBg, border: `1px solid ${G.goldBdr}`,
+                      color: G.gold, fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em',
+                      textTransform: 'uppercase', fontWeight: 700, cursor: 'pointer', marginTop: 'auto',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                    }}
+                      onMouseEnter={e => e.currentTarget.style.opacity = '.85'}
+                      onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+                    >
+                      <Users size={11} /> Demander un devis →
+                    </button>
+                  ) : (
+                    <button onClick={() => setSelectedPlan(plan)} style={{
+                      padding: '11px', background: G.gold, border: 'none',
+                      color: '#0f0f0d', fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em',
+                      textTransform: 'uppercase', fontWeight: 700, cursor: 'pointer', marginTop: 'auto',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                    }}
+                      onMouseEnter={e => e.currentTarget.style.opacity = '.85'}
+                      onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+                    >
+                      <CreditCard size={11} /> Démarrer l'essai →
+                    </button>
+                  )}
                 </div>
               )
             })}
@@ -780,30 +815,33 @@ export default function SubscriptionManagement() {
         />
       )}
 
-      {/* ── MODALE UPGRADE CLUB ── */}
-      {showUpgradeClubModal && (
+      {/* ── MODALE DEVIS CLUB ── */}
+      {showClubQuoteModal && (
         <ConfirmModal
-          title="Passer au plan Club"
+          title="Demander un devis Club"
           body={
-            <div>
-              <div style={{ padding: '14px', background: G.goldBg, border: `1px solid ${G.goldBdr}`, marginBottom: 14 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div style={{ padding: '14px', background: G.goldBg, border: `1px solid ${G.goldBdr}` }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                   {[
-                    isTrialing ? '⚡ Fin du trial immédiate' : '✅ Upgrade immédiat',
-                    '💳 129€ prélevé immédiatement (prorata si actif)',
-                    '📊 12 matchs/mois débloqués',
-                    '🔁 Renouvellement mensuel automatique',
+                    '🏟️ Offre sur mesure pour votre club',
+                    '📊 Nombre de matchs adapté à vos besoins',
+                    '👥 Multi-équipes illimité',
+                    '📞 Nous vous contacterons sous 24h',
                   ].map(item => (
                     <div key={item} style={{ fontFamily: G.mono, fontSize: 10, color: G.muted }}>{item}</div>
                   ))}
                 </div>
               </div>
+              <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, lineHeight: 1.6, margin: 0 }}>
+                Un membre de l'équipe InsightBall vous contactera à l'adresse associée à votre compte.
+              </p>
             </div>
           }
-          confirmLabel="Confirmer — 129€/mois"
-          confirmColor="#3b82f6"
-          onConfirm={confirmUpgradeClub}
-          onCancel={() => setShowUpgradeClubModal(false)}
+          confirmLabel="Envoyer la demande"
+          confirmColor={G.gold}
+          onConfirm={handleRequestClubQuote}
+          onCancel={() => setShowClubQuoteModal(false)}
           loading={upgradeLoading}
         />
       )}
