@@ -3,12 +3,16 @@ import { BarChart3, Lock, ArrowRight, CheckCircle, Zap } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import DashboardLayout from '../components/DashboardLayout'
 import matchService from '../services/matchService'
+import { useAuth } from '../context/AuthContext'
+import api from '../services/api'
 import { T } from '../theme'
 
 export default function Statistics() {
-  const [matches,  setMatches]  = useState([])
-  const [loading,  setLoading]  = useState(true)
-  const [isMobile, setIsMobile] = useState(false)
+  const { user } = useAuth()
+  const [matches,       setMatches]       = useState([])
+  const [loading,       setLoading]       = useState(true)
+  const [isMobile,      setIsMobile]      = useState(false)
+  const [quotaBlocked,  setQuotaBlocked]  = useState(false) // trial épuisé ou pas de sub
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -24,6 +28,22 @@ export default function Statistics() {
     })()
   }, [])
 
+  // Vérifier si le quota est épuisé pour désactiver le bouton upload
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const { data } = await api.get('/subscription/trial-status')
+        // Bloqué si : pas de sub, trial expiré, ou trial actif avec match déjà utilisé
+        const noSub      = data.access === 'no_trial'
+        const expired    = data.access === 'expired'
+        const trialUsed  = data.trial_active && data.match_used === true
+        setQuotaBlocked(noSub || expired || trialUsed)
+      } catch {
+        setQuotaBlocked(false) // En cas d'erreur réseau, on laisse passer
+      }
+    })()
+  }, [])
+
   const completed = matches.filter(m => m.status === 'completed')
   const pending   = matches.filter(m => m.status === 'pending' || m.status === 'processing')
 
@@ -33,7 +53,6 @@ export default function Statistics() {
     'Progression match après match',
     'Comparaison joueurs côte à côte',
     'Analyse possession, passes, tirs, duels',
-    'Distance parcourue et intensité physique',
     'Export PDF du rapport complet',
   ]
 
@@ -140,17 +159,29 @@ export default function Statistics() {
               <p style={{ fontFamily: T.mono, fontSize: 11, color: 'rgba(245,242,235,0.45)', lineHeight: 1.7, marginBottom: 24 }}>
                 Uploadez et lancez l'analyse d'un match. Notre IA génère automatiquement toutes vos statistiques.
               </p>
-              <Link to="/dashboard/matches/upload" style={{
-                display: 'inline-flex', alignItems: 'center', gap: 8,
-                padding: '11px 20px', background: T.gold, color: T.dark,
-                fontFamily: T.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', fontWeight: 700,
-                textDecoration: 'none', transition: 'background .12s',
-              }}
-                onMouseEnter={e => e.currentTarget.style.background = T.goldD}
-                onMouseLeave={e => e.currentTarget.style.background = T.gold}
-              >
-                <Zap size={11} /> Analyser un match
-              </Link>
+              {quotaBlocked ? (
+                <div style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 8,
+                  padding: '11px 20px', background: 'rgba(201,162,39,0.12)',
+                  border: `1px solid ${T.goldBdr}`,
+                  fontFamily: T.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase',
+                  color: 'rgba(201,162,39,0.45)', cursor: 'not-allowed',
+                }}>
+                  <Lock size={11} /> Match offert utilisé
+                </div>
+              ) : (
+                <Link to="/dashboard/matches/upload" style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 8,
+                  padding: '11px 20px', background: T.gold, color: T.dark,
+                  fontFamily: T.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', fontWeight: 700,
+                  textDecoration: 'none', transition: 'background .12s',
+                }}
+                  onMouseEnter={e => e.currentTarget.style.background = T.goldD}
+                  onMouseLeave={e => e.currentTarget.style.background = T.gold}
+                >
+                  <Zap size={11} /> Analyser un match
+                </Link>
+              )}
 
               {pending.length > 0 && (
                 <div style={{ marginTop: 16, padding: '12px 14px', background: 'rgba(37,99,235,0.1)', border: '1px solid rgba(37,99,235,0.2)', display: 'flex', alignItems: 'center', gap: 10 }}>
