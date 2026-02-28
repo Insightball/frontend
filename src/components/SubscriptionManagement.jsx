@@ -517,7 +517,7 @@ export default function SubscriptionManagement() {
             {sub.current_period_end && (
               <div style={{ background: G.bg2, padding: '16px 20px' }}>
                 <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted, marginBottom: 6 }}>
-                  {isTrialing ? 'Premier débit le' : sub?.cancel_at_period_end ? "Actif jusqu'au" : 'Renouvellement'}
+                  {isTrialing && !sub?.cancel_at_period_end ? 'Premier débit le' : sub?.cancel_at_period_end ? "Accès jusqu'au" : 'Renouvellement'}
                 </div>
                 <div style={{ fontFamily: G.mono, fontSize: 13, color: G.text }}>
                   {new Date(sub.current_period_end * 1000).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
