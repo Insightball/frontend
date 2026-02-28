@@ -362,6 +362,13 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
   const [showCoachModal, setShowCoachModal]         = useState(false)
   const [showCancelSubModal, setShowCancelSubModal] = useState(false)
   const [copied, setCopied]                         = useState(false)
+  const [isMobile, setIsMobile]                     = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check(); window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   useEffect(() => { loadAll() }, [])
 
@@ -506,7 +513,7 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
           </div>
 
           {/* Plan + dates */}
-          <div style={{ background: G.border, display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+          <div style={{ background: G.border, display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr' }}>
             <div style={{ background: G.bg2, padding: '16px 20px' }}>
               <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted, marginBottom: 6 }}>Plan</div>
               <div style={{ fontFamily: G.display, fontSize: 28, color: G.gold }}>{user?.plan}</div>
@@ -524,7 +531,7 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
           </div>
 
           {/* Actions */}
-          <div style={{ background: G.bg2, padding: '16px 20px', display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <div style={{ background: G.bg2, padding: '16px 20px', display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 10, flexWrap: 'wrap' }}>
             {!isTrialing && (
               <button onClick={handlePortal} disabled={portalLoading} style={{
                 display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px',
@@ -639,7 +646,7 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
             {isExpired ? 'Votre essai est terminé. Choisissez un plan pour continuer.' : 'Choisissez le plan adapté à votre structure'}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: G.border }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 1, background: G.border }}>
             {PLANS.map(plan => {
               const Icon = plan.icon
               const isCurrent = user?.plan === plan.id
