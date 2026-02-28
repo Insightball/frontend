@@ -5,15 +5,19 @@ import DashboardLayout from '../components/DashboardLayout'
 import PlayerStatsCard from '../components/PlayerStatsCard'
 import HeatmapPlayer from '../components/HeatmapPlayer'
 import MatchTimeline from '../components/MatchTimeline'
+import { T, globalStyles } from '../theme'
 
 const API = 'https://backend-pued.onrender.com/api'
 
 const G = {
-  bg: '#0a0908', bg2: '#0f0e0c', bg3: '#141210',
-  gold: '#c9a227', goldD: '#a8861f', goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.25)',
-  mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
-  border: 'rgba(255,255,255,0.07)', muted: 'rgba(245,242,235,0.45)',
-  text: '#f5f2eb', green: '#22c55e', red: '#ef4444',
+  bg:     T.bg,       bg2:    T.surface,  bg3: T.bgAlt,
+  gold:   T.gold,     goldD:  T.goldD,
+  goldBg: T.goldBg,   goldBdr:T.goldBdr,
+  mono:   T.mono,     display:T.display,
+  border: T.ruleDark,
+  muted:  T.muted,
+  text:   T.ink,
+  green:  T.green,    red: T.red,
 }
 
 function authHeaders() {
@@ -39,21 +43,21 @@ function StatusBadge({ status, progress }) {
 
 function StatBox({ label, value }) {
   return (
-    <div style={{ background: G.bg2, border: `1px solid ${G.border}`, padding: '18px 14px', borderTop: `2px solid ${G.goldBdr}` }}>
-      <div style={{ fontFamily: G.display, fontSize: 36, color: G.text, lineHeight: 1, marginBottom: 6 }}>{value ?? '—'}</div>
-      <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>{label}</div>
+    <div style={{ background: T.surface, border: `1px solid ${T.rule}`, padding: '18px 14px', borderTop: `2px solid ${G.goldBdr}` }}>
+      <div style={{ fontFamily: T.display, fontSize: 36, color: T.ink, lineHeight: 1, marginBottom: 6 }}>{value ?? '—'}</div>
+      <div style={{ fontFamily: T.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: T.muted }}>{label}</div>
     </div>
   )
 }
 
 function EmptyTab({ label }) {
   return (
-    <div style={{ background: G.bg2, border: `1px solid ${G.border}`, padding: '64px 24px', textAlign: 'center' }}>
+    <div style={{ background: T.surface, border: `1px solid ${T.rule}`, padding: '64px 24px', textAlign: 'center' }}>
       <div style={{ width: 44, height: 44, background: G.goldBg, border: `1px solid ${G.goldBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
         <span style={{ fontFamily: G.mono, fontSize: 14, color: G.gold }}>⏳</span>
       </div>
-      <h3 style={{ fontFamily: G.display, fontSize: 22, textTransform: 'uppercase', letterSpacing: '.04em', color: G.text, marginBottom: 8 }}>{label}</h3>
-      <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.08em', color: G.muted }}>Disponible prochainement</p>
+      <h3 style={{ fontFamily: G.display, fontSize: 22, textTransform: 'uppercase', letterSpacing: '.04em', color: T.ink, marginBottom: 8 }}>{label}</h3>
+      <p style={{ fontFamily: T.mono, fontSize: 10, letterSpacing: '.08em', color: T.muted }}>Disponible prochainement</p>
     </div>
   )
 }
@@ -62,6 +66,12 @@ function MatchDetail() {
   const { matchId } = useParams()
   const navigate = useNavigate()
   const [match, setMatch] = useState(null)
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check(); window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [activeTab, setActiveTab] = useState('overview')
@@ -89,7 +99,7 @@ function MatchDetail() {
 
   if (loading) return (
     <DashboardLayout>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 300, fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted }}>Chargement...</div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 300, fontFamily: T.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', color: T.muted }}>Chargement...</div>
     </DashboardLayout>
   )
 
@@ -97,7 +107,7 @@ function MatchDetail() {
     <DashboardLayout>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 300, gap: 16 }}>
         <AlertCircle size={32} color={G.red} />
-        <div style={{ fontFamily: G.mono, fontSize: 12, color: G.muted }}>{error || 'Match introuvable'}</div>
+        <div style={{ fontFamily: T.mono, fontSize: 12, color: T.muted }}>{error || 'Match introuvable'}</div>
         <button onClick={() => navigate(-1)} style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.gold, background: 'none', border: 'none', cursor: 'pointer' }}>← Retour</button>
       </div>
     </DashboardLayout>
@@ -137,11 +147,12 @@ function MatchDetail() {
 
   return (
     <DashboardLayout>
-      {/* Header */}
+      <style>{globalStyles}</style>
+      {/* Header */
       <div style={{ marginBottom: 28 }}>
-        <button onClick={() => navigate(-1)} style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', cursor: 'pointer', fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted, marginBottom: 20, padding: 0, transition: 'color .15s' }}
+        <button onClick={() => navigate(-1)} style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', cursor: 'pointer', fontFamily: T.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: T.muted, marginBottom: 20, padding: 0, transition: 'color .15s' }}
           onMouseEnter={e => e.currentTarget.style.color = G.gold}
-          onMouseLeave={e => e.currentTarget.style.color = G.muted}>
+          onMouseLeave={e => e.currentTarget.style.color = T.muted}>
           <ArrowLeft size={14} /> Retour aux matchs
         </button>
 
@@ -151,20 +162,20 @@ function MatchDetail() {
               <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />
               {match.category} · {match.type} · {new Date(match.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
             </div>
-            <h1 style={{ fontFamily: G.display, fontSize: 44, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: G.text, margin: '0 0 12px' }}>
+            <h1 style={{ fontFamily: T.display, fontSize: 44, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: T.ink, margin: '0 0 12px' }}>
               vs {match.opponent}
             </h1>
             <StatusBadge status={match.status} progress={match.progress} />
           </div>
 
           <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-            <button onClick={handleShare} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 18px', background: 'transparent', border: `1px solid ${G.border}`, color: G.muted, fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .15s' }}
+            <button onClick={handleShare} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 18px', background: 'transparent', border: `1px solid ${T.rule}`, color: T.muted, fontFamily: T.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .15s' }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = G.goldBdr; e.currentTarget.style.color = G.gold }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = G.border; e.currentTarget.style.color = G.muted }}>
+              onMouseLeave={e => { e.currentTarget.style.borderColor = T.rule; e.currentTarget.style.color = T.muted }}>
               <Share2 size={12} /> Partager
             </button>
             {match.pdf_url && (
-              <button onClick={handleDownloadPDF} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 18px', background: G.gold, color: G.bg, fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', fontWeight: 700, border: 'none', cursor: 'pointer', transition: 'background .15s' }}
+              <button onClick={handleDownloadPDF} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 18px', background: T.gold, color: T.dark, fontFamily: T.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', fontWeight: 700, border: 'none', cursor: 'pointer', transition: 'background .15s' }}
                 onMouseEnter={e => e.currentTarget.style.background = G.goldD}
                 onMouseLeave={e => e.currentTarget.style.background = G.gold}>
                 <Download size={12} /> PDF
@@ -174,44 +185,44 @@ function MatchDetail() {
         </div>
 
         {/* Score card */}
-        <div style={{ marginTop: 24, background: G.bg2, border: `1px solid ${G.border}`, borderTop: `2px solid ${resultColor}`, padding: '28px 36px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 40 }}>
+        <div style={{ marginTop: 24, background: T.surface, border: `1px solid ${T.rule}`, borderTop: `2px solid ${resultColor}`, padding: isMobile ? '20px 16px' : '28px 36px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: isMobile ? 20 : 40 }}>
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted, marginBottom: 8 }}>
+            <div style={{ fontFamily: T.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', color: T.muted, marginBottom: 8 }}>
               {isHome ? 'Domicile' : match.opponent}
             </div>
-            <div style={{ fontFamily: G.display, fontSize: 80, lineHeight: 1, color: G.text }}>{hasScore ? scoreHome : '?'}</div>
+            <div style={{ fontFamily: G.display, fontSize: isMobile ? 52 : 80, lineHeight: 1, color: T.ink }}>{hasScore ? scoreHome : '?'}</div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontFamily: G.mono, fontSize: 22, color: G.border }}>—</span>
+            <span style={{ fontFamily: T.mono, fontSize: 22, color: T.rule }}>—</span>
             <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', padding: '4px 14px', background: resultColor + '18', color: resultColor, border: `1px solid ${resultColor}30` }}>{resultLabel}</span>
           </div>
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted, marginBottom: 8 }}>
+            <div style={{ fontFamily: T.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', color: T.muted, marginBottom: 8 }}>
               {isHome ? match.opponent : 'Extérieur'}
             </div>
-            <div style={{ fontFamily: G.display, fontSize: 80, lineHeight: 1, color: G.text }}>{hasScore ? scoreAway : '?'}</div>
+            <div style={{ fontFamily: G.display, fontSize: isMobile ? 52 : 80, lineHeight: 1, color: T.ink }}>{hasScore ? scoreAway : '?'}</div>
           </div>
         </div>
 
         {/* Infos contexte */}
         {(match.competition || match.location || match.formation) && (
-          <div style={{ marginTop: 1, background: G.bg2, border: `1px solid ${G.border}`, borderTop: 'none', padding: '12px 36px', display: 'flex', gap: 32 }}>
-            {match.competition && <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted }}><span style={{ color: G.gold, marginRight: 8 }}>Compétition</span>{match.competition}</div>}
-            {match.location && <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted }}><span style={{ color: G.gold, marginRight: 8 }}>Lieu</span>{match.location}</div>}
-            {match.formation && <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted }}><span style={{ color: G.gold, marginRight: 8 }}>Formation</span>{match.formation}</div>}
-            {match.opponent_formation && <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted }}><span style={{ color: G.gold, marginRight: 8 }}>Adversaire</span>{match.opponent_formation}</div>}
+          <div style={{ marginTop: 1, background: T.bgAlt, border: `1px solid ${T.rule}`, borderTop: 'none', padding: '12px 24px', display: 'flex', gap: 24, flexWrap: 'wrap' }}>
+            {match.competition && <div style={{ fontFamily: T.mono, fontSize: 9, color: T.muted }}><span style={{ color: T.gold, marginRight: 8 }}>Compétition</span>{match.competition}</div>}
+            {match.location && <div style={{ fontFamily: T.mono, fontSize: 9, color: T.muted }}><span style={{ color: T.gold, marginRight: 8 }}>Lieu</span>{match.location}</div>}
+            {match.formation && <div style={{ fontFamily: T.mono, fontSize: 9, color: T.muted }}><span style={{ color: T.gold, marginRight: 8 }}>Formation</span>{match.formation}</div>}
+            {match.opponent_formation && <div style={{ fontFamily: T.mono, fontSize: 9, color: T.muted }}><span style={{ color: T.gold, marginRight: 8 }}>Adversaire</span>{match.opponent_formation}</div>}
           </div>
         )}
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid ${G.border}`, marginBottom: 28, overflowX: 'auto' }}>
+      <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid ${T.rule}`, marginBottom: 28, overflowX: 'auto' }}>
         {tabs.map(tab => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
             padding: '12px 20px', fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase',
             background: 'transparent', border: 'none',
             borderBottom: activeTab === tab.id ? `2px solid ${G.gold}` : '2px solid transparent',
-            color: activeTab === tab.id ? G.gold : G.muted,
+            color: activeTab === tab.id ? G.gold : T.muted,
             cursor: 'pointer', transition: 'all .15s', whiteSpace: 'nowrap',
           }}>
             {tab.label}
@@ -225,7 +236,7 @@ function MatchDetail() {
 
           {/* Stats grille */}
           {match.stats && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(120px,1fr))', gap: 1, background: G.border }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(120px,1fr))', gap: 1, background: T.rule }}>
               {[
                 { label: 'Possession',  value: match.stats.possession ? `${match.stats.possession}%` : null },
                 { label: 'Passes',      value: match.stats.passes },
@@ -249,15 +260,15 @@ function MatchDetail() {
 
           {/* Lineup */}
           {match.lineup && (
-            <div style={{ background: G.bg2, border: `1px solid ${G.border}`, borderTop: `2px solid ${G.goldBdr}`, padding: '24px' }}>
-              <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, marginBottom: 16 }}>— Composition</div>
+            <div style={{ background: T.surface, border: `1px solid ${T.rule}`, borderTop: `2px solid ${G.goldBdr}`, padding: '24px' }}>
+              <div style={{ fontFamily: T.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: T.gold, marginBottom: 16 }}>— Composition</div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(140px,1fr))', gap: 8 }}>
                 {(match.lineup.starters || []).map((p, i) => (
-                  <div key={i} style={{ padding: '10px 14px', background: 'rgba(255,255,255,0.02)', border: `1px solid ${G.border}`, display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <span style={{ fontFamily: G.display, fontSize: 18, color: G.gold, width: 24, flexShrink: 0 }}>{p.number}</span>
+                  <div key={i} style={{ padding: '10px 14px', background: T.bgAlt, border: `1px solid ${T.rule}`, display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <span style={{ fontFamily: T.display, fontSize: 18, color: T.gold, width: 24, flexShrink: 0 }}>{p.number}</span>
                     <div>
-                      <div style={{ fontFamily: G.mono, fontSize: 11, color: G.text }}>{p.name}</div>
-                      <div style={{ fontFamily: G.mono, fontSize: 9, color: G.muted }}>{p.position}</div>
+                      <div style={{ fontFamily: T.mono, fontSize: 11, color: T.ink }}>{p.name}</div>
+                      <div style={{ fontFamily: T.mono, fontSize: 9, color: T.muted }}>{p.position}</div>
                     </div>
                   </div>
                 ))}
@@ -267,20 +278,20 @@ function MatchDetail() {
 
           {/* État analyse en attente */}
           {match.status === 'pending' && (
-            <div style={{ background: G.bg2, border: `1px solid ${G.goldBdr}`, borderTop: `2px solid ${G.gold}`, padding: '32px 24px', textAlign: 'center' }}>
+            <div style={{ background: T.surface, border: `1px solid ${T.goldBdr}`, borderTop: `2px solid ${T.gold}`, padding: '32px 24px', textAlign: 'center' }}>
               <Clock size={28} color={G.gold} style={{ marginBottom: 12 }} />
-              <div style={{ fontFamily: G.display, fontSize: 22, textTransform: 'uppercase', color: G.text, marginBottom: 8 }}>Analyse en attente</div>
-              <div style={{ fontFamily: G.mono, fontSize: 10, color: G.muted }}>Votre vidéo a été reçue. L'analyse démarrera automatiquement. Vous serez notifié par email dès que le rapport sera prêt.</div>
+              <div style={{ fontFamily: T.display, fontSize: 22, textTransform: 'uppercase', color: T.ink, marginBottom: 8 }}>Analyse en attente</div>
+              <div style={{ fontFamily: T.mono, fontSize: 10, color: T.muted }}>Votre vidéo a été reçue. L'analyse démarrera automatiquement. Vous serez notifié par email dès que le rapport sera prêt.</div>
             </div>
           )}
 
           {match.status === 'processing' && (
-            <div style={{ background: G.bg2, border: `1px solid rgba(59,130,246,0.3)`, borderTop: `2px solid #3b82f6`, padding: '32px 24px', textAlign: 'center' }}>
-              <div style={{ fontFamily: G.display, fontSize: 22, textTransform: 'uppercase', color: G.text, marginBottom: 12 }}>Analyse en cours</div>
-              <div style={{ background: 'rgba(255,255,255,0.05)', height: 6, borderRadius: 3, overflow: 'hidden', maxWidth: 300, margin: '0 auto 12px' }}>
+            <div style={{ background: T.surface, border: `1px solid ${T.blueBdr}`, borderTop: `2px solid ${T.blue}`, padding: '32px 24px', textAlign: 'center' }}>
+              <div style={{ fontFamily: T.display, fontSize: 22, textTransform: 'uppercase', color: T.ink, marginBottom: 12 }}>Analyse en cours</div>
+              <div style={{ background: T.rule, height: 6, borderRadius: 3, overflow: 'hidden', maxWidth: 300, margin: '0 auto 12px' }}>
                 <div style={{ height: '100%', background: '#3b82f6', width: `${match.progress || 0}%`, transition: 'width .5s' }} />
               </div>
-              <div style={{ fontFamily: G.mono, fontSize: 10, color: G.muted }}>{match.progress || 0}% — Détection joueurs en cours...</div>
+              <div style={{ fontFamily: T.mono, fontSize: 10, color: T.muted }}>{match.progress || 0}% — Détection joueurs en cours...</div>
             </div>
           )}
         </div>
@@ -288,7 +299,7 @@ function MatchDetail() {
 
       {activeTab === 'players' && match.player_stats && (
         <div>
-          <h2 style={{ fontFamily: G.display, fontSize: 28, textTransform: 'uppercase', letterSpacing: '.03em', color: G.text, marginBottom: 20 }}>Stats individuelles</h2>
+          <h2 style={{ fontFamily: T.display, fontSize: 28, textTransform: 'uppercase', letterSpacing: '.03em', color: T.ink, marginBottom: 20 }}>Stats individuelles</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: 16 }}>
             {match.player_stats.map((ps, i) => <PlayerStatsCard key={i} player={ps.player} stats={ps} />)}
           </div>
@@ -296,18 +307,18 @@ function MatchDetail() {
       )}
 
       {activeTab === 'insights' && match.ai_insights && (
-        <div style={{ background: G.bg2, border: `1px solid ${G.border}`, borderTop: `2px solid ${G.gold}`, padding: '32px' }}>
-          <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, marginBottom: 20 }}>— Analyse IA</div>
-          <div style={{ fontFamily: G.mono, fontSize: 13, color: G.text, lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>{match.ai_insights}</div>
+        <div style={{ background: T.surface, border: `1px solid ${T.rule}`, borderTop: `2px solid ${G.gold}`, padding: '32px' }}>
+          <div style={{ fontFamily: T.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: T.gold, marginBottom: 20 }}>— Analyse IA</div>
+          <div style={{ fontFamily: T.mono, fontSize: 13, color: T.ink, lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>{match.ai_insights}</div>
         </div>
       )}
 
       {activeTab === 'report' && match.pdf_url && (
-        <div style={{ background: G.bg2, border: `1px solid ${G.border}`, borderTop: `2px solid ${G.gold}`, padding: '48px 24px', textAlign: 'center' }}>
+        <div style={{ background: T.surface, border: `1px solid ${T.rule}`, borderTop: `2px solid ${G.gold}`, padding: '48px 24px', textAlign: 'center' }}>
           <Download size={28} color={G.gold} style={{ marginBottom: 16 }} />
-          <div style={{ fontFamily: G.display, fontSize: 22, textTransform: 'uppercase', color: G.text, marginBottom: 8 }}>Rapport disponible</div>
-          <div style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, marginBottom: 24 }}>Téléchargez le rapport complet de l'analyse de ce match.</div>
-          <button onClick={handleDownloadPDF} style={{ padding: '14px 32px', background: G.gold, color: G.bg, fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
+          <div style={{ fontFamily: T.display, fontSize: 22, textTransform: 'uppercase', color: T.ink, marginBottom: 8 }}>Rapport disponible</div>
+          <div style={{ fontFamily: T.mono, fontSize: 10, color: T.muted, marginBottom: 24 }}>Téléchargez le rapport complet de l'analyse de ce match.</div>
+          <button onClick={handleDownloadPDF} style={{ padding: '14px 32px', background: G.gold, color: T.dark, fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
             Télécharger le PDF
           </button>
         </div>

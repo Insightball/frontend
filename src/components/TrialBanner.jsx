@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 import { Clock, X, AlertTriangle, CreditCard } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
+import { T } from '../theme'
 
-const G = { mono: "'JetBrains Mono', monospace" }
 
 export default function TrialBanner() {
   const { user }                  = useAuth()
@@ -60,7 +60,7 @@ export default function TrialBanner() {
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1, minWidth: 0 }}>
         <Icon size={14} color={color} style={{ flexShrink: 0 }} />
-        <span style={{ fontFamily: G.mono, fontSize: 11, letterSpacing: '.06em', color, fontWeight: 700 }}>
+        <span style={{ fontFamily: T.mono, fontSize: 11, letterSpacing: '.06em', color, fontWeight: 700 }}>
           {mainMsg}
         </span>
       </div>
@@ -68,7 +68,7 @@ export default function TrialBanner() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
         <Link to="/dashboard/settings" style={{
           display: 'flex', alignItems: 'center', gap: 6,
-          fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase',
+          fontFamily: T.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase',
           padding: '6px 16px', background: color, color: '#fff',
           textDecoration: 'none', fontWeight: 700, whiteSpace: 'nowrap',
           transition: 'opacity .15s',

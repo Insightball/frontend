@@ -3,16 +3,17 @@ import { useNavigate } from 'react-router-dom'
 import { Zap, ArrowRight, Check, Lock, X } from 'lucide-react'
 import api from '../services/api'
 import { useAuth } from '../context/AuthContext'
+import { T, globalStyles } from '../theme'
 
-const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');`
-
+// Overlay fullscreen → intentionnellement dark
 const G = {
-  bg: '#0a0908', bg2: '#0f0e0c',
-  gold: '#c9a227', goldD: '#a8861f',
-  goldBg: 'rgba(201,162,39,0.08)', goldBdr: 'rgba(201,162,39,0.25)',
-  mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
-  border: 'rgba(255,255,255,0.07)', muted: 'rgba(245,242,235,0.50)',
-  text: '#f5f2eb',
+  bg:     T.dark,    bg2:     T.dark2,
+  gold:   T.gold,    goldD:   T.goldD,
+  goldBg: T.goldBg2, goldBdr: T.goldBdr,
+  mono:   T.mono,    display: T.display,
+  border: 'rgba(255,255,255,0.07)',
+  muted:  'rgba(245,242,235,0.50)',
+  text:   '#f5f2eb',
 }
 
 function Spinner() {
@@ -57,13 +58,7 @@ export default function TrialUpgradeGate({ onClose }) {
 
   return (
     <>
-      <style>{`
-        ${FONTS}
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-        @keyframes slideUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
-        @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.6; } }
-      `}</style>
+      <style>{`${globalStyles} @keyframes fadeIn{from{opacity:0}to{opacity:1}} @keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}} @keyframes spin{to{transform:rotate(360deg)}}`}</style>
 
       {/* Overlay */}
       <div style={{
