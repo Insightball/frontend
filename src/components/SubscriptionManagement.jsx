@@ -274,7 +274,8 @@ function InlineCardForm({ plan, onSuccess, onCancel }) {
       })
       onSuccess()
     } catch (e) {
-      setCardError(e?.response?.data?.detail || 'Erreur lors du paiement')
+      const detail = e?.response?.data?.detail
+      setCardError(typeof detail === 'string' ? detail : 'Erreur lors du paiement')
       setPaying(false)
     }
   }
@@ -417,7 +418,8 @@ export default function SubscriptionManagement() {
       await loadAll()
       if (refreshUser) refreshUser()
     } catch (e) {
-      setError(e?.response?.data?.detail || "Erreur lors de l'activation")
+      const detail = e?.response?.data?.detail
+      setError(typeof detail === 'string' ? detail : "Erreur lors de l'activation")
       setShowCoachModal(false)
     } finally {
       setUpgradeLoading(false)
