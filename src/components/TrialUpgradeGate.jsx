@@ -29,6 +29,7 @@ export default function TrialUpgradeGate({ onClose }) {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [confirming, setConfirming] = useState(false) // étape confirmation avant débit
   const [error, setError] = useState('')
 
   const handleConfirmCoach = async () => {
@@ -46,6 +47,7 @@ export default function TrialUpgradeGate({ onClose }) {
       const detail = e?.response?.data?.detail
       setError(typeof detail === 'string' ? detail : 'Erreur — réessayez')
       setLoading(false)
+      setConfirming(false)
     }
   }
 
@@ -147,8 +149,10 @@ export default function TrialUpgradeGate({ onClose }) {
           {/* CTA */}
           <div style={{ padding: '20px 32px 28px' }}>
             {error && (
-              <div style={{ marginBottom: 12, fontFamily: G.mono, fontSize: 10, color: '#ef4444' }}>
-                {error}
+              <div style={{ marginBottom: 12, padding: '12px 14px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ fontFamily: G.mono, fontSize: 10, color: '#ef4444', letterSpacing: '.04em' }}>
+                  ⚠ {error}
+                </span>
               </div>
             )}
 
@@ -163,25 +167,76 @@ export default function TrialUpgradeGate({ onClose }) {
                   Plan activé — redirection en cours...
                 </span>
               </div>
+            ) : confirming ? (
+              // ── Étape confirmation — résumé avant débit ──
+              <>
+                <div style={{ marginBottom: 16, padding: '14px 16px', background: G.goldBg, border: `1px solid ${G.goldBdr}` }}>
+                  <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 10 }}>
+                    Ce qui va se passer
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    {[
+                      '⚡ Votre trial se termine maintenant',
+                      '💳 39€ prélevés immédiatement',
+                      '📊 4 matchs/mois débloqués',
+                      '🔁 Renouvellement mensuel automatique',
+                      '❌ Résiliable à tout moment depuis les paramètres',
+                    ].map(item => (
+                      <div key={item} style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, lineHeight: 1.5 }}>{item}</div>
+                    ))}
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: 10, marginBottom: 12 }}>
+                  <button
+                    onClick={() => { setConfirming(false); setError('') }}
+                    style={{
+                      flex: 1, padding: '13px', background: 'transparent',
+                      border: `1px solid ${G.border}`, fontFamily: G.mono, fontSize: 9,
+                      letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    onClick={handleConfirmCoach}
+                    disabled={loading}
+                    style={{
+                      flex: 2, padding: '13px',
+                      background: loading ? 'rgba(201,162,39,0.5)' : G.gold,
+                      border: 'none', color: G.bg,
+                      fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em',
+                      textTransform: 'uppercase', fontWeight: 700,
+                      cursor: loading ? 'not-allowed' : 'pointer',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                      transition: 'background .15s',
+                    }}
+                    onMouseEnter={e => { if (!loading) e.currentTarget.style.background = G.goldD }}
+                    onMouseLeave={e => { if (!loading) e.currentTarget.style.background = G.gold }}
+                  >
+                    {loading ? <><Spinner /> Activation...</> : <>💳 Payer 39€ maintenant</>}
+                  </button>
+                </div>
+              </>
             ) : (
+              // ── Bouton principal ──
               <>
                 <button
-                  onClick={handleConfirmCoach}
-                  disabled={loading}
+                  onClick={() => setConfirming(true)}
                   style={{
                     width: '100%', padding: '15px',
-                    background: loading ? 'rgba(201,162,39,0.5)' : G.gold,
+                    background: G.gold,
                     border: 'none', color: G.bg,
                     fontFamily: G.mono, fontSize: 11, letterSpacing: '.14em',
                     textTransform: 'uppercase', fontWeight: 700,
-                    cursor: loading ? 'not-allowed' : 'pointer',
+                    cursor: 'pointer',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
                     marginBottom: 12, transition: 'background .15s',
                   }}
-                  onMouseEnter={e => { if (!loading) e.currentTarget.style.background = G.goldD }}
-                  onMouseLeave={e => { if (!loading) e.currentTarget.style.background = G.gold }}
+                  onMouseEnter={e => e.currentTarget.style.background = G.goldD}
+                  onMouseLeave={e => e.currentTarget.style.background = G.gold}
                 >
-                  {loading ? <><Spinner /> Activation...</> : <>Activer le plan Coach <ArrowRight size={13} /></>}
+                  Activer le plan Coach <ArrowRight size={13} />
                 </button>
 
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
