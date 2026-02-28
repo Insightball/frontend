@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Calendar, Users, Film, CheckCircle, Clock, ArrowRight, AlertCircle, Upload, Zap, Activity } from 'lucide-react'
+import { Calendar, Users, Film, CheckCircle, Clock, ArrowRight, AlertCircle, Upload, Zap, Activity, ChevronRight } from 'lucide-react'
 import DashboardLayout from '../components/DashboardLayout'
 import { useAuth } from '../context/AuthContext'
 import matchService from '../services/matchService'
