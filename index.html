@@ -132,6 +132,9 @@
 
     <!-- Theme mobile -->
     <meta name="theme-color" content="#0a0908" />
+
+    <!-- Cache le contenu SEO statique — React l'écrase au mount, Googlebot lit le HTML source -->
+    <style>#root > header, #root > main, #root > footer { display: none }</style>
   </head>
   <body>
     <!--
