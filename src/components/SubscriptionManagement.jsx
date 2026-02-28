@@ -143,7 +143,7 @@ function ConfirmCoachModal({ isTrialing, onConfirm, onCancel, loading }) {
                 </div>
               </div>
 
-              {isTrialing && (
+              {isTrialing && !sub?.cancel_at_period_end && (
                 <div style={{ padding: '12px 14px', background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.2)', marginBottom: 16, display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                   <AlertCircle size={13} color={G.orange} style={{ flexShrink: 0, marginTop: 1 }} />
                   <p style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(245,242,235,0.70)', lineHeight: 1.6, margin: 0 }}>
@@ -610,7 +610,7 @@ export default function SubscriptionManagement() {
           {isTrialing && (
             <div style={{ background: G.bg2, padding: '10px 20px', borderTop: `1px solid ${G.border}` }}>
               <p style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.30)', margin: 0, lineHeight: 1.6 }}>
-                Annulation en 1 clic · Aucune question posée · Aucun débit si annulé avant la fin du trial
+                Annulation en 1 clic · Aucun débit si annulé avant la fin du trial
               </p>
             </div>
           )}
