@@ -420,7 +420,7 @@ export default function SubscriptionManagement() {
   const confirmCoach = async () => {
     setUpgradeLoading(true); setError('')
     try {
-      await api.post('/subscription/upgrade-plan', { plan: 'COACH' })
+      await api.post('/subscription/confirm-plan', { plan: 'COACH' })
       setShowCoachModal(false)
       setSuccess('Plan Coach activé ! 4 matchs/mois débloqués.')
       await loadAll()
