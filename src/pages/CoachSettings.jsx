@@ -1,16 +1,19 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Trash2, AlertTriangle, X, User, Mail, Shield } from 'lucide-react'
 import DashboardLayout from '../components/DashboardLayout'
 import { useAuth } from '../context/AuthContext'
 import SubscriptionManagement from '../components/SubscriptionManagement'
+import { T, globalStyles } from '../theme'
 
+// CoachSettings : fond CREAM (pages), modales restent dark via SubscriptionManagement
 const G = {
-  bg: '#0a0908', bg2: '#0f0e0c',
-  gold: '#c9a227', goldD: '#a8861f',
-  goldBg: 'rgba(201,162,39,0.08)', goldBdr: 'rgba(201,162,39,0.25)',
-  mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
-  border: 'rgba(255,255,255,0.07)', muted: 'rgba(245,242,235,0.62)',
-  text: '#f5f2eb',
+  bg:     T.bg,       bg2:    T.surface,
+  gold:   T.gold,     goldD:  T.goldD,
+  goldBg: T.goldBg,   goldBdr:T.goldBdr,
+  mono:   T.mono,     display:T.display,
+  border: T.ruleDark,
+  muted:  T.muted2,
+  text:   T.ink,
 }
 
 function Section({ title, accent, children }) {
@@ -26,6 +29,7 @@ function Section({ title, accent, children }) {
 
 export default function CoachSettings() {
   const { user } = useAuth()
+  const [isMobile, setIsMobile] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleteConfirm, setDeleteConfirm] = useState('')
   const [deleteLoading, setDeleteLoading] = useState(false)
@@ -48,19 +52,26 @@ export default function CoachSettings() {
     }
   }
 
+  React.useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check(); window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+
   return (
     <DashboardLayout>
+      <style>{globalStyles}</style>
       {/* Header */}
       <div style={{ marginBottom: 32 }}>
         <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
           <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />Paramètres
         </div>
-        <h1 style={{ fontFamily: G.display, fontSize: 52, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: G.text, margin: 0 }}>
+        <h1 style={{ fontFamily: G.display, fontSize: isMobile ? 32 : 52, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: G.text, margin: 0 }}>
           Mon<br /><span style={{ color: G.gold }}>compte.</span>
         </h1>
       </div>
 
-      <div style={{ maxWidth: 600, display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
+      <div style={{ maxWidth: isMobile ? '100%' : 600, display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
 
         {/* Infos compte */}
         <Section title="Informations" accent={G.gold}>
@@ -109,11 +120,11 @@ export default function CoachSettings() {
       {/* Modale suppression */}
       {showDeleteModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}>
-          <div style={{ background: G.bg2, width: '100%', maxWidth: 440, border: `1px solid rgba(239,68,68,0.3)`, borderTop: `2px solid #ef4444` }}>
+          <div style={{ background: T.dark, width: '100%', maxWidth: 440, border: `1px solid rgba(239,68,68,0.3)`, borderTop: `2px solid #ef4444` }}>
             <div style={{ padding: '20px 24px', borderBottom: `1px solid ${G.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <AlertTriangle size={16} color="#ef4444" />
-                <span style={{ fontFamily: G.display, fontSize: 18, textTransform: 'uppercase', color: G.text }}>Supprimer le compte</span>
+                <span style={{ fontFamily: G.display, fontSize: 18, textTransform: 'uppercase', color: '#f5f2eb' }}>Supprimer le compte</span>
               </div>
               <button onClick={() => { setShowDeleteModal(false); setDeleteConfirm('') }} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
                 <X size={16} color={G.muted} />
@@ -122,7 +133,7 @@ export default function CoachSettings() {
             <div style={{ padding: '24px' }}>
               <div style={{ padding: '14px 16px', background: 'rgba(239,68,68,0.06)', border: `1px solid rgba(239,68,68,0.15)`, marginBottom: 24 }}>
                 <p style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(245,242,235,0.7)', lineHeight: 1.7, margin: 0 }}>
-                  Votre compte sera désactivé immédiatement. Toutes vos données seront conservées pendant <strong style={{ color: G.text }}>30 jours</strong> et vous recevrez un email pour récupérer votre compte si vous changez d'avis.
+                  Votre compte sera désactivé immédiatement. Toutes vos données seront conservées pendant <strong style={{ color: '#f5f2eb' }}>30 jours</strong> et vous recevrez un email pour récupérer votre compte si vous changez d'avis.
                 </p>
               </div>
               <div style={{ marginBottom: 20 }}>
@@ -134,7 +145,7 @@ export default function CoachSettings() {
                   style={{
                     width: '100%', background: 'rgba(239,68,68,0.04)',
                     border: `1px solid ${deleteConfirm === 'SUPPRIMER' ? '#ef4444' : 'rgba(239,68,68,0.15)'}`,
-                    padding: '12px 16px', color: G.text, fontFamily: G.mono, fontSize: 13,
+                    padding: '12px 16px', color: '#f5f2eb', fontFamily: G.mono, fontSize: 13,
                     outline: 'none', boxSizing: 'border-box', letterSpacing: '.06em',
                   }} />
               </div>

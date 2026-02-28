@@ -5,7 +5,7 @@ import PlayerCard from '../components/PlayerCard'
 import PlayerForm from '../components/PlayerForm'
 import playerService from '../services/playerService'
 import { useAuth } from '../context/AuthContext'
-import { T } from '../theme'
+import { T, globalStyles } from '../theme'
 
 
 const G = {
@@ -118,21 +118,16 @@ function PlayerManagement() {
 
   return (
     <DashboardLayout>
-      <style>{`
-        ${FONTS} * { box-sizing:border-box; }
-        @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-        @keyframes spin { to { transform:rotate(360deg); } }
-        ::placeholder { color: rgba(245,242,235,0.2); }
-      `}</style>
+      <style>{`${globalStyles} @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } } ::placeholder { color: rgba(26,25,22,0.25); }`}</style>
 
       {/* ── HEADER ── */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28, paddingBottom: 24, borderBottom: `1px solid ${G.border}` }}>
+      <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'stretch' : 'flex-start', gap: isMobile ? 16 : 0, marginBottom: 28, paddingBottom: 24, borderBottom: `1px solid ${G.border}` }}>
         <div>
           <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
             <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />Effectif
           </div>
           {/* "Vos" en texte plein visible */}
-          <h1 style={{ fontFamily: G.display, fontSize: 52, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', margin: 0 }}>
+          <h1 style={{ fontFamily: G.display, fontSize: isMobile ? 32 : 52, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', margin: 0 }}>
             <span style={{ color: G.text }}>Vos</span><br />
             <span style={{ color: G.gold }}>joueurs.</span>
           </h1>
