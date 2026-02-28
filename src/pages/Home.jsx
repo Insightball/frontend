@@ -574,9 +574,9 @@ export default function LandingPage() {
 
           <div className="feat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 1, background: G.border, border: `1px solid ${G.border}` }}>
             {[
-              { n:'01', title:'Stats Collectives', desc:'Vue complète de votre équipe sur chaque match. Comprenez comment vous jouez, pressez, défendez.', items:['Possession & zones de pressing','Heatmap collective','Phases offensives / défensives','Précision des passes','Distance totale & sprints'] },
-              { n:'02', title:'Stats Individuelles', desc:'Une fiche pour chaque joueur. Évaluez objectivement, identifiez les axes de progression.', items:['Heatmap de position individuelle','Ballons touchés / perdus / gagnés','Duels aériens & terrestres','Distance & intensité de course','Comparaison match-à-match'] },
-              { n:'03', title:'Rapport Complet', desc:'Un PDF professionnel exportable en un clic. À partager avec votre staff, vos joueurs, votre direction.', items:['Export PDF mis en page','Résumé tactique narratif IA','Top performers du match','Graphiques & heatmaps inclus','Logo et couleurs de votre club'] },
+              { n:'01', title:'Stats Collectives', desc:'Vue complète de votre équipe sur chaque match. Comprenez comment vous jouez, pressez et défendez.', items:['Possession de balle','Précision des passes','Distance totale & sprints'] },
+              { n:'02', title:'Stats Individuelles', desc:'Une fiche pour chaque joueur. Évaluez objectivement, identifiez les axes de progression.', items:['Heatmap de position individuelle','Ballons touchés / perdus / gagnés','Duels aériens & terrestres','Comparaison match-à-match'] },
+              { n:'03', title:'Rapport Complet', desc:'Un PDF professionnel exportable en un clic. À partager avec votre staff, vos joueurs, votre direction.', items:['Export PDF mis en page','Top performers du match','Graphiques & heatmaps inclus','Logo et couleurs de votre club'] },
             ].map((f, i) => (
               <Reveal key={f.n} delay={i * 0.1}>
                 <div style={{ background: G.white, padding: '36px 32px', height: '100%', transition: 'background .18s', cursor: 'default' }}
@@ -750,13 +750,26 @@ export default function LandingPage() {
             <h2 className="sec-h2" style={{ fontFamily: G.display, fontSize: 'clamp(34px,4vw,54px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.ink, marginBottom: 16 }}>
               Simple et<br/><span style={{ color: G.gold }}>sans surprise.</span>
             </h2>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: G.goldL, border: `1px solid ${G.goldLx}`, borderRadius: 4, padding: '6px 14px', marginBottom: 20 }}>
-              <span style={{ width: 7, height: 7, background: G.gold, borderRadius: '50%', flexShrink: 0, boxShadow: `0 0 0 3px ${G.goldL}` }}/>
-              <span style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: G.gold }}>Accès anticipé — offre limitée</span>
-            </div>
-            <p style={{ fontSize: 17, color: G.muted, lineHeight: 1.65, maxWidth: 480, marginBottom: 56 }}>
-              Deux formules. Une logique : vous payez pour ce que vous utilisez vraiment.
+            <p style={{ fontSize: 17, color: G.muted, lineHeight: 1.65, maxWidth: 480, marginBottom: 32 }}>
+              Deux formules. Zéro matériel, zéro engagement, zéro formation — uploadez et analysez.
             </p>
+
+            {/* ── Bandeau trial ── */}
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 16, background: G.ink, border: `1.5px solid ${G.gold}`, borderRadius: 6, padding: '14px 24px', marginBottom: 48 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ width: 8, height: 8, background: G.gold, borderRadius: '50%', flexShrink: 0, boxShadow: `0 0 0 3px rgba(201,162,39,0.25)` }}/>
+                <span style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: G.gold }}>Offre de lancement limitée</span>
+              </div>
+              <div style={{ width: 1, height: 20, background: 'rgba(201,162,39,0.3)' }}/>
+              <div style={{ display: 'flex', gap: 20 }}>
+                {['1 match analysé offert', '7 jours gratuits', 'Sans engagement'].map((t, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ color: G.gold, fontSize: 13 }}>✓</span>
+                    <span style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(255,255,255,0.75)', letterSpacing: '.04em' }}>{t}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </Reveal>
 
           <div className="price-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, maxWidth: 940, alignItems: 'start' }}>
@@ -768,13 +781,19 @@ export default function LandingPage() {
                 onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>
                 <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted, marginBottom: 6 }}>Pour les coachs</div>
                 <div style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', color: G.ink, marginBottom: 4 }}>Coach</div>
-                <div style={{ fontSize: 14, color: G.muted, marginBottom: 20, lineHeight: 1.55 }}>
-                  Analysez vos matchs en quelques minutes.<br/>Arrêtez de perdre des heures en vidéo.
+                {/* Badge trial */}
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: G.goldL, border: `1px solid ${G.goldLx}`, borderRadius: 4, padding: '5px 12px', marginBottom: 16 }}>
+                  <span style={{ width: 6, height: 6, background: G.gold, borderRadius: '50%' }}/>
+                  <span style={{ fontFamily: G.mono, fontSize: 10, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: G.gold }}>1 match offert · 7 jours gratuits</span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 28 }}>
+                <div style={{ fontSize: 14, color: G.muted, marginBottom: 20, lineHeight: 1.55 }}>
+                  Testez gratuitement sur un vrai match. Sans carte bancaire, sans engagement.
+                </div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 6 }}>
                   <span style={{ fontFamily: G.display, fontSize: 68, fontWeight: 800, lineHeight: 1, color: G.ink }}>39</span>
                   <span style={{ fontSize: 15, color: G.muted }}>€ / mois</span>
                 </div>
+                <p style={{ fontSize: 12, color: G.muted, marginBottom: 24, fontFamily: G.mono, letterSpacing: '.04em' }}>après la période d'essai</p>
                 <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 32 }}>
                   {["4 matchs analysés / mois","1 équipe","Stats collectives & individuelles","Heatmaps & rapport PDF export","Suivi progression sur la saison","Support inclus"].map(item => (
                     <li key={item} style={{ fontSize: 14, color: G.ink2, display: 'flex', alignItems: 'flex-start', gap: 9, lineHeight: 1.5 }}>
@@ -782,10 +801,10 @@ export default function LandingPage() {
                     </li>
                   ))}
                 </ul>
-                <a href="#waitlist" style={{ display: 'block', width: '100%', padding: 13, fontFamily: G.display, fontSize: 15, fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase', textAlign: 'center', textDecoration: 'none', borderRadius: 4, transition: 'all .15s', background: 'transparent', color: G.ink2, border: `1.5px solid ${G.border2}`, boxSizing: 'border-box' }}
-                  onMouseEnter={e => { e.currentTarget.style.background = G.ink; e.currentTarget.style.color = G.white; e.currentTarget.style.borderColor = G.ink }}
-                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = G.ink2; e.currentTarget.style.borderColor = G.border2 }}>
-                  Demander l'accès →
+                <a href="#waitlist" style={{ display: 'block', width: '100%', padding: 14, fontFamily: G.display, fontSize: 15, fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase', textAlign: 'center', textDecoration: 'none', borderRadius: 4, transition: 'all .15s', background: G.gold, color: G.ink, border: 'none', boxSizing: 'border-box' }}
+                  onMouseEnter={e => e.currentTarget.style.background = G.goldD}
+                  onMouseLeave={e => e.currentTarget.style.background = G.gold}>
+                  Commencer gratuitement →
                 </a>
               </div>
             </Reveal>
@@ -835,10 +854,13 @@ export default function LandingPage() {
                   ))}
                 </ul>
 
-                <a href="#waitlist" style={{ display: 'block', width: '100%', padding: 14, fontFamily: G.display, fontSize: 15, fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase', textAlign: 'center', textDecoration: 'none', borderRadius: 4, transition: 'background .15s', background: G.gold, color: G.ink, boxSizing: 'border-box' }}
+                <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)', fontFamily: G.mono, letterSpacing: '.04em', marginBottom: 16, textAlign: 'center' }}>
+                  Pas de trial — démo personnalisée sur demande
+                </div>
+                <a href="#contact" style={{ display: 'block', width: '100%', padding: 14, fontFamily: G.display, fontSize: 15, fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase', textAlign: 'center', textDecoration: 'none', borderRadius: 4, transition: 'background .15s', background: G.gold, color: G.ink, boxSizing: 'border-box' }}
                   onMouseEnter={e => e.currentTarget.style.background = G.goldD}
                   onMouseLeave={e => e.currentTarget.style.background = G.gold}>
-                  Demander l'accès →
+                  Demander une démo →
                 </a>
               </div>
             </Reveal>
@@ -847,7 +869,7 @@ export default function LandingPage() {
 
           <Reveal delay={0.2}>
             <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, marginTop: 28, maxWidth: 940 }}>
-              🔒 Paiement sécurisé Stripe · Résiliable à tout moment · Sans engagement
+              🔒 Paiement sécurisé Stripe · Résiliable à tout moment · Sans engagement · Offre de lancement limitée
             </p>
           </Reveal>
 
