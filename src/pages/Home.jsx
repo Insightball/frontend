@@ -787,7 +787,7 @@ export default function LandingPage() {
                   <span style={{ fontFamily: G.mono, fontSize: 10, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: G.gold }}>1 match offert · 7 jours gratuits</span>
                 </div>
                 <div style={{ fontSize: 14, color: G.muted, marginBottom: 20, lineHeight: 1.55 }}>
-                  Testez gratuitement sur un vrai match. Sans carte bancaire, sans engagement.
+                  Uploadez votre vidéo de match. Le premier est offert, sans engagement.
                 </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 6 }}>
                   <span style={{ fontFamily: G.display, fontSize: 68, fontWeight: 800, lineHeight: 1, color: G.ink }}>39</span>
@@ -827,17 +827,11 @@ export default function LandingPage() {
                 </div>
 
                 {/* 2 blocs valeur */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
+                <div style={{ marginBottom: 24 }}>
                   <div style={{ padding: '13px 15px', background: 'rgba(201,162,39,0.10)', border: '1px solid rgba(201,162,39,0.20)', borderRadius: 6 }}>
                     <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, marginBottom: 5 }}>👁 Visibilité</div>
                     <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', lineHeight: 1.6 }}>
-                      Dashboard consolidé — toutes vos équipes, un seul écran. Le directeur sportif voit son club comme un tout.
-                    </div>
-                  </div>
-                  <div style={{ padding: '13px 15px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 6 }}>
-                    <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', marginBottom: 5 }}>📊 Compréhension</div>
-                    <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.60)', lineHeight: 1.6 }}>
-                      Fini les impressions en réunion de staff. Chaque coach arrive avec les mêmes données. Les décisions sont objectives, rapides, assumées.
+                      Une vue sur l'ensemble de vos équipes. Un seul écran, toutes les données.
                     </div>
                   </div>
                 </div>
