@@ -28,6 +28,12 @@ const Onboarding        = lazy(() => import('./pages/Onboarding'))
 const AdminPanel        = lazy(() => import('./pages/AdminPanel'))
 const ClubDashboard     = lazy(() => import('./pages/ClubDashboard'))
 
+// Pages légales
+const MentionsLegales          = lazy(() => import('./pages/MentionsLegales'))
+const PolitiqueConfidentialite = lazy(() => import('./pages/PolitiqueConfidentialite'))
+const PolitiqueCookies         = lazy(() => import('./pages/PolitiqueCookies'))
+const CGV                      = lazy(() => import('./pages/CGV'))
+
 const PageLoader = () => (
   <div style={{
     minHeight: '100vh', background: '#0a0908',
@@ -75,6 +81,12 @@ function App() {
             <Route path="/demo"                element={<Dashboard />} />
             <Route path="/x-portal-7f2a/plans" element={<SubscriptionPlans />} />
             <Route path="/admin"               element={<AdminPanel />} />
+
+            {/* Pages légales */}
+            <Route path="/mentions-legales" element={<MentionsLegales />} />
+            <Route path="/confidentialite" element={<PolitiqueConfidentialite />} />
+            <Route path="/cookies"         element={<PolitiqueCookies />} />
+            <Route path="/cgv"             element={<CGV />} />
 
             {/* Dashboard protégé */}
             <Route path="/dashboard"                  element={<ProtectedRoute><DashboardHome /></ProtectedRoute>} />
