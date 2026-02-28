@@ -33,13 +33,13 @@ export default function Statistics() {
     ;(async () => {
       try {
         const { data } = await api.get('/subscription/trial-status')
-        // Bloqué si : pas de sub, trial expiré, ou trial actif avec match déjà utilisé
-        const noSub      = data.access === 'no_trial'
-        const expired    = data.access === 'expired'
-        const trialUsed  = data.trial_active && data.match_used === true
-        setQuotaBlocked(noSub || expired || trialUsed)
+        // Bloqué UNIQUEMENT si : trial actif avec match déjà utilisé, ou trial expiré
+        // no_trial (pas de CB) → on laisse passer, le backend gère le 402 à l'upload
+        const expired   = data.access === 'expired'
+        const trialUsed = data.trial_active && data.match_used === true
+        setQuotaBlocked(expired || trialUsed)
       } catch {
-        setQuotaBlocked(false) // En cas d'erreur réseau, on laisse passer
+        setQuotaBlocked(false)
       }
     })()
   }, [])
