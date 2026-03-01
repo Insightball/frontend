@@ -457,6 +457,7 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
     setSuccess('Essai activé ! Bienvenue sur InsightBall.')
     await loadAll()
     if (refreshUser) refreshUser()
+    window.location.reload()
   }
 
   if (loading) return (
