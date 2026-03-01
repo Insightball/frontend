@@ -454,7 +454,7 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
 
   const handlePaymentSuccess = async () => {
     setSelectedPlan(null)
-    setSuccess('Essai activé ! Bienvenue sur InsightBall.')
+    setSuccess('Essai activé ! Bienvenue sur Insightball.')
     await loadAll()
     if (refreshUser) refreshUser()
     window.location.reload()

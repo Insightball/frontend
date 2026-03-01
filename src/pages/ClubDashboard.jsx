@@ -291,7 +291,7 @@ export default function ClubDashboard() {
 
           {/* Description */}
           <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted2, lineHeight: 1.7, marginBottom: 20, maxWidth: 600 }}>
-            Définissez vos indicateurs cibles. InsightBall compare chaque match à ces objectifs et vous dit si vos équipes jouent bien selon votre projet.
+            Définissez vos indicateurs cibles. Insightball compare chaque match à ces objectifs et vous dit si vos équipes jouent bien selon votre projet.
           </p>
 
           {/* Indicateurs */}

@@ -56,7 +56,7 @@ export default function TrialExpired() {
           Période d'essai terminée
         </div>
         <h1 style={{ fontFamily: G.display, fontSize: 'clamp(34px,4vw,50px)', textTransform: 'uppercase', lineHeight: .88, color: G.text, margin: '0 0 14px' }}>
-          Continuez avec<br /><span style={{ color: G.gold }}>INSIGHTBALL.</span>
+          Continuez avec<br /><span style={{ color: G.gold }}>Insightball.</span>
         </h1>
         <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, maxWidth: 400, margin: '0 auto', lineHeight: 1.65 }}>
           Votre essai de 7 jours est terminé. Choisissez votre plan pour accéder à votre dashboard et à toutes vos analyses.

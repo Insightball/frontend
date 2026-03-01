@@ -66,7 +66,7 @@ export default function Signup() {
         padding: '0 40px', zIndex: 100,
       }}>
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <img src="/logo.svg" alt="InsightBall" style={{ width: 28, height: 28 }} />
+          <img src="/logo.svg" alt="Insightball" style={{ width: 28, height: 28 }} />
           <span style={{ fontFamily: G.display, fontSize: 17, letterSpacing: '.08em', color: '#fff' }}>
             INSIGHT<span style={{ color: G.gold }}>BALL</span>
           </span>

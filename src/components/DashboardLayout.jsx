@@ -57,7 +57,7 @@ function DashboardLayout({ children }) {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <img src="/logo.svg" alt="InsightBall" style={{ width: 24, height: 24 }} />
+          <img src="/logo.svg" alt="Insightball" style={{ width: 24, height: 24 }} />
           <span style={{ fontFamily: T.display, fontSize: 14, letterSpacing: '.08em', color: '#f5f2eb' }}>
             INSIGHT<span style={{ color: T.gold }}>BALL</span>
           </span>

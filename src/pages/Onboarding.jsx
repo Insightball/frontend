@@ -471,7 +471,7 @@ export default function Onboarding() {
               <div style={{ padding: '14px 16px', background: G.goldBg, border: `1px solid ${G.goldBdr}`, marginBottom: 16 }}>
                 <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, marginBottom: 6 }}>💡 Notre recommandation</div>
                 <p style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(245,242,235,0.65)', lineHeight: 1.6, margin: 0 }}>
-                  Un smartphone posé sur un trépied en tribune, à 5-7m de hauteur, plan large centré. C'est le setup le plus simple et celui qui donne les meilleurs résultats avec InsightBall.
+                  Un smartphone posé sur un trépied en tribune, à 5-7m de hauteur, plan large centré. C'est le setup le plus simple et celui qui donne les meilleurs résultats avec Insightball.
                 </p>
               </div>
             )}
