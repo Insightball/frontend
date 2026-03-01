@@ -379,13 +379,24 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
         api.get('/subscription/subscription-status'),
         api.get('/subscription/trial-status'),
       ])
-      setSub(subRes.data)
-      setTrialData(trialRes.data)
+      // Sécurité : ne jamais stocker un objet erreur Pydantic comme donnée
+      if (subRes.data && typeof subRes.data === 'object' && !subRes.data.type) {
+        setSub(subRes.data)
+      }
+      if (trialRes.data && typeof trialRes.data === 'object' && !trialRes.data.type) {
+        setTrialData(trialRes.data)
+      }
       // Notifier CoachSettings du statut réel pour le libellé du plan
       if (onTrialStatusChange) {
         onTrialStatusChange(trialRes.data?.trial_active === true)
       }
-    } catch (e) { console.error(e) }
+    } catch (e) {
+      console.error('loadAll error:', e)
+      const detail = e?.response?.data?.detail
+      if (detail) {
+        setError(typeof detail === 'string' ? detail : 'Erreur de chargement de l\'abonnement')
+      }
+    }
     finally { setLoading(false) }
   }
 
@@ -470,14 +481,14 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
       {error && (
         <div style={{ marginBottom: 16, padding: '12px 16px', background: 'rgba(239,68,68,0.08)', borderLeft: `2px solid ${G.red}`, display: 'flex', alignItems: 'center', gap: 8 }}>
           <AlertCircle size={13} color={G.red} />
-          <span style={{ fontFamily: G.mono, fontSize: 11, color: G.red }}>{error}</span>
+          <span style={{ fontFamily: G.mono, fontSize: 11, color: G.red }}>{typeof error === 'string' ? error : 'Une erreur est survenue'}</span>
         </div>
       )}
 
       {success && (
         <div style={{ marginBottom: 16, padding: '12px 16px', background: 'rgba(34,197,94,0.08)', borderLeft: `2px solid ${G.green}`, display: 'flex', alignItems: 'center', gap: 8 }}>
           <CheckCircle size={13} color={G.green} />
-          <span style={{ fontFamily: G.mono, fontSize: 11, color: G.green }}>{success}</span>
+          <span style={{ fontFamily: G.mono, fontSize: 11, color: G.green }}>{typeof success === 'string' ? success : ''}</span>
         </div>
       )}
 
