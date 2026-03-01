@@ -13,11 +13,12 @@ function ProtectedRoute({ children }) {
 
   useEffect(() => {
     if (!isAuthenticated || loading) { setTrialLoading(false); return }
+    setTrialLoading(true)
     api.get('/subscription/trial-status')
       .then(r => setTrialStatus(r.data))
       .catch(() => setTrialStatus({ access: 'trial' })) // fallback permissif
       .finally(() => setTrialLoading(false))
-  }, [isAuthenticated, loading])
+  }, [isAuthenticated, loading, user?.stripe_subscription_id])
 
   // Loader
   if (loading || trialLoading) {
