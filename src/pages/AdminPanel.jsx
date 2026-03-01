@@ -388,6 +388,191 @@ function UsersSection() {
 }
 
 
+// ─── Invitations CLUB ─────────────────────────────────────────────────────────
+
+const INVITE_API = 'https://backend-pued.onrender.com/api/x-admin'
+
+function InviteStatusBadge({ status }) {
+  const map = {
+    pending:  { bg: 'rgba(245,158,11,0.1)', color: G.orange, bdr: 'rgba(245,158,11,0.25)', label: 'En attente' },
+    accepted: { bg: 'rgba(34,197,94,0.1)',  color: G.green,  bdr: 'rgba(34,197,94,0.25)',  label: 'Acceptée' },
+    expired:  { bg: 'rgba(239,68,68,0.1)',  color: G.red,    bdr: 'rgba(239,68,68,0.25)',  label: 'Expirée' },
+  }
+  const s = map[status] || map.pending
+  return <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', padding: '3px 10px', background: s.bg, color: s.color, border: `1px solid ${s.bdr}` }}>{s.label}</span>
+}
+
+function CreateInviteModal({ onClose, onSuccess }) {
+  const [form, setForm] = useState({
+    email: '', first_name: '', last_name: '',
+    club_name: '', city: '',
+    plan_tier: 'CLUB', plan_price: 99, quota_matches: 10,
+  })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const tierPresets = {
+    CLUB:     { plan_price: 99,  quota_matches: 10 },
+    CLUB_PRO: { plan_price: 139, quota_matches: 15 },
+  }
+
+  const handleTierChange = (tier) => {
+    const preset = tierPresets[tier] || tierPresets.CLUB
+    setForm(p => ({ ...p, plan_tier: tier, plan_price: preset.plan_price, quota_matches: preset.quota_matches }))
+  }
+
+  const handleSubmit = async () => {
+    setError('')
+    if (!form.email || !form.club_name) return setError('Email et nom du club requis')
+    if (!form.first_name) return setError('Prénom du DS requis')
+    setLoading(true)
+    try {
+      const res = await fetch(`${INVITE_API}/create-club-invite`, {
+        method: 'POST', headers: authHeaders(),
+        body: JSON.stringify(form),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(typeof data.detail === 'string' ? data.detail : 'Erreur')
+      onSuccess()
+      onClose()
+    } catch (e) { setError(e.message) }
+    finally { setLoading(false) }
+  }
+
+  return (
+    <Modal title="Nouvelle invitation" subtitle="Invitation club" onClose={onClose}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        {error && <div style={{ padding: '10px 14px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', fontFamily: G.mono, fontSize: 11, color: '#ef4444' }}>{error}</div>}
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div><label style={labelStyle}>Prénom</label>
+            <input style={inputStyle} placeholder="Jean" value={form.first_name} onChange={e => setForm(p => ({ ...p, first_name: e.target.value }))} onFocus={e => e.target.style.borderColor = 'rgba(201,162,39,0.3)'} onBlur={e => e.target.style.borderColor = 'rgba(15,15,13,0.15)'} /></div>
+          <div><label style={labelStyle}>Nom</label>
+            <input style={inputStyle} placeholder="Dupont" value={form.last_name} onChange={e => setForm(p => ({ ...p, last_name: e.target.value }))} onFocus={e => e.target.style.borderColor = 'rgba(201,162,39,0.3)'} onBlur={e => e.target.style.borderColor = 'rgba(15,15,13,0.15)'} /></div>
+        </div>
+
+        <div><label style={labelStyle}>Email du DS</label>
+          <input style={inputStyle} type="email" placeholder="directeur@club.fr" value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} onFocus={e => e.target.style.borderColor = 'rgba(201,162,39,0.3)'} onBlur={e => e.target.style.borderColor = 'rgba(15,15,13,0.15)'} /></div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div><label style={labelStyle}>Nom du club</label>
+            <input style={inputStyle} placeholder="FC Toulouse" value={form.club_name} onChange={e => setForm(p => ({ ...p, club_name: e.target.value }))} onFocus={e => e.target.style.borderColor = 'rgba(201,162,39,0.3)'} onBlur={e => e.target.style.borderColor = 'rgba(15,15,13,0.15)'} /></div>
+          <div><label style={labelStyle}>Ville</label>
+            <input style={inputStyle} placeholder="Toulouse" value={form.city} onChange={e => setForm(p => ({ ...p, city: e.target.value }))} onFocus={e => e.target.style.borderColor = 'rgba(201,162,39,0.3)'} onBlur={e => e.target.style.borderColor = 'rgba(15,15,13,0.15)'} /></div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
+          <div><label style={labelStyle}>Palier</label>
+            <select style={{ ...inputStyle, cursor: 'pointer' }} value={form.plan_tier} onChange={e => handleTierChange(e.target.value)}>
+              <option value="CLUB">Club — 99€</option>
+              <option value="CLUB_PRO">Club Pro — 139€</option>
+            </select></div>
+          <div><label style={labelStyle}>Prix (€/mois)</label>
+            <input style={inputStyle} type="number" value={form.plan_price} onChange={e => setForm(p => ({ ...p, plan_price: parseInt(e.target.value) || 0 }))} /></div>
+          <div><label style={labelStyle}>Quota matchs</label>
+            <input style={inputStyle} type="number" value={form.quota_matches} onChange={e => setForm(p => ({ ...p, quota_matches: parseInt(e.target.value) || 0 }))} /></div>
+        </div>
+
+        <div style={{ padding: '12px 14px', background: G.goldBg, border: `1px solid ${G.goldBdr}`, fontFamily: G.mono, fontSize: 10, color: 'rgba(15,15,13,0.55)', lineHeight: 1.7 }}>
+          Un lien unique sera généré. Le DS pourra créer son compte et payer directement via Stripe (CB ou SEPA).
+          <br />Le prix et le quota sont modifiables pour des offres négociées.
+        </div>
+
+        <div style={{ display: 'flex', gap: 10, paddingTop: 4 }}>
+          <button onClick={onClose} style={{ flex: 1, padding: '11px', background: 'transparent', border: '1px solid rgba(15,15,13,0.15)', fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: 'rgba(15,15,13,0.45)', cursor: 'pointer' }}>Annuler</button>
+          <button onClick={handleSubmit} disabled={loading} style={{ flex: 2, padding: '11px', background: loading ? 'rgba(201,162,39,0.4)' : '#c9a227', border: 'none', fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: '#0f0f0d', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer' }}>
+            {loading ? 'Création...' : 'Créer l\'invitation'}
+          </button>
+        </div>
+      </div>
+    </Modal>
+  )
+}
+
+
+function InvitationsSection() {
+  const [invites, setInvites] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [showCreate, setShowCreate] = useState(false)
+  const [copied, setCopied] = useState(null)
+
+  const loadInvites = () => {
+    setLoading(true)
+    fetch(`${INVITE_API}/club-invites`, { headers: authHeaders() })
+      .then(r => r.json()).then(setInvites).finally(() => setLoading(false))
+  }
+
+  useEffect(() => { loadInvites() }, [])
+
+  const deleteInvite = async (id) => {
+    if (!window.confirm('Supprimer cette invitation ?')) return
+    const res = await fetch(`${INVITE_API}/club-invites/${id}`, { method: 'DELETE', headers: authHeaders() })
+    if (res.ok) setInvites(prev => prev.filter(i => i.id !== id))
+    else alert('Erreur lors de la suppression')
+  }
+
+  const copyLink = (token) => {
+    const url = `https://insightball.com/club-invite/${token}`
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(token)
+      setTimeout(() => setCopied(null), 2000)
+    })
+  }
+
+  return (
+    <div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
+        <h2 style={{ fontFamily: G.display, fontSize: 32, textTransform: 'uppercase', letterSpacing: '.03em', color: G.text, margin: 0 }}>Invitations Club</h2>
+        <button onClick={() => setShowCreate(true)} style={{ padding: '10px 20px', background: G.gold, border: 'none', fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: '#0f0f0d', fontWeight: 700, cursor: 'pointer' }}>
+          + Nouvelle invitation
+        </button>
+      </div>
+
+      {loading ? <Loader /> : (
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', background: G.bg3, border: `1px solid ${G.border}` }}>
+            <thead>
+              <tr>{['Club', 'DS', 'Email', 'Palier', 'Prix', 'Quota', 'Statut', 'Créée le', 'Actions'].map(h => <th key={h} style={thStyle}>{h}</th>)}</tr>
+            </thead>
+            <tbody>
+              {invites?.map(inv => (
+                <tr key={inv.id}
+                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(201,162,39,0.06)'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                  style={{ transition: 'background .1s' }}>
+                  <td style={tdStyle}><strong>{inv.club_name}</strong>{inv.city ? <span style={{ color: G.muted, fontSize: 10 }}> · {inv.city}</span> : null}</td>
+                  <td style={tdStyle}>{inv.first_name} {inv.last_name}</td>
+                  <td style={{ ...tdStyle, color: G.muted, fontSize: 10 }}>{inv.email}</td>
+                  <td style={tdStyle}><PlanBadge plan={inv.plan_tier} /></td>
+                  <td style={tdStyle}>{inv.plan_price}€</td>
+                  <td style={tdStyle}>{inv.quota_matches}</td>
+                  <td style={tdStyle}><InviteStatusBadge status={inv.status} /></td>
+                  <td style={{ ...tdStyle, fontSize: 10 }}>{formatDate(inv.created_at)}</td>
+                  <td style={tdStyle} onClick={e => e.stopPropagation()}>
+                    <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                      {inv.status === 'pending' && (
+                        <button onClick={() => copyLink(inv.token)} style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.08em', textTransform: 'uppercase', padding: '4px 10px', background: copied === inv.token ? 'rgba(34,197,94,0.08)' : G.goldBg, color: copied === inv.token ? G.green : G.gold, border: `1px solid ${copied === inv.token ? 'rgba(34,197,94,0.25)' : G.goldBdr}`, cursor: 'pointer', transition: 'all .15s', whiteSpace: 'nowrap' }}>
+                          {copied === inv.token ? '✓ Copié' : 'Copier lien'}
+                        </button>
+                      )}
+                      <button onClick={() => deleteInvite(inv.id)} style={{ padding: '4px 8px', background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)', cursor: 'pointer', color: '#ef4444', fontSize: 13, lineHeight: 1 }}>×</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {invites?.length === 0 && <div style={{ textAlign: 'center', padding: '40px', fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.1em' }}>Aucune invitation créée</div>}
+
+      {showCreate && <CreateInviteModal onClose={() => setShowCreate(false)} onSuccess={loadInvites} />}
+    </div>
+  )
+}
+
+
 // ─── Paiements ────────────────────────────────────────────────────────────────
 
 function PaymentsSection() {
@@ -459,10 +644,11 @@ function LoginsSection() {
 // ─── App principale ───────────────────────────────────────────────────────────
 
 const SECTIONS = [
-  { id: 'dashboard', label: '📊 Dashboard' },
-  { id: 'users',     label: '👥 Utilisateurs' },
-  { id: 'payments',  label: '💳 Paiements' },
-  { id: 'logins',    label: '🔐 Connexions' },
+  { id: 'dashboard',   label: '📊 Dashboard' },
+  { id: 'users',       label: '👥 Utilisateurs' },
+  { id: 'invitations', label: '📩 Invitations' },
+  { id: 'payments',    label: '💳 Paiements' },
+  { id: 'logins',      label: '🔐 Connexions' },
 ]
 
 export default function AdminPanel() {
@@ -509,6 +695,7 @@ export default function AdminPanel() {
       <main style={{ flex: 1, padding: 32, overflowX: 'auto' }}>
         {active === 'dashboard' && <DashboardSection />}
         {active === 'users'     && <UsersSection />}
+        {active === 'invitations' && <InvitationsSection />}
         {active === 'payments'  && <PaymentsSection />}
         {active === 'logins'    && <LoginsSection />}
       </main>
