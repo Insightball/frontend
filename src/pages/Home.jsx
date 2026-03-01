@@ -332,10 +332,10 @@ export default function LandingPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       })
-      setWlSent(true)
     } catch {
-      setWlError('Une erreur est survenue. Écrivez-nous : contact@insightball.com')
+      // no-cors → opaque response, peut throw sur redirect Google — données passent quand même
     }
+    setWlSent(true)
     setWlLoading(false)
   }
 
