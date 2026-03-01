@@ -24,7 +24,8 @@ const inputStyle = {
   outline: 'none', boxSizing: 'border-box', transition: 'border-color .15s',
 }
 
-function Section({ title, children, accent }) {
+// FIX : isMobile passé en prop — Section n'a pas accès au state du composant parent
+function Section({ title, children, accent, isMobile }) {
   return (
     <div style={{ background: G.bg2, border: `1px solid ${G.border}`, borderTop: `2px solid ${accent || G.border}`, padding: isMobile ? '20px 16px' : '28px' }}>
       <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
@@ -115,20 +116,21 @@ export default function ClubSettings() {
   return (
     <DashboardLayout>
       <style>{globalStyles}</style>
-      {/* Toast */}
+
+      {/* Toast — FIX : un seul background, cohérent avec le design system dark */}
       {toast && (
         <div style={{
           position: 'fixed', bottom: 24, right: 24, zIndex: 9999,
           display: 'flex', alignItems: 'center', gap: 10,
           padding: '14px 20px',
-          background: toast.type === 'success' ? 'rgba(34,197,94,0.12)' : 'rgba(239,68,68,0.12)',
+          background: T.dark,
           border: `1px solid ${toast.type === 'success' ? 'rgba(34,197,94,0.35)' : 'rgba(239,68,68,0.35)'}`,
-          background: T.dark, boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
         }}>
           {toast.type === 'success'
             ? <CheckCircle size={15} color="#22c55e" />
             : <AlertCircle size={15} color="#ef4444" />}
-          <span style={{ fontFamily: G.mono, fontSize: 11, letterSpacing: '.06em', color: toast.type === 'success' ? T.green : T.red }}>
+          <span style={{ fontFamily: G.mono, fontSize: 11, letterSpacing: '.06em', color: toast.type === 'success' ? '#22c55e' : '#ef4444' }}>
             {toast.msg}
           </span>
         </div>
@@ -146,15 +148,15 @@ export default function ClubSettings() {
 
       <div style={{ maxWidth: isMobile ? '100%' : 680, display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
 
-        {/* Aperçu */}
-        <Section title="Aperçu" accent={G.gold}>
+        {/* Aperçu — isMobile transmis en prop */}
+        <Section title="Aperçu" accent={G.gold} isMobile={isMobile}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '28px', background: T.bgAlt, border: `1px solid ${G.border}` }}>
             <ClubBadge club={{ ...formData, logo_url: formData.logo_url }} size="xl" showName />
           </div>
         </Section>
 
         {/* Nom */}
-        <Section title="Nom du club">
+        <Section title="Nom du club" isMobile={isMobile}>
           <input type="text" name="name" value={formData.name} onChange={handleChange}
             placeholder="Mon Club FC" style={inputStyle}
             onFocus={e => e.target.style.borderColor = G.goldBdr}
@@ -162,7 +164,7 @@ export default function ClubSettings() {
         </Section>
 
         {/* Logo */}
-        <Section title="Logo">
+        <Section title="Logo" isMobile={isMobile}>
           {formData.logo_url && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20, padding: '14px 16px', background: T.bgAlt, border: `1px solid ${G.border}` }}>
               <img src={formData.logo_url} alt="Logo" style={{ width: 56, height: 56, objectFit: 'contain' }} />
@@ -185,9 +187,9 @@ export default function ClubSettings() {
           </div>
         </Section>
 
-        {/* Couleurs */}
-        <Section title="Couleurs du club">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+        {/* Couleurs — grille 1 colonne sur mobile */}
+        <Section title="Couleurs du club" isMobile={isMobile}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 20 }}>
             {[{ label: 'Couleur principale', name: 'primary_color' }, { label: 'Couleur secondaire', name: 'secondary_color' }].map(({ label, name }) => (
               <div key={name}>
                 <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.18em', textTransform: 'uppercase', color: T.muted2, marginBottom: 10 }}>{label}</div>
@@ -204,7 +206,7 @@ export default function ClubSettings() {
         </Section>
 
         {/* Abonnement */}
-        <div style={{ background: G.bg2, border: `1px solid ${G.border}`, padding: '28px' }}>
+        <div style={{ background: G.bg2, border: `1px solid ${G.border}`, padding: isMobile ? '20px 16px' : '28px' }}>
           <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
             <span style={{ width: 12, height: 1, background: G.gold }} />Abonnement
           </div>
@@ -212,7 +214,7 @@ export default function ClubSettings() {
         </div>
 
         {/* Save */}
-        <div style={{ background: G.bg2, border: `1px solid ${G.border}`, padding: '20px 28px', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 12 }}>
+        <div style={{ background: G.bg2, border: `1px solid ${G.border}`, padding: isMobile ? '16px' : '20px 28px', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 12, flexWrap: 'wrap' }}>
           <button onClick={loadClub} disabled={saving} style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted, background: 'none', border: 'none', cursor: 'pointer' }}>
             Annuler
           </button>
@@ -229,7 +231,7 @@ export default function ClubSettings() {
         </div>
 
         {/* Supprimer compte — discret */}
-        <div style={{ padding: '16px 28px', display: 'flex', justifyContent: 'flex-end' }}>
+        <div style={{ padding: isMobile ? '16px' : '16px 28px', display: 'flex', justifyContent: 'flex-end' }}>
           <button onClick={() => setShowDeleteModal(true)} style={{
             background: 'none', border: 'none', cursor: 'pointer',
             fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase',
