@@ -7,7 +7,7 @@ import TrialExpired from '../pages/TrialExpired'
 const G = { mono: "'JetBrains Mono', monospace", gold: '#c9a227', bg: '#0a0908' }
 
 function ProtectedRoute({ children }) {
-  const { isAuthenticated, loading } = useAuth()
+  const { isAuthenticated, loading, user } = useAuth()
   const [trialStatus, setTrialStatus] = useState(null)
   const [trialLoading, setTrialLoading] = useState(true)
 
@@ -46,8 +46,14 @@ function ProtectedRoute({ children }) {
     return <Navigate to="/x-portal-7f2a/login" replace />
   }
 
-  // Trial expiré sans abonnement → dashboard flouté + overlay paiement
-  if (trialStatus?.access === 'expired') {
+  // Trial expiré OU sub annulée (user qui a déjà eu un trial mais n'a plus de sub active)
+  // On ne bloque PAS les nouveaux users sans trial (pas encore de trial_ends_at)
+  const isExpiredOrCanceled = (
+    trialStatus?.access === 'expired' ||
+    (trialStatus?.access === 'no_trial' && user?.trial_ends_at != null)
+  )
+
+  if (isExpiredOrCanceled) {
     return (
       <div style={{ position: 'relative', minHeight: '100vh', overflow: 'hidden' }}>
         <div style={{ filter: 'blur(6px)', pointerEvents: 'none', userSelect: 'none', opacity: 0.35 }}>
