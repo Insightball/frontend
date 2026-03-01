@@ -221,7 +221,7 @@ function ConfirmCoachModal({ isTrialing, onConfirm, onCancel, loading }) {
 }
 
 // ── Composant formulaire CB intégré ──────────────────────────
-function InlineCardForm({ plan, onSuccess, onCancel }) {
+function InlineCardForm({ plan, onSuccess, onCancel, alreadyTrialed }) {
   const cardRef           = useRef(null)
   const cardElementRef    = useRef(null)
   const stripeRef         = useRef(null)
@@ -289,10 +289,12 @@ function InlineCardForm({ plan, onSuccess, onCancel }) {
             {plan.name}
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginTop: 4 }}>
-            <span style={{ fontFamily: G.display, fontSize: 26, color: G.gold, lineHeight: 1 }}>0€</span>
-            <span style={{ fontFamily: G.mono, fontSize: 9, color: G.muted }}>aujourd'hui</span>
-            <span style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.25)' }}>·</span>
-            <span style={{ fontFamily: G.mono, fontSize: 9, color: G.muted }}>puis {plan.price}€/mois après 7 jours</span>
+            <span style={{ fontFamily: G.display, fontSize: 26, color: G.gold, lineHeight: 1 }}>{alreadyTrialed ? `${plan.price}€` : '0€'}</span>
+            <span style={{ fontFamily: G.mono, fontSize: 9, color: G.muted }}>{alreadyTrialed ? '/mois' : "aujourd'hui"}</span>
+            {!alreadyTrialed && <>
+              <span style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.25)' }}>·</span>
+              <span style={{ fontFamily: G.mono, fontSize: 9, color: G.muted }}>puis {plan.price}€/mois après 7 jours</span>
+            </>}
           </div>
         </div>
         <button onClick={onCancel} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
@@ -300,12 +302,14 @@ function InlineCardForm({ plan, onSuccess, onCancel }) {
         </button>
       </div>
 
-      <div style={{ background: G.bg2, padding: '12px 20px', borderTop: `1px solid ${G.border}`, display: 'flex', alignItems: 'center', gap: 8 }}>
-        <Clock size={12} color={G.gold} style={{ flexShrink: 0 }} />
-        <span style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.55)', lineHeight: 1.6 }}>
-          Essai gratuit 7 jours · Aucun débit aujourd'hui · Rappel email J-3 · Résiliable en 1 clic
-        </span>
-      </div>
+      {!alreadyTrialed && (
+        <div style={{ background: G.bg2, padding: '12px 20px', borderTop: `1px solid ${G.border}`, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <Clock size={12} color={G.gold} style={{ flexShrink: 0 }} />
+          <span style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.55)', lineHeight: 1.6 }}>
+            Essai gratuit 7 jours · Aucun débit aujourd'hui · Rappel email J-3 · Résiliable en 1 clic
+          </span>
+        </div>
+      )}
 
       <div style={{ background: G.bg2, padding: '20px', borderTop: `1px solid ${G.border}` }}>
         <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.18em', textTransform: 'uppercase', color: G.muted, marginBottom: 10 }}>Carte bancaire</div>
@@ -334,10 +338,10 @@ function InlineCardForm({ plan, onSuccess, onCancel }) {
           cursor: paying || !ready ? 'not-allowed' : 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
         }}>
-          {paying ? <><Spinner /> Activation en cours...</> : !ready ? 'Chargement...' : <><CreditCard size={13} /> Démarrer l'essai gratuit</>}
+          {paying ? <><Spinner /> Activation en cours...</> : !ready ? 'Chargement...' : alreadyTrialed ? <><CreditCard size={13} /> S'abonner — {plan.price}€/mois</> : <><CreditCard size={13} /> Démarrer l'essai gratuit</>}
         </button>
         <p style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.25)', textAlign: 'center', marginTop: 10, lineHeight: 1.6 }}>
-          Premier débit le {getDebitDate()} · Annulable avant depuis ce menu
+          {alreadyTrialed ? `Débit immédiat de ${plan.price}€ · Résiliable à tout moment` : `Premier débit le ${getDebitDate()} · Annulable avant depuis ce menu`}
         </p>
       </div>
     </div>
@@ -465,7 +469,7 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
     return (
       <>
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-        <InlineCardForm plan={selectedPlan} onSuccess={handlePaymentSuccess} onCancel={() => setSelectedPlan(null)} />
+        <InlineCardForm plan={selectedPlan} onSuccess={handlePaymentSuccess} onCancel={() => setSelectedPlan(null)} alreadyTrialed={alreadyTrialed} />
       </>
     )
   }
@@ -473,6 +477,7 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
   const isExpired  = trialData?.access === 'expired'
   const hasSub     = sub?.active
   const isTrialing = sub?.status === 'trialing'
+  const alreadyTrialed = user?.trial_ends_at != null || trialData?.match_used === true || isExpired
 
   return (
     <div>
@@ -665,6 +670,13 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
                           <div style={{ fontFamily: G.display, fontSize: 20, color: G.text, lineHeight: 1.1 }}>Sur devis</div>
                           <div style={{ fontFamily: G.mono, fontSize: 8, color: G.muted }}>à partir de 99€/mois</div>
                         </>
+                      ) : alreadyTrialed ? (
+                        <>
+                          <div style={{ fontFamily: G.display, fontSize: 28, color: G.text, lineHeight: 1 }}>
+                            {plan.price}<span style={{ fontFamily: G.mono, fontSize: 11, color: G.muted }}>€</span>
+                          </div>
+                          <div style={{ fontFamily: G.mono, fontSize: 8, color: G.muted }}>/mois · {plan.features[0]}</div>
+                        </>
                       ) : (
                         <>
                           <div style={{ fontFamily: G.display, fontSize: 28, color: G.text, lineHeight: 1 }}>
@@ -709,7 +721,7 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
                       onMouseEnter={e => e.currentTarget.style.opacity = '.85'}
                       onMouseLeave={e => e.currentTarget.style.opacity = '1'}
                     >
-                      <CreditCard size={11} /> Démarrer l'essai →
+                      <CreditCard size={11} /> {alreadyTrialed ? "S'abonner — 39€/mois →" : 'Démarrer l\'essai →'}
                     </button>
                   )}
                 </div>
@@ -720,7 +732,7 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <Lock size={11} color={G.muted} />
             <span style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.06em' }}>
-              Paiement sécurisé Stripe · 7 jours gratuits · Aucun débit aujourd'hui
+              {alreadyTrialed ? 'Paiement sécurisé Stripe · Résiliable à tout moment' : 'Paiement sécurisé Stripe · 7 jours gratuits · Aucun débit aujourd\'hui'}
             </span>
           </div>
         </div>
