@@ -465,6 +465,11 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
     </div>
   )
 
+  const isExpired  = trialData?.access === 'expired'
+  const hasSub     = sub?.active
+  const isTrialing = sub?.status === 'trialing'
+  const alreadyTrialed = user?.trial_ends_at != null || trialData?.match_used === true || isExpired
+
   if (selectedPlan) {
     return (
       <>
@@ -473,11 +478,6 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
       </>
     )
   }
-
-  const isExpired  = trialData?.access === 'expired'
-  const hasSub     = sub?.active
-  const isTrialing = sub?.status === 'trialing'
-  const alreadyTrialed = user?.trial_ends_at != null || trialData?.match_used === true || isExpired
 
   return (
     <div>
