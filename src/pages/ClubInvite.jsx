@@ -1,352 +1,576 @@
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
-import { CheckCircle, AlertTriangle, ArrowRight, Shield, Users, BarChart2 } from 'lucide-react'
-import { T } from '../theme'
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
 
-const API = import.meta.env.VITE_API_URL || 'https://backend-pued.onrender.com'
+const API = import.meta.env.VITE_API_URL
 
-const G = {
-  bg:     T.bg,
-  dark:   T.dark,
-  ink:    T.ink,
-  muted:  T.muted,
-  gold:   T.gold,
-  mono:   T.mono,
-  display: T.display,
-  border: T.rule,
-  borderDark: T.ruleDark,
+// ─── Design tokens (from theme.js) ─────────────────────────
+const T = {
+  bg:      '#f5f2eb',
+  surface: '#ffffff',
+  dark:    '#0a0908',
+  ink:     '#1a1916',
+  muted:   'rgba(26,25,22,0.45)',
+  rule:    'rgba(26,25,22,0.09)',
+  gold:    '#c9a227',
+  goldBg:  'rgba(201,162,39,0.07)',
+  goldBdr: 'rgba(201,162,39,0.22)',
+  red:     '#dc2626',
+  font:    "'JetBrains Mono', monospace",
+  display: "'Anton', sans-serif",
 }
 
-const inputStyle = (focused) => ({
-  width: '100%',
-  background: T.surface,
-  border: `1px solid ${focused ? T.gold : T.rule}`,
-  padding: '13px 16px',
-  color: T.ink,
-  fontFamily: T.mono,
-  fontSize: 13,
-  outline: 'none',
-  boxSizing: 'border-box',
-  transition: 'border-color .15s',
-})
+const PLAN_LABELS = {
+  CLUB: 'Club',
+  CLUB_PRO: 'Club Pro',
+}
 
-// Avantages affichés selon le plan
-const PLAN_FEATURES = [
-  { icon: BarChart2, label: 'Rapports tactiques automatiques' },
-  { icon: Users,     label: 'Gestion multi-équipes' },
-  { icon: Shield,    label: 'Heatmaps & stats joueurs' },
-  { icon: CheckCircle, label: 'Export PDF illimité' },
-]
 
 export default function ClubInvite() {
   const { token } = useParams()
-  const navigate = useNavigate()
   const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
+
+  // ── State ──
+  const [invite, setInvite] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [submitting, setSubmitting] = useState(false)
+
+  // Formulaire nouveau compte
+  const [name, setName] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [formError, setFormError] = useState('')
+
   const cancelled = searchParams.get('cancelled') === 'true'
 
-  const [invite, setInvite]       = useState(null)
-  const [loading, setLoading]     = useState(true)
-  const [error, setError]         = useState(null)
-  const [submitting, setSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState(null)
-  const [isMobile, setIsMobile]   = useState(false)
-
-  // Form — seulement pour nouveau user
-  const [name, setName]         = useState('')
-  const [password, setPassword] = useState('')
-  const [focusName, setFocusName]     = useState(false)
-  const [focusPass, setFocusPass]     = useState(false)
-
+  // ── Fetch invite au chargement ──
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
-
-  useEffect(() => {
-    fetchInvite()
+    if (!token) return
+    setLoading(true)
+    fetch(`${API}/subscription/club-invite/${token}`)
+      .then(async (res) => {
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}))
+          throw new Error(data.detail || 'Invitation introuvable')
+        }
+        return res.json()
+      })
+      .then((data) => {
+        setInvite(data)
+        if (data.first_name && data.last_name) {
+          setName(`${data.first_name} ${data.last_name}`)
+        }
+      })
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false))
   }, [token])
 
-  const fetchInvite = async () => {
-    try {
-      setLoading(true)
-      const res = await fetch(`${API}/api/subscription/club-invite/${token}`)
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        setError(typeof data.detail === 'string' ? data.detail : 'Invitation introuvable ou expirée')
+  // ── Validation + submit ──
+  const handleAccept = async () => {
+    setFormError('')
+
+    if (!invite.has_existing_account) {
+      if (!name.trim()) {
+        setFormError('Le nom est requis')
         return
       }
-      const data = await res.json()
-      setInvite(data)
-    } catch {
-      setError('Impossible de charger l\'invitation. Vérifiez votre connexion.')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleAccept = async () => {
-    if (!invite) return
-
-    // Nouveau user : nom + password requis
-    if (!invite.has_existing_account) {
-      if (!name.trim()) { setSubmitError('Entrez votre nom complet'); return }
-      if (password.length < 8) { setSubmitError('Le mot de passe doit contenir au moins 8 caractères'); return }
+      if (!password) {
+        setFormError('Le mot de passe est requis')
+        return
+      }
+      if (password.length < 8) {
+        setFormError('Le mot de passe doit contenir au moins 8 caractères')
+        return
+      }
+      if (password !== confirmPassword) {
+        setFormError('Les mots de passe ne correspondent pas')
+        return
+      }
     }
 
     setSubmitting(true)
-    setSubmitError(null)
-
     try {
       const body = invite.has_existing_account
         ? {}
         : { name: name.trim(), password }
 
-      const res = await fetch(`${API}/api/subscription/club-invite/${token}/accept`, {
+      const res = await fetch(`${API}/subscription/club-invite/${token}/accept`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       })
 
-      const data = await res.json()
-
       if (!res.ok) {
-        setSubmitError(typeof data.detail === 'string' ? data.detail : 'Une erreur est survenue')
-        return
+        const data = await res.json().catch(() => ({}))
+        throw new Error(typeof data.detail === 'string' ? data.detail : 'Une erreur est survenue')
       }
 
-      // Redirect vers Stripe Checkout
-      if (data.checkout_url) {
-        window.location.href = data.checkout_url
+      const { checkout_url } = await res.json()
+      if (checkout_url) {
+        window.location.href = checkout_url
+      } else {
+        setFormError('Erreur lors de la création de la session de paiement')
       }
-    } catch {
-      setSubmitError('Erreur réseau. Réessayez dans quelques secondes.')
+    } catch (err) {
+      setFormError(err.message)
     } finally {
       setSubmitting(false)
     }
   }
 
-  const planLabel = invite?.plan_tier === 'CLUB_PRO' ? 'Club Pro' : 'Club'
-  const planColor = invite?.plan_tier === 'CLUB_PRO' ? '#c9a227' : T.gold
+  // ── Render helpers ──
+  const planLabel = invite ? (PLAN_LABELS[invite.plan_tier] || invite.plan_tier) : ''
+  const priceDisplay = invite ? `${invite.plan_price}€/mois` : ''
 
-  // ── États de chargement / erreur ──────────────────────────────────
-
-  if (loading) return (
-    <div style={{ minHeight: '100vh', background: G.dark, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <span style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.2em', textTransform: 'uppercase', color: 'rgba(201,162,39,0.5)' }}>
-        Chargement...
-      </span>
-    </div>
-  )
-
-  if (error) return (
-    <div style={{ minHeight: '100vh', background: G.dark, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-      <div style={{ maxWidth: 440, width: '100%', background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.25)', borderTop: '2px solid #ef4444', padding: '32px 28px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-          <AlertTriangle size={18} color="#ef4444" />
-          <span style={{ fontFamily: G.display, fontSize: 20, textTransform: 'uppercase', color: '#f5f2eb' }}>Invitation invalide</span>
+  // ── Loading ──
+  if (loading) {
+    return (
+      <div style={styles.page}>
+        <div style={styles.card}>
+          <div style={styles.loadingPulse}>Chargement de l'invitation...</div>
         </div>
-        <p style={{ fontFamily: G.mono, fontSize: 12, color: 'rgba(245,242,235,0.6)', lineHeight: 1.7, margin: '0 0 24px' }}>{error}</p>
-        <button onClick={() => navigate('/')} style={{
-          fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase',
-          color: G.gold, background: 'none', border: `1px solid rgba(201,162,39,0.3)`,
-          padding: '10px 20px', cursor: 'pointer',
-        }}>
-          Retour à l'accueil
-        </button>
       </div>
-    </div>
-  )
+    )
+  }
 
-  // ── Page principale ───────────────────────────────────────────────
+  // ── Error (invitation introuvable, expirée, déjà utilisée) ──
+  if (error) {
+    return (
+      <div style={styles.page}>
+        <div style={styles.card}>
+          <div style={styles.logo}>
+            INSIGHT<span style={{ color: T.gold }}>BALL</span>
+          </div>
+          <div style={styles.errorIcon}>✕</div>
+          <h1 style={styles.errorTitle}>Invitation non disponible</h1>
+          <p style={styles.errorText}>{error}</p>
+          <p style={{ ...styles.errorText, marginTop: 24 }}>
+            Contactez{' '}
+            <a href="mailto:contact@insightball.com" style={styles.link}>
+              contact@insightball.com
+            </a>{' '}
+            pour obtenir une nouvelle invitation.
+          </p>
+        </div>
+      </div>
+    )
+  }
 
+  // ── Main ──
   return (
-    <div style={{ minHeight: '100vh', background: G.dark, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: isMobile ? '24px 16px' : '48px 24px' }}>
-
-      {/* Logo */}
-      <div style={{ marginBottom: 40, textAlign: 'center' }}>
-        <div style={{ fontFamily: G.display, fontSize: isMobile ? 22 : 26, textTransform: 'uppercase', letterSpacing: '.04em', color: '#f5f2eb' }}>
-          Insight<span style={{ color: G.gold }}>ball</span>
+    <div style={styles.page}>
+      <div style={styles.card}>
+        {/* Logo */}
+        <div style={styles.logo}>
+          INSIGHT<span style={{ color: T.gold }}>BALL</span>
         </div>
-      </div>
 
-      <div style={{ width: '100%', maxWidth: 520 }}>
-
-        {/* Bandeau annulation */}
+        {/* Cancelled banner */}
         {cancelled && (
-          <div style={{ marginBottom: 20, padding: '12px 16px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <AlertTriangle size={14} color="#ef4444" />
-            <span style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(239,68,68,0.8)' }}>
-              Paiement annulé. Vous pouvez réessayer ci-dessous.
-            </span>
+          <div style={styles.cancelledBanner}>
+            Paiement annulé — vous pouvez réessayer ci-dessous.
           </div>
         )}
 
-        {/* Card principale */}
-        <div style={{ background: '#0f0f0d', border: '1px solid rgba(255,255,255,0.07)', borderTop: `2px solid ${planColor}` }}>
+        {/* Welcome header */}
+        <div style={styles.welcomeSection}>
+          <p style={styles.welcomeLabel}>Invitation club</p>
+          <h1 style={styles.clubName}>{invite.club_name}</h1>
+          {invite.city && <p style={styles.city}>{invite.city}</p>}
+        </div>
 
-          {/* Header offre */}
-          <div style={{ padding: isMobile ? '24px 20px' : '32px 32px 28px', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-            <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ width: 14, height: 1, background: G.gold, display: 'inline-block' }} />
-              Invitation personnelle
-            </div>
-            <h1 style={{ fontFamily: G.display, fontSize: isMobile ? 28 : 36, textTransform: 'uppercase', lineHeight: .9, letterSpacing: '.01em', color: '#f5f2eb', margin: '0 0 16px' }}>
-              {invite.club_name || 'Votre club'}<br />
-              <span style={{ color: G.gold }}>rejoint Insightball.</span>
-            </h1>
-            {invite.city && (
-              <div style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(245,242,235,0.4)', letterSpacing: '.08em' }}>
-                {invite.city}
-              </div>
-            )}
+        {/* Offer card */}
+        <div style={styles.offerCard}>
+          <div style={styles.offerHeader}>
+            <span style={styles.planBadge}>{planLabel}</span>
+            <span style={styles.price}>{priceDisplay}</span>
           </div>
-
-          {/* Récap offre */}
-          <div style={{ padding: isMobile ? '20px' : '24px 32px', borderBottom: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
-            <div>
-              <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.35)', marginBottom: 6 }}>
-                Plan sélectionné
-              </div>
-              <div style={{ fontFamily: G.display, fontSize: 18, textTransform: 'uppercase', color: '#f5f2eb' }}>
-                Insightball <span style={{ color: G.gold }}>{planLabel}</span>
-              </div>
-              <div style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(245,242,235,0.45)', marginTop: 4 }}>
-                {invite.quota_matches} matchs analysés par mois
-              </div>
+          <div style={styles.offerDetails}>
+            <div style={styles.offerRow}>
+              <span style={styles.offerLabel}>Matchs analysés</span>
+              <span style={styles.offerValue}>{invite.quota_matches} / mois</span>
             </div>
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ fontFamily: G.display, fontSize: 32, color: G.gold, lineHeight: 1 }}>
-                {invite.plan_price}€
-              </div>
-              <div style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.35)', letterSpacing: '.1em', textTransform: 'uppercase' }}>
-                par mois
-              </div>
+            <div style={styles.offerRow}>
+              <span style={styles.offerLabel}>Paiement</span>
+              <span style={styles.offerValue}>CB ou SEPA</span>
+            </div>
+            <div style={styles.offerRow}>
+              <span style={styles.offerLabel}>Engagement</span>
+              <span style={styles.offerValue}>Sans engagement</span>
             </div>
           </div>
-
-          {/* Features */}
-          <div style={{ padding: isMobile ? '20px' : '24px 32px', borderBottom: '1px solid rgba(255,255,255,0.07)', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12 }}>
-            {PLAN_FEATURES.map(({ icon: Icon, label }) => (
-              <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <Icon size={13} color={G.gold} />
-                <span style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(245,242,235,0.6)', letterSpacing: '.04em' }}>{label}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Formulaire */}
-          <div style={{ padding: isMobile ? '20px' : '24px 32px' }}>
-
-            {invite.has_existing_account ? (
-              /* User existant — pas de formulaire */
-              <div style={{ marginBottom: 20, padding: '14px 16px', background: 'rgba(201,162,39,0.06)', border: '1px solid rgba(201,162,39,0.2)' }}>
-                <div style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(245,242,235,0.55)', lineHeight: 1.6 }}>
-                  Compte existant détecté pour <strong style={{ color: '#f5f2eb' }}>{invite.email}</strong>
-                  {invite.existing_user_name && (
-                    <span style={{ color: 'rgba(245,242,235,0.4)' }}> · {invite.existing_user_name}</span>
-                  )}
-                  <br />Votre abonnement Coach sera remplacé par le plan Club.
-                </div>
-              </div>
-            ) : (
-              /* Nouveau user — formulaire */
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 20 }}>
-                <div>
-                  <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.35)', marginBottom: 8 }}>
-                    Votre nom complet
-                  </div>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                    onFocus={() => setFocusName(true)}
-                    onBlur={() => setFocusName(false)}
-                    placeholder="Jean Dupont"
-                    style={{ ...inputStyle(focusName), background: 'rgba(255,255,255,0.04)', color: '#f5f2eb', border: `1px solid ${focusName ? G.gold : 'rgba(255,255,255,0.1)'}` }}
-                    autoComplete="name"
-                  />
-                </div>
-                <div>
-                  <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.35)', marginBottom: 8 }}>
-                    Mot de passe
-                  </div>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    onFocus={() => setFocusPass(true)}
-                    onBlur={() => setFocusPass(false)}
-                    placeholder="8 caractères minimum"
-                    style={{ ...inputStyle(focusPass), background: 'rgba(255,255,255,0.04)', color: '#f5f2eb', border: `1px solid ${focusPass ? G.gold : 'rgba(255,255,255,0.1)'}` }}
-                    autoComplete="new-password"
-                    onKeyDown={e => { if (e.key === 'Enter') handleAccept() }}
-                  />
-                </div>
-                <div style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.3)', lineHeight: 1.6 }}>
-                  Compte créé pour <strong style={{ color: 'rgba(245,242,235,0.6)' }}>{invite.email}</strong>
-                </div>
-              </div>
-            )}
-
-            {/* Erreur submit */}
-            {submitError && (
-              <div style={{ marginBottom: 16, padding: '10px 14px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', display: 'flex', alignItems: 'center', gap: 8 }}>
-                <AlertTriangle size={13} color="#ef4444" />
-                <span style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(239,68,68,0.85)' }}>{submitError}</span>
-              </div>
-            )}
-
-            {/* CTA */}
-            <button
-              onClick={handleAccept}
-              disabled={submitting}
-              style={{
-                width: '100%',
-                padding: '15px 24px',
-                background: submitting ? 'rgba(201,162,39,0.4)' : G.gold,
-                color: '#0f0f0d',
-                fontFamily: G.mono,
-                fontSize: 11,
-                letterSpacing: '.12em',
-                textTransform: 'uppercase',
-                fontWeight: 700,
-                border: 'none',
-                cursor: submitting ? 'not-allowed' : 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 10,
-                transition: 'background .15s',
-              }}
-              onMouseEnter={e => { if (!submitting) e.currentTarget.style.background = T.goldD || '#b8911f' }}
-              onMouseLeave={e => { if (!submitting) e.currentTarget.style.background = G.gold }}
-            >
-              {submitting
-                ? 'Redirection vers le paiement...'
-                : <>{invite.has_existing_account ? 'Mettre à niveau mon compte' : 'Créer mon compte et payer'} <ArrowRight size={14} /></>
-              }
-            </button>
-
-            {/* Réassurance */}
-            <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-              <Shield size={11} color="rgba(245,242,235,0.25)" />
-              <span style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.25)', letterSpacing: '.06em' }}>
-                Paiement sécurisé via Stripe · CB ou SEPA
-              </span>
-            </div>
+          <div style={styles.offerIncludes}>
+            <p style={styles.includesTitle}>Inclus</p>
+            <ul style={styles.includesList}>
+              <li>Rapports tactiques automatiques</li>
+              <li>Heatmaps individuelles et collectives</li>
+              <li>Statistiques joueurs et équipe</li>
+              <li>Export PDF</li>
+              <li>Gestion multi-équipes</li>
+              <li>Portail de gestion abonnement</li>
+            </ul>
           </div>
         </div>
+
+        {/* Account section */}
+        {invite.has_existing_account ? (
+          <div style={styles.existingAccount}>
+            <p style={styles.existingText}>
+              Bonjour <strong>{invite.existing_user_name || invite.first_name}</strong>,
+              votre compte existant sera mis à niveau vers le plan {planLabel}.
+            </p>
+            <p style={styles.existingSubtext}>
+              Vos matchs, joueurs et statistiques seront conservés.
+            </p>
+          </div>
+        ) : (
+          <div style={styles.formSection}>
+            <p style={styles.formLabel}>Créez votre compte</p>
+            <div style={styles.readonlyField}>
+              <span style={styles.readonlyLabel}>Email</span>
+              <span style={styles.readonlyValue}>{invite.email}</span>
+            </div>
+            <input
+              type="text"
+              placeholder="Nom complet"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              style={styles.input}
+              autoComplete="name"
+            />
+            <input
+              type="password"
+              placeholder="Mot de passe (min. 8 caractères)"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              style={styles.input}
+              autoComplete="new-password"
+            />
+            <input
+              type="password"
+              placeholder="Confirmer le mot de passe"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              style={styles.input}
+              autoComplete="new-password"
+            />
+          </div>
+        )}
+
+        {/* Error */}
+        {formError && <p style={styles.formError}>{formError}</p>}
+
+        {/* CTA */}
+        <button
+          onClick={handleAccept}
+          disabled={submitting}
+          style={{
+            ...styles.cta,
+            opacity: submitting ? 0.6 : 1,
+            cursor: submitting ? 'not-allowed' : 'pointer',
+          }}
+        >
+          {submitting
+            ? 'Redirection vers le paiement...'
+            : `Souscrire — ${priceDisplay}`}
+        </button>
+
+        <p style={styles.ctaSubtext}>
+          Paiement sécurisé via Stripe · Sans engagement · Résiliation en 1 clic
+        </p>
 
         {/* Footer */}
-        <div style={{ marginTop: 24, textAlign: 'center' }}>
-          <span style={{ fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.2)', letterSpacing: '.08em' }}>
-            Une question ? <a href="mailto:contact@insightball.com" style={{ color: 'rgba(201,162,39,0.5)', textDecoration: 'none' }}>contact@insightball.com</a>
-          </span>
+        <div style={styles.footer}>
+          <p>
+            Une question ?{' '}
+            <a href="mailto:contact@insightball.com" style={styles.link}>
+              contact@insightball.com
+            </a>
+          </p>
         </div>
-
       </div>
     </div>
   )
+}
+
+
+// ─── Styles ─────────────────────────────────────────────────
+const styles = {
+  page: {
+    minHeight: '100vh',
+    background: T.bg,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '40px 16px',
+    fontFamily: T.font,
+  },
+  card: {
+    background: T.surface,
+    border: `1px solid ${T.rule}`,
+    maxWidth: 480,
+    width: '100%',
+    padding: '40px 32px',
+    position: 'relative',
+  },
+  logo: {
+    fontFamily: T.display,
+    fontSize: 22,
+    fontWeight: 900,
+    textTransform: 'uppercase',
+    letterSpacing: '.04em',
+    color: T.ink,
+    marginBottom: 32,
+  },
+  cancelledBanner: {
+    background: 'rgba(220,38,38,0.06)',
+    border: '1px solid rgba(220,38,38,0.15)',
+    color: T.red,
+    fontSize: 11,
+    fontFamily: T.font,
+    letterSpacing: '.02em',
+    padding: '10px 14px',
+    marginBottom: 24,
+  },
+  welcomeSection: {
+    marginBottom: 28,
+  },
+  welcomeLabel: {
+    fontSize: 10,
+    fontWeight: 700,
+    textTransform: 'uppercase',
+    letterSpacing: '.12em',
+    color: T.gold,
+    margin: '0 0 8px',
+  },
+  clubName: {
+    fontFamily: T.display,
+    fontSize: 28,
+    fontWeight: 900,
+    textTransform: 'uppercase',
+    letterSpacing: '.02em',
+    color: T.ink,
+    margin: 0,
+    lineHeight: 1.1,
+  },
+  city: {
+    fontSize: 12,
+    color: T.muted,
+    margin: '6px 0 0',
+    letterSpacing: '.02em',
+  },
+  // ── Offer card ──
+  offerCard: {
+    background: T.bg,
+    border: `1px solid ${T.rule}`,
+    borderTop: `3px solid ${T.gold}`,
+    padding: '20px',
+    marginBottom: 28,
+  },
+  offerHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingBottom: 12,
+    borderBottom: `1px solid ${T.rule}`,
+  },
+  planBadge: {
+    background: T.goldBg,
+    border: `1px solid ${T.goldBdr}`,
+    color: T.gold,
+    fontSize: 10,
+    fontWeight: 700,
+    textTransform: 'uppercase',
+    letterSpacing: '.1em',
+    padding: '4px 10px',
+  },
+  price: {
+    fontSize: 18,
+    fontWeight: 700,
+    color: T.ink,
+    fontFamily: T.font,
+  },
+  offerDetails: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+    marginBottom: 16,
+  },
+  offerRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  offerLabel: {
+    fontSize: 11,
+    color: T.muted,
+    letterSpacing: '.02em',
+  },
+  offerValue: {
+    fontSize: 12,
+    color: T.ink,
+    fontWeight: 600,
+  },
+  offerIncludes: {
+    borderTop: `1px solid ${T.rule}`,
+    paddingTop: 14,
+  },
+  includesTitle: {
+    fontSize: 10,
+    fontWeight: 700,
+    textTransform: 'uppercase',
+    letterSpacing: '.1em',
+    color: T.muted,
+    margin: '0 0 10px',
+  },
+  includesList: {
+    margin: 0,
+    padding: '0 0 0 16px',
+    fontSize: 11,
+    color: T.ink,
+    lineHeight: 1.9,
+  },
+  // ── Existing account ──
+  existingAccount: {
+    background: T.goldBg,
+    border: `1px solid ${T.goldBdr}`,
+    padding: '16px 18px',
+    marginBottom: 24,
+  },
+  existingText: {
+    fontSize: 12,
+    color: T.ink,
+    lineHeight: 1.6,
+    margin: 0,
+  },
+  existingSubtext: {
+    fontSize: 11,
+    color: T.muted,
+    margin: '8px 0 0',
+    lineHeight: 1.5,
+  },
+  // ── Form ──
+  formSection: {
+    marginBottom: 24,
+  },
+  formLabel: {
+    fontSize: 10,
+    fontWeight: 700,
+    textTransform: 'uppercase',
+    letterSpacing: '.1em',
+    color: T.muted,
+    margin: '0 0 14px',
+  },
+  readonlyField: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '10px 14px',
+    background: T.bg,
+    border: `1px solid ${T.rule}`,
+    marginBottom: 10,
+  },
+  readonlyLabel: {
+    fontSize: 10,
+    color: T.muted,
+    letterSpacing: '.04em',
+    textTransform: 'uppercase',
+  },
+  readonlyValue: {
+    fontSize: 12,
+    color: T.ink,
+    fontWeight: 600,
+  },
+  input: {
+    width: '100%',
+    padding: '12px 14px',
+    fontSize: 13,
+    fontFamily: T.font,
+    border: `1px solid ${T.rule}`,
+    background: T.surface,
+    color: T.ink,
+    outline: 'none',
+    marginBottom: 10,
+    boxSizing: 'border-box',
+    transition: 'border-color 0.15s',
+  },
+  formError: {
+    fontSize: 11,
+    color: T.red,
+    margin: '0 0 16px',
+    lineHeight: 1.5,
+  },
+  // ── CTA ──
+  cta: {
+    width: '100%',
+    padding: '14px 24px',
+    background: T.gold,
+    color: T.dark,
+    border: 'none',
+    fontSize: 11,
+    fontFamily: T.font,
+    fontWeight: 700,
+    letterSpacing: '.1em',
+    textTransform: 'uppercase',
+    transition: 'opacity 0.15s',
+    boxSizing: 'border-box',
+  },
+  ctaSubtext: {
+    fontSize: 10,
+    color: T.muted,
+    textAlign: 'center',
+    margin: '12px 0 0',
+    letterSpacing: '.02em',
+  },
+  // ── Footer ──
+  footer: {
+    marginTop: 32,
+    paddingTop: 20,
+    borderTop: `1px solid ${T.rule}`,
+    fontSize: 11,
+    color: T.muted,
+    textAlign: 'center',
+  },
+  link: {
+    color: T.gold,
+    textDecoration: 'none',
+  },
+  // ── Loading & Error ──
+  loadingPulse: {
+    fontSize: 11,
+    color: T.muted,
+    textAlign: 'center',
+    letterSpacing: '.06em',
+    textTransform: 'uppercase',
+    padding: '60px 0',
+  },
+  errorIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: '50%',
+    background: 'rgba(220,38,38,0.08)',
+    color: T.red,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 20,
+    fontWeight: 700,
+    marginBottom: 20,
+  },
+  errorTitle: {
+    fontFamily: T.display,
+    fontSize: 20,
+    fontWeight: 900,
+    textTransform: 'uppercase',
+    color: T.ink,
+    margin: '0 0 12px',
+  },
+  errorText: {
+    fontSize: 12,
+    color: T.muted,
+    lineHeight: 1.6,
+    margin: 0,
+  },
 }

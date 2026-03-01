@@ -27,6 +27,7 @@ const UploadMatch       = lazy(() => import('./pages/UploadMatch'))
 const Onboarding        = lazy(() => import('./pages/Onboarding'))
 const AdminPanel        = lazy(() => import('./pages/AdminPanel'))
 const ClubDashboard     = lazy(() => import('./pages/ClubDashboard'))
+const ClubInvite        = lazy(() => import('./pages/ClubInvite'))
 
 // Pages légales
 const MentionsLegales          = lazy(() => import('./pages/MentionsLegales'))
@@ -71,6 +72,9 @@ function App() {
 
             {/* Onboarding */}
             <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
+
+            {/* Invitation club (publique — pas de auth) */}
+            <Route path="/club-invite/:token" element={<ClubInvite />} />
 
             {/* Invitation & récupération */}
             <Route path="/join"    element={<JoinClub />} />
