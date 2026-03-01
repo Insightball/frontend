@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Lock, Zap, Users, ArrowRight, CreditCard, Shield, CheckCircle } from 'lucide-react'
+import { Lock, Zap, Users, ArrowRight, CreditCard, Shield } from 'lucide-react'
 import api from '../services/api'
 
 const G = {
@@ -12,11 +11,10 @@ const G = {
 }
 
 export default function TrialExpired() {
-  const navigate = useNavigate()
   const [coachLoading, setCoachLoading] = useState(false)
-  const [quoteLoading, setQuoteLoading] = useState(false)
-  const [quoteSuccess, setQuoteSuccess] = useState(false)
   const [error, setError] = useState('')
+
+  const [copied, setCopied] = useState(false)
 
   // Flow COACH — Stripe Checkout
   const handleChooseCoach = async () => {
@@ -31,20 +29,6 @@ export default function TrialExpired() {
     } catch (e) {
       setError('Erreur lors de la redirection vers le paiement')
       setCoachLoading(false)
-    }
-  }
-
-  // Flow CLUB — demande de devis, pas de Stripe
-  const handleRequestQuote = async () => {
-    if (quoteSuccess) return
-    setQuoteLoading(true); setError('')
-    try {
-      await api.post('/subscription/request-club-quote', { message: '' })
-      setQuoteSuccess(true)
-    } catch (e) {
-      setError("Erreur lors de l'envoi. Contactez-nous : contact@insightball.com")
-    } finally {
-      setQuoteLoading(false)
     }
   }
 
@@ -89,14 +73,7 @@ export default function TrialExpired() {
 
       {error && (
         <div style={{ marginBottom: 14, padding: '10px 16px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', fontFamily: G.mono, fontSize: 11, color: '#ef4444', maxWidth: 560, width: '100%' }}>
-          {error}
-        </div>
-      )}
-
-      {quoteSuccess && (
-        <div style={{ marginBottom: 14, padding: '10px 16px', background: G.greenBg, border: `1px solid ${G.greenBdr}`, fontFamily: G.mono, fontSize: 10, color: G.green, maxWidth: 560, width: '100%', display: 'flex', alignItems: 'center', gap: 8 }}>
-          <CheckCircle size={13} color={G.green} />
-          Demande envoyée ✓ — Nous vous contacterons sous 24h pour votre offre sur mesure.
+          {typeof error === 'string' ? error : 'Une erreur est survenue'}
         </div>
       )}
 
@@ -146,12 +123,8 @@ export default function TrialExpired() {
           </button>
         </div>
 
-        {/* CLUB — Demande de devis, pas Stripe */}
+        {/* CLUB — Nous contacter */}
         <div style={{ background: 'rgba(201,162,39,0.04)', borderTop: `2px solid ${G.gold}`, padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, border: `1px solid ${G.goldBdr}`, padding: '3px 10px', alignSelf: 'flex-start' }}>
-            Sur devis
-          </div>
-
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <Users size={13} color={G.gold} />
@@ -159,7 +132,7 @@ export default function TrialExpired() {
             </div>
             <div style={{ textAlign: 'right' }}>
               <div style={{ fontFamily: G.display, fontSize: 22, color: G.text, lineHeight: 1.1 }}>
-                Sur devis
+                Sur mesure
               </div>
               <div style={{ fontFamily: G.mono, fontSize: 8, color: G.muted }}>à partir de 99€/mois</div>
             </div>
@@ -174,29 +147,19 @@ export default function TrialExpired() {
             ))}
           </div>
 
-          {quoteSuccess ? (
-            <div style={{ marginTop: 'auto', padding: '12px', background: G.greenBg, border: `1px solid ${G.greenBdr}`, fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.green, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-              <CheckCircle size={11} color={G.green} /> Demande envoyée
+          <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <p style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, margin: 0 }}>Contactez-nous :</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontFamily: G.mono, fontSize: 11, color: G.text, fontWeight: 700 }}>contact@insightball.com</span>
+              <button onClick={() => { navigator.clipboard.writeText('contact@insightball.com'); setCopied(true); setTimeout(() => setCopied(false), 2000) }} style={{
+                padding: '4px 10px', background: 'transparent', border: `1px solid ${G.goldBdr}`,
+                fontFamily: G.mono, fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase',
+                color: copied ? G.green : G.muted, cursor: 'pointer', transition: 'color .15s',
+              }}>
+                {copied ? '✓ Copié' : 'Copier'}
+              </button>
             </div>
-          ) : (
-            <button onClick={handleRequestQuote} disabled={quoteLoading} style={{
-              marginTop: 'auto', padding: '12px',
-              background: 'rgba(201,162,39,0.12)', border: `1px solid ${G.goldBdr}`,
-              color: G.gold,
-              fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase',
-              fontWeight: 700, cursor: quoteLoading ? 'not-allowed' : 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-              transition: 'opacity .15s',
-            }}
-              onMouseEnter={e => { if (!quoteLoading) e.currentTarget.style.opacity = '.85' }}
-              onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-            >
-              {quoteLoading
-                ? <span style={{ width: 12, height: 12, border: '2px solid currentColor', borderTopColor: 'transparent', borderRadius: '50%', display: 'inline-block', animation: 'spin .6s linear infinite' }} />
-                : <>Demander un devis <ArrowRight size={11} /></>
-              }
-            </button>
-          )}
+          </div>
         </div>
       </div>
 
