@@ -500,7 +500,7 @@ function InvitationsSection() {
   const loadInvites = () => {
     setLoading(true)
     fetch(`${INVITE_API}/club-invites`, { headers: authHeaders() })
-      .then(r => r.json()).then(setInvites).finally(() => setLoading(false))
+      .then(r => r.json()).then(d => setInvites(Array.isArray(d) ? d : [])).finally(() => setLoading(false))
   }
 
   useEffect(() => { loadInvites() }, [])
