@@ -22,8 +22,8 @@ const PLANS = [
     features: ['4 matchs / mois', 'Rapports PDF', 'Statistiques joueurs', 'Support email'],
   },
   {
-    id: 'CLUB', name: 'Club', price: 129, icon: Users, color: '#3b82f6',
-    features: ['12 matchs / mois', 'Multi-équipes', 'Dashboard directeur sportif', 'Support prioritaire'],
+    id: 'CLUB', name: 'Club', price: 99, icon: Users, color: '#3b82f6',
+    features: ['10 matchs / mois', 'Multi-équipes', 'Dashboard directeur sportif', 'Support prioritaire'],
   },
 ]
 
