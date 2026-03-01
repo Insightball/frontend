@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
 
 const API = import.meta.env.VITE_API_URL
+const SUB_API = `${API}/api/subscription`
 
 // ─── Design tokens (from theme.js) ─────────────────────────
 const T = {
@@ -48,7 +49,7 @@ export default function ClubInvite() {
   useEffect(() => {
     if (!token) return
     setLoading(true)
-    fetch(`${API}/subscription/club-invite/${token}`)
+    fetch(`${SUB_API}/club-invite/${token}`)
       .then(async (res) => {
         if (!res.ok) {
           const data = await res.json().catch(() => ({}))
@@ -95,7 +96,7 @@ export default function ClubInvite() {
         ? {}
         : { name: name.trim(), password }
 
-      const res = await fetch(`${API}/subscription/club-invite/${token}/accept`, {
+      const res = await fetch(`${SUB_API}/club-invite/${token}/accept`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
