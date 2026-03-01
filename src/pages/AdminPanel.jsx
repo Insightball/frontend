@@ -393,13 +393,14 @@ function UsersSection() {
 const INVITE_API = 'https://backend-pued.onrender.com/api/x-admin'
 
 function InviteStatusBadge({ status }) {
+  const s = (status || '').toLowerCase()
   const map = {
     pending:  { bg: 'rgba(245,158,11,0.1)', color: G.orange, bdr: 'rgba(245,158,11,0.25)', label: 'En attente' },
     accepted: { bg: 'rgba(34,197,94,0.1)',  color: G.green,  bdr: 'rgba(34,197,94,0.25)',  label: 'Acceptée' },
     expired:  { bg: 'rgba(239,68,68,0.1)',  color: G.red,    bdr: 'rgba(239,68,68,0.25)',  label: 'Expirée' },
   }
-  const s = map[status] || map.pending
-  return <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', padding: '3px 10px', background: s.bg, color: s.color, border: `1px solid ${s.bdr}` }}>{s.label}</span>
+  const st = map[s] || map.pending
+  return <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', padding: '3px 10px', background: st.bg, color: st.color, border: `1px solid ${st.bdr}` }}>{st.label}</span>
 }
 
 function CreateInviteModal({ onClose, onSuccess }) {
@@ -550,7 +551,7 @@ function InvitationsSection() {
                   <td style={{ ...tdStyle, fontSize: 10 }}>{formatDate(inv.created_at)}</td>
                   <td style={tdStyle} onClick={e => e.stopPropagation()}>
                     <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-                      {inv.status === 'pending' && (
+                      {(inv.status || '').toLowerCase() === 'pending' && (
                         <button onClick={() => copyLink(inv.token)} style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.08em', textTransform: 'uppercase', padding: '4px 10px', background: copied === inv.token ? 'rgba(34,197,94,0.08)' : G.goldBg, color: copied === inv.token ? G.green : G.gold, border: `1px solid ${copied === inv.token ? 'rgba(34,197,94,0.25)' : G.goldBdr}`, cursor: 'pointer', transition: 'all .15s', whiteSpace: 'nowrap' }}>
                           {copied === inv.token ? '✓ Copié' : 'Copier lien'}
                         </button>
