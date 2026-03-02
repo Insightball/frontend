@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 
 const API = import.meta.env.VITE_API_URL
 const SUB_API = `${API}/api/subscription`
@@ -29,7 +29,6 @@ const PLAN_LABELS = {
 export default function ClubInvite() {
   const { token } = useParams()
   const [searchParams] = useSearchParams()
-  const navigate = useNavigate()
 
   // ── State ──
   const [invite, setInvite] = useState(null)
