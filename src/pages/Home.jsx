@@ -606,6 +606,42 @@ export default function LandingPage() {
         </div>
       </div>
 
+      {/* ══ SOCIAL PROOF — CHIFFRES PRODUIT ═══════ */}
+      <div style={{ background: G.ink }}>
+        <div className="wrap-inner" style={{ maxWidth: 1200, margin: '0 auto', padding: '72px 48px' }}>
+          <Reveal>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 1, background: 'rgba(255,255,255,0.06)' }} className="feat-grid">
+              {[
+                { value: '40+', label: 'Métriques analysées', sub: 'par match' },
+                { value: '< 1h', label: 'Temps de traitement', sub: 'rapport livré' },
+                { value: '0€', label: 'Matériel requis', sub: 'votre téléphone suffit' },
+                { value: 'PDF', label: 'Export en 1 clic', sub: 'prêt à partager' },
+              ].map((stat, i) => (
+                <div key={i} style={{ background: G.ink, padding: '36px 28px', textAlign: 'center' }}>
+                  <div style={{ fontFamily: G.display, fontSize: 42, fontWeight: 800, color: G.gold, lineHeight: 1, marginBottom: 8 }}>{stat.value}</div>
+                  <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', color: G.white, marginBottom: 4 }}>{stat.label}</div>
+                  <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>{stat.sub}</div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+          <Reveal delay={0.15}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 32, marginTop: 40, flexWrap: 'wrap' }}>
+              {[
+                'Séniors → U14 : toutes catégories couvertes',
+                'Zéro formation, zéro setup complexe',
+                'Conçu pour le football amateur et semi-pro',
+              ].map((txt, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ color: G.gold, fontSize: 13 }}>✓</span>
+                  <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)' }}>{txt}</span>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </div>
+
       {/* ══ PROCESS ════════════════════════════════════ */}
       <div id="process" style={{ maxWidth: 1200, margin: '0 auto' }}>
         <div className="wrap-inner" style={{ padding: '96px 48px' }}>
@@ -886,10 +922,10 @@ export default function LandingPage() {
               Demandez votre<br/><span style={{ color: G.gold }}>accès en avant-première.</span>
             </h2>
             <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.55)', lineHeight: 1.65, maxWidth: 560, marginBottom: 16 }}>
-              La plateforme arrive bientôt. Inscrivez-vous maintenant pour bénéficier d'un accès en avant-première.
+              Lancement prévu en <strong style={{ color: G.gold }}>mars 2026</strong>. Inscrivez-vous maintenant pour bénéficier d'un accès en avant-première.
             </p>
             <div style={{ display: 'flex', gap: 24, marginBottom: 48, flexWrap: 'wrap' }}>
-              {[['⚡','Accès avant ouverture publique'],['🤝','Onboarding personnalisé']].map(([icon, label]) => (
+              {[['⚡','Accès avant ouverture publique'],['🤝','Onboarding personnalisé'],['🏷️','Tarif early adopter']].map(([icon, label]) => (
                 <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: 'rgba(255,255,255,0.45)' }}>
                   <span>{icon}</span><span>{label}</span>
                 </div>
@@ -1042,6 +1078,27 @@ export default function LandingPage() {
         </div>
       </div>
 
+      {/* ══ CRÉDIBILITÉ ═══════════════════════════════ */}
+      <div style={{ background: G.off, borderTop: `1px solid ${G.border}`, borderBottom: `1px solid ${G.border}` }}>
+        <div className="wrap-inner" style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 48px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 40, flexWrap: 'wrap' }}>
+          <Reveal>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 40, flexWrap: 'wrap', justifyContent: 'center' }}>
+              {[
+                { icon: '🇫🇷', text: 'Conçu et hébergé en France' },
+                { icon: '🔒', text: 'Paiement sécurisé Stripe' },
+                { icon: '⚽', text: 'Pensé par des passionnés de football' },
+                { icon: '📊', text: 'Propulsé par l\'IA' },
+              ].map((item, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 18 }}>{item.icon}</span>
+                  <span style={{ fontFamily: G.mono, fontSize: 12, color: G.muted, letterSpacing: '.04em' }}>{item.text}</span>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </div>
+
       {/* ══ CTA BAND ═══════════════════════════════════ */}
       <div className="cta-band" style={{ background: G.ink, padding: '80px 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 40, flexWrap: 'wrap' }}>
         <div>
@@ -1071,7 +1128,7 @@ export default function LandingPage() {
               </span>
             </div>
             <p style={{ fontFamily: G.mono, fontSize: 11, color: G.gold, marginBottom: 14, letterSpacing: '.04em' }}>
-              Football Analytics 🚀
+              Football Analytics — Toulouse, France
             </p>
             <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
               {[
@@ -1093,7 +1150,7 @@ export default function LandingPage() {
           </div>
           {[
             { title:'Produit', links:[['#features','Fonctionnalités'],['#pricing','Tarifs'],['#rapport','Exemple rapport'],['#waitlist','Accès anticipé']] },
-            { title:'Ressources', links:[['#','Documentation'],['#','Blog tactique'],['#',"Guides d'analyse"],['#','Support']] },
+            { title:'Entreprise', links:[['#contact','Contact'],['mailto:contact@insightball.com','Support']] },
             { title:'Légal', links:[['/mentions-legales','Mentions légales'],['/cgv','CGV'],['/confidentialite','Confidentialité'],['/cookies','Cookies']] },
           ].map(col => (
             <div key={col.title}>
