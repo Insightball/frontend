@@ -93,7 +93,7 @@ export default function CoachSettings() {
         <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
           <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />Paramètres
         </div>
-        <h1 style={{ fontFamily: G.display, fontSize: isMobile ? 32 : 52, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: G.text, margin: 0 }}>
+        <h1 style={{ fontFamily: G.display, fontSize: isMobile ? 28 : 52, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: G.text, margin: 0, overflowWrap: 'break-word', wordBreak: 'break-word' }}>
           Mon<br /><span style={{ color: G.gold }}>compte.</span>
         </h1>
       </div>

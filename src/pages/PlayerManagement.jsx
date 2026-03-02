@@ -127,7 +127,7 @@ function PlayerManagement() {
             <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />Effectif
           </div>
           {/* "Vos" en texte plein visible */}
-          <h1 style={{ fontFamily: G.display, fontSize: isMobile ? 32 : 52, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', margin: 0 }}>
+          <h1 style={{ fontFamily: G.display, fontSize: isMobile ? 28 : 52, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', margin: 0, overflowWrap: 'break-word', wordBreak: 'break-word' }}>
             <span style={{ color: G.text }}>Vos</span><br />
             <span style={{ color: G.gold }}>joueurs.</span>
           </h1>
@@ -146,7 +146,7 @@ function PlayerManagement() {
       </div>
 
       {/* ── STAT CARDS ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(3,1fr)' : 'repeat(5,1fr)', gap: 1, background: G.border, marginBottom: 28 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(5,1fr)', gap: 1, background: G.border, marginBottom: 28 }}>
         {stats.map(s => <StatCard key={s.label} {...s} />)}
       </div>
 
