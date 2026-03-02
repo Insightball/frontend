@@ -220,53 +220,114 @@ function ConfirmCoachModal({ isTrialing, onConfirm, onCancel, loading }) {
   )
 }
 
-// ── Composant formulaire CB intégré ──────────────────────────
+// ── Composant formulaire paiement intégré (PaymentElement) ──
+// Supporte automatiquement : CB, Apple Pay, Google Pay, Link
 function InlineCardForm({ plan, onSuccess, onCancel, alreadyTrialed }) {
-  const cardRef           = useRef(null)
-  const cardElementRef    = useRef(null)
+  const paymentRef        = useRef(null)
+  const elementsRef       = useRef(null)
   const stripeRef         = useRef(null)
   const [ready, setReady]   = useState(false)
   const [paying, setPaying] = useState(false)
   const [cardError, setCardError] = useState('')
+  const [clientSecret, setClientSecret] = useState(null)
 
+  // 1. Créer le SetupIntent au montage pour obtenir le client_secret
   useEffect(() => {
     let mounted = true
-    getStripe().then(stripe => {
-      if (!mounted || !cardRef.current) return
-      stripeRef.current = stripe
-      const elements = stripe.elements({
-        fonts: [{ cssSrc: 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap' }],
-      })
-      const card = elements.create('card', {
-        style: {
-          base: {
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: '13px',
-            color: '#f5f2eb',
-            '::placeholder': { color: 'rgba(245,242,235,0.28)' },
-            iconColor: '#c9a227',
-          },
-          invalid: { color: '#ef4444', iconColor: '#ef4444' },
-        },
-        hidePostalCode: true,
-      })
-      card.mount(cardRef.current)
-      card.on('ready', () => setReady(true))
-      card.on('change', e => setCardError(e.error?.message || ''))
-      cardElementRef.current = card
-    })
-    return () => { mounted = false; cardElementRef.current?.destroy() }
+    const init = async () => {
+      try {
+        const { data } = await api.post('/subscription/create-setup-intent')
+        if (mounted) setClientSecret(data.client_secret)
+      } catch (e) {
+        if (mounted) setCardError('Erreur d\'initialisation du paiement')
+      }
+    }
+    init()
+    return () => { mounted = false }
   }, [])
 
+  // 2. Monter le PaymentElement une fois le client_secret obtenu
+  useEffect(() => {
+    if (!clientSecret) return
+    let mounted = true
+    getStripe().then(stripe => {
+      if (!mounted || !paymentRef.current) return
+      stripeRef.current = stripe
+      const elements = stripe.elements({
+        clientSecret,
+        appearance: {
+          theme: 'night',
+          variables: {
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSizeBase: '13px',
+            colorPrimary: '#c9a227',
+            colorBackground: '#0a0908',
+            colorText: '#f5f2eb',
+            colorTextPlaceholder: 'rgba(245,242,235,0.28)',
+            colorDanger: '#ef4444',
+            borderRadius: '0px',
+            spacingUnit: '4px',
+          },
+          rules: {
+            '.Tab': {
+              border: '1px solid rgba(255,255,255,0.07)',
+              backgroundColor: '#0a0908',
+            },
+            '.Tab--selected': {
+              border: '1px solid #c9a227',
+              backgroundColor: 'rgba(201,162,39,0.07)',
+              color: '#c9a227',
+            },
+            '.Tab:hover': {
+              border: '1px solid rgba(201,162,39,0.4)',
+            },
+            '.Input': {
+              border: '1px solid rgba(255,255,255,0.07)',
+              backgroundColor: 'rgba(255,255,255,0.03)',
+            },
+            '.Input:focus': {
+              border: '1px solid #c9a227',
+              boxShadow: 'none',
+            },
+            '.Label': {
+              fontSize: '9px',
+              letterSpacing: '0.16em',
+              textTransform: 'uppercase',
+              color: 'rgba(245,242,235,0.45)',
+            },
+          },
+        },
+        fonts: [{ cssSrc: 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap' }],
+      })
+      const paymentElement = elements.create('payment', {
+        layout: {
+          type: 'tabs',
+          defaultCollapsed: false,
+        },
+        wallets: {
+          applePay: 'auto',
+          googlePay: 'auto',
+        },
+      })
+      paymentElement.mount(paymentRef.current)
+      paymentElement.on('ready', () => setReady(true))
+      paymentElement.on('change', e => setCardError(e.error?.message || ''))
+      elementsRef.current = elements
+    })
+    return () => { mounted = false }
+  }, [clientSecret])
+
   const handlePay = async () => {
-    if (!stripeRef.current || !cardElementRef.current) return
+    if (!stripeRef.current || !elementsRef.current) return
     setPaying(true); setCardError('')
     try {
-      const { data } = await api.post('/subscription/create-setup-intent')
-      const { setupIntent, error } = await stripeRef.current.confirmCardSetup(
-        data.client_secret,
-        { payment_method: { card: cardElementRef.current } }
-      )
+      const { setupIntent, error } = await stripeRef.current.confirmSetup({
+        elements: elementsRef.current,
+        redirect: 'if_required',
+        confirmParams: {
+          return_url: window.location.href,
+        },
+      })
       if (error) { setCardError(error.message); setPaying(false); return }
       await api.post('/subscription/confirm-plan', {
         plan: plan.id,
@@ -312,10 +373,11 @@ function InlineCardForm({ plan, onSuccess, onCancel, alreadyTrialed }) {
       )}
 
       <div style={{ background: G.bg2, padding: '20px', borderTop: `1px solid ${G.border}` }}>
-        <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.18em', textTransform: 'uppercase', color: G.muted, marginBottom: 10 }}>Carte bancaire</div>
-        <div ref={cardRef} style={{
-          padding: '14px 16px', background: 'rgba(255,255,255,0.03)',
-          border: `1px solid ${cardError ? G.red : G.border}`, minHeight: 44, transition: 'border-color .15s',
+        <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.18em', textTransform: 'uppercase', color: G.muted, marginBottom: 10 }}>Moyen de paiement</div>
+        <div ref={paymentRef} style={{
+          minHeight: 80,
+          transition: 'opacity .15s',
+          opacity: ready ? 1 : 0.5,
         }} />
         {cardError && (
           <div style={{ fontFamily: G.mono, fontSize: 9, color: G.red, marginTop: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
