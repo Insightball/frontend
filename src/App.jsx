@@ -28,6 +28,7 @@ const Onboarding        = lazy(() => import('./pages/Onboarding'))
 const AdminPanel        = lazy(() => import('./pages/AdminPanel'))
 const ClubDashboard     = lazy(() => import('./pages/ClubDashboard'))
 const ClubInvite        = lazy(() => import('./pages/ClubInvite'))
+const MatchBoard        = lazy(() => import('./components/MatchBoard'))
 
 // Pages légales
 const MentionsLegales          = lazy(() => import('./pages/MentionsLegales'))
@@ -103,6 +104,7 @@ function App() {
             <Route path="/dashboard/club"             element={<ProtectedRoute><ClubDashboard /></ProtectedRoute>} />
             <Route path="/dashboard/members"          element={<ProtectedRoute><ClubMembers /></ProtectedRoute>} />
             <Route path="/dashboard/settings"         element={<ProtectedRoute><SettingsRoute /></ProtectedRoute>} />
+            <Route path="/dashboard/matchboard"       element={<ProtectedRoute><MatchBoard /></ProtectedRoute>} />
           </Routes>
         </Suspense>
       </Router>
