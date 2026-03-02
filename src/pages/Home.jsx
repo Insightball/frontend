@@ -539,14 +539,6 @@ export default function LandingPage() {
                 Voir un exemple
               </a>
             </div>
-            <div style={{ display: 'flex', gap: 32, marginTop: 48, paddingTop: 32, borderTop: `1px solid ${G.border}`, opacity: 0, animation: 'heroUp .5s .6s forwards', flexWrap: 'wrap' }}>
-              {[['40+','métriques analysées'],['< 1h','rapport généré'],['Séniors→U14','toutes catégories']].map(([n,l]) => (
-                <div key={l}>
-                  <div style={{ fontFamily: G.display, fontSize: 32, fontWeight: 800, color: G.ink, lineHeight: 1 }}>{n}</div>
-                  <div style={{ fontSize: 13, color: G.muted, marginTop: 3 }}>{l}</div>
-                </div>
-              ))}
-            </div>
           </div>
           <div className="hero-right" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, animation: 'heroUp .6s .3s forwards' }}>
             <MockupRapport/>
@@ -1128,7 +1120,7 @@ export default function LandingPage() {
               </span>
             </div>
             <p style={{ fontFamily: G.mono, fontSize: 11, color: G.gold, marginBottom: 14, letterSpacing: '.04em' }}>
-              Football Analytics — Toulouse, France
+              Football Analytics
             </p>
             <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
               {[
@@ -1168,7 +1160,6 @@ export default function LandingPage() {
           ))}
         </div>
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.10)', paddingTop: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, fontSize: 13, color: 'rgba(255,255,255,0.75)', textAlign: 'center' }}>
-          <span>Made in 🇫🇷 with ❤️</span>
           <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12 }}>© 2026 Insightball — Tous droits réservés</span>
         </div>
       </footer>
