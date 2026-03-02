@@ -65,7 +65,7 @@ function PlayerManagement() {
   const [players, setPlayers]               = useState([])
   const [filteredPlayers, setFilteredPlayers] = useState([])
   const [loading, setLoading]               = useState(true)
-  const [isMobile, setIsMobile]             = useState(false)
+  const [isMobile, setIsMobile]             = useState(() => typeof window !== 'undefined' && window.innerWidth < 768)
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)

@@ -12,7 +12,7 @@ function DashboardLayout({ children }) {
   const navigate  = useNavigate()
   const { user, logout } = useAuth()
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [isMobile,   setIsMobile]   = useState(false)
+  const [isMobile,   setIsMobile]   = useState(() => typeof window !== 'undefined' && window.innerWidth < 768)
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)

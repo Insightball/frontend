@@ -33,7 +33,7 @@ export default function CoachSettings() {
   const { user } = useAuth()
   const location = useLocation()
   const flashMessage = location.state?.flash || ''
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleteConfirm, setDeleteConfirm] = useState('')
   const [deleteLoading, setDeleteLoading] = useState(false)
