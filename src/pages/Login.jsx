@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { ArrowRight, Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
@@ -18,7 +18,9 @@ const G = {
 
 function Login() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { login } = useAuth()
+  const welcomeClub = searchParams.get('welcome') === 'club'
   const [email, setEmail]         = useState('')
   const [password, setPassword]   = useState('')
   const [error, setError]         = useState('')
@@ -177,6 +179,14 @@ function Login() {
               </h1>
             </div>
 
+            {welcomeClub && (
+              <div style={{ marginBottom: 24, padding: '12px 16px', background: 'rgba(201,162,39,0.08)', borderLeft: `2px solid ${G.gold}` }}>
+                <p style={{ fontFamily: G.mono, fontSize: 11, color: G.gold, margin: 0, letterSpacing: '.04em', lineHeight: 1.6 }}>
+                  Abonnement Club activé avec succès ! Connectez-vous pour accéder à votre dashboard.
+                </p>
+              </div>
+            )}
+
             {error && (
               <div style={{ marginBottom: 24, padding: '12px 16px', background: 'rgba(239,68,68,0.08)', borderLeft: '2px solid #ef4444' }}>
                 <p style={{ fontFamily: G.mono, fontSize: 11, color: '#ef4444', margin: 0, letterSpacing: '.04em' }}>{error}</p>
@@ -244,7 +254,7 @@ function Login() {
 
           <p style={{ textAlign: 'center', marginTop: 16, fontFamily: G.mono, fontSize: 9, letterSpacing: '.08em', color: 'rgba(245,242,235,0.45)' }}>
             En vous connectant, vous acceptez nos{' '}
-            <Link to="/terms" style={{ color: 'rgba(245,242,235,0.65)', textDecoration: 'underline' }}>CGU</Link>
+            <Link to="/cgv" style={{ color: 'rgba(245,242,235,0.65)', textDecoration: 'underline' }}>CGV</Link>
           </p>
         </div>
       </div>
