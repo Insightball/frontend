@@ -389,6 +389,7 @@ export default function LandingPage() {
       .wrap, .wrap-inner { padding: 72px 32px !important; }
       .contact-grid { grid-template-columns: 1fr !important; }
       .wl-grid      { grid-template-columns: 1fr !important; }
+      .stat-grid    { grid-template-columns: repeat(2, 1fr) !important; }
     }
     @media (max-width: 768px) {
       .nav-links, .nav-cta-d { display: none !important; }
@@ -403,6 +404,11 @@ export default function LandingPage() {
       .price-grid   { grid-template-columns: 1fr !important; max-width: 100% !important; }
       .wl-grid      { grid-template-columns: 1fr !important; }
       .contact-grid { grid-template-columns: 1fr !important; }
+      .trial-banner { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
+      .trial-banner-sep { display: none !important; }
+      .trial-banner-items { flex-direction: column !important; gap: 8px !important; }
+      .cred-bar     { flex-direction: column !important; gap: 16px !important; align-items: flex-start !important; }
+      .trust-checks { flex-direction: column !important; gap: 10px !important; align-items: flex-start !important; }
     }
     @media (max-width: 1024px) {
       .hero-mobile-mockup { display: block !important; }
@@ -602,7 +608,7 @@ export default function LandingPage() {
       <div style={{ background: G.ink }}>
         <div className="wrap-inner" style={{ maxWidth: 1200, margin: '0 auto', padding: '72px 48px' }}>
           <Reveal>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 1, background: 'rgba(255,255,255,0.06)' }} className="feat-grid">
+            <div className="stat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 1, background: 'rgba(255,255,255,0.06)' }}>
               {[
                 { value: '40+', label: 'Métriques analysées', sub: 'par match' },
                 { value: '< 1h', label: 'Temps de traitement', sub: 'rapport livré' },
@@ -618,7 +624,7 @@ export default function LandingPage() {
             </div>
           </Reveal>
           <Reveal delay={0.15}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 32, marginTop: 40, flexWrap: 'wrap' }}>
+            <div className="trust-checks" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 32, marginTop: 40, flexWrap: 'wrap' }}>
               {[
                 'Séniors → U14 : toutes catégories couvertes',
                 'Zéro formation, zéro setup complexe',
@@ -783,13 +789,13 @@ export default function LandingPage() {
             </p>
 
             {/* ── Bandeau trial ── */}
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 16, background: G.ink, border: `1.5px solid ${G.gold}`, borderRadius: 6, padding: '14px 24px', marginBottom: 48 }}>
+            <div className="trial-banner" style={{ display: 'inline-flex', alignItems: 'center', gap: 16, background: G.ink, border: `1.5px solid ${G.gold}`, borderRadius: 6, padding: '14px 24px', marginBottom: 48 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ width: 8, height: 8, background: G.gold, borderRadius: '50%', flexShrink: 0, boxShadow: `0 0 0 3px rgba(201,162,39,0.25)` }}/>
                 <span style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: G.gold }}>Offre de lancement limitée</span>
               </div>
-              <div style={{ width: 1, height: 20, background: 'rgba(201,162,39,0.3)' }}/>
-              <div style={{ display: 'flex', gap: 20 }}>
+              <div className="trial-banner-sep" style={{ width: 1, height: 20, background: 'rgba(201,162,39,0.3)' }}/>
+              <div className="trial-banner-items" style={{ display: 'flex', gap: 20 }}>
                 {['1 match analysé offert', '7 jours gratuits', 'Sans engagement'].map((t, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <span style={{ color: G.gold, fontSize: 13 }}>✓</span>
@@ -1074,7 +1080,7 @@ export default function LandingPage() {
       <div style={{ background: G.off, borderTop: `1px solid ${G.border}`, borderBottom: `1px solid ${G.border}` }}>
         <div className="wrap-inner" style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 48px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 40, flexWrap: 'wrap' }}>
           <Reveal>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 40, flexWrap: 'wrap', justifyContent: 'center' }}>
+            <div className="cred-bar" style={{ display: 'flex', alignItems: 'center', gap: 40, flexWrap: 'wrap', justifyContent: 'center' }}>
               {[
                 { icon: '🇫🇷', text: 'Conçu et hébergé en France' },
                 { icon: '🔒', text: 'Paiement sécurisé Stripe' },
