@@ -7,7 +7,6 @@ import SubscriptionManagement from '../components/SubscriptionManagement'
 import api from '../services/api'
 import { T, globalStyles } from '../theme'
 
-// CoachSettings : fond CREAM (pages), modales restent dark via SubscriptionManagement
 const G = {
   bg:     T.bg,       bg2:    T.surface,
   gold:   T.gold,     goldD:  T.goldD,
@@ -37,11 +36,13 @@ export default function CoachSettings() {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleteConfirm, setDeleteConfirm] = useState('')
   const [deleteLoading, setDeleteLoading] = useState(false)
+  const [isTrialing, setIsTrialing] = useState(null)
 
-  // Statut Stripe réel — source de vérité pour le libellé du plan
-  const [isTrialing, setIsTrialing] = useState(null) // null = chargement
+  // Membre club = a un club_id mais pas de stripe_subscription_id
+  const isClubMember = user?.club_id && !user?.stripe_subscription_id
 
   useEffect(() => {
+    if (isClubMember) return // pas besoin de checker le trial pour un membre
     const fetchTrialStatus = async () => {
       try {
         const { data } = await api.get('/subscription/trial-status')
@@ -51,12 +52,12 @@ export default function CoachSettings() {
       }
     }
     fetchTrialStatus()
-  }, [])
+  }, [isClubMember])
 
   const getPlanLabel = () => {
+    if (isClubMember) return 'Membre club — accès inclus'
     const p = (user?.plan || 'COACH').toUpperCase()
-    if (p === 'CLUB') return 'Club — Offre sur mesure'
-    // isTrialing null = encore en chargement → on affiche rien de faux
+    if (p === 'CLUB' || p === 'CLUB_PRO') return 'Club — Offre sur mesure'
     if (isTrialing === null) return 'Coach'
     return isTrialing ? 'Coach — Essai en cours' : 'Coach — 39 €/mois · 4 matchs'
   }
@@ -88,6 +89,7 @@ export default function CoachSettings() {
   return (
     <DashboardLayout>
       <style>{globalStyles}</style>
+
       {/* Header */}
       <div style={{ marginBottom: 32 }}>
         <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
@@ -128,15 +130,27 @@ export default function CoachSettings() {
           </div>
         </Section>
 
-        {/* Abonnement */}
-        <div style={{ background: G.bg2, border: `1px solid ${G.border}`, borderTop: `2px solid ${G.border}`, padding: '28px' }}>
-          <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
-            <span style={{ width: 12, height: 1, background: G.gold, display: 'inline-block' }} />Abonnement
+        {/* Abonnement — masqué pour les membres club */}
+        {!isClubMember ? (
+          <div style={{ background: G.bg2, border: `1px solid ${G.border}`, borderTop: `2px solid ${G.border}`, padding: '28px' }}>
+            <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
+              <span style={{ width: 12, height: 1, background: G.gold, display: 'inline-block' }} />Abonnement
+            </div>
+            <SubscriptionManagement onTrialStatusChange={setIsTrialing} />
           </div>
-          <SubscriptionManagement onTrialStatusChange={setIsTrialing} />
-        </div>
+        ) : (
+          <div style={{ background: G.bg2, border: `1px solid ${G.border}`, borderTop: `2px solid ${G.gold}`, padding: '28px' }}>
+            <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+              <span style={{ width: 12, height: 1, background: G.gold, display: 'inline-block' }} />Abonnement
+            </div>
+            <p style={{ fontFamily: G.mono, fontSize: 12, color: G.muted, lineHeight: 1.7, margin: 0 }}>
+              Votre accès est géré par votre club.<br />
+              Contactez votre directeur sportif pour toute question.
+            </p>
+          </div>
+        )}
 
-        {/* Supprimer compte — discret */}
+        {/* Supprimer compte */}
         <div style={{ padding: '16px 28px', display: 'flex', justifyContent: 'flex-end', background: G.bg2, border: `1px solid ${G.border}` }}>
           <button onClick={() => setShowDeleteModal(true)} style={{
             background: 'none', border: 'none', cursor: 'pointer',
