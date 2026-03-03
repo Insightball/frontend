@@ -67,7 +67,6 @@ function SectionHeader({ title, to, label = 'Voir tout' }) {
   )
 }
 
-// helpers stats — normalise les deux conventions de nommage en base
 function normStats(s) {
   if (!s) return {}
   return {
@@ -77,7 +76,6 @@ function normStats(s) {
   }
 }
 
-// Sparkline SVG inline
 function Sparkline({ values, color, height = 32, width = 80 }) {
   if (!values || values.length < 2) return null
   const min = Math.min(...values)
@@ -98,7 +96,6 @@ function Sparkline({ values, color, height = 32, width = 80 }) {
   )
 }
 
-// Carte évolution avec sparkline
 function EvoCard({ label, values, unit = '', decimals = 0, delay = 0 }) {
   const [vis, setVis] = useState(false)
   useEffect(() => { const t = setTimeout(() => setVis(true), delay); return () => clearTimeout(t) }, [delay])
@@ -109,9 +106,9 @@ function EvoCard({ label, values, unit = '', decimals = 0, delay = 0 }) {
   const diff  = last - first
   const isUp  = diff > 0.01
   const isDown = diff < -0.01
-  const trendColor  = isDown ? T.red : isUp ? T.green : T.muted
-  const sparkColor  = isDown ? T.gold : isUp ? T.green : T.muted
-  const trendLabel  = isDown ? `↓ ${Math.abs(diff).toFixed(decimals)}${unit}` : isUp ? `↑ +${diff.toFixed(decimals)}${unit}` : '— Stable'
+  const trendColor = isDown ? T.red : isUp ? T.green : T.muted
+  const sparkColor = isDown ? T.gold : isUp ? T.green : T.muted
+  const trendLabel = isDown ? `↓ ${Math.abs(diff).toFixed(decimals)}${unit}` : isUp ? `↑ +${diff.toFixed(decimals)}${unit}` : '— Stable'
   return (
     <div style={{
       background: T.surface, borderTop: `2px solid ${T.rule}`, padding: '16px 18px',
@@ -134,13 +131,13 @@ function EvoCard({ label, values, unit = '', decimals = 0, delay = 0 }) {
 
 // ── Page ──────────────────────────────────────────────────────
 export default function DashboardHome() {
-  const { user }            = useAuth()
-  const [matches, setMatches]         = useState([])
-  const [players, setPlayers]         = useState([])
-  const [quotaData, setQuotaData]     = useState(null)
-  const [evoMatches, setEvoMatches]   = useState([])
-  const [loading, setLoading]         = useState(true)
-  const [isMobile, setIsMobile]       = useState(() => typeof window !== 'undefined' && window.innerWidth < 768)
+  const { user }          = useAuth()
+  const [matches, setMatches]       = useState([])
+  const [players, setPlayers]       = useState([])
+  const [quotaData, setQuotaData]   = useState(null)
+  const [evoMatches, setEvoMatches] = useState([])
+  const [loading, setLoading]       = useState(true)
+  const [isMobile, setIsMobile]     = useState(() => typeof window !== 'undefined' && window.innerWidth < 768)
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -158,7 +155,6 @@ export default function DashboardHome() {
           matchService.getMatches({ limit: 8, status: 'COMPLETED' }),
         ])
         setMatches(m); setPlayers(p); setQuotaData(q.data)
-        // tri chronologique + exclusion AMICAL pour les sparklines
         const sorted = [...evo]
           .filter(m => m.type !== 'AMICAL')
           .sort((a, b) => new Date(a.date) - new Date(b.date))
@@ -168,23 +164,20 @@ export default function DashboardHome() {
     })()
   }, [])
 
-  const quota     = quotaData?.quota    ?? 4
-  const quotaUsed = quotaData?.used     ?? 0
-  const quotaLeft = quotaData?.remaining ?? quota
-  const quotaPct  = Math.min((quotaUsed / quota) * 100, 100)
+  const quota      = quotaData?.quota     ?? 4
+  const quotaUsed  = quotaData?.used      ?? 0
+  const quotaLeft  = quotaData?.remaining ?? quota
+  const quotaPct   = Math.min((quotaUsed / quota) * 100, 100)
   const quotaColor = quotaPct >= 100 ? T.red : quotaPct >= 75 ? T.orange : T.gold
 
-  const completed  = matches.filter(m => m.status === 'completed' || m.status === 'COMPLETED').length
-  const processing = matches.filter(m => m.status === 'processing' || m.status === 'PROCESSING').length
+  const completed     = matches.filter(m => m.status === 'completed' || m.status === 'COMPLETED').length
+  const processing    = matches.filter(m => m.status === 'processing' || m.status === 'PROCESSING').length
   const recentMatches = matches.slice(0, 4)
   const topPlayers    = players.slice(0, 5)
-  // Membre club = a un club_id mais pas de stripe_subscription_id
-  const isClubMember = user?.club_id && !user?.stripe_subscription_id
-  const userPlan = isClubMember
-    ? 'CLUB'
-    : (user?.plan || 'COACH').toUpperCase()
 
-  // Séries sparklines — matchs complétés chronologiques
+  const isClubMember = user?.club_id && !user?.stripe_subscription_id
+  const userPlan     = isClubMember ? 'CLUB' : (user?.plan || 'COACH').toUpperCase()
+
   const evoSeries = {
     possession:    evoMatches.map(m => normStats(m.stats).possession).filter(v => v !== null),
     passAccuracy:  evoMatches.map(m => normStats(m.stats).passAccuracy).filter(v => v !== null),
@@ -192,9 +185,12 @@ export default function DashboardHome() {
   }
   const hasEvo = Object.values(evoSeries).some(s => s.length >= 2)
 
-  const formatDate = (d) => new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
+  // ── Hero : fontSize adaptatif selon longueur du nom ──
+  const clubName  = user?.club_name || 'Mon équipe'
+  const firstName = user?.name?.split(' ')[0] || 'Coach'
+  const maxLen    = Math.max(clubName.length, `Bonjour, ${firstName}.`.length)
+  const heroFontSize = isMobile ? 26 : maxLen > 22 ? 32 : maxLen > 16 ? 40 : maxLen > 12 ? 46 : 52
 
-  // Skeleton rows
   const SkeletonRow = ({ h = 56 }) => (
     <div style={{ height: h, background: `linear-gradient(90deg, ${T.rule} 25%, rgba(26,25,22,0.04) 50%, ${T.rule} 75%)`, backgroundSize: '200% 100%', animation: 'shimmer 1.4s infinite' }} />
   )
@@ -214,13 +210,11 @@ export default function DashboardHome() {
         marginBottom: 24, position: 'relative', overflow: 'hidden',
         animation: 'fadeUp .4s ease both',
       }}>
-        {/* Grille déco */}
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.04,
           backgroundImage: 'linear-gradient(rgba(201,162,39,1) 1px, transparent 1px), linear-gradient(90deg, rgba(201,162,39,1) 1px, transparent 1px)',
           backgroundSize: '36px 36px',
         }} />
-        {/* Mot décoratif */}
         <div style={{
           position: 'absolute', right: -10, bottom: -16,
           fontFamily: T.display, fontSize: 96, color: 'rgba(201,162,39,0.05)',
@@ -228,19 +222,31 @@ export default function DashboardHome() {
         }}>DATA</div>
 
         <div style={{ position: 'relative', display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'flex-start' : 'flex-end', justifyContent: 'space-between', gap: isMobile ? 14 : 20 }}>
-          <div>
-            <p style={{ fontFamily: T.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: 'rgba(201,162,39,0.7)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ width: 14, height: 1, background: T.gold, display: 'inline-block' }} />
-              Tableau de bord · Saison 2025/26
-            </p>
-            <h1 style={{ fontFamily: T.display, fontSize: isMobile ? 30 : 52, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: '#f5f2eb' }}>
-              {user?.club_name || 'Mon équipe'}<br />
-              <span style={{ color: T.gold }}>Bonjour, {user?.name?.split(' ')[0] || 'Coach'}.</span>
-            </h1>
+
+          {/* Gauche : logo + texte */}
+          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 16, minWidth: 0, flex: 1 }}>
+            {/* Logo club — affiché si défini dans les paramètres */}
+            {user?.club_logo_url && (
+              <img
+                src={user.club_logo_url}
+                alt="Logo club"
+                style={{ width: 54, height: 54, objectFit: 'contain', flexShrink: 0, marginBottom: 4, opacity: 0.9 }}
+              />
+            )}
+            <div style={{ minWidth: 0 }}>
+              <p style={{ fontFamily: T.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: 'rgba(201,162,39,0.7)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ width: 14, height: 1, background: T.gold, display: 'inline-block' }} />
+                Tableau de bord · Saison 2025/26
+              </p>
+              <h1 style={{ fontFamily: T.display, fontSize: heroFontSize, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: '#f5f2eb' }}>
+                {clubName}<br />
+                <span style={{ color: T.gold }}>Bonjour, {firstName}.</span>
+              </h1>
+            </div>
           </div>
 
           {/* Quota */}
-          <div style={{ textAlign: 'left' }}>
+          <div style={{ textAlign: 'left', flexShrink: 0 }}>
             <p style={{ fontFamily: T.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.4)', marginBottom: 6 }}>Quota ce mois</p>
             <p style={{ fontFamily: T.display, fontSize: isMobile ? 26 : 36, lineHeight: 1, color: quotaColor }}>
               {quotaLeft}<span style={{ fontFamily: T.mono, fontSize: 10, color: 'rgba(245,242,235,0.4)', marginLeft: 4 }}>/ {quota} restants</span>
@@ -254,10 +260,10 @@ export default function DashboardHome() {
 
       {/* ── KPI STRIP ── */}
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 1, background: T.rule, marginBottom: 24 }}>
-        <KpiCard label="Matchs analysés"  value={completed}            sub="Ce mois"    accent delay={0}   />
-        <KpiCard label="En cours"         value={processing}           sub="En analyse"         delay={60}  />
-        <KpiCard label="Joueurs effectif" value={players.length}       sub="Enregistrés"        delay={120} />
-        <KpiCard label="Matchs restants"  value={quotaLeft}            sub={`Plan ${userPlan}`} delay={180} />
+        <KpiCard label="Matchs analysés"  value={completed}      sub="Ce mois"            accent delay={0}   />
+        <KpiCard label="En cours"         value={processing}     sub="En analyse"                delay={60}  />
+        <KpiCard label="Joueurs effectif" value={players.length} sub="Enregistrés"               delay={120} />
+        <KpiCard label="Matchs restants"  value={quotaLeft}      sub={`Plan ${userPlan}`}         delay={180} />
       </div>
 
       {/* ── ÉVOLUTION ── */}
@@ -266,11 +272,7 @@ export default function DashboardHome() {
           <div style={{ background: T.surface, borderBottom: `1px solid ${T.rule}`, marginBottom: 1 }}>
             <SectionHeader title="Évolution" />
           </div>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(3,1fr)',
-            gap: 1, background: T.rule,
-          }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(3,1fr)', gap: 1, background: T.rule }}>
             <EvoCard label="Possession"      values={evoSeries.possession}    unit="%" decimals={0} delay={0}   />
             <EvoCard label="Passes réussies" values={evoSeries.passAccuracy}  unit="%" decimals={0} delay={60}  />
             <EvoCard label="Tirs cadrés"     values={evoSeries.shotsOnTarget} unit=""  decimals={0} delay={120} />
@@ -281,7 +283,7 @@ export default function DashboardHome() {
       {/* ── CONTENU 2 COLONNES ── */}
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 340px', gap: 1, background: T.rule, alignItems: 'start' }}>
 
-        {/* ── COL GAUCHE ── mobile: order 2 */}
+        {/* COL GAUCHE */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: T.rule, order: isMobile ? 2 : 1 }}>
 
           {/* Derniers matchs */}
@@ -304,22 +306,17 @@ export default function DashboardHome() {
                 display: 'flex', alignItems: 'center', gap: 14,
                 padding: '14px 20px',
                 borderBottom: i < recentMatches.length - 1 ? `1px solid ${T.rule}` : 'none',
-                textDecoration: 'none', background: T.surface,
-                transition: 'background .12s',
+                textDecoration: 'none', background: T.surface, transition: 'background .12s',
               }}>
-                {/* Date box */}
                 <div style={{ width: 38, textAlign: 'center', flexShrink: 0, padding: '5px 0', borderLeft: `2px solid ${T.goldBdr}`, paddingLeft: 8 }}>
                   <div style={{ fontFamily: T.display, fontSize: 18, lineHeight: 1, color: T.ink }}>{new Date(m.date).getDate()}</div>
                   <div style={{ fontFamily: T.mono, fontSize: 7, letterSpacing: '.1em', textTransform: 'uppercase', color: T.muted, marginTop: 2 }}>
                     {new Date(m.date).toLocaleDateString('fr-FR', { month: 'short' })}
                   </div>
                 </div>
-
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4, flexWrap: 'wrap' }}>
-                    <span style={{ fontFamily: T.display, fontSize: 16, textTransform: 'uppercase', letterSpacing: '.03em', color: T.ink }}>
-                      vs {m.opponent}
-                    </span>
+                    <span style={{ fontFamily: T.display, fontSize: 16, textTransform: 'uppercase', letterSpacing: '.03em', color: T.ink }}>vs {m.opponent}</span>
                     {m.category && (
                       <span style={{ fontFamily: T.mono, fontSize: 7, letterSpacing: '.1em', padding: '2px 7px', border: `1px solid ${T.rule}`, color: T.muted }}>{m.category}</span>
                     )}
@@ -328,8 +325,7 @@ export default function DashboardHome() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                       <span style={{ fontFamily: T.display, fontSize: 20, lineHeight: 1, color: T.ink }}>{m.score_home} – {m.score_away}</span>
                       <span style={{
-                        fontFamily: T.mono, fontSize: 7, letterSpacing: '.1em', textTransform: 'uppercase',
-                        padding: '2px 7px',
+                        fontFamily: T.mono, fontSize: 7, letterSpacing: '.1em', textTransform: 'uppercase', padding: '2px 7px',
                         color: m.score_home > m.score_away ? T.green : m.score_home < m.score_away ? T.red : T.orange,
                         background: m.score_home > m.score_away ? T.greenBg : m.score_home < m.score_away ? T.redBg : T.orangeBg,
                         border: `1px solid ${m.score_home > m.score_away ? T.greenBdr : m.score_home < m.score_away ? T.redBdr : T.orangeBdr}`,
@@ -348,7 +344,6 @@ export default function DashboardHome() {
                     </div>
                   )}
                 </div>
-
                 <ChevronRight size={13} color={T.muted} style={{ flexShrink: 0 }} />
               </Link>
             ))}
@@ -367,8 +362,7 @@ export default function DashboardHome() {
               </p>
             ) : topPlayers.map((p, i) => (
               <div key={p.id} className="player-row" style={{
-                display: 'flex', alignItems: 'center', gap: 12,
-                padding: '10px 20px',
+                display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px',
                 borderBottom: i < topPlayers.length - 1 ? `1px solid ${T.rule}` : 'none',
                 background: T.surface, transition: 'background .12s',
               }}>
@@ -383,23 +377,17 @@ export default function DashboardHome() {
                   <div style={{ fontFamily: T.mono, fontSize: 11, color: T.ink, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</div>
                   <div style={{ fontFamily: T.mono, fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase', color: T.muted, marginTop: 1 }}>{p.position}</div>
                 </div>
-                {p.number && (
-                  <span style={{ fontFamily: T.display, fontSize: 14, color: T.muted }}>{p.number}</span>
-                )}
+                {p.number && <span style={{ fontFamily: T.display, fontSize: 14, color: T.muted }}>{p.number}</span>}
               </div>
             ))}
           </div>
         </div>
 
-        {/* ── COL DROITE ── mobile: order 1 (CTA en premier) */}
+        {/* COL DROITE */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: T.rule, order: isMobile ? 1 : 2 }}>
 
           {/* CTA Upload */}
-          <div style={{
-            background: T.dark, padding: '24px 20px',
-            position: 'relative', overflow: 'hidden',
-            animation: 'fadeUp .4s ease 60ms both',
-          }}>
+          <div style={{ background: T.dark, padding: '24px 20px', position: 'relative', overflow: 'hidden', animation: 'fadeUp .4s ease 60ms both' }}>
             <div style={{
               position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.05,
               backgroundImage: 'linear-gradient(rgba(201,162,39,1) 1px, transparent 1px), linear-gradient(90deg, rgba(201,162,39,1) 1px, transparent 1px)',
@@ -418,26 +406,25 @@ export default function DashboardHome() {
               </p>
               {quotaLeft === 0 ? (
                 <div style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 6,
-                  padding: '10px 18px', background: 'rgba(201,162,39,0.12)',
-                  border: `1px solid rgba(201,162,39,0.22)`,
+                  display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 18px',
+                  background: 'rgba(201,162,39,0.12)', border: `1px solid rgba(201,162,39,0.22)`,
                   fontFamily: T.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase',
                   color: 'rgba(201,162,39,0.45)', cursor: 'not-allowed',
                 }}>
                   Quota atteint
                 </div>
               ) : (
-              <Link to="/dashboard/matches/upload" style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-                padding: '10px 18px', background: T.gold, color: T.dark,
-                fontFamily: T.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', fontWeight: 700,
-                textDecoration: 'none', transition: 'background .12s',
-              }}
-                onMouseEnter={e => e.currentTarget.style.background = T.goldD}
-                onMouseLeave={e => e.currentTarget.style.background = T.gold}
-              >
-                <Upload size={11} /> Uploader
-              </Link>
+                <Link to="/dashboard/matches/upload" style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 18px',
+                  background: T.gold, color: T.dark, fontFamily: T.mono, fontSize: 9,
+                  letterSpacing: '.14em', textTransform: 'uppercase', fontWeight: 700,
+                  textDecoration: 'none', transition: 'background .12s',
+                }}
+                  onMouseEnter={e => e.currentTarget.style.background = T.goldD}
+                  onMouseLeave={e => e.currentTarget.style.background = T.gold}
+                >
+                  <Upload size={11} /> Uploader
+                </Link>
               )}
             </div>
           </div>
@@ -451,21 +438,17 @@ export default function DashboardHome() {
               </div>
             ) : (
               <div>
-                {/* Ligne quota */}
                 <div className="action-row" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', borderBottom: `1px solid ${T.rule}`, background: T.surface, transition: 'background .12s' }}>
                   <div style={{ width: 28, height: 28, background: quotaColor + '14', border: `1px solid ${quotaColor}28`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <Activity size={11} color={quotaColor} />
                   </div>
                   <div style={{ flex: 1 }}>
-                    <p style={{ fontFamily: T.mono, fontSize: 10, color: T.ink, lineHeight: 1.4 }}>
-                      {quotaUsed}/{quota} matchs utilisés ce mois
-                    </p>
+                    <p style={{ fontFamily: T.mono, fontSize: 10, color: T.ink, lineHeight: 1.4 }}>{quotaUsed}/{quota} matchs utilisés ce mois</p>
                     <div style={{ marginTop: 5, height: 2, background: T.rule }}>
                       <div style={{ height: '100%', width: `${quotaPct}%`, background: quotaColor, transition: 'width .4s' }} />
                     </div>
                   </div>
                 </div>
-
                 {completed > 0 && (
                   <div className="action-row" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', borderBottom: `1px solid ${T.rule}`, background: T.surface, transition: 'background .12s' }}>
                     <div style={{ width: 28, height: 28, background: T.greenBg, border: `1px solid ${T.greenBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -476,7 +459,6 @@ export default function DashboardHome() {
                     </p>
                   </div>
                 )}
-
                 {processing > 0 && (
                   <div className="action-row" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', background: T.surface, transition: 'background .12s' }}>
                     <div style={{ width: 28, height: 28, background: T.blueBg, border: `1px solid ${T.blueBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -487,11 +469,8 @@ export default function DashboardHome() {
                     </p>
                   </div>
                 )}
-
                 {completed === 0 && processing === 0 && (
-                  <p style={{ padding: '20px', fontFamily: T.mono, fontSize: 10, color: T.muted, letterSpacing: '.04em' }}>
-                    Aucune activité récente
-                  </p>
+                  <p style={{ padding: '20px', fontFamily: T.mono, fontSize: 10, color: T.muted, letterSpacing: '.04em' }}>Aucune activité récente</p>
                 )}
               </div>
             )}
