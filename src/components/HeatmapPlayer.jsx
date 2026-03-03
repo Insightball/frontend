@@ -22,27 +22,19 @@ function HeatmapPlayer({ data, playerName }) {
           preserveAspectRatio="xMidYMid meet"
         >
           <defs>
-            {/* Blur pour effet chaleur */}
-            <filter id={filterId} x="-30%" y="-30%" width="160%" height="160%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="blur" />
+            {/* Blur fort pour fusion des zones — type heatmap pro */}
+            <filter id={filterId} x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="5.5" result="blur" />
               <feColorMatrix
                 in="blur"
                 type="matrix"
                 values="1 0 0 0 0
                         0 1 0 0 0
                         0 0 1 0 0
-                        0 0 0 18 -7"
+                        0 0 0 22 -6"
                 result="heat"
               />
             </filter>
-
-            {/* Gradient chaleur : transparent → jaune → orange → rouge */}
-            <linearGradient id={colorMatrixId} x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%"   stopColor="#ffff00" stopOpacity="0.0" />
-              <stop offset="30%"  stopColor="#ffff00" stopOpacity="0.6" />
-              <stop offset="60%"  stopColor="#ff8800" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#ff0000" stopOpacity="1.0" />
-            </linearGradient>
           </defs>
 
           {/* ── Terrain vert ── */}
@@ -93,12 +85,28 @@ function HeatmapPlayer({ data, playerName }) {
           {data && data.length > 0 && (
             <g filter={`url(#${filterId})`}>
               {data.map((point, i) => {
-                const intensity = Math.max(0, Math.min(1, point.intensity ?? 0.5))
-                // Couleur selon intensité : jaune → orange → rouge
-                const r = 255
-                const g = Math.round(255 * (1 - intensity))
-                const b = 0
-                const radius = 4 + intensity * 5
+                const t = Math.max(0, Math.min(1, point.intensity ?? 0.5))
+                // Dégradé complet : bleu → cyan → vert → jaune → orange → rouge
+                let r, g, b
+                if (t < 0.25) {
+                  // bleu → cyan
+                  const s = t / 0.25
+                  r = 0; g = Math.round(180 * s); b = 255
+                } else if (t < 0.5) {
+                  // cyan → vert
+                  const s = (t - 0.25) / 0.25
+                  r = 0; g = 180 + Math.round(75 * s); b = Math.round(255 * (1 - s))
+                } else if (t < 0.75) {
+                  // vert → jaune
+                  const s = (t - 0.5) / 0.25
+                  r = Math.round(255 * s); g = 255; b = 0
+                } else {
+                  // jaune → orange → rouge
+                  const s = (t - 0.75) / 0.25
+                  r = 255; g = Math.round(255 * (1 - s)); b = 0
+                }
+                // Rayon large pour bien couvrir et fusionner
+                const radius = 7 + t * 8
                 return (
                   <circle
                     key={i}
@@ -106,7 +114,7 @@ function HeatmapPlayer({ data, playerName }) {
                     cy={(point.y / 100) * VH}
                     r={radius}
                     fill={`rgb(${r},${g},${b})`}
-                    opacity={0.55 + intensity * 0.4}
+                    opacity={0.6 + t * 0.35}
                   />
                 )
               })}
@@ -126,9 +134,9 @@ function HeatmapPlayer({ data, playerName }) {
       {/* Légende */}
       <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
         {[
-          { color: '#ffff00', label: 'Faible' },
-          { color: '#ffaa00', label: 'Moyen' },
-          { color: '#ff5500', label: 'Élevé' },
+          { color: '#0066ff', label: 'Faible' },
+          { color: '#00cc44', label: 'Moyen' },
+          { color: '#ffcc00', label: 'Élevé' },
           { color: '#ff0000', label: 'Très élevé' },
         ].map(({ color, label }) => (
           <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
