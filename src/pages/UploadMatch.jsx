@@ -61,7 +61,7 @@ export default function UploadMatch() {
   const [quotaData, setQuotaData]             = useState(null)
 
   const [matchData, setMatchData] = useState({
-    date: '', opponent: '', competition: '', location: '',
+    date: '', opponent: '', competition: '', location: 'Domicile',
     score_home: '', score_away: '', category: 'Seniors',
     type: 'CHAMPIONNAT', matchday: '',
     weather: 'Ensoleillé', pitch_type: 'Naturel',
@@ -396,19 +396,26 @@ export default function UploadMatch() {
                 </Field>
               ) : (
                 <Field label="Lieu">
-                  <input type="text" name="location" value={matchData.location} onChange={handleMatchChange}
-                    placeholder="Domicile / Extérieur" style={S.input}
-                    onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = G.border} />
+                  <select name="location" value={matchData.location} onChange={handleMatchChange} style={S.select}>
+                    <option value="Domicile">Domicile</option>
+                    <option value="Extérieur">Extérieur</option>
+                  </select>
                 </Field>
               )}
 
               <Field label={matchData.type === 'AMICAL' ? 'Score (optionnel)' : 'Score *'}>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                  <input type="number" name="score_home" value={matchData.score_home} onChange={handleMatchChange}
-                    placeholder="0" style={{ ...S.input, textAlign: 'center', width: '40%' }} min="0" max="20" />
-                  <span style={{ fontFamily: G.mono, fontSize: 14, color: G.muted }}>—</span>
-                  <input type="number" name="score_away" value={matchData.score_away} onChange={handleMatchChange}
-                    placeholder="0" style={{ ...S.input, textAlign: 'center', width: '40%' }} min="0" max="20" />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontFamily: T.mono, fontSize: 7, letterSpacing: '.12em', textTransform: 'uppercase', color: T.muted, marginBottom: 4, textAlign: 'center' }}>Domicile</div>
+                    <input type="number" name="score_home" value={matchData.score_home} onChange={handleMatchChange}
+                      placeholder="0" style={{ ...S.input, textAlign: 'center' }} min="0" max="20" />
+                  </div>
+                  <span style={{ fontFamily: G.mono, fontSize: 14, color: G.muted, paddingTop: 18 }}>—</span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontFamily: T.mono, fontSize: 7, letterSpacing: '.12em', textTransform: 'uppercase', color: T.muted, marginBottom: 4, textAlign: 'center' }}>Extérieur</div>
+                    <input type="number" name="score_away" value={matchData.score_away} onChange={handleMatchChange}
+                      placeholder="0" style={{ ...S.input, textAlign: 'center' }} min="0" max="20" />
+                  </div>
                 </div>
               </Field>
 
