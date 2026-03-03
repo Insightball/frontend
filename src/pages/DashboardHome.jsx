@@ -226,9 +226,9 @@ export default function DashboardHome() {
           {/* Gauche : logo + texte */}
           <div style={{ display: 'flex', alignItems: 'flex-end', gap: 16, minWidth: 0, flex: 1 }}>
             {/* Logo club — affiché si défini dans les paramètres */}
-            {user?.club_logo_url && (
+            {user?.club_logo && (
               <img
-                src={user.club_logo_url}
+                src={user.club_logo}
                 alt="Logo club"
                 style={{ width: 54, height: 54, objectFit: 'contain', flexShrink: 0, marginBottom: 4, opacity: 0.9 }}
               />
