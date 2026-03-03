@@ -17,7 +17,7 @@ const G = {
 }
 
 const ROLES = ['admin', 'coach', 'analyst']
-const ROLE_LABELS = { admin: 'Administrateur', coach: 'Coach', analyst: 'Analyste' }
+const ROLE_LABELS = { admin: 'Administrateur', coach: 'Coach', analyst: 'Analyste vidéo' }
 const ROLE_COLORS = { admin: G.gold, coach: G.blue, analyst: '#8b5cf6' }
 const STATUS_COLORS = { accepted: G.green, pending: G.orange, declined: G.red }
 const STATUS_LABELS = { accepted: 'Actif', pending: 'En attente', declined: 'Refusé' }
