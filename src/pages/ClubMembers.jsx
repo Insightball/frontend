@@ -71,7 +71,7 @@ function InviteModal({ onClose, onSuccess }) {
         body: JSON.stringify({ email: form.email, role: form.role, category: form.role === 'coach' ? form.category : null })
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.detail || 'Erreur')
+      if (!res.ok) throw new Error(typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail))
       onSuccess(); onClose()
     } catch (e) { setError(e.message) }
     finally { setLoading(false) }
