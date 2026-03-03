@@ -64,7 +64,7 @@ export default function UploadMatch() {
     date: '', opponent: '', competition: '', location: 'Domicile',
     score_home: '', score_away: '', category: 'Seniors',
     type: 'CHAMPIONNAT', matchday: '',
-    weather: 'Ensoleillé', pitch_type: 'Naturel',
+    weather: 'Ensoleillé', pitch_type: 'Gazon naturel',
   })
   const [lineup, setLineup]     = useState({ starters: [], substitutes: [] })
   const [videoFile, setVideoFile] = useState(null)
@@ -450,7 +450,7 @@ export default function UploadMatch() {
 
               <Field label="Type de terrain">
                 <select name="pitch_type" value={matchData.pitch_type} onChange={handleMatchChange} style={S.select}>
-                  {['Naturel', 'Synthétique', 'Dur'].map(t => <option key={t}>{t}</option>)}
+                  {['Gazon naturel', 'Gazon synthétique'].map(t => <option key={t}>{t}</option>)}
                 </select>
               </Field>
 
