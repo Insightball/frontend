@@ -67,30 +67,100 @@ function SectionHeader({ title, to, label = 'Voir tout' }) {
   )
 }
 
+// helpers stats — normalise les deux conventions de nommage en base
+function normStats(s) {
+  if (!s) return {}
+  return {
+    possession:    s.possession    ?? null,
+    passAccuracy:  s.passAccuracy  ?? s.pass_accuracy  ?? null,
+    shotsOnTarget: s.shotsOnTarget ?? s.shots_on_target ?? null,
+  }
+}
+
+// Sparkline SVG inline
+function Sparkline({ values, color, height = 32, width = 80 }) {
+  if (!values || values.length < 2) return null
+  const min = Math.min(...values)
+  const max = Math.max(...values)
+  const range = max - min || 1
+  const pad = 3
+  const pts = values.map((v, i) => {
+    const x = pad + (i / (values.length - 1)) * (width - pad * 2)
+    const y = pad + (1 - (v - min) / range) * (height - pad * 2)
+    return `${x.toFixed(1)},${y.toFixed(1)}`
+  })
+  const [lx, ly] = pts[pts.length - 1].split(',')
+  return (
+    <svg width={width} height={height} style={{ display: 'block', overflow: 'visible', flexShrink: 0 }}>
+      <polyline points={pts.join(' ')} fill="none" stroke={color} strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round" opacity=".9" />
+      <circle cx={lx} cy={ly} r="2.5" fill={color} />
+    </svg>
+  )
+}
+
+// Carte évolution avec sparkline
+function EvoCard({ label, values, unit = '', decimals = 0, delay = 0 }) {
+  const [vis, setVis] = useState(false)
+  useEffect(() => { const t = setTimeout(() => setVis(true), delay); return () => clearTimeout(t) }, [delay])
+  const clean = (values || []).filter(v => v !== null && v !== undefined)
+  if (clean.length < 2) return null
+  const first = clean[0]
+  const last  = clean[clean.length - 1]
+  const diff  = last - first
+  const isUp  = diff > 0.01
+  const isDown = diff < -0.01
+  const trendColor  = isDown ? T.red : isUp ? T.green : T.muted
+  const sparkColor  = isDown ? T.gold : isUp ? T.green : T.muted
+  const trendLabel  = isDown ? `↓ ${Math.abs(diff).toFixed(decimals)}${unit}` : isUp ? `↑ +${diff.toFixed(decimals)}${unit}` : '— Stable'
+  return (
+    <div style={{
+      background: T.surface, borderTop: `2px solid ${T.rule}`, padding: '16px 18px',
+      opacity: vis ? 1 : 0, transform: vis ? 'translateY(0)' : 'translateY(10px)',
+      transition: 'opacity .35s ease, transform .35s ease',
+    }}>
+      <p style={{ fontFamily: T.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: T.muted, marginBottom: 10 }}>{label}</p>
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 8 }}>
+        <div>
+          <p style={{ fontFamily: T.display, fontSize: 32, lineHeight: 1, color: T.ink }}>{last.toFixed(decimals)}{unit}</p>
+          <p style={{ fontFamily: T.mono, fontSize: 9, color: trendColor, marginTop: 5, letterSpacing: '.04em' }}>
+            {trendLabel} <span style={{ color: T.muted }}>vs 1er match</span>
+          </p>
+        </div>
+        <Sparkline values={clean} color={sparkColor} />
+      </div>
+    </div>
+  )
+}
+
 // ── Page ──────────────────────────────────────────────────────
 export default function DashboardHome() {
   const { user }            = useAuth()
-  const [matches, setMatches]     = useState([])
-  const [players, setPlayers]     = useState([])
-  const [quotaData, setQuotaData] = useState(null)
-  const [loading, setLoading]     = useState(true)
-  const [isMobile, setIsMobile]   = useState(false)
+  const [matches, setMatches]         = useState([])
+  const [players, setPlayers]         = useState([])
+  const [quotaData, setQuotaData]     = useState(null)
+  const [evoMatches, setEvoMatches]   = useState([])
+  const [loading, setLoading]         = useState(true)
+  const [isMobile, setIsMobile]       = useState(() => typeof window !== 'undefined' && window.innerWidth < 768)
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
-    check(); window.addEventListener('resize', check)
+    window.addEventListener('resize', check)
     return () => window.removeEventListener('resize', check)
   }, [])
 
   useEffect(() => {
     ;(async () => {
       try {
-        const [m, p, q] = await Promise.all([
+        const [m, p, q, evo] = await Promise.all([
           matchService.getMatches({ limit: 4 }),
           playerService.getPlayers(),
           api.get('/matches/quota'),
+          matchService.getMatches({ limit: 8, status: 'COMPLETED' }),
         ])
         setMatches(m); setPlayers(p); setQuotaData(q.data)
+        // tri chronologique pour les sparklines (du plus ancien au plus récent)
+        const sorted = [...evo].sort((a, b) => new Date(a.date) - new Date(b.date))
+        setEvoMatches(sorted)
       } catch (e) { console.error(e) }
       finally { setLoading(false) }
     })()
@@ -102,11 +172,19 @@ export default function DashboardHome() {
   const quotaPct  = Math.min((quotaUsed / quota) * 100, 100)
   const quotaColor = quotaPct >= 100 ? T.red : quotaPct >= 75 ? T.orange : T.gold
 
-  const completed  = matches.filter(m => m.status === 'completed').length
-  const processing = matches.filter(m => m.status === 'processing').length
+  const completed  = matches.filter(m => m.status === 'completed' || m.status === 'COMPLETED').length
+  const processing = matches.filter(m => m.status === 'processing' || m.status === 'PROCESSING').length
   const recentMatches = matches.slice(0, 4)
   const topPlayers    = players.slice(0, 5)
   const userPlan      = (user?.plan || 'COACH').toUpperCase()
+
+  // Séries sparklines — matchs complétés chronologiques
+  const evoSeries = {
+    possession:    evoMatches.map(m => normStats(m.stats).possession).filter(v => v !== null),
+    passAccuracy:  evoMatches.map(m => normStats(m.stats).passAccuracy).filter(v => v !== null),
+    shotsOnTarget: evoMatches.map(m => normStats(m.stats).shotsOnTarget).filter(v => v !== null),
+  }
+  const hasEvo = Object.values(evoSeries).some(s => s.length >= 2)
 
   const formatDate = (d) => new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
 
@@ -175,6 +253,24 @@ export default function DashboardHome() {
         <KpiCard label="Joueurs effectif" value={players.length}       sub="Enregistrés"        delay={120} />
         <KpiCard label="Matchs restants"  value={quotaLeft}            sub={`Plan ${userPlan}`} delay={180} />
       </div>
+
+      {/* ── ÉVOLUTION ── */}
+      {hasEvo && (
+        <div style={{ marginBottom: 24, animation: 'fadeUp .4s ease 100ms both' }}>
+          <div style={{ background: T.surface, borderBottom: `1px solid ${T.rule}`, marginBottom: 1 }}>
+            <SectionHeader title="Évolution" />
+          </div>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(3,1fr)',
+            gap: 1, background: T.rule,
+          }}>
+            <EvoCard label="Possession"      values={evoSeries.possession}    unit="%" decimals={0} delay={0}   />
+            <EvoCard label="Passes réussies" values={evoSeries.passAccuracy}  unit="%" decimals={0} delay={60}  />
+            <EvoCard label="Tirs cadrés"     values={evoSeries.shotsOnTarget} unit=""  decimals={0} delay={120} />
+          </div>
+        </div>
+      )}
 
       {/* ── CONTENU 2 COLONNES ── */}
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 340px', gap: 1, background: T.rule, alignItems: 'start' }}>
