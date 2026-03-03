@@ -68,7 +68,7 @@ function InviteModal({ onClose, onSuccess }) {
     try {
       const res = await fetch(`${API}/invite`, {
         method: 'POST', headers: authHeaders(),
-        body: JSON.stringify({ email: form.email, role: form.role, category: form.role === 'coach' ? form.category : null })
+        body: JSON.stringify({ email: form.email, role: form.role.toUpperCase(), category: form.role === 'coach' ? form.category : null })
       })
       const data = await res.json()
       if (!res.ok) throw new Error(typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail))
@@ -125,7 +125,7 @@ function EditModal({ member, onClose, onSuccess }) {
     try {
       const res = await fetch(`${API}/${member.id}`, {
         method: 'PATCH', headers: authHeaders(),
-        body: JSON.stringify({ role: form.role, category: form.role === 'coach' ? form.category : null })
+        body: JSON.stringify({ role: form.role.toUpperCase(), category: form.role === 'coach' ? form.category : null })
       })
       if (!res.ok) throw new Error()
       onSuccess(); onClose()
