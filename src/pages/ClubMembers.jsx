@@ -21,7 +21,7 @@ const ROLE_LABELS = { admin: 'Administrateur', coach: 'Coach', analyst: 'Analyst
 const ROLE_COLORS = { admin: G.gold, coach: G.blue, analyst: '#8b5cf6' }
 const STATUS_COLORS = { accepted: G.green, pending: G.orange, declined: G.red }
 const STATUS_LABELS = { accepted: 'Actif', pending: 'En attente', declined: 'Refusé' }
-const CATEGORIES = ['N3', 'N2', 'N1', 'U19', 'U18', 'U17', 'U16', 'U15', 'U14', 'U13', 'Séniors', 'Féminines']
+const CATEGORIES = ['Seniors', 'U20', 'U19', 'U18', 'U17', 'U16', 'U15', 'U14']
 
 function authHeaders() {
   const token = localStorage.getItem('insightball_token')
@@ -179,6 +179,12 @@ export default function ClubMembers() {
     setLoading(true)
     try {
       const res = await fetch(API, { headers: authHeaders() })
+      const contentType = res.headers.get('content-type') || ''
+      if (!contentType.includes('application/json')) {
+        console.error('API membres — réponse non-JSON:', res.status)
+        setMembers([])
+        return
+      }
       const data = await res.json()
       setMembers(Array.isArray(data) ? data : [])
     } catch (e) { console.error(e) }
