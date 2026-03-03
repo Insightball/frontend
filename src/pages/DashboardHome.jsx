@@ -158,8 +158,10 @@ export default function DashboardHome() {
           matchService.getMatches({ limit: 8, status: 'COMPLETED' }),
         ])
         setMatches(m); setPlayers(p); setQuotaData(q.data)
-        // tri chronologique pour les sparklines (du plus ancien au plus récent)
-        const sorted = [...evo].sort((a, b) => new Date(a.date) - new Date(b.date))
+        // tri chronologique + exclusion AMICAL pour les sparklines
+        const sorted = [...evo]
+          .filter(m => m.type !== 'AMICAL')
+          .sort((a, b) => new Date(a.date) - new Date(b.date))
         setEvoMatches(sorted)
       } catch (e) { console.error(e) }
       finally { setLoading(false) }

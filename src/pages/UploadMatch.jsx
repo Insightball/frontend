@@ -62,7 +62,8 @@ export default function UploadMatch() {
 
   const [matchData, setMatchData] = useState({
     date: '', opponent: '', competition: '', location: '',
-    score_home: '', score_away: '', category: 'N3',
+    score_home: '', score_away: '', category: 'Seniors',
+    type: 'CHAMPIONNAT', matchday: '',
     weather: 'Ensoleillé', pitch_type: 'Naturel',
   })
   const [lineup, setLineup]     = useState({ starters: [], substitutes: [] })
@@ -153,9 +154,16 @@ export default function UploadMatch() {
 
   // FIX — erreurs inline au lieu d'alert()
   const nextStep = () => {
-    if (step === 1 && (!matchData.date || !matchData.opponent)) {
-      setError("Remplissez la date et l'adversaire")
-      return
+    if (step === 1) {
+      if (!matchData.date || !matchData.opponent) {
+        setError("Remplissez la date et l'adversaire")
+        return
+      }
+      const scoreRequired = matchData.type === 'CHAMPIONNAT' || matchData.type === 'COUPE'
+      if (scoreRequired && (matchData.score_home === '' || matchData.score_away === '')) {
+        setError('Le score est obligatoire pour un match de championnat ou de coupe')
+        return
+      }
     }
     setError('')
     setStep(s => Math.min(s + 1, 4))
@@ -347,31 +355,54 @@ export default function UploadMatch() {
           <div style={{ ...S.card, animation: 'fadeIn .3s ease', borderTop: `2px solid ${G.gold}` }}>
             <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 24 }}>— Informations du match</div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
+
               <Field label="Date *">
                 <input type="date" name="date" value={matchData.date} onChange={handleMatchChange} style={S.input}
                   onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = G.border} />
               </Field>
+
               <Field label="Adversaire *">
                 <input type="text" name="opponent" value={matchData.opponent} onChange={handleMatchChange}
                   placeholder="FC Marseille" style={S.input}
                   onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = G.border} />
               </Field>
-              <Field label="Compétition">
-                <input type="text" name="competition" value={matchData.competition} onChange={handleMatchChange}
-                  placeholder="Championnat N3" style={S.input}
-                  onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = G.border} />
-              </Field>
-              <Field label="Lieu">
-                <input type="text" name="location" value={matchData.location} onChange={handleMatchChange}
-                  placeholder="Domicile / Extérieur" style={S.input}
-                  onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = G.border} />
-              </Field>
+
               <Field label="Catégorie">
                 <select name="category" value={matchData.category} onChange={handleMatchChange} style={S.select}>
-                  {['N3', 'R1', 'R2', 'U19', 'U17', 'U15', 'Seniors'].map(c => <option key={c}>{c}</option>)}
+                  {['Seniors', 'U20', 'U19', 'U18', 'U17', 'U16', 'U15', 'U14'].map(c => <option key={c}>{c}</option>)}
                 </select>
               </Field>
-              <Field label="Score (optionnel)">
+
+              <Field label="Type de match">
+                <select name="type" value={matchData.type} onChange={handleMatchChange} style={S.select}>
+                  <option value="CHAMPIONNAT">Championnat</option>
+                  <option value="COUPE">Coupe</option>
+                  <option value="AMICAL">Amical</option>
+                </select>
+              </Field>
+
+              <Field label="Compétition">
+                <input type="text" name="competition" value={matchData.competition} onChange={handleMatchChange}
+                  placeholder={matchData.type === 'COUPE' ? 'Coupe de France, Coupe Régionale...' : 'Régionale 1, N3, District...'}
+                  style={S.input}
+                  onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = G.border} />
+              </Field>
+
+              {matchData.type === 'CHAMPIONNAT' ? (
+                <Field label="Journée">
+                  <input type="number" name="matchday" value={matchData.matchday} onChange={handleMatchChange}
+                    placeholder="Ex : 12" style={S.input} min="1" max="40"
+                    onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = G.border} />
+                </Field>
+              ) : (
+                <Field label="Lieu">
+                  <input type="text" name="location" value={matchData.location} onChange={handleMatchChange}
+                    placeholder="Domicile / Extérieur" style={S.input}
+                    onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = G.border} />
+                </Field>
+              )}
+
+              <Field label={matchData.type === 'AMICAL' ? 'Score (optionnel)' : 'Score *'}>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                   <input type="number" name="score_home" value={matchData.score_home} onChange={handleMatchChange}
                     placeholder="0" style={{ ...S.input, textAlign: 'center', width: '40%' }} min="0" max="20" />
@@ -380,16 +411,19 @@ export default function UploadMatch() {
                     placeholder="0" style={{ ...S.input, textAlign: 'center', width: '40%' }} min="0" max="20" />
                 </div>
               </Field>
+
               <Field label="Météo">
                 <select name="weather" value={matchData.weather} onChange={handleMatchChange} style={S.select}>
                   {['Ensoleillé', 'Nuageux', 'Pluvieux', 'Venteux', 'Neige'].map(w => <option key={w}>{w}</option>)}
                 </select>
               </Field>
+
               <Field label="Type de terrain">
                 <select name="pitch_type" value={matchData.pitch_type} onChange={handleMatchChange} style={S.select}>
                   {['Naturel', 'Synthétique', 'Dur'].map(t => <option key={t}>{t}</option>)}
                 </select>
               </Field>
+
             </div>
           </div>
         )}
