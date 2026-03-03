@@ -506,7 +506,8 @@ function InvitationsSection() {
   useEffect(() => { loadInvites() }, [])
 
   const deleteInvite = async (id, status) => {
-    const isAccepted = status === 'ACCEPTEE' || status === 'accepted'
+    console.log('deleteInvite — id:', id, 'status:', status, 'type:', typeof status)
+    const isAccepted = (status || '').toLowerCase() === 'accepted'
     const msg = isAccepted
       ? 'Cette invitation est déjà acceptée (client actif). Forcer la suppression ?'
       : 'Supprimer cette invitation ?'
@@ -514,9 +515,14 @@ function InvitationsSection() {
     const url = isAccepted
       ? `${INVITE_API}/club-invites/${id}?force=true`
       : `${INVITE_API}/club-invites/${id}`
+    console.log('DELETE url:', url)
     const res = await fetch(url, { method: 'DELETE', headers: authHeaders() })
     if (res.ok) setInvites(prev => prev.filter(i => i.id !== id))
-    else alert('Erreur lors de la suppression')
+    else {
+      const err = await res.json().catch(() => ({}))
+      console.error('Erreur suppression:', res.status, err)
+      alert('Erreur lors de la suppression')
+    }
   }
 
   const copyLink = (token) => {
