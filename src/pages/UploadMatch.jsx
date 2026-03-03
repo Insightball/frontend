@@ -357,13 +357,15 @@ export default function UploadMatch() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
 
               <Field label="Date *">
-                <input type="date" name="date" value={matchData.date} onChange={handleMatchChange} style={S.input}
+                <input type="date" name="date" value={matchData.date} onChange={handleMatchChange}
+                  max={new Date().toISOString().split('T')[0]}
+                  style={S.input}
                   onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = G.border} />
               </Field>
 
               <Field label="Adversaire *">
                 <input type="text" name="opponent" value={matchData.opponent} onChange={handleMatchChange}
-                  placeholder="FC Marseille" style={S.input}
+                  placeholder="Club adverse" style={S.input}
                   onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = G.border} />
               </Field>
 
@@ -388,31 +390,31 @@ export default function UploadMatch() {
                   onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = G.border} />
               </Field>
 
-              {matchData.type === 'CHAMPIONNAT' ? (
+              <Field label="Lieu">
+                <select name="location" value={matchData.location} onChange={handleMatchChange} style={S.select}>
+                  <option value="Domicile">Domicile</option>
+                  <option value="Extérieur">Extérieur</option>
+                </select>
+              </Field>
+
+              {matchData.type === 'CHAMPIONNAT' && (
                 <Field label="Journée">
                   <input type="number" name="matchday" value={matchData.matchday} onChange={handleMatchChange}
                     placeholder="Ex : 12" style={S.input} min="1" max="40"
                     onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = G.border} />
-                </Field>
-              ) : (
-                <Field label="Lieu">
-                  <select name="location" value={matchData.location} onChange={handleMatchChange} style={S.select}>
-                    <option value="Domicile">Domicile</option>
-                    <option value="Extérieur">Extérieur</option>
-                  </select>
                 </Field>
               )}
 
               <Field label={matchData.type === 'AMICAL' ? 'Score (optionnel)' : 'Score *'}>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontFamily: T.mono, fontSize: 7, letterSpacing: '.12em', textTransform: 'uppercase', color: T.muted, marginBottom: 4, textAlign: 'center' }}>Domicile</div>
+                    <div style={{ fontFamily: T.mono, fontSize: 7, letterSpacing: '.12em', textTransform: 'uppercase', color: T.gold, marginBottom: 4, textAlign: 'center' }}>Nous</div>
                     <input type="number" name="score_home" value={matchData.score_home} onChange={handleMatchChange}
                       placeholder="0" style={{ ...S.input, textAlign: 'center' }} min="0" max="20" />
                   </div>
                   <span style={{ fontFamily: G.mono, fontSize: 14, color: G.muted, paddingTop: 18 }}>—</span>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontFamily: T.mono, fontSize: 7, letterSpacing: '.12em', textTransform: 'uppercase', color: T.muted, marginBottom: 4, textAlign: 'center' }}>Extérieur</div>
+                    <div style={{ fontFamily: T.mono, fontSize: 7, letterSpacing: '.12em', textTransform: 'uppercase', color: T.muted, marginBottom: 4, textAlign: 'center' }}>Eux</div>
                     <input type="number" name="score_away" value={matchData.score_away} onChange={handleMatchChange}
                       placeholder="0" style={{ ...S.input, textAlign: 'center' }} min="0" max="20" />
                   </div>
