@@ -159,6 +159,10 @@ export default function UploadMatch() {
         setError("Remplissez la date et l'adversaire")
         return
       }
+      if (new Date(matchData.date) > new Date()) {
+        setError("La date du match ne peut pas être dans le futur")
+        return
+      }
       const scoreRequired = matchData.type === 'CHAMPIONNAT' || matchData.type === 'COUPE'
       if (scoreRequired && matchData.score_home === '' && matchData.score_away === '') {
         // Les deux vides = 0-0, on accepte
