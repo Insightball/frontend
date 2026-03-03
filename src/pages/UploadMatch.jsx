@@ -23,7 +23,6 @@ const S = {
   select: { width: '100%', background: T.surface, border: `1px solid ${T.rule}`, padding: '12px 16px', color: T.ink, fontFamily: T.mono, fontSize: 13, outline: 'none', cursor: 'pointer', boxSizing: 'border-box' },
 }
 
-
 // Limite vidéo : 8GB (adapté aux vidéos match full HD)
 const MAX_VIDEO_SIZE = 8 * 1024 * 1024 * 1024
 
@@ -128,7 +127,6 @@ export default function UploadMatch() {
     return players.filter(p => !usedIds.includes(p.id))
   }
 
-  // FIX — validation taille vidéo : limite à 8GB
   const handleVideoChange = (e) => {
     const file = e.target.files[0]
     if (!file) return
@@ -152,7 +150,6 @@ export default function UploadMatch() {
     setVideoFile(file)
   }
 
-  // FIX — erreurs inline au lieu d'alert()
   const nextStep = () => {
     if (step === 1) {
       if (!matchData.date || !matchData.opponent) {
@@ -162,10 +159,6 @@ export default function UploadMatch() {
       if (new Date(matchData.date) > new Date()) {
         setError("La date du match ne peut pas être dans le futur")
         return
-      }
-      const scoreRequired = matchData.type === 'CHAMPIONNAT' || matchData.type === 'COUPE'
-      if (scoreRequired && matchData.score_home === '' && matchData.score_away === '') {
-        // Les deux vides = 0-0, on accepte
       }
     }
     setError('')
@@ -178,7 +171,6 @@ export default function UploadMatch() {
     setError('')
     setUploading(true)
     setUploadProgress(0)
-    // Score vide → 0
     const normalizedMatchData = {
       ...matchData,
       score_home: matchData.score_home === '' ? 0 : parseInt(matchData.score_home, 10),
@@ -223,14 +215,17 @@ export default function UploadMatch() {
   }
 
   // ── PAYWALL ──────────────────────────────────────────────────
-  const access             = trialStatus?.access
-  const isTrialNoCB        = !hasPaymentMethod && access !== 'full'
-  const isExpired          = access === 'expired'
+  const access              = trialStatus?.access
+  const isTrialNoCB         = !hasPaymentMethod && access !== 'full'
+  const isExpired           = access === 'expired'
   const trialMatchExhausted = access === 'full' && trialStatus?.trial_active && trialStatus?.match_used === true
-  const quotaExhausted     = quotaData && quotaData.remaining === 0 && quotaData.plan !== 'TRIAL' && quotaData.plan !== 'NO_SUBSCRIPTION'
-  const canUpload          = access === 'full' && !trialMatchExhausted && !quotaExhausted
+  const quotaExhausted      = quotaData && quotaData.remaining === 0 && quotaData.plan !== 'TRIAL' && quotaData.plan !== 'NO_SUBSCRIPTION'
 
-  // Loading state pendant vérification trial — évite le flash du formulaire
+  // FIX — membres club : accès via pool quota du DS admin (pas de stripe_subscription_id perso)
+  const isClubMember = quotaData && ['CLUB', 'CLUB_PRO'].includes(quotaData.plan) && quotaData.remaining > 0
+  const canUpload    = (access === 'full' || isClubMember) && !trialMatchExhausted && !quotaExhausted
+
+  // Loading state
   if (trialLoading) {
     return (
       <DashboardLayout>
