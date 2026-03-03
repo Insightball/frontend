@@ -184,7 +184,7 @@ export default function ClubMembers() {
   // Guard : seul l'admin peut voir cette page
   const isAdmin = user?.role === 'ADMIN' || user?.role === 'admin'
 
-  useEffect(() => { if (isAdmin) loadMembers() else setLoading(false) }, [isAdmin])
+  useEffect(() => { if (isAdmin) loadMembers(); else setLoading(false) }, [isAdmin])
 
   const loadMembers = async () => {
     setLoading(true)
