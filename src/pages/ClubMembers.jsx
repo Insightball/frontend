@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react'
 import { UserPlus, Trash2, Edit2, X, Mail } from 'lucide-react'
 import DashboardLayout from '../components/DashboardLayout'
+import { useAuth } from '../context/AuthContext'
 
 const API = 'https://backend-pued.onrender.com/api/club/members'
 
@@ -26,6 +27,12 @@ const CATEGORIES = ['Seniors', 'U20', 'U19', 'U18', 'U17', 'U16', 'U15', 'U14']
 function authHeaders() {
   const token = localStorage.getItem('insightball_token')
   return { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }
+}
+
+function safeJson(res) {
+  const ct = res.headers.get('content-type') || ''
+  if (!ct.includes('application/json')) return Promise.resolve(null)
+  return res.json()
 }
 
 function RoleBadge({ role }) {
@@ -54,7 +61,6 @@ const inputStyle = {
 }
 const labelStyle = { fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted, marginBottom: 8, display: 'block' }
 
-// ─── Modale Invitation ───────────────────────────────────────────────────────
 function InviteModal({ onClose, onSuccess }) {
   const [form, setForm] = useState({ email: '', role: 'coach', category: '' })
   const [loading, setLoading] = useState(false)
@@ -70,8 +76,8 @@ function InviteModal({ onClose, onSuccess }) {
         method: 'POST', headers: authHeaders(),
         body: JSON.stringify({ email: form.email, role: form.role.toUpperCase(), category: form.role === 'coach' ? form.category : null })
       })
-      const data = await res.json()
-      if (!res.ok) throw new Error(typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail))
+      const data = await safeJson(res)
+      if (!res.ok) throw new Error(data ? (typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail)) : 'Erreur serveur')
       onSuccess(); onClose()
     } catch (e) { setError(e.message) }
     finally { setLoading(false) }
@@ -115,7 +121,6 @@ function InviteModal({ onClose, onSuccess }) {
   )
 }
 
-// ─── Modale Édition ──────────────────────────────────────────────────────────
 function EditModal({ member, onClose, onSuccess }) {
   const [form, setForm] = useState({ role: member.role, category: member.category || '' })
   const [loading, setLoading] = useState(false)
@@ -127,7 +132,10 @@ function EditModal({ member, onClose, onSuccess }) {
         method: 'PATCH', headers: authHeaders(),
         body: JSON.stringify({ role: form.role.toUpperCase(), category: form.role === 'coach' ? form.category : null })
       })
-      if (!res.ok) throw new Error()
+      if (!res.ok) {
+        const data = await safeJson(res)
+        alert(data?.detail || 'Erreur lors de la mise à jour'); return
+      }
       onSuccess(); onClose()
     } catch { alert('Erreur lors de la mise à jour') }
     finally { setLoading(false) }
@@ -165,26 +173,25 @@ function EditModal({ member, onClose, onSuccess }) {
   )
 }
 
-// ─── Page principale ─────────────────────────────────────────────────────────
 export default function ClubMembers() {
+  const { user } = useAuth()
   const [members, setMembers] = useState([])
   const [loading, setLoading] = useState(true)
   const [showInvite, setShowInvite] = useState(false)
   const [editMember, setEditMember] = useState(null)
   const [filter, setFilter] = useState('all')
 
-  useEffect(() => { loadMembers() }, [])
+  // Guard : seul l'admin peut voir cette page
+  const isAdmin = user?.role === 'ADMIN' || user?.role === 'admin'
+
+  useEffect(() => { if (isAdmin) loadMembers() else setLoading(false) }, [isAdmin])
 
   const loadMembers = async () => {
     setLoading(true)
     try {
       const res = await fetch(API, { headers: authHeaders() })
-      const contentType = res.headers.get('content-type') || ''
-      if (!contentType.includes('application/json')) {
-        console.error('API membres — réponse non-JSON:', res.status)
-        setMembers([])
-        return
-      }
+      const ct = res.headers.get('content-type') || ''
+      if (!ct.includes('application/json')) { setMembers([]); return }
       const data = await res.json()
       setMembers(Array.isArray(data) ? data : [])
     } catch (e) { console.error(e) }
@@ -195,7 +202,10 @@ export default function ClubMembers() {
     if (!window.confirm(`Retirer ${member.user_name || member.email} du club ?`)) return
     try {
       const res = await fetch(`${API}/${member.id}`, { method: 'DELETE', headers: authHeaders() })
-      if (!res.ok) throw new Error()
+      if (!res.ok) {
+        const data = await safeJson(res)
+        alert(data?.detail || 'Erreur lors de la suppression'); return
+      }
       setMembers(prev => prev.filter(m => m.id !== member.id))
     } catch { alert('Erreur lors de la suppression') }
   }
@@ -206,9 +216,20 @@ export default function ClubMembers() {
   const thStyle = { fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted, padding: '10px 16px', textAlign: 'left', borderBottom: `1px solid ${G.border}`, whiteSpace: 'nowrap' }
   const tdStyle = { fontFamily: G.mono, fontSize: 11, color: G.text, padding: '14px 16px', borderBottom: `1px solid rgba(255,255,255,0.03)`, verticalAlign: 'middle' }
 
+  // Accès refusé pour les non-admins
+  if (!isAdmin) {
+    return (
+      <DashboardLayout>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '40vh', gap: 16 }}>
+          <div style={{ fontFamily: "'Anton', sans-serif", fontSize: 36, textTransform: 'uppercase', color: 'rgba(26,25,22,0.1)' }}>Accès refusé</div>
+          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'rgba(26,25,22,0.45)' }}>Cette page est réservée aux administrateurs du club.</div>
+        </div>
+      </DashboardLayout>
+    )
+  }
+
   return (
     <DashboardLayout>
-      {/* Header */}
       <div style={{ marginBottom: 32 }}>
         <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
           <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />Gestion accès
@@ -218,7 +239,6 @@ export default function ClubMembers() {
         </h1>
       </div>
 
-      {/* Toolbar */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 1, flexWrap: 'wrap', gap: 12 }}>
         <div style={{ display: 'flex', gap: 1, background: G.border }}>
           {[{ key: 'all', label: 'Tous' }, { key: 'accepted', label: 'Actifs' }, { key: 'pending', label: 'En attente' }].map(({ key, label }) => (
@@ -243,7 +263,6 @@ export default function ClubMembers() {
         </button>
       </div>
 
-      {/* Table */}
       <div style={{ background: G.bg2, border: `1px solid ${G.border}`, overflowX: 'auto' }}>
         {loading ? (
           <div style={{ textAlign: 'center', padding: '48px', fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted }}>Chargement...</div>

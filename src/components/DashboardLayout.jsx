@@ -23,6 +23,11 @@ function DashboardLayout({ children }) {
 
   useEffect(() => { setMobileOpen(false) }, [location.pathname])
 
+  // Membre club = a un club_id mais pas de stripe_subscription_id
+  const isClubMember = user?.club_id && !user?.stripe_subscription_id
+  const isClubAdmin  = (user?.plan === 'CLUB' || user?.plan === 'CLUB_PRO') && (user?.role === 'ADMIN' || user?.role === 'admin')
+  const isClubUser   = isClubAdmin || isClubMember
+
   const navigation = [
     { name: 'Accueil',      href: '/dashboard',            icon: Home },
     { name: 'Matchs',       href: '/dashboard/matches',    icon: Film },
@@ -30,10 +35,11 @@ function DashboardLayout({ children }) {
     { name: 'Statistiques', href: '/dashboard/stats',      icon: BarChart3 },
     { name: 'MatchBoard',   href: '/dashboard/matchboard', icon: Layout },
   ]
-  if (user?.plan === 'CLUB') {
+  if (isClubUser) {
     navigation.push({ name: 'Vue Club', href: '/dashboard/club', icon: Trophy })
-    if (user?.role === 'ADMIN')
-      navigation.push({ name: 'Membres', href: '/dashboard/members', icon: UserCog })
+  }
+  if (isClubAdmin) {
+    navigation.push({ name: 'Membres', href: '/dashboard/members', icon: UserCog })
   }
   navigation.push({ name: 'Paramètres', href: '/dashboard/settings', icon: Settings })
 
@@ -47,6 +53,12 @@ function DashboardLayout({ children }) {
     href === '/dashboard'
       ? location.pathname === href
       : location.pathname.startsWith(href)
+
+  // Label du plan affiché dans la sidebar
+  const getPlanBadge = () => {
+    if (isClubMember) return 'CLUB'
+    return user?.plan || 'COACH'
+  }
 
   const SidebarContent = () => (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: T.dark }}>
@@ -96,10 +108,10 @@ function DashboardLayout({ children }) {
               fontFamily: T.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase',
               padding: '3px 9px', background: T.goldBg2, border: `1px solid ${T.goldBdr}`, color: T.gold,
             }}>
-              {user.plan}
+              {getPlanBadge()}
             </span>
           )}
-          {user?.plan === 'CLUB' && user?.role && (
+          {isClubUser && user?.role && (
             <span style={{
               fontFamily: T.mono, fontSize: 8, letterSpacing: '.12em', textTransform: 'uppercase',
               padding: '3px 9px', background: 'rgba(245,242,235,0.06)', border: `1px solid rgba(245,242,235,0.1)`, color: 'rgba(245,242,235,0.4)',
