@@ -51,19 +51,21 @@ function HeatmapPlayer({ data, playerName }) {
             <g filter={`url(#${filterId})`}>
               {data.map((point, i) => {
                 const t = Math.max(0, Math.min(1, point.intensity ?? 0.5))
+                // Transparence → jaune → orange → rouge (pas de bleu)
                 let r, g, b
-                if (t < 0.25) {
-                  const s = t / 0.25
-                  r = 0; g = Math.round(180 * s); b = 255
-                } else if (t < 0.5) {
-                  const s = (t - 0.25) / 0.25
-                  r = 0; g = 180 + Math.round(75 * s); b = Math.round(255 * (1 - s))
+                if (t < 0.5) {
+                  // jaune pâle → jaune vif
+                  const s = t / 0.5
+                  r = 255; g = 255; b = 0
+                  // on ajuste juste l'opacité dans ce range
                 } else if (t < 0.75) {
+                  // jaune → orange
                   const s = (t - 0.5) / 0.25
-                  r = Math.round(255 * s); g = 255; b = 0
+                  r = 255; g = Math.round(255 * (1 - s * 0.6)); b = 0
                 } else {
+                  // orange → rouge vif
                   const s = (t - 0.75) / 0.25
-                  r = 255; g = Math.round(255 * (1 - s)); b = 0
+                  r = 255; g = Math.round(100 * (1 - s)); b = 0
                 }
                 const radius = 5 + t * 6
                 return (
@@ -73,7 +75,7 @@ function HeatmapPlayer({ data, playerName }) {
                     cy={(point.y / 100) * VH}
                     r={radius}
                     fill={`rgb(${r},${g},${b})`}
-                    opacity={0.55 + t * 0.35}
+                    opacity={t < 0.3 ? t * 1.2 : 0.5 + t * 0.45}
                   />
                 )
               })}
@@ -115,9 +117,9 @@ function HeatmapPlayer({ data, playerName }) {
       {/* Légende */}
       <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
         {[
-          { color: '#0066ff', label: 'Faible' },
-          { color: '#00cc44', label: 'Moyen' },
-          { color: '#ffcc00', label: 'Élevé' },
+          { color: '#ffff00', label: 'Faible' },
+          { color: '#ff8800', label: 'Moyen' },
+          { color: '#ff4400', label: 'Élevé' },
           { color: '#ff0000', label: 'Très élevé' },
         ].map(({ color, label }) => (
           <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
