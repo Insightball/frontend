@@ -69,7 +69,7 @@ export default function UploadMatch() {
   const [lineup, setLineup]     = useState({ starters: [], substitutes: [] })
   const [videoFile, setVideoFile] = useState(null)
 
-  const positions = ['GB', 'DD', 'DC', 'DG', 'MDC', 'MIL', 'MOF', 'AD', 'AG', 'AVT']
+  const positions = ['GB', 'DEF', 'MIL', 'ATT']
   const steps     = [{ n: '01', label: 'Match' }, { n: '02', label: 'Titulaires' }, { n: '03', label: 'Remplaçants' }, { n: '04', label: 'Vidéo' }]
 
   useEffect(() => { loadPlayers() }, [])
@@ -111,7 +111,7 @@ export default function UploadMatch() {
     setLineup({ ...lineup, starters: updated })
   }
 
-  const addSubstitute    = () => { if (lineup.substitutes.length < 5) setLineup({ ...lineup, substitutes: [...lineup.substitutes, { player_id: '', player_name: '', number: '' }] }) }
+  const addSubstitute    = () => { setLineup({ ...lineup, substitutes: [...lineup.substitutes, { player_id: '', player_name: '', number: '' }] }) }
   const removeSubstitute = (i) => setLineup({ ...lineup, substitutes: lineup.substitutes.filter((_, idx) => idx !== i) })
   const updateSubstitute = (i, field, value) => {
     const updated = [...lineup.substitutes]
@@ -505,13 +505,11 @@ export default function UploadMatch() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
               <div>
                 <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 6 }}>— Remplaçants</div>
-                <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.08em' }}>{lineup.substitutes.length}/5 — optionnels</p>
+                <p style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.08em' }}>Optionnel</p>
               </div>
-              {lineup.substitutes.length < 5 && (
-                <button onClick={addSubstitute} style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', padding: '9px 18px', background: 'rgba(201,162,39,0.06)', color: G.gold, border: `1px solid ${G.goldBdr}`, cursor: 'pointer' }}>
-                  + Ajouter
-                </button>
-              )}
+              <button onClick={addSubstitute} style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', padding: '9px 18px', background: 'rgba(201,162,39,0.06)', color: G.gold, border: `1px solid ${G.goldBdr}`, cursor: 'pointer' }}>
+                + Ajouter
+              </button>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {lineup.substitutes.map((sub, i) => (
@@ -530,7 +528,7 @@ export default function UploadMatch() {
               ))}
               {lineup.substitutes.length === 0 && (
                 <div style={{ textAlign: 'center', padding: '40px 0', fontFamily: G.mono, fontSize: 11, color: G.muted, letterSpacing: '.06em' }}>
-                  Les remplaçants sont optionnels (max 5)
+                  Optionnel
                 </div>
               )}
             </div>
