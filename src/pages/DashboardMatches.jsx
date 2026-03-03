@@ -74,6 +74,7 @@ function DashboardMatches() {
   const [showUpgradeGate, setShowUpgradeGate] = useState(false)
   const [trialStatus, setTrialStatus]       = useState(null)
   const [trialLoading, setTrialLoading]     = useState(true)
+  const [quotaData, setQuotaData]           = useState(null)
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -83,8 +84,14 @@ function DashboardMatches() {
 
   useEffect(() => {
     loadMatches()
-    api.get('/subscription/trial-status')
-      .then(r => setTrialStatus(r.data))
+    Promise.all([
+      api.get('/subscription/trial-status'),
+      api.get('/matches/quota'),
+    ])
+      .then(([trialRes, quotaRes]) => {
+        setTrialStatus(trialRes.data)
+        setQuotaData(quotaRes.data)
+      })
       .catch(() => {})
       .finally(() => setTrialLoading(false))
   }, [])
@@ -97,6 +104,11 @@ function DashboardMatches() {
   const handleNewMatch = (e) => {
     e.preventDefault()
     if (trialLoading) return
+
+    // FIX — membres club : accès via pool quota du DS admin
+    const isClubMember = quotaData && ['CLUB', 'CLUB_PRO'].includes(quotaData.plan) && quotaData.remaining > 0
+    if (isClubMember) { navigate('/dashboard/matches/upload'); return }
+
     const { access, trial_active, match_used } = trialStatus || {}
     if (access === 'expired' || access === 'no_trial') { navigate('/dashboard/settings'); return }
     if (trial_active && match_used) { setShowUpgradeGate(true); return }
