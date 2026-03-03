@@ -111,7 +111,8 @@ function DashboardLayout({ children }) {
               {getPlanBadge()}
             </span>
           )}
-          {isClubUser && user?.role && (
+          {/* Badge rôle — masqué pour les membres club (COACH en base) et pour le rôle COACH */}
+          {isClubUser && user?.role && !isClubMember && !['COACH', 'coach'].includes(user.role) && (
             <span style={{
               fontFamily: T.mono, fontSize: 8, letterSpacing: '.12em', textTransform: 'uppercase',
               padding: '3px 9px', background: 'rgba(245,242,235,0.06)', border: `1px solid rgba(245,242,235,0.1)`, color: 'rgba(245,242,235,0.4)',
