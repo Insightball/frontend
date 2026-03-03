@@ -160,9 +160,8 @@ export default function UploadMatch() {
         return
       }
       const scoreRequired = matchData.type === 'CHAMPIONNAT' || matchData.type === 'COUPE'
-      if (scoreRequired && (matchData.score_home === '' || matchData.score_away === '')) {
-        setError('Le score est obligatoire pour un match de championnat ou de coupe')
-        return
+      if (scoreRequired && matchData.score_home === '' && matchData.score_away === '') {
+        // Les deux vides = 0-0, on accepte
       }
     }
     setError('')
@@ -175,9 +174,15 @@ export default function UploadMatch() {
     setError('')
     setUploading(true)
     setUploadProgress(0)
+    // Score vide → 0
+    const normalizedMatchData = {
+      ...matchData,
+      score_home: matchData.score_home === '' ? 0 : parseInt(matchData.score_home, 10),
+      score_away: matchData.score_away === '' ? 0 : parseInt(matchData.score_away, 10),
+    }
     try {
       await matchService.uploadMatch({
-        matchData,
+        matchData: normalizedMatchData,
         lineup,
         videoFile,
         onProgress: setUploadProgress,
@@ -315,7 +320,7 @@ export default function UploadMatch() {
       {showUpgradeGate && (
         <TrialUpgradeGate onClose={() => setShowUpgradeGate(false)} />
       )}
-      <style>{`${globalStyles} * { box-sizing: border-box; } @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } } @keyframes spin { to { transform: rotate(360deg); } } select option { background: #fff; color: #0f0f0d; }`}</style>
+      <style>{`${globalStyles} * { box-sizing: border-box; } @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } } @keyframes spin { to { transform: rotate(360deg); } } select option { background: #fff; color: #0f0f0d; } input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; } input[type=number] { -moz-appearance: textfield; }`}</style>
 
       {/* Header */}
       <div style={{ marginBottom: 32 }}>
@@ -409,14 +414,26 @@ export default function UploadMatch() {
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontFamily: T.mono, fontSize: 7, letterSpacing: '.12em', textTransform: 'uppercase', color: T.gold, marginBottom: 4, textAlign: 'center' }}>Nous</div>
-                    <input type="number" name="score_home" value={matchData.score_home} onChange={handleMatchChange}
-                      placeholder="0" style={{ ...S.input, textAlign: 'center' }} min="0" max="20" />
+                    <input
+                      type="text" inputMode="numeric" pattern="[0-9]*"
+                      name="score_home" value={matchData.score_home}
+                      onChange={e => { if (/^\d{0,2}$/.test(e.target.value)) handleMatchChange(e) }}
+                      placeholder="0"
+                      style={{ ...S.input, textAlign: 'center', MozAppearance: 'textfield', WebkitAppearance: 'none' }}
+                      onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = G.border}
+                    />
                   </div>
                   <span style={{ fontFamily: G.mono, fontSize: 14, color: G.muted, paddingTop: 18 }}>—</span>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontFamily: T.mono, fontSize: 7, letterSpacing: '.12em', textTransform: 'uppercase', color: T.muted, marginBottom: 4, textAlign: 'center' }}>Eux</div>
-                    <input type="number" name="score_away" value={matchData.score_away} onChange={handleMatchChange}
-                      placeholder="0" style={{ ...S.input, textAlign: 'center' }} min="0" max="20" />
+                    <input
+                      type="text" inputMode="numeric" pattern="[0-9]*"
+                      name="score_away" value={matchData.score_away}
+                      onChange={e => { if (/^\d{0,2}$/.test(e.target.value)) handleMatchChange(e) }}
+                      placeholder="0"
+                      style={{ ...S.input, textAlign: 'center', MozAppearance: 'textfield', WebkitAppearance: 'none' }}
+                      onFocus={e => e.target.style.borderColor = G.gold} onBlur={e => e.target.style.borderColor = G.border}
+                    />
                   </div>
                 </div>
               </Field>
