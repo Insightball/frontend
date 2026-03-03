@@ -178,7 +178,11 @@ export default function DashboardHome() {
   const processing = matches.filter(m => m.status === 'processing' || m.status === 'PROCESSING').length
   const recentMatches = matches.slice(0, 4)
   const topPlayers    = players.slice(0, 5)
-  const userPlan      = (user?.plan || 'COACH').toUpperCase()
+  // Membre club = a un club_id mais pas de stripe_subscription_id
+  const isClubMember = user?.club_id && !user?.stripe_subscription_id
+  const userPlan = isClubMember
+    ? 'CLUB'
+    : (user?.plan || 'COACH').toUpperCase()
 
   // Séries sparklines — matchs complétés chronologiques
   const evoSeries = {
