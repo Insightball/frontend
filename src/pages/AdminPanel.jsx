@@ -505,9 +505,16 @@ function InvitationsSection() {
 
   useEffect(() => { loadInvites() }, [])
 
-  const deleteInvite = async (id) => {
-    if (!window.confirm('Supprimer cette invitation ?')) return
-    const res = await fetch(`${INVITE_API}/club-invites/${id}`, { method: 'DELETE', headers: authHeaders() })
+  const deleteInvite = async (id, status) => {
+    const isAccepted = status === 'ACCEPTEE' || status === 'accepted'
+    const msg = isAccepted
+      ? 'Cette invitation est déjà acceptée (client actif). Forcer la suppression ?'
+      : 'Supprimer cette invitation ?'
+    if (!window.confirm(msg)) return
+    const url = isAccepted
+      ? `${INVITE_API}/club-invites/${id}?force=true`
+      : `${INVITE_API}/club-invites/${id}`
+    const res = await fetch(url, { method: 'DELETE', headers: authHeaders() })
     if (res.ok) setInvites(prev => prev.filter(i => i.id !== id))
     else alert('Erreur lors de la suppression')
   }
@@ -556,7 +563,7 @@ function InvitationsSection() {
                           {copied === inv.token ? '✓ Copié' : 'Copier lien'}
                         </button>
                       )}
-                      <button onClick={() => deleteInvite(inv.id)} style={{ padding: '4px 8px', background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)', cursor: 'pointer', color: '#ef4444', fontSize: 13, lineHeight: 1 }}>×</button>
+                      <button onClick={() => deleteInvite(inv.id, inv.status)} style={{ padding: '4px 8px', background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)', cursor: 'pointer', color: '#ef4444', fontSize: 13, lineHeight: 1 }}>×</button>
                     </div>
                   </td>
                 </tr>
