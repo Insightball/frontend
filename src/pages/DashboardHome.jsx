@@ -175,7 +175,7 @@ export default function DashboardHome() {
   const recentMatches = matches.slice(0, 4)
   const topPlayers    = players.slice(0, 5)
 
-  const isClubMember = user?.club_id && !user?.stripe_subscription_id
+  const isClubMember = user?.club_id && !user?.stripe_subscription_id && ['CLUB', 'CLUB_PRO'].includes((user?.plan || '').toUpperCase())
   const userPlan     = isClubMember ? 'CLUB' : (user?.plan || 'COACH').toUpperCase()
 
   const evoSeries = {

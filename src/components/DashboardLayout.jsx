@@ -23,8 +23,8 @@ function DashboardLayout({ children }) {
 
   useEffect(() => { setMobileOpen(false) }, [location.pathname])
 
-  // Membre club = a un club_id mais pas de stripe_subscription_id
-  const isClubMember = user?.club_id && !user?.stripe_subscription_id
+  // Membre club = a un club_id + pas de stripe_subscription_id + plan CLUB ou CLUB_PRO
+  const isClubMember = user?.club_id && !user?.stripe_subscription_id && ['CLUB', 'CLUB_PRO'].includes((user?.plan || '').toUpperCase())
   const isClubAdmin  = (user?.plan === 'CLUB' || user?.plan === 'CLUB_PRO') && (user?.role === 'ADMIN' || user?.role === 'admin')
   const isClubUser   = isClubAdmin || isClubMember
 
