@@ -487,7 +487,7 @@ export default function LandingPage() {
         </Link>
 
         <div className="nav-links" style={{ display: 'flex', gap: 28, alignItems: 'center' }}>
-          {[['#features','Fonctionnalités'],['#pricing','Tarifs'],['#waitlist','Accès anticipé']].map(([h,l]) => (
+          {[['#features','Fonctionnalités'],['#pricing','Tarifs'],['#waitlist','Accès anticipé'],['/blog/','Blog']].map(([h,l]) => (
             <a key={h} href={h} style={{ fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.65)', textDecoration: 'none', transition: 'color .15s' }}
               onMouseEnter={e => e.currentTarget.style.color = G.gold}
               onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.65)'}>{l}</a>
@@ -514,7 +514,7 @@ export default function LandingPage() {
 
       {menuOpen && (
         <div style={{ position: 'fixed', top: 60, left: 0, right: 0, zIndex: 199, background: G.ink, borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '16px 24px 20px', display: 'flex', flexDirection: 'column' }}>
-          {[['#features','Fonctionnalités'],['#pricing','Tarifs'],['#waitlist','Accès anticipé']].map(([h,l]) => (
+          {[['#features','Fonctionnalités'],['#pricing','Tarifs'],['#waitlist','Accès anticipé'],['/blog/','Blog']].map(([h,l]) => (
             <a key={h} href={h} onClick={() => setMenuOpen(false)} style={{ fontSize: 15, fontWeight: 500, color: 'rgba(255,255,255,0.75)', textDecoration: 'none', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>{l}</a>
           ))}
           <a href="#waitlist" onClick={() => setMenuOpen(false)} style={{ ...btnPrimary, marginTop: 12, justifyContent: 'center', textDecoration:'none' }}>Accès anticipé →</a>
@@ -1148,7 +1148,7 @@ export default function LandingPage() {
           </div>
           {[
             { title:'Produit', links:[['#features','Fonctionnalités'],['#pricing','Tarifs'],['#rapport','Exemple rapport'],['#waitlist','Accès anticipé']] },
-            { title:'Entreprise', links:[['#contact','Contact'],['mailto:contact@insightball.com','Support']] },
+            { title:'Entreprise', links:[['#contact','Contact'],['mailto:contact@insightball.com','Support'],['/blog/','Blog']] },
             { title:'Légal', links:[['/mentions-legales','Mentions légales'],['/cgv','CGV'],['/confidentialite','Confidentialité'],['/cookies','Cookies']] },
           ].map(col => (
             <div key={col.title}>
