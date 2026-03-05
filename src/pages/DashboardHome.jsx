@@ -164,10 +164,10 @@ export default function DashboardHome() {
     })()
   }, [])
 
-  const quota      = quotaData?.quota     ?? 4
-  const quotaUsed  = quotaData?.used      ?? 0
-  const quotaLeft  = quotaData?.remaining ?? quota
-  const quotaPct   = Math.min((quotaUsed / quota) * 100, 100)
+  const quota      = quotaData?.quota     ?? null
+  const quotaUsed  = quotaData?.used      ?? null
+  const quotaLeft  = quotaData?.remaining ?? null
+  const quotaPct   = quota ? Math.min((quotaUsed / quota) * 100, 100) : 0
   const quotaColor = quotaPct >= 100 ? T.red : quotaPct >= 75 ? T.orange : T.gold
 
   const completed     = matches.filter(m => m.status === 'completed' || m.status === 'COMPLETED').length
@@ -404,7 +404,16 @@ export default function DashboardHome() {
               <p style={{ fontFamily: T.mono, fontSize: 10, color: 'rgba(245,242,235,0.38)', lineHeight: 1.65, marginBottom: 18, letterSpacing: '.03em' }}>
                 Uploadez votre vidéo, obtenez un rapport tactique complet.
               </p>
-              {quotaLeft === 0 ? (
+              {quotaLeft === null ? (
+                <div style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 18px',
+                  background: 'rgba(201,162,39,0.12)', border: `1px solid rgba(201,162,39,0.22)`,
+                  fontFamily: T.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase',
+                  color: 'rgba(201,162,39,0.45)',
+                }}>
+                  Chargement...
+                </div>
+              ) : quotaLeft === 0 ? (
                 <div style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 18px',
                   background: 'rgba(201,162,39,0.12)', border: `1px solid rgba(201,162,39,0.22)`,
@@ -443,7 +452,7 @@ export default function DashboardHome() {
                     <Activity size={11} color={quotaColor} />
                   </div>
                   <div style={{ flex: 1 }}>
-                    <p style={{ fontFamily: T.mono, fontSize: 10, color: T.ink, lineHeight: 1.4 }}>{quotaUsed}/{quota} matchs utilisés ce mois</p>
+                    <p style={{ fontFamily: T.mono, fontSize: 10, color: T.ink, lineHeight: 1.4 }}>{quota !== null ? `${quotaUsed}/${quota} matchs utilisés ce mois` : '—'}</p>
                     <div style={{ marginTop: 5, height: 2, background: T.rule }}>
                       <div style={{ height: '100%', width: `${quotaPct}%`, background: quotaColor, transition: 'width .4s' }} />
                     </div>

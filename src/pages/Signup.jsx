@@ -16,7 +16,7 @@ const G = {
 export default function Signup() {
   const navigate = useNavigate()
   const { signup } = useAuth()
-  const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '' })
+  const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', password: '', confirmPassword: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [focused, setFocused] = useState(null)
@@ -24,10 +24,12 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault(); setError('')
     if (formData.password !== formData.confirmPassword) { setError('Les mots de passe ne correspondent pas'); return }
-    if (formData.password.length < 8) { setError('Minimum 8 caractères'); return }
+    if (formData.password.length < 8) { setError('Le mot de passe doit contenir au moins 8 caractères'); return }
+    if (!formData.firstName.trim() || !formData.lastName.trim()) { setError('Prénom et nom requis'); return }
     setLoading(true)
     try {
-      await signup({ name: formData.name, email: formData.email, password: formData.password, plan: 'COACH' })
+      const fullName = `${formData.firstName.trim()} ${formData.lastName.trim()}`
+      await signup({ name: fullName, email: formData.email, password: formData.password, plan: 'COACH' })
       navigate('/onboarding')
     } catch (err) {
       const msg = err?.response?.data?.detail || err?.message || 'Une erreur est survenue.'
@@ -44,9 +46,10 @@ export default function Signup() {
   })
 
   const fields = [
-    { label: 'Nom complet', name: 'name', type: 'text', ph: 'Jean Dupont' },
+    { label: 'Prénom', name: 'firstName', type: 'text', ph: 'Jean' },
+    { label: 'Nom', name: 'lastName', type: 'text', ph: 'Dupont' },
     { label: 'Email', name: 'email', type: 'email', ph: 'votre@email.com' },
-    { label: 'Mot de passe', name: 'password', type: 'password', ph: '••••••••', hint: 'Minimum 8 caractères' },
+    { label: 'Mot de passe', name: 'password', type: 'password', ph: '••••••••', hint: '8 caractères minimum' },
     { label: 'Confirmer le mot de passe', name: 'confirmPassword', type: 'password', ph: '••••••••' },
   ]
 
