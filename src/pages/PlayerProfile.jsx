@@ -107,6 +107,7 @@ export default function PlayerProfile() {
   const { playerId } = useParams()
   const navigate = useNavigate()
   const [player, setPlayer] = useState(null)
+  const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [isFormOpen, setIsFormOpen] = useState(false)
@@ -123,8 +124,12 @@ export default function PlayerProfile() {
   const loadPlayer = async () => {
     try {
       setLoading(true)
-      const data = await playerService.getPlayer(playerId)
+      const [data, statsData] = await Promise.all([
+        playerService.getPlayer(playerId),
+        playerService.getPlayerStats(playerId).catch(() => null),
+      ])
       setPlayer(data)
+      setStats(statsData)
     } catch (e) {
       setError('Joueur introuvable')
     } finally {
@@ -169,28 +174,35 @@ export default function PlayerProfile() {
   const status = STATUS[player.status] || STATUS['actif']
   const age = getAge(player.birth_date)
 
-  // Placeholder stats — seront alimentées par le pipeline IA
+  // Stats from backend aggregation
   const matchStats = {
-    played: player.matches_played ?? 0,
-    starter: player.matches_starter ?? 0,
-    sub: player.matches_sub ?? 0,
-    minutes: player.total_minutes ?? 0,
-    goals: player.goals ?? 0,
-    assists: player.assists ?? 0,
+    played: stats?.matches_played ?? 0,
+    starter: stats?.matches_starter ?? 0,
+    sub: stats?.matches_sub ?? 0,
+    minutes: stats?.total_minutes ?? 0,
+    goals: stats?.goals ?? 0,
+    assists: stats?.assists ?? 0,
   }
 
   const techStats = {
-    passes: player.total_passes ?? null,
-    passSuccess: player.pass_success_rate ?? null,
-    shots: player.total_shots ?? null,
-    shotsOnTarget: player.shots_on_target ?? null,
-    duels: player.total_duels ?? null,
-    duelsWon: player.duels_won ?? null,
-    distance: player.total_distance ?? null,
-    avgDistance: player.avg_distance ?? null,
+    passes: stats?.total_passes ?? null,
+    passSuccess: stats?.avg_pass_success ?? null,
+    shots: stats?.total_shots ?? null,
+    shotsOnTarget: stats?.shots_on_target ?? null,
+    duels: stats?.total_duels ?? null,
+    duelsWon: stats?.duels_won ?? null,
+    distance: stats?.total_distance_km ?? null,
+    avgDistance: stats?.avg_distance_km ?? null,
+    keyPasses: stats?.total_key_passes ?? null,
+    tackles: stats?.total_tackles ?? null,
+    interceptions: stats?.total_interceptions ?? null,
+    saves: stats?.total_saves ?? null,
+    yellowCards: stats?.yellow_cards ?? null,
   }
 
-  const hasTechStats = Object.values(techStats).some(v => v !== null)
+  const matchHistory = stats?.match_history ?? []
+
+  const hasTechStats = Object.values(techStats).some(v => v !== null && v > 0)
   const hasMatchStats = matchStats.played > 0
 
   return (
@@ -408,42 +420,144 @@ export default function PlayerProfile() {
 
       {/* ── STATS TECHNIQUES (conditionnel) ── */}
       {hasTechStats && (
-        <div style={{ background: G.card, border: `1px solid ${G.border}`, padding: '24px', marginBottom: 28, animation: 'fadeIn .4s ease .3s both' }}>
+        <div style={{ background: G.card, border: `1px solid ${G.border}`, padding: '24px', marginBottom: 20, animation: 'fadeIn .4s ease .3s both' }}>
           <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{ width: 16, height: 1, background: G.gold }} />Performance technique
+          </div>
+
+          {/* KPI row */}
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: 8, marginBottom: 24 }}>
+            {techStats.keyPasses > 0 && <StatBox value={techStats.keyPasses} label="Passes clés" color={G.gold} />}
+            {techStats.tackles > 0 && <StatBox value={techStats.tackles} label="Tacles" color={G.blue} />}
+            {techStats.interceptions > 0 && <StatBox value={techStats.interceptions} label="Interceptions" color={G.green} />}
+            {techStats.saves > 0 && <StatBox value={techStats.saves} label="Arrêts" color={G.orange} />}
+            {techStats.yellowCards > 0 && <StatBox value={techStats.yellowCards} label="Cartons J." color={G.yellow} />}
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 28 }}>
             {/* Colonne gauche */}
             <div>
-              {techStats.passes !== null && (
-                <ProgressBar label="Passes" value={techStats.passes} max={techStats.passes} color={G.gold} />
+              {techStats.passes !== null && techStats.passes > 0 && (
+                <ProgressBar label="Passes totales" value={techStats.passes} max={techStats.passes} color={G.gold} />
               )}
               {techStats.passSuccess !== null && (
-                <ProgressBar label="% Passes réussies" value={techStats.passSuccess} max={100} color={G.green} />
+                <ProgressBar label="% Passes réussies (moy.)" value={techStats.passSuccess} max={100} color={G.green} />
               )}
-              {techStats.distance !== null && (
-                <ProgressBar label={`Distance (${techStats.distance} km)`} value={techStats.distance} max={15} color={G.blue} />
+              {techStats.avgDistance !== null && (
+                <ProgressBar label={`Distance moy. / match (${techStats.avgDistance} km)`} value={techStats.avgDistance} max={14} color={G.blue} />
               )}
             </div>
             {/* Colonne droite */}
             <div>
-              {techStats.shots !== null && (
-                <ProgressBar label="Tirs" value={techStats.shots} max={techStats.shots} color={G.red} />
+              {techStats.shots !== null && techStats.shots > 0 && (
+                <ProgressBar label="Tirs totaux" value={techStats.shots} max={techStats.shots} color={G.red} />
               )}
-              {techStats.shotsOnTarget !== null && (
-                <ProgressBar label="Tirs cadrés" value={techStats.shotsOnTarget} max={techStats.shots || 1} color={G.orange} />
+              {techStats.shotsOnTarget !== null && techStats.shots > 0 && (
+                <ProgressBar label={`Tirs cadrés (${techStats.shotsOnTarget}/${techStats.shots})`} value={techStats.shotsOnTarget} max={techStats.shots} color={G.orange} />
               )}
-              {techStats.duelsWon !== null && (
-                <ProgressBar label={`Duels gagnés (${techStats.duelsWon}/${techStats.duels})`} value={techStats.duelsWon} max={techStats.duels || 1} color={G.gold} />
+              {techStats.duelsWon !== null && techStats.duels > 0 && (
+                <ProgressBar label={`Duels gagnés (${techStats.duelsWon}/${techStats.duels})`} value={techStats.duelsWon} max={techStats.duels} color={G.gold} />
               )}
             </div>
+          </div>
+
+          {/* Distance totale */}
+          {techStats.distance > 0 && (
+            <div style={{ background: G.goldBg, border: `1px solid ${G.goldBdr}`, padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 16 }}>
+              <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted }}>Distance totale parcourue</span>
+              <span style={{ fontFamily: G.display, fontSize: 28, color: G.gold }}>{techStats.distance} km</span>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── HISTORIQUE MATCHS ── */}
+      {matchHistory.length > 0 && (
+        <div style={{ background: G.card, border: `1px solid ${G.border}`, padding: '24px', marginBottom: 20, animation: 'fadeIn .4s ease .4s both' }}>
+          <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ width: 16, height: 1, background: G.gold }} />Historique matchs
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
+            {matchHistory.map((m, i) => {
+              const isWin = m.is_home ? (m.score_home > m.score_away) : (m.score_away > m.score_home)
+              const isDraw = m.score_home === m.score_away
+              const resultColor = isWin ? G.green : isDraw ? G.orange : G.red
+              const resultLabel = isWin ? 'V' : isDraw ? 'N' : 'D'
+              const score = m.is_home ? `${m.score_home} - ${m.score_away}` : `${m.score_away} - ${m.score_home}`
+              const dateStr = m.date ? new Date(m.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) : ''
+
+              return (
+                <div key={m.match_id} style={{
+                  background: G.card, padding: isMobile ? '12px' : '12px 16px',
+                  display: 'flex', alignItems: 'center', gap: isMobile ? 10 : 16,
+                  cursor: 'pointer', transition: 'background .1s',
+                }}
+                  onClick={() => navigate(`/dashboard/matches/${m.match_id}`)}
+                  onMouseEnter={e => e.currentTarget.style.background = G.goldBg}
+                  onMouseLeave={e => e.currentTarget.style.background = G.card}
+                >
+                  {/* Résultat */}
+                  <div style={{
+                    width: 28, height: 28, background: resultColor + '15', border: `1px solid ${resultColor}30`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                    fontFamily: G.mono, fontSize: 11, fontWeight: 700, color: resultColor,
+                  }}>
+                    {resultLabel}
+                  </div>
+
+                  {/* Adversaire + date */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontFamily: G.display, fontSize: 14, color: G.text, textTransform: 'uppercase', letterSpacing: '.02em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {m.is_home ? 'vs' : '@'} {m.opponent}
+                    </div>
+                    <div style={{ fontFamily: G.mono, fontSize: 8, color: G.muted, letterSpacing: '.08em' }}>
+                      {dateStr} {m.competition ? `· ${m.competition}` : ''}
+                    </div>
+                  </div>
+
+                  {/* Score */}
+                  <div style={{ fontFamily: G.display, fontSize: 18, color: G.text, flexShrink: 0 }}>
+                    {score}
+                  </div>
+
+                  {/* Stats joueur dans ce match */}
+                  <div style={{ display: 'flex', gap: isMobile ? 6 : 12, alignItems: 'center', flexShrink: 0 }}>
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontFamily: G.display, fontSize: 14, color: G.text }}>{m.minutes}'</div>
+                      <div style={{ fontFamily: G.mono, fontSize: 7, color: G.muted, letterSpacing: '.08em', textTransform: 'uppercase' }}>min</div>
+                    </div>
+                    {m.goals > 0 && (
+                      <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontFamily: G.display, fontSize: 14, color: G.gold }}>{m.goals}</div>
+                        <div style={{ fontFamily: G.mono, fontSize: 7, color: G.muted, letterSpacing: '.08em', textTransform: 'uppercase' }}>but{m.goals > 1 ? 's' : ''}</div>
+                      </div>
+                    )}
+                    {m.assists > 0 && (
+                      <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontFamily: G.display, fontSize: 14, color: G.blue }}>{m.assists}</div>
+                        <div style={{ fontFamily: G.mono, fontSize: 7, color: G.muted, letterSpacing: '.08em', textTransform: 'uppercase' }}>pd</div>
+                      </div>
+                    )}
+                    {/* Badge titulaire/remplaçant */}
+                    <span style={{
+                      fontFamily: G.mono, fontSize: 7, letterSpacing: '.08em', textTransform: 'uppercase',
+                      padding: '2px 6px', background: m.starter ? G.green + '12' : 'rgba(26,25,22,0.05)',
+                      border: `1px solid ${m.starter ? G.green + '30' : G.border}`,
+                      color: m.starter ? G.green : G.muted,
+                    }}>
+                      {m.starter ? 'TIT' : 'RMP'}
+                    </span>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
       )}
 
       {/* ── PLACEHOLDER EVOLUTION (futur) ── */}
-      {!hasTechStats && (
+      {!hasMatchStats && (
         <div style={{
           background: G.card, border: `1px dashed ${G.border}`,
           padding: '48px 24px', textAlign: 'center', marginBottom: 28,

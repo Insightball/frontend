@@ -16,6 +16,12 @@ const playerService = {
     return response.data
   },
 
+  // Get player aggregated stats from matches
+  async getPlayerStats(playerId) {
+    const response = await api.get(`${API_URL}${playerId}/stats`)
+    return response.data
+  },
+
   // Create player
   async createPlayer(playerData) {
     const response = await api.post(API_URL, playerData)
