@@ -328,7 +328,7 @@ const LANG = {
     wlPerk2: 'Personalized onboarding',
     wlPerk3: 'Early adopter pricing',
     wlSentTitle: 'Request received',
-    wlSentSub: 'Your request has been recorded. We'll contact you as a priority when we launch.',
+    wlSentSub: "Your request has been recorded. We'll contact you as a priority when we launch.",
     wlFormTitle: 'Fill in the form',
     wlFirstName: 'First name *',
     wlLastName: 'Last name *',
@@ -345,7 +345,7 @@ const LANG = {
     contactLabel: 'Contact',
     contactTitle1: 'Got a question?',
     contactTitle2: "We'll answer.",
-    contactSub: 'A demo, a question about our plans, feedback from the pitch — we're here. Response within 24h.',
+    contactSub: "A demo, a question about our plans, feedback from the pitch — we're here. Response within 24h.",
     contactSentTitle: 'Message sent',
     contactSentSub: "We'll respond within 24h.",
     contactName: 'Name',
@@ -678,7 +678,9 @@ function MockupRapport({ mobile, t }) {
 ════════════════════════════════════════════════ */
 export default function LandingPage() {
   const [lang, setLang]                   = useState(() => {
-    try { const saved = sessionStorage.getItem('ib_lang'); return saved === 'EN' ? 'EN' : 'FR' } catch { return 'FR' }
+    try { const saved = sessionStorage.getItem('ib_lang'); if (saved) return saved } catch {}
+    const browserLang = (navigator.language || '').toLowerCase()
+    return browserLang.startsWith('fr') ? 'FR' : 'EN'
   })
   const t = LANG[lang]
   const toggleLang = () => {
