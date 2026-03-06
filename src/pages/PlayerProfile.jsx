@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Edit2, User, Shield, Zap, Target, Calendar, Ruler, Weight, Footprints, Activity, TrendingUp, Clock, AlertCircle } from 'lucide-react'
+import { ArrowLeft, Edit2, User, Shield, Zap, Target, Calendar, Ruler, Scale, Circle, Activity, TrendingUp, Clock, AlertCircle } from 'lucide-react'
 import DashboardLayout from '../components/DashboardLayout'
 import PlayerForm from '../components/PlayerForm'
 import playerService from '../services/playerService'
@@ -373,8 +373,8 @@ export default function PlayerProfile() {
           <InfoRow icon={User} label="Nom complet" value={player.name} />
           <InfoRow icon={Calendar} label="Date de naissance" value={player.birth_date ? `${formatDate(player.birth_date)} (${age} ans)` : null} />
           <InfoRow icon={Ruler} label="Taille" value={player.height ? `${player.height} cm` : null} />
-          <InfoRow icon={Weight} label="Poids" value={player.weight ? `${player.weight} kg` : null} />
-          <InfoRow icon={Footprints} label="Pied fort" value={foot?.label} color={foot?.color} />
+          <InfoRow icon={Scale} label="Poids" value={player.weight ? `${player.weight} kg` : null} />
+          <InfoRow icon={Circle} label="Pied fort" value={foot?.label} color={foot?.color} />
           <InfoRow icon={Activity} label="Statut" value={status.label} color={status.color} />
           <InfoRow icon={Shield} label="Catégorie" value={player.category} />
 
