@@ -235,22 +235,50 @@ function MatchDetail() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
 
           {/* Stats grille */}
-          {match.stats && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(120px,1fr))', gap: 1, background: T.rule }}>
-              {[
-                { label: 'Possession',  value: match.stats.possession ? `${match.stats.possession}%` : null },
-                { label: 'Passes',      value: match.stats.passes },
-                { label: 'Tirs',        value: match.stats.shots },
-                { label: 'Tirs cadrés', value: match.stats.shotsOnTarget },
-                { label: 'Corners',     value: match.stats.corners },
-                { label: 'Fautes',      value: match.stats.fouls },
-                { label: 'Km parcourus',value: match.stats.totalDistance ? `${match.stats.totalDistance} km` : null },
-                { label: 'Sprints',     value: match.stats.sprints },
-              ].filter(s => s.value !== null && s.value !== undefined).map((stat, i) => (
-                <StatBox key={i} label={stat.label} value={stat.value} />
-              ))}
-            </div>
-          )}
+          {match.stats && (() => {
+            const s = match.stats
+            const home = (v) => typeof v === 'object' && v !== null ? v.home : v
+            const away = (v) => typeof v === 'object' && v !== null ? v.away : v
+            const fmt = (v, suffix) => {
+              if (v === null || v === undefined) return null
+              if (typeof v === 'object' && v !== null) return `${v.home}${suffix || ''} — ${v.away}${suffix || ''}`
+              return suffix ? `${v}${suffix}` : v
+            }
+            const rows = [
+              { label: 'Possession', value: fmt(s.possession, '%') },
+              { label: 'Passes', value: fmt(s.passes) },
+              { label: 'Précision passes', value: fmt(s.pass_accuracy, '%') },
+              { label: 'Tirs', value: fmt(s.shots) },
+              { label: 'Tirs cadrés', value: fmt(s.shots_on_target) },
+              { label: 'Corners', value: fmt(s.corners) },
+              { label: 'Fautes', value: fmt(s.fouls) },
+              { label: 'Hors-jeu', value: fmt(s.offsides) },
+              { label: 'Cartons J.', value: fmt(s.yellow_cards) },
+              { label: 'Cartons R.', value: fmt(s.red_cards) },
+              { label: 'Distance (km)', value: fmt(s.total_distance_km) },
+            ].filter(r => r.value !== null && r.value !== undefined)
+
+            return (
+              <div style={{ background: T.surface, border: `1px solid ${T.rule}`, borderTop: `2px solid ${G.goldBdr}`, overflow: 'hidden' }}>
+                <div style={{ padding: '14px 24px', borderBottom: `1px solid ${T.rule}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontFamily: T.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: T.gold }}>— Statistiques du match</span>
+                  <div style={{ display: 'flex', gap: 40 }}>
+                    <span style={{ fontFamily: T.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: T.muted }}>{isHome ? 'Dom.' : match.opponent}</span>
+                    <span style={{ fontFamily: T.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: T.muted }}>{isHome ? match.opponent : 'Ext.'}</span>
+                  </div>
+                </div>
+                {rows.map((row, i) => {
+                  const val = typeof (s[Object.keys(s).find(k => row.label.toLowerCase().includes(k.split('_')[0])) || ''] || '') === 'object'
+                  return (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', padding: '12px 24px', borderBottom: i < rows.length - 1 ? `1px solid ${T.rule}` : 'none', background: i % 2 === 0 ? 'transparent' : T.bgAlt }}>
+                      <span style={{ flex: 1, fontFamily: T.mono, fontSize: 11, color: T.muted, letterSpacing: '.04em' }}>{row.label}</span>
+                      <span style={{ fontFamily: T.display, fontSize: 16, color: T.ink, textAlign: 'center' }}>{row.value}</span>
+                    </div>
+                  )
+                })}
+              </div>
+            )
+          })()}
 
           {/* Timeline événements */}
           {match.events && match.events.length > 0 && <MatchTimeline events={match.events} />}
@@ -300,8 +328,37 @@ function MatchDetail() {
       {activeTab === 'players' && match.player_stats && (
         <div>
           <h2 style={{ fontFamily: T.display, fontSize: 28, textTransform: 'uppercase', letterSpacing: '.03em', color: T.ink, marginBottom: 20 }}>Stats individuelles</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: 16 }}>
-            {match.player_stats.map((ps, i) => <PlayerStatsCard key={i} player={ps.player} stats={ps} />)}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: T.rule }}>
+            {/* Header */}
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr repeat(3, 50px)' : '1fr repeat(6, 70px)', gap: 0, background: T.bgAlt, padding: '10px 16px' }}>
+              <span style={{ fontFamily: T.mono, fontSize: 8, letterSpacing: '.14em', textTransform: 'uppercase', color: T.muted }}>Joueur</span>
+              <span style={{ fontFamily: T.mono, fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase', color: T.muted, textAlign: 'center' }}>Min</span>
+              {!isMobile && <span style={{ fontFamily: T.mono, fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase', color: T.muted, textAlign: 'center' }}>Passes</span>}
+              <span style={{ fontFamily: T.mono, fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase', color: T.muted, textAlign: 'center' }}>Tirs</span>
+              {!isMobile && <span style={{ fontFamily: T.mono, fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase', color: T.muted, textAlign: 'center' }}>Duels</span>}
+              {!isMobile && <span style={{ fontFamily: T.mono, fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase', color: T.muted, textAlign: 'center' }}>Km</span>}
+              <span style={{ fontFamily: T.mono, fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase', color: T.muted, textAlign: 'center' }}>Buts</span>
+            </div>
+            {/* Rows */}
+            {match.player_stats
+              .sort((a, b) => (b.minutes || 0) - (a.minutes || 0))
+              .map((ps, i) => (
+              <div key={i} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr repeat(3, 50px)' : '1fr repeat(6, 70px)', gap: 0, background: T.surface, padding: '12px 16px', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+                  <span style={{ fontFamily: T.display, fontSize: 14, color: T.gold, width: 22, flexShrink: 0 }}>{ps.number}</span>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontFamily: T.mono, fontSize: 11, color: T.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ps.name}</div>
+                    <div style={{ fontFamily: T.mono, fontSize: 8, color: T.muted }}>{ps.position} {ps.starter ? '' : '· RMP'}</div>
+                  </div>
+                </div>
+                <span style={{ fontFamily: T.display, fontSize: 14, color: T.ink, textAlign: 'center' }}>{ps.minutes || 0}'</span>
+                {!isMobile && <span style={{ fontFamily: T.mono, fontSize: 11, color: T.ink, textAlign: 'center' }}>{ps.passes || 0} <span style={{ fontSize: 8, color: T.muted }}>({ps.pass_success || 0}%)</span></span>}
+                <span style={{ fontFamily: T.mono, fontSize: 11, color: T.ink, textAlign: 'center' }}>{ps.shots || 0}{ps.shots_on_target ? ` (${ps.shots_on_target})` : ''}</span>
+                {!isMobile && <span style={{ fontFamily: T.mono, fontSize: 11, color: T.ink, textAlign: 'center' }}>{ps.duels_won || 0}/{ps.duels || 0}</span>}
+                {!isMobile && <span style={{ fontFamily: T.mono, fontSize: 11, color: T.ink, textAlign: 'center' }}>{ps.distance_km || '—'}</span>}
+                <span style={{ fontFamily: T.display, fontSize: 14, color: ps.goals ? T.gold : T.muted, textAlign: 'center' }}>{ps.goals || '—'}{ps.assists ? <span style={{ fontSize: 10, color: '#3b82f6' }}> +{ps.assists}</span> : ''}</span>
+              </div>
+            ))}
           </div>
         </div>
       )}
