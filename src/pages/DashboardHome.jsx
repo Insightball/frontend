@@ -69,10 +69,15 @@ function SectionHeader({ title, to, label = 'Voir tout' }) {
 
 function normStats(s) {
   if (!s) return {}
+  const val = (v) => {
+    if (v === null || v === undefined) return null
+    if (typeof v === 'object' && v !== null && 'home' in v) return v.home
+    return typeof v === 'number' ? v : null
+  }
   return {
-    possession:    s.possession    ?? null,
-    passAccuracy:  s.passAccuracy  ?? s.pass_accuracy  ?? null,
-    shotsOnTarget: s.shotsOnTarget ?? s.shots_on_target ?? null,
+    possession:    val(s.possession),
+    passAccuracy:  val(s.passAccuracy  ?? s.pass_accuracy),
+    shotsOnTarget: val(s.shotsOnTarget ?? s.shots_on_target),
   }
 }
 
