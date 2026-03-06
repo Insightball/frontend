@@ -38,7 +38,7 @@ function PlayerForm({ isOpen, onClose, onSubmit, player = null, category }) {
     name:           player?.name           || '',
     number:         player?.number         || '',
     position:       player?.position       || 'Milieu',
-    category:       player?.category       || category || 'N3',
+    category:       player?.category       || category || 'Seniors',
     photo_url:      player?.photo_url      || '',
     birth_date:     player?.birth_date     || '',
     height:         player?.height         || '',
@@ -56,7 +56,7 @@ function PlayerForm({ isOpen, onClose, onSubmit, player = null, category }) {
         name:           player.name           || '',
         number:         player.number         || '',
         position:       player.position       || 'Milieu',
-        category:       player.category       || category || 'N3',
+        category:       player.category       || category || 'Seniors',
         photo_url:      player.photo_url      || '',
         birth_date:     player.birth_date     || '',
         height:         player.height         || '',
@@ -170,7 +170,7 @@ function PlayerForm({ isOpen, onClose, onSubmit, player = null, category }) {
               <select name="category" value={formData.category} onChange={handleChange} required
                 style={selectSt('category')}
                 onFocus={() => setFocused('category')} onBlur={() => setFocused(null)}>
-                {['N3','U19','U17','U15','Seniors'].map(c => <option key={c} style={{ background: G.bg2 }}>{c}</option>)}
+                {['U14','U15','U16','U17','U18','U19','Seniors'].map(c => <option key={c} style={{ background: G.bg2 }}>{c}</option>)}
               </select>
             </Field>
           </div>
