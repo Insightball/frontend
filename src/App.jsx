@@ -29,6 +29,7 @@ const AdminPanel        = lazy(() => import('./pages/AdminPanel'))
 const ClubDashboard     = lazy(() => import('./pages/ClubDashboard'))
 const ClubInvite        = lazy(() => import('./pages/ClubInvite'))
 const MatchBoard        = lazy(() => import('./components/MatchBoard'))
+const PlayerProfile     = lazy(() => import('./pages/PlayerProfile'))
 
 // Pages légales
 const MentionsLegales          = lazy(() => import('./pages/MentionsLegales'))
@@ -98,7 +99,8 @@ function App() {
             <Route path="/dashboard/matches"          element={<ProtectedRoute><DashboardMatches /></ProtectedRoute>} />
             <Route path="/dashboard/matches/upload"   element={<ProtectedRoute><UploadMatch /></ProtectedRoute>} />
             <Route path="/dashboard/matches/:matchId" element={<ProtectedRoute><MatchDetail /></ProtectedRoute>} />
-            <Route path="/dashboard/players"          element={<ProtectedRoute><PlayerManagement /></ProtectedRoute>} />
+            <Route path="/dashboard/players"              element={<ProtectedRoute><PlayerManagement /></ProtectedRoute>} />
+            <Route path="/dashboard/player/:playerId"     element={<ProtectedRoute><PlayerProfile /></ProtectedRoute>} />
             <Route path="/dashboard/stats"            element={<ProtectedRoute><Statistics /></ProtectedRoute>} />
             <Route path="/dashboard/team"             element={<ProtectedRoute><TeamManagement /></ProtectedRoute>} />
             <Route path="/dashboard/club"             element={<ProtectedRoute><ClubDashboard /></ProtectedRoute>} />

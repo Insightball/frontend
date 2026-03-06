@@ -1,4 +1,5 @@
 import { User, Edit2, Trash2, AlertCircle } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 const G = {
   gold: '#c9a227', goldBg: 'rgba(201,162,39,0.08)', goldBdr: 'rgba(201,162,39,0.25)',
@@ -29,15 +30,18 @@ const FOOT = {
 }
 
 function PlayerCard({ player, onEdit, onDelete }) {
+  const navigate = useNavigate()
   const pos    = POS[player.position]    || POS['Milieu']
   const status = STATUS[player.status]  || STATUS['actif']
   const foot   = FOOT[player.preferred_foot]
 
   return (
     <div
+      onClick={() => navigate(`/dashboard/player/${player.id}`)}
       style={{
         background: G.bg2, border: `1px solid ${G.border}`,
         padding: '18px', position: 'relative', transition: 'border-color .15s, box-shadow .15s',
+        cursor: 'pointer',
       }}
       onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(201,162,39,0.30)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.25)' }}
       onMouseLeave={e => { e.currentTarget.style.borderColor = G.border; e.currentTarget.style.boxShadow = 'none' }}
@@ -48,10 +52,10 @@ function PlayerCard({ player, onEdit, onDelete }) {
         position: 'absolute', top: 12, right: 12,
         display: 'flex', gap: 4, opacity: 0, transition: 'opacity .15s',
       }}>
-        <button onClick={() => onEdit(player)} style={{ background: 'rgba(255,255,255,0.05)', border: `1px solid ${G.border}`, padding: '5px 7px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+        <button onClick={(e) => { e.stopPropagation(); onEdit(player) }} style={{ background: 'rgba(255,255,255,0.05)', border: `1px solid ${G.border}`, padding: '5px 7px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
           <Edit2 size={12} color={G.gold} />
         </button>
-        <button onClick={() => onDelete(player)} style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.2)', padding: '5px 7px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+        <button onClick={(e) => { e.stopPropagation(); onDelete(player) }} style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.2)', padding: '5px 7px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
           <Trash2 size={12} color={G.red} />
         </button>
       </div>
