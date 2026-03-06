@@ -23,6 +23,382 @@ const G = {
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;600&display=swap');`
 
+/* ─── Traductions FR / EN ───────────────────── */
+const LANG = {
+  FR: {
+    // Nav
+    navFeatures: 'Fonctionnalités',
+    navPricing: 'Tarifs',
+    navEarlyAccess: 'Accès anticipé',
+    navBlog: 'Blog',
+    navCta: 'Accès anticipé',
+    // Hero
+    heroTitle1: 'Transformez vos vidéos',
+    heroTitle2: 'en données',
+    heroTitle3: 'exploitables.',
+    heroSub: 'Uploadez votre vidéo. Recevez un ',
+    heroSubBold: 'rapport tactique complet',
+    heroSubEnd: ' — heatmaps, stats individuelles, phases de jeu.',
+    heroCta1: 'Demander un accès →',
+    heroCta2: 'Voir un exemple',
+    // Features
+    featLabel: 'Fonctionnalités',
+    featTitle1: 'Ce que vous obtenez',
+    featTitle2: 'après chaque match.',
+    featSub: 'Tout ce dont un coach a besoin pour analyser, comprendre et progresser. Sans formation, sans setup complexe.',
+    feat1Title: 'Stats Collectives',
+    feat1Desc: 'Vue complète de votre équipe sur chaque match. Comprenez comment vous jouez, pressez et défendez.',
+    feat1Items: ['Possession de balle','Nombre & % de passes réussies','Nombre & % de tirs réussis','Courbe de suivi des matchs','Distance totale parcourue','Heatmap collective'],
+    feat2Title: 'Stats Individuelles',
+    feat2Desc: 'Une fiche pour chaque joueur. Évaluez objectivement, identifiez les axes de progression.',
+    feat2Items: ['Heatmap de position individuelle','Ballons touchés / perdus / gagnés','Nombre de tirs','Passes réussies / ratées','Distance totale parcourue','Heatmap individuelle'],
+    feat3Title: 'Rapport Complet',
+    feat3Desc: 'Un PDF professionnel exportable en un clic. À partager avec votre staff, vos joueurs, votre direction.',
+    feat3Items: ['Tableau de bord en ligne','Export PDF à partager','Graphiques & heatmaps inclus','Comparaison entre 2 joueurs'],
+    // Social proof
+    stat1Value: '40+', stat1Label: 'Métriques analysées', stat1Sub: 'par match',
+    stat2Value: '< 1h', stat2Label: 'Temps de traitement', stat2Sub: 'rapport livré',
+    stat3Value: '0€', stat3Label: 'Matériel requis', stat3Sub: 'votre téléphone suffit',
+    stat4Value: 'PDF', stat4Label: 'Export en 1 clic', stat4Sub: 'prêt à partager',
+    trust1: 'Séniors → U14 : toutes catégories couvertes',
+    trust2: 'Zéro formation, zéro setup complexe',
+    trust3: 'Conçu pour le football amateur et semi-pro',
+    // Process
+    processLabel: 'Comment ça marche',
+    processTitle1: 'Simple.',
+    processTitle2: 'Rapide.',
+    processTitle3: 'Précis.',
+    processSub: "Pas de formation, pas de setup. Vous uploadez, l'IA s'occupe du reste.",
+    step1Title: 'Uploadez votre vidéo',
+    step1Desc: 'Depuis votre téléphone, tablette ou caméra. MP4, MOV, AVI — tout format accepté.',
+    step2Title: 'Renseignez le match',
+    step2Desc: 'Équipes, composition, score. Deux minutes pour contextualiser votre analyse.',
+    step3Title: "L'IA analyse",
+    step3Desc: "Notre moteur détecte les joueurs, les actions, les zones de jeu. Traitement en moins d'une heure.",
+    step4Title: 'Recevez votre rapport',
+    step4Desc: 'Dashboard interactif + PDF prêt à imprimer ou partager. Livré directement.',
+    // Process card
+    pcTitle: 'Analyse en cours…',
+    pcLabel: 'Extraction des données',
+    pc1: 'Détection joueurs', pc2: 'Heatmaps', pc3: 'Calcul métriques', pc4: 'Génération rapport',
+    pc4Val: 'En cours…',
+    pcReady: 'Rapport prêt dans',
+    // Rapport
+    rapportLabel: 'Exemple de rapport',
+    rapportTitle1: "Vue d'ensemble",
+    rapportTitle2: 'de votre équipe.',
+    rapportSub: "Possession, tirs, duels, distance — tout ce qu'il faut pour analyser la performance collective et individuelle de votre équipe match après match.",
+    rapportPanel: 'Performances individuelles',
+    rapportPlayers: '11 titulaires',
+    rapportCols: ['Joueur','Passes','Duels','Buts','Km'],
+    rapportPdf: 'Rapport PDF prêt',
+    rapportPdfSub: 'à être partagé.',
+    rapportCta: 'Accès anticipé →',
+    // Mockup rapport
+    mockupTitle: 'Rapport de match',
+    mockupHeatmapLabel: 'Heatmap collective',
+    mockupHeatmapSub: 'Mi-temps 2',
+    mockupCols: ['Joueur','Pass.','Duels','Km'],
+    // Heatmap legend
+    hmLeg1: 'Tir cadré', hmLeg2: 'Tir non cadré', hmLeg3: 'Récupération', hmLeg4: 'Ballon perdu',
+    hmHover: 'SURVOLEZ UN POINT',
+    // Pricing
+    priceLabel: 'Tarifs',
+    priceTitle1: 'Simple et',
+    priceTitle2: 'sans surprise.',
+    priceSub: 'Deux formules. Zéro matériel, zéro engagement, zéro formation — uploadez et analysez.',
+    priceBannerLabel: 'Offre de lancement limitée',
+    priceBanner1: '1 match analysé offert',
+    priceBanner2: '7 jours gratuits',
+    priceBanner3: 'Sans engagement',
+    // Coach card
+    coachFor: 'Pour les coachs',
+    coachName: 'Coach',
+    coachBadge: '1 match offert · 7 jours gratuits',
+    coachDesc: 'Uploadez votre vidéo de match. Le premier est offert, sans engagement.',
+    coachAfter: "après la période d'essai",
+    coachItems: ['4 matchs analysés / mois','1 équipe','Stats collectives & individuelles','Heatmaps & rapport PDF export','Suivi progression sur la saison','Support inclus'],
+    coachCta: 'Commencer gratuitement →',
+    // Club card
+    clubFor: 'Pour les clubs',
+    clubName: 'Club',
+    clubDesc: 'Toutes vos équipes, un projet club.',
+    clubFrom: 'À partir de',
+    clubAdapted: 'Offre adaptée à la taille de votre club',
+    clubVis: 'Visibilité',
+    clubVisDesc: "Une vue sur l'ensemble de vos équipes. Un seul écran, toutes les données.",
+    clubItems: ['Nombre de matchs adapté à vos besoins','Multi-équipes & multi-utilisateurs','Vue consolidée du club','Comparaison inter-équipes','Suivi joueurs cross-équipes','Rapport direction mensuel PDF','Support prioritaire dédié'],
+    clubDemo: 'Démo gratuite · Sans engagement · Sur mesure',
+    clubCta: 'Demander un devis →',
+    priceFooter: '🔒 Paiement sécurisé Stripe · Résiliable à tout moment · Sans engagement · Offre de lancement limitée',
+    // Waitlist
+    wlLabel: 'Accès anticipé',
+    wlTitle1: 'Demandez votre',
+    wlTitle2: 'accès en avant-première.',
+    wlSub1: 'Lancement prévu en ',
+    wlSub1Bold: 'mars 2026',
+    wlSub2: ". Inscrivez-vous maintenant pour bénéficier d'un accès en avant-première.",
+    wlPerk1: 'Accès avant ouverture publique',
+    wlPerk2: 'Onboarding personnalisé',
+    wlPerk3: 'Tarif early adopter',
+    wlSentTitle: 'Demande reçue',
+    wlSentSub: "Votre demande a bien été enregistrée. On vous contacte en priorité dès l'ouverture.",
+    wlFormTitle: 'Remplissez le formulaire',
+    wlFirstName: 'Prénom *',
+    wlLastName: 'Nom *',
+    wlEmail: 'Email *',
+    wlClub: 'Nom du club *',
+    wlRole: 'Poste *',
+    wlRoleChoose: 'Choisir...',
+    wlRoleOptions: ['Éducateur','Entraîneur','Directeur Sportif'],
+    wlCategory: 'Catégorie entraînée *',
+    wlCatChoose: 'Choisir...',
+    wlSubmit: '→ Demander mon accès anticipé',
+    wlSubmitting: 'Envoi...',
+    // Contact
+    contactLabel: 'Contact',
+    contactTitle1: 'Une question ?',
+    contactTitle2: 'On répond.',
+    contactSub: 'Une démo, une question sur nos offres, un retour terrain — on est là. Réponse sous 24h.',
+    contactSentTitle: 'Message envoyé',
+    contactSentSub: 'On vous répond sous 24h.',
+    contactName: 'Nom',
+    contactEmail: 'Email',
+    contactMessage: 'Message',
+    contactPlaceholder: 'Votre message…',
+    contactSubmit: 'Envoyer →',
+    contactSubmitting: 'Envoi...',
+    // Crédibilité
+    cred1: 'Conçu et hébergé en France',
+    cred2: 'Paiement sécurisé Stripe',
+    cred3: 'Pensé par des passionnés de football',
+    cred4: "Propulsé par l'IA",
+    // CTA band
+    ctaTitle1: 'Prêt à analyser',
+    ctaTitle2: 'votre prochain match ?',
+    ctaCta: "Demander l'accès →",
+    // Footer
+    footProduit: 'Produit',
+    footEntreprise: 'Entreprise',
+    footLegal: 'Légal',
+    footFeatures: 'Fonctionnalités',
+    footPricing: 'Tarifs',
+    footRapport: 'Exemple rapport',
+    footEarly: 'Accès anticipé',
+    footContact: 'Contact',
+    footSupport: 'Support',
+    footBlog: 'Blog',
+    footMentions: 'Mentions légales',
+    footCGV: 'CGV',
+    footConf: 'Confidentialité',
+    footCookies: 'Cookies',
+    footCopy: '© 2026 Insightball — Tous droits réservés',
+    // Heatmap events
+    hmEvents: [
+      { type: 'Tir cadré', detail: 'Dangoumau - 74min' },
+      { type: 'Tir cadré', detail: 'Randazzo - 61min' },
+      { type: 'Tir non cadré', detail: 'Finidori - 55min' },
+      { type: 'Tir non cadré', detail: 'Kheroua - 38min' },
+      { type: 'Ballon récupéré', detail: 'Fogacci - 67min' },
+      { type: 'Ballon récupéré', detail: 'Kheroua - 42min' },
+      { type: 'Ballon perdu', detail: 'Finidori - 51min' },
+      { type: 'Ballon récupéré', detail: 'Bonalair - 29min' },
+      { type: 'Ballon perdu', detail: 'Dangoumau - 44min' },
+      { type: 'Tir cadré', detail: 'Randazzo - 82min' },
+    ],
+    // Mockup KPIs
+    kpi1Val: '63%', kpi1Label: 'Possession',
+    kpi2Val: '18',  kpi2Label: 'Attaques',
+    kpi3Val: '8/14', kpi3Label: 'Cadrés',
+  },
+  EN: {
+    // Nav
+    navFeatures: 'Features',
+    navPricing: 'Pricing',
+    navEarlyAccess: 'Early Access',
+    navBlog: 'Blog',
+    navCta: 'Early Access',
+    // Hero
+    heroTitle1: 'Turn your match footage',
+    heroTitle2: 'into actionable',
+    heroTitle3: 'insights.',
+    heroSub: 'Upload your video. Get a ',
+    heroSubBold: 'full tactical report',
+    heroSubEnd: ' — heatmaps, individual stats, game phases.',
+    heroCta1: 'Request access →',
+    heroCta2: 'See an example',
+    // Features
+    featLabel: 'Features',
+    featTitle1: 'What you get',
+    featTitle2: 'after every match.',
+    featSub: 'Everything a coach needs to analyze, understand and improve. No training, no complex setup.',
+    feat1Title: 'Team Stats',
+    feat1Desc: 'Full overview of your team each match. Understand how you play, press and defend.',
+    feat1Items: ['Ball possession','Number & % of successful passes','Number & % of shots on target','Match-by-match tracking curve','Total distance covered','Team heatmap'],
+    feat2Title: 'Player Stats',
+    feat2Desc: 'A profile for every player. Evaluate objectively, identify areas for improvement.',
+    feat2Items: ['Individual position heatmap','Touches / lost / won balls','Number of shots','Successful / missed passes','Total distance covered','Individual heatmap'],
+    feat3Title: 'Full Report',
+    feat3Desc: 'A professional PDF exportable in one click. Share with your staff, players, or board.',
+    feat3Items: ['Online dashboard','Shareable PDF export','Charts & heatmaps included','Head-to-head player comparison'],
+    // Social proof
+    stat1Value: '40+', stat1Label: 'Metrics analyzed', stat1Sub: 'per match',
+    stat2Value: '< 1h', stat2Label: 'Processing time', stat2Sub: 'report delivered',
+    stat3Value: '€0', stat3Label: 'Equipment needed', stat3Sub: 'your phone is enough',
+    stat4Value: 'PDF', stat4Label: 'One-click export', stat4Sub: 'ready to share',
+    trust1: 'Senior → U14: all age groups covered',
+    trust2: 'Zero training, zero complex setup',
+    trust3: 'Built for amateur & semi-pro football',
+    // Process
+    processLabel: 'How it works',
+    processTitle1: 'Simple.',
+    processTitle2: 'Fast.',
+    processTitle3: 'Precise.',
+    processSub: 'No training, no setup. You upload, AI does the rest.',
+    step1Title: 'Upload your video',
+    step1Desc: 'From your phone, tablet or camera. MP4, MOV, AVI — any format accepted.',
+    step2Title: 'Enter match details',
+    step2Desc: 'Teams, lineup, score. Two minutes to set up your analysis.',
+    step3Title: 'AI analyzes',
+    step3Desc: 'Our engine detects players, actions, and zones. Processing in under one hour.',
+    step4Title: 'Get your report',
+    step4Desc: 'Interactive dashboard + PDF ready to print or share. Delivered directly.',
+    // Process card
+    pcTitle: 'Analysis in progress…',
+    pcLabel: 'Data extraction',
+    pc1: 'Player detection', pc2: 'Heatmaps', pc3: 'Metrics calculation', pc4: 'Report generation',
+    pc4Val: 'In progress…',
+    pcReady: 'Report ready in',
+    // Rapport
+    rapportLabel: 'Report example',
+    rapportTitle1: 'Full overview',
+    rapportTitle2: 'of your team.',
+    rapportSub: 'Possession, shots, duels, distance — everything you need to analyze collective and individual performance match after match.',
+    rapportPanel: 'Individual performances',
+    rapportPlayers: '11 starters',
+    rapportCols: ['Player','Passes','Duels','Goals','Km'],
+    rapportPdf: 'PDF report ready',
+    rapportPdfSub: 'to share.',
+    rapportCta: 'Early access →',
+    // Mockup rapport
+    mockupTitle: 'Match report',
+    mockupHeatmapLabel: 'Team heatmap',
+    mockupHeatmapSub: '2nd half',
+    mockupCols: ['Player','Pass.','Duels','Km'],
+    // Heatmap legend
+    hmLeg1: 'Shot on target', hmLeg2: 'Shot off target', hmLeg3: 'Recovery', hmLeg4: 'Ball lost',
+    hmHover: 'HOVER A POINT',
+    // Pricing
+    priceLabel: 'Pricing',
+    priceTitle1: 'Simple and',
+    priceTitle2: 'no surprises.',
+    priceSub: 'Two plans. No hardware, no commitment, no training — upload and analyze.',
+    priceBannerLabel: 'Limited launch offer',
+    priceBanner1: '1 free match analysis',
+    priceBanner2: '7-day free trial',
+    priceBanner3: 'No commitment',
+    // Coach card
+    coachFor: 'For coaches',
+    coachName: 'Coach',
+    coachBadge: '1 free match · 7 days free',
+    coachDesc: 'Upload your match video. The first one is free, no commitment.',
+    coachAfter: 'after the trial period',
+    coachItems: ['4 matches analyzed / month','1 team','Team & individual stats','Heatmaps & PDF report export','Season-long progress tracking','Support included'],
+    coachCta: 'Start for free →',
+    // Club card
+    clubFor: 'For clubs',
+    clubName: 'Club',
+    clubDesc: 'All your teams, one club project.',
+    clubFrom: 'Starting at',
+    clubAdapted: 'Offer tailored to your club size',
+    clubVis: 'Visibility',
+    clubVisDesc: 'A view across all your teams. One screen, all the data.',
+    clubItems: ['Match volume tailored to your needs','Multi-team & multi-user','Consolidated club view','Cross-team comparison','Cross-team player tracking','Monthly board report PDF','Dedicated priority support'],
+    clubDemo: 'Free demo · No commitment · Custom plan',
+    clubCta: 'Request a quote →',
+    priceFooter: '🔒 Secure Stripe payment · Cancel anytime · No commitment · Limited launch offer',
+    // Waitlist
+    wlLabel: 'Early Access',
+    wlTitle1: 'Request your',
+    wlTitle2: 'early access.',
+    wlSub1: 'Launch planned for ',
+    wlSub1Bold: 'March 2026',
+    wlSub2: '. Sign up now for early access.',
+    wlPerk1: 'Access before public launch',
+    wlPerk2: 'Personalized onboarding',
+    wlPerk3: 'Early adopter pricing',
+    wlSentTitle: 'Request received',
+    wlSentSub: 'Your request has been recorded. We'll contact you as a priority when we launch.',
+    wlFormTitle: 'Fill in the form',
+    wlFirstName: 'First name *',
+    wlLastName: 'Last name *',
+    wlEmail: 'Email *',
+    wlClub: 'Club name *',
+    wlRole: 'Role *',
+    wlRoleChoose: 'Choose...',
+    wlRoleOptions: ['Educator','Head Coach','Sporting Director'],
+    wlCategory: 'Age group coached *',
+    wlCatChoose: 'Choose...',
+    wlSubmit: '→ Request my early access',
+    wlSubmitting: 'Sending...',
+    // Contact
+    contactLabel: 'Contact',
+    contactTitle1: 'Got a question?',
+    contactTitle2: "We'll answer.",
+    contactSub: 'A demo, a question about our plans, feedback from the pitch — we're here. Response within 24h.',
+    contactSentTitle: 'Message sent',
+    contactSentSub: "We'll respond within 24h.",
+    contactName: 'Name',
+    contactEmail: 'Email',
+    contactMessage: 'Message',
+    contactPlaceholder: 'Your message…',
+    contactSubmit: 'Send →',
+    contactSubmitting: 'Sending...',
+    // Crédibilité
+    cred1: 'Designed and hosted in France',
+    cred2: 'Secure payment via Stripe',
+    cred3: 'Built by football enthusiasts',
+    cred4: 'Powered by AI',
+    // CTA band
+    ctaTitle1: 'Ready to analyze',
+    ctaTitle2: 'your next match?',
+    ctaCta: 'Request access →',
+    // Footer
+    footProduit: 'Product',
+    footEntreprise: 'Company',
+    footLegal: 'Legal',
+    footFeatures: 'Features',
+    footPricing: 'Pricing',
+    footRapport: 'Report example',
+    footEarly: 'Early Access',
+    footContact: 'Contact',
+    footSupport: 'Support',
+    footBlog: 'Blog',
+    footMentions: 'Legal notice',
+    footCGV: 'Terms',
+    footConf: 'Privacy',
+    footCookies: 'Cookies',
+    footCopy: '© 2026 Insightball — All rights reserved',
+    // Heatmap events
+    hmEvents: [
+      { type: 'Shot on target', detail: 'Dangoumau - 74min' },
+      { type: 'Shot on target', detail: 'Randazzo - 61min' },
+      { type: 'Shot off target', detail: 'Finidori - 55min' },
+      { type: 'Shot off target', detail: 'Kheroua - 38min' },
+      { type: 'Recovery', detail: 'Fogacci - 67min' },
+      { type: 'Recovery', detail: 'Kheroua - 42min' },
+      { type: 'Ball lost', detail: 'Finidori - 51min' },
+      { type: 'Recovery', detail: 'Bonalair - 29min' },
+      { type: 'Ball lost', detail: 'Dangoumau - 44min' },
+      { type: 'Shot on target', detail: 'Randazzo - 82min' },
+    ],
+    // Mockup KPIs
+    kpi1Val: '63%', kpi1Label: 'Possession',
+    kpi2Val: '18',  kpi2Label: 'Attacks',
+    kpi3Val: '8/14', kpi3Label: 'On target',
+  },
+}
+
 /* ─── Google Sheets webhook URL ─────────────── */
 /* Remplace par ton URL Apps Script une fois deployé */
 const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzVmVTmvlRMv27XsGYTtkjSK6-KV3cm3bLlI17Coe1e7HRUqamGaYBzbfPVePLnaqqROg/exec'
@@ -89,9 +465,10 @@ const EVENTS = [
   { cx: 240, cy: 98,  r: 5,   color: '#ef4444', type: 'Tir cadré',       detail: 'Randazzo - 82min',   icon: '⚽' },
 ]
 
-function HeatmapSVG() {
+function HeatmapSVG({ t }) {
   const [tooltip, setTooltip] = useState(null)
   const [hovered, setHovered] = useState(null)
+  const hmEvents = t.hmEvents
 
   return (
     <div style={{ position: 'relative', width: '100%' }}>
@@ -202,8 +579,8 @@ function HeatmapSVG() {
                   x: ev.cx * scaleX,
                   y: ev.cy * scaleY,
                   color: ev.color,
-                  type: ev.type,
-                  detail: ev.detail,
+                  type: hmEvents[i].type,
+                  detail: hmEvents[i].detail,
                   icon: ev.icon,
                 })
               }}
@@ -221,20 +598,20 @@ function HeatmapSVG() {
         background: 'rgba(0,0,0,0.45)',
         borderTop: '1px solid rgba(255,255,255,0.07)',
       }}>
-        {[['#ef4444','Tir cadré'],['#f97316','Tir non cadré'],['#22c55e','Récupération'],['#a855f7','Ballon perdu']].map(([c,l]) => (
+        {[['#ef4444',t.hmLeg1],['#f97316',t.hmLeg2],['#22c55e',t.hmLeg3],['#a855f7',t.hmLeg4]].map(([c,l]) => (
           <div key={l} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <span style={{ width: 9, height: 9, borderRadius: '50%', background: c, flexShrink: 0, display: 'inline-block', boxShadow: `0 0 5px ${c}` }}/>
             <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.75)', letterSpacing: '.06em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>{l}</span>
           </div>
         ))}
-        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: 'rgba(255,255,255,0.28)', marginLeft: 'auto', alignSelf: 'center', letterSpacing: '.08em' }}>SURVOLEZ UN POINT</span>
+        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: 'rgba(255,255,255,0.28)', marginLeft: 'auto', alignSelf: 'center', letterSpacing: '.08em' }}>{t.hmHover}</span>
       </div>
     </div>
   )
 }
 
 /* ─── Mockup rapport responsive ─────────────── */
-function MockupRapport({ mobile }) {
+function MockupRapport({ mobile, t }) {
   const pad   = mobile ? 12 : 16
   const kpiFs = mobile ? 20 : 26
   const rowFs = mobile ? 11 : 12
@@ -245,13 +622,13 @@ function MockupRapport({ mobile }) {
       {/* Barre titre */}
       <div style={{ background: G.off, borderBottom: `1px solid ${G.border}`, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 6 }}>
         {['#f87171','#fbbf24','#4ade80'].map(c => <span key={c} style={{ width: 8, height: 8, borderRadius: '50%', background: c, flexShrink: 0 }}/>)}
-        <span style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, marginLeft: 6, letterSpacing: '.06em' }}>Rapport de match</span>
+        <span style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, marginLeft: 6, letterSpacing: '.06em' }}>{t.mockupTitle}</span>
       </div>
 
       <div style={{ padding: pad, display: 'flex', flexDirection: 'column', gap: mobile ? 8 : 10 }}>
         {/* KPIs */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: mobile ? 6 : 8 }}>
-          {[['63%',G.gold,'Possession'],['18',G.ink,'Attaques'],['8/14','#1a7a4a','Cadrés']].map(([v,c,l]) => (
+          {[[t.kpi1Val,G.gold,t.kpi1Label],[t.kpi2Val,G.ink,t.kpi2Label],[t.kpi3Val,'#1a7a4a',t.kpi3Label]].map(([v,c,l]) => (
             <div key={l} style={{ background: G.off, border: `1px solid ${G.border}`, borderRadius: 4, padding: mobile ? '10px 6px' : '12px 10px', textAlign: 'center' }}>
               <div style={{ fontFamily: G.display, fontSize: kpiFs, fontWeight: 800, lineHeight: 1, color: c }}>{v}</div>
               <div style={{ fontSize: mobile ? 9 : 10, color: G.muted, marginTop: 2 }}>{l}</div>
@@ -262,17 +639,17 @@ function MockupRapport({ mobile }) {
         {/* Heatmap */}
         <div style={{ border: `1px solid ${G.border}`, borderRadius: 4, overflow: 'hidden' }}>
           <div style={{ background: G.off, borderBottom: `1px solid ${G.border}`, padding: '7px 12px', fontFamily: G.mono, fontSize: 9, color: G.muted, letterSpacing: '.1em', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between' }}>
-            <span>Heatmap collective</span><span style={{ color: G.gold }}>Mi-temps 2</span>
+            <span>{t.mockupHeatmapLabel}</span><span style={{ color: G.gold }}>{t.mockupHeatmapSub}</span>
           </div>
-          <HeatmapSVG/>
+          <HeatmapSVG t={t}/>
         </div>
 
         {/* Table joueurs */}
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ background: G.off }}>
-              {['Joueur','Pass.','Duels','Km'].map(h => (
-                <th key={h} style={{ fontFamily: G.mono, fontSize: mobile ? 8 : 9, fontWeight: 600, letterSpacing: '.08em', textTransform: 'uppercase', color: G.muted, padding: mobile ? '6px 8px' : '7px 10px', textAlign: h==='Joueur'?'left':'center', borderBottom: `1px solid ${G.border}` }}>{h}</th>
+              {t.mockupCols.map(h => (
+                <th key={h} style={{ fontFamily: G.mono, fontSize: mobile ? 8 : 9, fontWeight: 600, letterSpacing: '.08em', textTransform: 'uppercase', color: G.muted, padding: mobile ? '6px 8px' : '7px 10px', textAlign: h===t.mockupCols[0]?'left':'center', borderBottom: `1px solid ${G.border}` }}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -300,6 +677,15 @@ function MockupRapport({ mobile }) {
    LANDING PAGE
 ════════════════════════════════════════════════ */
 export default function LandingPage() {
+  const [lang, setLang]                   = useState(() => {
+    try { const saved = sessionStorage.getItem('ib_lang'); return saved === 'EN' ? 'EN' : 'FR' } catch { return 'FR' }
+  })
+  const t = LANG[lang]
+  const toggleLang = () => {
+    const next = lang === 'FR' ? 'EN' : 'FR'
+    setLang(next)
+    try { sessionStorage.setItem('ib_lang', next) } catch {}
+  }
   const [navScrolled, setNavScrolled]   = useState(false)
   const [menuOpen, setMenuOpen]         = useState(false)
   const [contactForm, setContactForm]   = useState({ name: '', email: '', message: '' })
@@ -392,7 +778,7 @@ export default function LandingPage() {
       .stat-grid    { grid-template-columns: repeat(2, 1fr) !important; }
     }
     @media (max-width: 768px) {
-      .nav-links, .nav-cta-d { display: none !important; }
+      .nav-links, .nav-cta-d, .nav-lang { display: none !important; }
       .nav-burger   { display: flex !important; }
       .hero-grid    { padding: 80px 20px 40px !important; min-height: unset !important; }
       .hero-title   { font-size: clamp(36px,10vw,58px) !important; }
@@ -487,17 +873,29 @@ export default function LandingPage() {
         </Link>
 
         <div className="nav-links" style={{ display: 'flex', gap: 28, alignItems: 'center' }}>
-          {[['#features','Fonctionnalités'],['#pricing','Tarifs'],['#waitlist','Accès anticipé'],['/blog/','Blog']].map(([h,l]) => (
+          {[['#features',t.navFeatures],['#pricing',t.navPricing],['#waitlist',t.navEarlyAccess],['/blog/',t.navBlog]].map(([h,l]) => (
             <a key={h} href={h} style={{ fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.65)', textDecoration: 'none', transition: 'color .15s' }}
               onMouseEnter={e => e.currentTarget.style.color = G.gold}
               onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.65)'}>{l}</a>
           ))}
         </div>
 
+        {/* Language toggle */}
+        <button className="nav-lang" onClick={toggleLang} style={{
+          background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
+          borderRadius: 4, padding: '5px 10px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+          transition: 'background .15s',
+        }}
+          onMouseEnter={e => e.currentTarget.style.background = 'rgba(201,162,39,0.15)'}
+          onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.06)'}>
+          <span style={{ fontSize: 13 }}>{lang === 'FR' ? '🇫🇷' : '🇬🇧'}</span>
+          <span style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.08em', color: 'rgba(255,255,255,0.75)' }}>{lang}</span>
+        </button>
+
         <a href="#waitlist" className="nav-cta-d" style={{ ...btnPrimary, padding: '9px 20px', fontSize: 14, textDecoration:'none' }}
           onMouseEnter={e => e.currentTarget.style.background = G.goldD}
           onMouseLeave={e => e.currentTarget.style.background = G.gold}>
-          Accès anticipé
+          {t.navCta}
         </a>
 
         <button className="nav-burger" onClick={() => setMenuOpen(o => !o)}
@@ -514,10 +912,19 @@ export default function LandingPage() {
 
       {menuOpen && (
         <div style={{ position: 'fixed', top: 60, left: 0, right: 0, zIndex: 199, background: G.ink, borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '16px 24px 20px', display: 'flex', flexDirection: 'column' }}>
-          {[['#features','Fonctionnalités'],['#pricing','Tarifs'],['#waitlist','Accès anticipé'],['/blog/','Blog']].map(([h,l]) => (
+          {[['#features',t.navFeatures],['#pricing',t.navPricing],['#waitlist',t.navEarlyAccess],['/blog/',t.navBlog]].map(([h,l]) => (
             <a key={h} href={h} onClick={() => setMenuOpen(false)} style={{ fontSize: 15, fontWeight: 500, color: 'rgba(255,255,255,0.75)', textDecoration: 'none', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>{l}</a>
           ))}
-          <a href="#waitlist" onClick={() => setMenuOpen(false)} style={{ ...btnPrimary, marginTop: 12, justifyContent: 'center', textDecoration:'none' }}>Accès anticipé →</a>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+            <button onClick={toggleLang} style={{
+              background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
+              borderRadius: 4, padding: '5px 10px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+            }}>
+              <span style={{ fontSize: 13 }}>{lang === 'FR' ? '🇫🇷' : '🇬🇧'}</span>
+              <span style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.08em', color: 'rgba(255,255,255,0.75)' }}>{lang}</span>
+            </button>
+          </div>
+          <a href="#waitlist" onClick={() => setMenuOpen(false)} style={{ ...btnPrimary, marginTop: 12, justifyContent: 'center', textDecoration:'none' }}>{t.navCta} →</a>
         </div>
       )}
 
@@ -527,31 +934,31 @@ export default function LandingPage() {
         <div className="hero-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', maxWidth: 1200, margin: '0 auto', padding: '100px 48px 60px', gap: 60, minHeight: '100vh' }}>
           <div style={{ padding: '80px 0' }}>
             <h1 className="hero-title" style={{ fontFamily: G.display, fontSize: 'clamp(48px,6vw,78px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.ink, marginBottom: 24, opacity: 0, animation: 'heroUp .5s .2s forwards' }}>
-              Transformez vos vidéos<br/>
-              <span style={{ color: G.gold }}>en données<br/>exploitables.</span>
+              {t.heroTitle1}<br/>
+              <span style={{ color: G.gold }}>{t.heroTitle2}<br/>{t.heroTitle3}</span>
             </h1>
             <p style={{ fontSize: 18, lineHeight: 1.65, color: G.muted, maxWidth: 440, marginBottom: 36, opacity: 0, animation: 'heroUp .5s .35s forwards' }}>
-              Uploadez votre vidéo. Recevez un <strong style={{ color: G.ink, fontWeight: 500 }}>rapport tactique complet</strong> — heatmaps, stats individuelles, phases de jeu.
+              {t.heroSub}<strong style={{ color: G.ink, fontWeight: 500 }}>{t.heroSubBold}</strong>{t.heroSubEnd}
             </p>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', opacity: 0, animation: 'heroUp .5s .45s forwards' }}>
               <a href="#waitlist" style={{ ...btnPrimary, textDecoration:'none' }}
                 onMouseEnter={e => e.currentTarget.style.background = G.goldD}
                 onMouseLeave={e => e.currentTarget.style.background = G.gold}>
-                Demander un accès →
+                {t.heroCta1}
               </a>
               <a href="#rapport" style={btnOutline}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = G.ink; e.currentTarget.style.color = G.ink }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = G.border2; e.currentTarget.style.color = G.ink2 }}>
-                Voir un exemple
+                {t.heroCta2}
               </a>
             </div>
           </div>
           <div className="hero-right" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, animation: 'heroUp .6s .3s forwards' }}>
-            <MockupRapport/>
+            <MockupRapport t={t}/>
           </div>
         </div>
         <div className="hero-mobile-mockup" style={{ display: 'none', padding: '0 16px 56px' }}>
-          <MockupRapport mobile/>
+          <MockupRapport mobile t={t}/>
         </div>
       </div>
 
@@ -560,21 +967,21 @@ export default function LandingPage() {
         <div className="wrap-inner" style={{ maxWidth: 1200, margin: '0 auto', padding: '96px 48px' }}>
           <Reveal>
             <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ width: 18, height: 1.5, background: G.gold }}/>Fonctionnalités
+              <span style={{ width: 18, height: 1.5, background: G.gold }}/>{t.featLabel}
             </div>
             <h2 className="sec-h2" style={{ fontFamily: G.display, fontSize: 'clamp(34px,4vw,54px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.ink, marginBottom: 16 }}>
-              Ce que vous obtenez<br/><span style={{ color: G.gold }}>après chaque match.</span>
+              {t.featTitle1}<br/><span style={{ color: G.gold }}>{t.featTitle2}</span>
             </h2>
             <p style={{ fontSize: 17, color: G.muted, lineHeight: 1.65, maxWidth: 520, marginBottom: 56 }}>
-              Tout ce dont un coach a besoin pour analyser, comprendre et progresser. Sans formation, sans setup complexe.
+              {t.featSub}
             </p>
           </Reveal>
 
           <div className="feat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 1, background: G.border, border: `1px solid ${G.border}` }}>
             {[
-              { n:'01', title:'Stats Collectives', desc:'Vue complète de votre équipe sur chaque match. Comprenez comment vous jouez, pressez et défendez.', items:['Possession de balle','Nombre & % de passes réussies','Nombre & % de tirs réussis','Courbe de suivi des matchs','Distance totale parcourue','Heatmap collective'] },
-              { n:'02', title:'Stats Individuelles', desc:'Une fiche pour chaque joueur. Évaluez objectivement, identifiez les axes de progression.', items:['Heatmap de position individuelle','Ballons touchés / perdus / gagnés','Nombre de tirs','Passes réussies / ratées','Distance totale parcourue','Heatmap individuelle'] },
-              { n:'03', title:'Rapport Complet', desc:'Un PDF professionnel exportable en un clic. À partager avec votre staff, vos joueurs, votre direction.', items:['Tableau de bord en ligne','Export PDF à partager','Graphiques & heatmaps inclus','Comparaison entre 2 joueurs'] },
+              { n:'01', title:t.feat1Title, desc:t.feat1Desc, items:t.feat1Items },
+              { n:'02', title:t.feat2Title, desc:t.feat2Desc, items:t.feat2Items },
+              { n:'03', title:t.feat3Title, desc:t.feat3Desc, items:t.feat3Items },
             ].map((f, i) => (
               <Reveal key={f.n} delay={i * 0.1}>
                 <div style={{ background: G.white, padding: '36px 32px', height: '100%', transition: 'background .18s', cursor: 'default' }}
@@ -610,10 +1017,10 @@ export default function LandingPage() {
           <Reveal>
             <div className="stat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 1, background: 'rgba(255,255,255,0.06)' }}>
               {[
-                { value: '40+', label: 'Métriques analysées', sub: 'par match' },
-                { value: '< 1h', label: 'Temps de traitement', sub: 'rapport livré' },
-                { value: '0€', label: 'Matériel requis', sub: 'votre téléphone suffit' },
-                { value: 'PDF', label: 'Export en 1 clic', sub: 'prêt à partager' },
+                { value: t.stat1Value, label: t.stat1Label, sub: t.stat1Sub },
+                { value: t.stat2Value, label: t.stat2Label, sub: t.stat2Sub },
+                { value: t.stat3Value, label: t.stat3Label, sub: t.stat3Sub },
+                { value: t.stat4Value, label: t.stat4Label, sub: t.stat4Sub },
               ].map((stat, i) => (
                 <div key={i} style={{ background: G.ink, padding: '36px 28px', textAlign: 'center' }}>
                   <div style={{ fontFamily: G.display, fontSize: 42, fontWeight: 800, color: G.gold, lineHeight: 1, marginBottom: 8 }}>{stat.value}</div>
@@ -626,9 +1033,9 @@ export default function LandingPage() {
           <Reveal delay={0.15}>
             <div className="trust-checks" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 32, marginTop: 40, flexWrap: 'wrap' }}>
               {[
-                'Séniors → U14 : toutes catégories couvertes',
-                'Zéro formation, zéro setup complexe',
-                'Conçu pour le football amateur et semi-pro',
+                t.trust1,
+                t.trust2,
+                t.trust3,
               ].map((txt, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <span style={{ color: G.gold, fontSize: 13 }}>✓</span>
@@ -647,20 +1054,20 @@ export default function LandingPage() {
             <div>
               <Reveal>
                 <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ width: 18, height: 1.5, background: G.gold }}/>Comment ça marche
+                  <span style={{ width: 18, height: 1.5, background: G.gold }}/>{t.processLabel}
                 </div>
                 <h2 className="sec-h2" style={{ fontFamily: G.display, fontSize: 'clamp(34px,4vw,54px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.ink, marginBottom: 16 }}>
-                  Simple.<br/><span style={{ color: G.gold }}>Rapide.</span><br/>Précis.
+                  {t.processTitle1}<br/><span style={{ color: G.gold }}>{t.processTitle2}</span><br/>{t.processTitle3}
                 </h2>
                 <p style={{ fontSize: 17, color: G.muted, lineHeight: 1.65, maxWidth: 440, marginBottom: 36 }}>
-                  Pas de formation, pas de setup. Vous uploadez, l'IA s'occupe du reste.
+                  {t.processSub}
                 </p>
               </Reveal>
               {[
-                { n:'01', title:'Uploadez votre vidéo', desc:'Depuis votre téléphone, tablette ou caméra. MP4, MOV, AVI — tout format accepté.', dark: false },
-                { n:'02', title:'Renseignez le match', desc:'Équipes, composition, score. Deux minutes pour contextualiser votre analyse.', dark: true },
-                { n:'03', title:"L'IA analyse", desc:"Notre moteur détecte les joueurs, les actions, les zones de jeu. Traitement en moins d'une heure.", dark: false },
-                { n:'04', title:'Recevez votre rapport', desc:'Dashboard interactif + PDF prêt à imprimer ou partager. Livré directement.', dark: true },
+                { n:'01', title:t.step1Title, desc:t.step1Desc, dark: false },
+                { n:'02', title:t.step2Title, desc:t.step2Desc, dark: true },
+                { n:'03', title:t.step3Title, desc:t.step3Desc, dark: false },
+                { n:'04', title:t.step4Title, desc:t.step4Desc, dark: true },
               ].map((s, i) => (
                 <Reveal key={s.n} delay={i * 0.1}>
                   <div style={{
@@ -691,11 +1098,11 @@ export default function LandingPage() {
                 <div style={{ background: G.white, border: `1px solid ${G.border}`, borderRadius: 8, boxShadow: '0 2px 16px rgba(0,0,0,0.07)', overflow: 'hidden' }}>
                   <div style={{ background: G.off, borderBottom: `1px solid ${G.border}`, padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 6 }}>
                     {['#f87171','#fbbf24','#4ade80'].map(c => <span key={c} style={{ width: 8, height: 8, borderRadius: '50%', background: c }}/>)}
-                    <span style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, marginLeft: 8, letterSpacing: '.06em' }}>Analyse en cours…</span>
+                    <span style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, marginLeft: 8, letterSpacing: '.06em' }}>{t.pcTitle}</span>
                   </div>
                   <div style={{ padding: 18 }}>
-                    <div style={{ fontFamily: G.mono, fontSize: 9, fontWeight: 600, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted, marginBottom: 10 }}>Extraction des données</div>
-                    {[['Détection joueurs','100%',G.gold,100],['Heatmaps','87%',G.green,87],['Calcul métriques','72%',G.border2,72],['Génération rapport','En cours…',G.gold,45]].map(([l,v,c,pct]) => (
+                    <div style={{ fontFamily: G.mono, fontSize: 9, fontWeight: 600, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted, marginBottom: 10 }}>{t.pcLabel}</div>
+                    {[[t.pc1,'100%',G.gold,100],[t.pc2,'87%',G.green,87],[t.pc3,'72%',G.border2,72],[t.pc4,t.pc4Val,G.gold,45]].map(([l,v,c,pct]) => (
                       <div key={l} style={{ marginBottom: 10 }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: G.muted, marginBottom: 5 }}>
                           <span>{l}</span><span style={{ fontWeight: 600, color: G.ink }}>{v}</span>
@@ -706,7 +1113,7 @@ export default function LandingPage() {
                       </div>
                     ))}
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: G.goldL, border: `1px solid ${G.goldLx}`, borderRadius: 4, padding: '12px 14px', marginTop: 12 }}>
-                      <span style={{ fontSize: 12, color: G.muted }}>Rapport prêt dans</span>
+                      <span style={{ fontSize: 12, color: G.muted }}>{t.pcReady}</span>
                       <span style={{ fontFamily: G.display, fontSize: 22, fontWeight: 800, color: G.gold }}>42 min</span>
                     </div>
                   </div>
@@ -722,25 +1129,25 @@ export default function LandingPage() {
         <div className="wrap-inner" style={{ maxWidth: 1200, margin: '0 auto', padding: '96px 48px' }}>
           <Reveal>
             <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ width: 18, height: 1.5, background: G.gold }}/>Exemple de rapport
+              <span style={{ width: 18, height: 1.5, background: G.gold }}/>{t.rapportLabel}
             </div>
             <h2 className="sec-h2" style={{ fontFamily: G.display, fontSize: 'clamp(34px,4vw,54px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.ink, marginBottom: 16 }}>
-              Vue d'ensemble<br/><span style={{ color: G.gold }}>de votre équipe.</span>
+              {t.rapportTitle1}<br/><span style={{ color: G.gold }}>{t.rapportTitle2}</span>
             </h2>
             <p style={{ fontSize: 17, color: G.muted, lineHeight: 1.65, maxWidth: 520, marginBottom: 56 }}>
-              Possession, tirs, duels, distance — tout ce qu'il faut pour analyser la performance collective et individuelle de votre équipe match après match.
+              {t.rapportSub}
             </p>
           </Reveal>
 
           {/* Stats individuelles uniquement — heatmap supprimée */}
           <Reveal>
             <div style={{ background: G.white, border: `1px solid ${G.border}`, borderRadius: 8, overflow: 'hidden', boxShadow: '0 1px 6px rgba(0,0,0,0.05)' }}>
-              <div style={panelHd}><span>Performances individuelles</span><b style={{ color: G.gold, fontWeight: 600 }}>11 titulaires</b></div>
+              <div style={panelHd}><span>{t.rapportPanel}</span><b style={{ color: G.gold, fontWeight: 600 }}>{t.rapportPlayers}</b></div>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ background: G.off }}>
-                    {['Joueur','Passes','Duels','Buts','Km'].map(h => (
-                      <th key={h} style={{ fontFamily: G.mono, fontSize: 9, fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, padding: '8px 10px', textAlign: h==='Joueur'?'left':'center', borderBottom: `1px solid ${G.border}` }}>{h}</th>
+                    {t.rapportCols.map(h => (
+                      <th key={h} style={{ fontFamily: G.mono, fontSize: 9, fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, padding: '8px 10px', textAlign: h===t.rapportCols[0]?'left':'center', borderBottom: `1px solid ${G.border}` }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -761,12 +1168,12 @@ export default function LandingPage() {
               </table>
               <div style={{ background: G.goldL, borderTop: `1px solid ${G.goldLx}`, padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
                 <div style={{ fontSize: 14, color: G.muted }}>
-                  <strong style={{ color: G.ink, fontWeight: 600 }}>Rapport PDF prêt</strong> à être partagé.
+                  <strong style={{ color: G.ink, fontWeight: 600 }}>{t.rapportPdf}</strong> {t.rapportPdfSub}
                 </div>
                 <a href="#waitlist" style={{ ...btnPrimary, padding: '8px 18px', fontSize: 12, borderRadius: 4, flexShrink: 0, textDecoration:'none' }}
                   onMouseEnter={e => e.currentTarget.style.background = G.goldD}
                   onMouseLeave={e => e.currentTarget.style.background = G.gold}>
-                  Accès anticipé →
+                  {t.rapportCta}
                 </a>
               </div>
             </div>
@@ -779,27 +1186,27 @@ export default function LandingPage() {
         <div className="wrap-inner" style={{ maxWidth: 1200, margin: '0 auto', padding: '96px 48px' }}>
           <Reveal>
             <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ width: 18, height: 1.5, background: G.gold }}/>Tarifs
+              <span style={{ width: 18, height: 1.5, background: G.gold }}/>{t.priceLabel}
             </div>
             <h2 className="sec-h2" style={{ fontFamily: G.display, fontSize: 'clamp(34px,4vw,54px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.ink, marginBottom: 16 }}>
-              Simple et<br/><span style={{ color: G.gold }}>sans surprise.</span>
+              {t.priceTitle1}<br/><span style={{ color: G.gold }}>{t.priceTitle2}</span>
             </h2>
             <p style={{ fontSize: 17, color: G.muted, lineHeight: 1.65, maxWidth: 480, marginBottom: 32 }}>
-              Deux formules. Zéro matériel, zéro engagement, zéro formation — uploadez et analysez.
+              {t.priceSub}
             </p>
 
             {/* ── Bandeau trial ── */}
             <div className="trial-banner" style={{ display: 'inline-flex', alignItems: 'center', gap: 16, background: G.ink, border: `1.5px solid ${G.gold}`, borderRadius: 6, padding: '14px 24px', marginBottom: 48 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ width: 8, height: 8, background: G.gold, borderRadius: '50%', flexShrink: 0, boxShadow: `0 0 0 3px rgba(201,162,39,0.25)` }}/>
-                <span style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: G.gold }}>Offre de lancement limitée</span>
+                <span style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: G.gold }}>{t.priceBannerLabel}</span>
               </div>
               <div className="trial-banner-sep" style={{ width: 1, height: 20, background: 'rgba(201,162,39,0.3)' }}/>
               <div className="trial-banner-items" style={{ display: 'flex', gap: 20 }}>
-                {['1 match analysé offert', '7 jours gratuits', 'Sans engagement'].map((t, i) => (
+                {[t.priceBanner1, t.priceBanner2, t.priceBanner3].map((txt, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <span style={{ color: G.gold, fontSize: 13 }}>✓</span>
-                    <span style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(255,255,255,0.75)', letterSpacing: '.04em' }}>{t}</span>
+                    <span style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(255,255,255,0.75)', letterSpacing: '.04em' }}>{txt}</span>
                   </div>
                 ))}
               </div>
@@ -813,23 +1220,23 @@ export default function LandingPage() {
               <div style={{ background: G.white, border: `1.5px solid ${G.border}`, borderRadius: 8, padding: '36px 32px', transition: 'box-shadow .2s' }}
                 onMouseEnter={e => e.currentTarget.style.boxShadow = '0 8px 40px rgba(0,0,0,0.08)'}
                 onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>
-                <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted, marginBottom: 6 }}>Pour les coachs</div>
-                <div style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', color: G.ink, marginBottom: 4 }}>Coach</div>
+                <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted, marginBottom: 6 }}>{t.coachFor}</div>
+                <div style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', color: G.ink, marginBottom: 4 }}>{t.coachName}</div>
                 {/* Badge trial */}
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: G.goldL, border: `1px solid ${G.goldLx}`, borderRadius: 4, padding: '5px 12px', marginBottom: 16 }}>
                   <span style={{ width: 6, height: 6, background: G.gold, borderRadius: '50%' }}/>
-                  <span style={{ fontFamily: G.mono, fontSize: 10, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: G.gold }}>1 match offert · 7 jours gratuits</span>
+                  <span style={{ fontFamily: G.mono, fontSize: 10, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: G.gold }}>{t.coachBadge}</span>
                 </div>
                 <div style={{ fontSize: 14, color: G.muted, marginBottom: 20, lineHeight: 1.55 }}>
-                  Uploadez votre vidéo de match. Le premier est offert, sans engagement.
+                  {t.coachDesc}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 6 }}>
                   <span style={{ fontFamily: G.display, fontSize: 68, fontWeight: 800, lineHeight: 1, color: G.ink }}>39</span>
                   <span style={{ fontSize: 15, color: G.muted }}>€ / mois</span>
                 </div>
-                <p style={{ fontSize: 12, color: G.muted, marginBottom: 24, fontFamily: G.mono, letterSpacing: '.04em' }}>après la période d'essai</p>
+                <p style={{ fontSize: 12, color: G.muted, marginBottom: 24, fontFamily: G.mono, letterSpacing: '.04em' }}>{t.coachAfter}</p>
                 <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 32 }}>
-                  {["4 matchs analysés / mois","1 équipe","Stats collectives & individuelles","Heatmaps & rapport PDF export","Suivi progression sur la saison","Support inclus"].map(item => (
+                  {t.coachItems.map(item => (
                     <li key={item} style={{ fontSize: 14, color: G.ink2, display: 'flex', alignItems: 'flex-start', gap: 9, lineHeight: 1.5 }}>
                       <span style={{ color: G.gold, fontWeight: 700, flexShrink: 0 }}>✓</span>{item}
                     </li>
@@ -838,7 +1245,7 @@ export default function LandingPage() {
                 <a href="#waitlist" style={{ display: 'block', width: '100%', padding: 14, fontFamily: G.display, fontSize: 15, fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase', textAlign: 'center', textDecoration: 'none', borderRadius: 4, transition: 'all .15s', background: G.gold, color: G.ink, border: 'none', boxSizing: 'border-box' }}
                   onMouseEnter={e => e.currentTarget.style.background = G.goldD}
                   onMouseLeave={e => e.currentTarget.style.background = G.gold}>
-                  Commencer gratuitement →
+                  {t.coachCta}
                 </a>
               </div>
             </Reveal>
@@ -846,40 +1253,32 @@ export default function LandingPage() {
             {/* ── CLUB ── */}
             <Reveal delay={0.1}>
               <div style={{ background: G.ink, border: `1.5px solid ${G.gold}`, borderRadius: 8, padding: '36px 32px', boxShadow: '0 8px 48px rgba(201,162,39,0.15)', boxSizing: 'border-box' }}>
-                <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, marginBottom: 6 }}>Pour les clubs</div>
-                <div style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', color: G.white, marginBottom: 4 }}>Club</div>
+                <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, marginBottom: 6 }}>{t.clubFor}</div>
+                <div style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', color: G.white, marginBottom: 4 }}>{t.clubName}</div>
                 <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', marginBottom: 20, lineHeight: 1.6 }}>
-                  Toutes vos équipes, un projet club.
+                  {t.clubDesc}
                 </div>
                 <div style={{ marginBottom: 28 }}>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 6 }}>
-                    <span style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(255,255,255,0.35)', letterSpacing: '.1em', textTransform: 'uppercase' }}>À partir de</span>
+                    <span style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(255,255,255,0.35)', letterSpacing: '.1em', textTransform: 'uppercase' }}>{t.clubFrom}</span>
                     <span style={{ fontFamily: G.display, fontSize: 52, fontWeight: 800, lineHeight: 1, color: G.white }}>99</span>
                     <span style={{ fontSize: 15, color: 'rgba(255,255,255,0.40)' }}>€ / mois</span>
                   </div>
-                  <p style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(255,255,255,0.35)', letterSpacing: '.04em', margin: 0 }}>Offre adaptée à la taille de votre club</p>
+                  <p style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(255,255,255,0.35)', letterSpacing: '.04em', margin: 0 }}>{t.clubAdapted}</p>
                 </div>
 
                 {/* 2 blocs valeur */}
                 <div style={{ marginBottom: 24 }}>
                   <div style={{ padding: '13px 15px', background: 'rgba(201,162,39,0.10)', border: '1px solid rgba(201,162,39,0.20)', borderRadius: 6 }}>
-                    <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, marginBottom: 5 }}>👁 Visibilité</div>
+                    <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, marginBottom: 5 }}>👁 {t.clubVis}</div>
                     <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', lineHeight: 1.6 }}>
-                      Une vue sur l'ensemble de vos équipes. Un seul écran, toutes les données.
+                      {t.clubVisDesc}
                     </div>
                   </div>
                 </div>
 
                 <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 32 }}>
-                  {[
-                    "Nombre de matchs adapté à vos besoins",
-                    "Multi-équipes & multi-utilisateurs",
-                    "Vue consolidée du club",
-                    "Comparaison inter-équipes",
-                    "Suivi joueurs cross-équipes",
-                    "Rapport direction mensuel PDF",
-                    "Support prioritaire dédié",
-                  ].map(item => (
+                  {t.clubItems.map(item => (
                     <li key={item} style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', display: 'flex', alignItems: 'flex-start', gap: 9, lineHeight: 1.5 }}>
                       <span style={{ color: G.gold, fontWeight: 700, flexShrink: 0 }}>✓</span>{item}
                     </li>
@@ -887,12 +1286,12 @@ export default function LandingPage() {
                 </ul>
 
                 <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', fontFamily: G.mono, letterSpacing: '.04em', marginBottom: 16, textAlign: 'center' }}>
-                  Démo gratuite · Sans engagement · Sur mesure
+                  {t.clubDemo}
                 </div>
                 <a href="#contact" style={{ display: 'block', width: '100%', padding: 14, fontFamily: G.display, fontSize: 15, fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase', textAlign: 'center', textDecoration: 'none', borderRadius: 4, transition: 'background .15s', background: G.gold, color: G.ink, boxSizing: 'border-box' }}
                   onMouseEnter={e => e.currentTarget.style.background = G.goldD}
                   onMouseLeave={e => e.currentTarget.style.background = G.gold}>
-                  Demander un devis →
+                  {t.clubCta}
                 </a>
               </div>
             </Reveal>
@@ -901,7 +1300,7 @@ export default function LandingPage() {
 
           <Reveal delay={0.2}>
             <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, marginTop: 28, maxWidth: 940 }}>
-              🔒 Paiement sécurisé Stripe · Résiliable à tout moment · Sans engagement · Offre de lancement limitée
+              {t.priceFooter}
             </p>
           </Reveal>
 
@@ -914,16 +1313,16 @@ export default function LandingPage() {
         <div className="wrap-inner" style={{ maxWidth: 1200, margin: '0 auto', padding: '96px 48px' }}>
           <Reveal>
             <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ width: 18, height: 1.5, background: G.gold }}/>Accès anticipé
+              <span style={{ width: 18, height: 1.5, background: G.gold }}/>{t.wlLabel}
             </div>
             <h2 className="sec-h2" style={{ fontFamily: G.display, fontSize: 'clamp(34px,4vw,54px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.white, marginBottom: 16 }}>
-              Demandez votre<br/><span style={{ color: G.gold }}>accès en avant-première.</span>
+              {t.wlTitle1}<br/><span style={{ color: G.gold }}>{t.wlTitle2}</span>
             </h2>
             <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.55)', lineHeight: 1.65, maxWidth: 560, marginBottom: 16 }}>
-              Lancement prévu en <strong style={{ color: G.gold }}>mars 2026</strong>. Inscrivez-vous maintenant pour bénéficier d'un accès en avant-première.
+              {t.wlSub1}<strong style={{ color: G.gold }}>{t.wlSub1Bold}</strong>{t.wlSub2}
             </p>
             <div style={{ display: 'flex', gap: 24, marginBottom: 48, flexWrap: 'wrap' }}>
-              {[['⚡','Accès avant ouverture publique'],['🤝','Onboarding personnalisé'],['🏷️','Tarif early adopter']].map(([icon, label]) => (
+              {[['⚡',t.wlPerk1],['🤝',t.wlPerk2],['🏷️',t.wlPerk3]].map(([icon, label]) => (
                 <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: 'rgba(255,255,255,0.45)' }}>
                   <span>{icon}</span><span>{label}</span>
                 </div>
@@ -934,17 +1333,17 @@ export default function LandingPage() {
           {wlSent ? (
             <div style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, padding: '48px 32px', textAlign: 'center', maxWidth: 520 }}>
               <div style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', color: G.white, marginBottom: 12 }}>
-                Demande reçue <span style={{ color: G.gold }}>✓</span>
+                {t.wlSentTitle} <span style={{ color: G.gold }}>✓</span>
               </div>
               <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>
-                Votre demande a bien été enregistrée. On vous contacte en priorité dès l'ouverture.
+                {t.wlSentSub}
               </p>
             </div>
           ) : (
             <Reveal delay={0.1}>
               <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.12)', borderTop: `3px solid ${G.gold}`, borderRadius: 8, padding: '40px 40px', maxWidth: 760, boxShadow: '0 8px 40px rgba(0,0,0,0.30)' }}>
                 <div style={{ fontFamily: G.display, fontSize: 20, fontWeight: 800, textTransform: 'uppercase', color: G.white, marginBottom: 28 }}>
-                  Remplissez le formulaire
+                  {t.wlFormTitle}
                 </div>
 
                 {wlError && (
@@ -956,49 +1355,49 @@ export default function LandingPage() {
                 <form onSubmit={handleWaitlist}>
                   <div className="wl-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '0 32px' }}>
                     <div style={inputLineDark(wlFocused==='firstName')}>
-                      <label style={labelStDark}>Prénom *</label>
+                      <label style={labelStDark}>{t.wlFirstName}</label>
                       <input type="text" required value={wlForm.firstName} onChange={e => setWlForm({...wlForm, firstName: e.target.value})}
                         placeholder="" style={inputStDark}
                         onFocus={() => setWlFocused('firstName')} onBlur={() => setWlFocused(null)} />
                     </div>
                     <div style={inputLineDark(wlFocused==='lastName')}>
-                      <label style={labelStDark}>Nom *</label>
+                      <label style={labelStDark}>{t.wlLastName}</label>
                       <input type="text" required value={wlForm.lastName} onChange={e => setWlForm({...wlForm, lastName: e.target.value})}
                         placeholder="" style={inputStDark}
                         onFocus={() => setWlFocused('lastName')} onBlur={() => setWlFocused(null)} />
                     </div>
                     <div style={{ ...inputLine(wlFocused==='email'), gridColumn: '1 / 3' }}>
-                      <label style={labelStDark}>Email *</label>
+                      <label style={labelStDark}>{t.wlEmail}</label>
                       <input type="email" required value={wlForm.email} onChange={e => setWlForm({...wlForm, email: e.target.value})}
                         placeholder="" style={inputStDark}
                         onFocus={() => setWlFocused('email')} onBlur={() => setWlFocused(null)} />
                     </div>
                     <div style={{ ...inputLine(wlFocused==='club'), gridColumn: '1 / 3' }}>
-                      <label style={labelStDark}>Nom du club *</label>
+                      <label style={labelStDark}>{t.wlClub}</label>
                       <input type="text" required value={wlForm.club} onChange={e => setWlForm({...wlForm, club: e.target.value})}
                         placeholder="" style={inputStDark}
                         onFocus={() => setWlFocused('club')} onBlur={() => setWlFocused(null)} />
                     </div>
                     <div style={{ ...inputLineDark(wlFocused==='role'), marginBottom: 32 }}>
-                      <label style={labelStDark}>Poste *</label>
+                      <label style={labelStDark}>{t.wlRole}</label>
                       <div className="select-wrapper">
                         <select required value={wlForm.role} onChange={e => setWlForm({...wlForm, role: e.target.value})}
                           style={{ ...inputStDark, color: wlForm.role ? G.white : 'rgba(255,255,255,0.55)', cursor:'pointer', appearance:'none', WebkitAppearance:'none', paddingRight: 20 }}
                           onFocus={() => setWlFocused('role')} onBlur={() => setWlFocused(null)}>
-                          <option value="" disabled style={{ color: '#888', background: '#1a1917' }}>Choisir...</option>
-                          <option style={{ background: '#1a1917', color: '#fff' }}>Éducateur</option>
-                          <option style={{ background: '#1a1917', color: '#fff' }}>Entraîneur</option>
-                          <option style={{ background: '#1a1917', color: '#fff' }}>Directeur Sportif</option>
+                          <option value="" disabled style={{ color: '#888', background: '#1a1917' }}>{t.wlRoleChoose}</option>
+                          {t.wlRoleOptions.map(r => (
+                            <option key={r} style={{ background: '#1a1917', color: '#fff' }}>{r}</option>
+                          ))}
                         </select>
                       </div>
                     </div>
                     <div style={{ ...inputLineDark(wlFocused==='category'), marginBottom: 32 }}>
-                      <label style={labelStDark}>Catégorie entraînée *</label>
+                      <label style={labelStDark}>{t.wlCategory}</label>
                       <div className="select-wrapper">
                         <select required value={wlForm.category} onChange={e => setWlForm({...wlForm, category: e.target.value})}
                           style={{ ...inputStDark, color: wlForm.category ? G.white : 'rgba(255,255,255,0.55)', cursor:'pointer', appearance:'none', WebkitAppearance:'none', paddingRight: 20 }}
                           onFocus={() => setWlFocused('category')} onBlur={() => setWlFocused(null)}>
-                          <option value="" disabled style={{ color: '#888', background: '#1a1917' }}>Choisir...</option>
+                          <option value="" disabled style={{ color: '#888', background: '#1a1917' }}>{t.wlCatChoose}</option>
                           {['U14','U15','U16','U17','U18','U19','Séniors'].map(c => (
                             <option key={c} style={{ background: '#1a1917', color: '#fff' }}>{c}</option>
                           ))}
@@ -1013,7 +1412,7 @@ export default function LandingPage() {
                   }}
                     onMouseEnter={e => { if(!wlLoading) e.currentTarget.style.background = G.goldD }}
                     onMouseLeave={e => { if(!wlLoading) e.currentTarget.style.background = G.gold }}>
-                    {wlLoading ? 'Envoi...' : '→ Demander mon accès anticipé'}
+                    {wlLoading ? t.wlSubmitting : t.wlSubmit}
                   </button>
                 </form>
               </div>
@@ -1028,13 +1427,13 @@ export default function LandingPage() {
           <div className="contact-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'start' }}>
             <Reveal>
               <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ width: 18, height: 1.5, background: G.gold }}/>Contact
+                <span style={{ width: 18, height: 1.5, background: G.gold }}/>{t.contactLabel}
               </div>
               <h2 className="sec-h2" style={{ fontFamily: G.display, fontSize: 'clamp(34px,4vw,54px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.ink, marginBottom: 20 }}>
-                Une question ?<br/><span style={{ color: G.gold }}>On répond.</span>
+                {t.contactTitle1}<br/><span style={{ color: G.gold }}>{t.contactTitle2}</span>
               </h2>
               <p style={{ fontSize: 16, color: G.muted, lineHeight: 1.7, maxWidth: 380, marginBottom: 32 }}>
-                Une démo, une question sur nos offres, un retour terrain — on est là. Réponse sous 24h.
+                {t.contactSub}
               </p>
               <a href="mailto:contact@insightball.com" style={{ fontFamily: G.mono, fontSize: 14, color: G.gold, textDecoration: 'none', borderBottom: `1px solid rgba(201,162,39,0.3)`, paddingBottom: 2, transition: 'border-color .15s' }}
                 onMouseEnter={e => e.currentTarget.style.borderBottomColor = G.gold}
@@ -1046,13 +1445,13 @@ export default function LandingPage() {
               {contactSent ? (
                 <div style={{ background: G.off, border: `1px solid ${G.border}`, borderRadius: 8, padding: '48px 32px', textAlign: 'center' }}>
                   <div style={{ fontFamily: G.display, fontSize: 28, fontWeight: 800, textTransform: 'uppercase', color: G.ink, marginBottom: 12 }}>
-                    Message envoyé <span style={{ color: G.gold }}>✓</span>
+                    {t.contactSentTitle} <span style={{ color: G.gold }}>✓</span>
                   </div>
-                  <p style={{ fontSize: 15, color: G.muted }}>On vous répond sous 24h.</p>
+                  <p style={{ fontSize: 15, color: G.muted }}>{t.contactSentSub}</p>
                 </div>
               ) : (
                 <form onSubmit={handleContact} style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-                  {[{l:'Nom',t:'text',k:'name',p:''},{l:'Email',t:'email',k:'email',p:''}].map(f => (
+                  {[{l:t.contactName,t:'text',k:'name',p:''},{l:t.contactEmail,t:'email',k:'email',p:''}].map(f => (
                     <div key={f.k} style={{ borderBottom: `1px solid ${G.border}`, paddingBottom: 16, marginBottom: 16 }}>
                       <label style={labelSt}>{f.l}</label>
                       <input type={f.t} required value={contactForm[f.k]} onChange={e => setContactForm({...contactForm,[f.k]:e.target.value})} placeholder={f.p}
@@ -1060,14 +1459,14 @@ export default function LandingPage() {
                     </div>
                   ))}
                   <div style={{ borderBottom: `1px solid ${G.border}`, paddingBottom: 16, marginBottom: 24 }}>
-                    <label style={labelSt}>Message</label>
-                    <textarea required rows={5} value={contactForm.message} onChange={e => setContactForm({...contactForm,message:e.target.value})} placeholder="Votre message…"
+                    <label style={labelSt}>{t.contactMessage}</label>
+                    <textarea required rows={5} value={contactForm.message} onChange={e => setContactForm({...contactForm,message:e.target.value})} placeholder={t.contactPlaceholder}
                       style={{ width: '100%', background: 'transparent', border: 'none', outline: 'none', resize: 'none', fontSize: 15, color: G.ink, fontFamily: G.body, lineHeight: 1.6 }}/>
                   </div>
                   <button type="submit" disabled={contactLoad} style={{ ...btnPrimary, alignSelf: 'flex-start', opacity: contactLoad ? .6 : 1 }}
                     onMouseEnter={e => { if(!contactLoad) e.currentTarget.style.background = G.goldD }}
                     onMouseLeave={e => { if(!contactLoad) e.currentTarget.style.background = G.gold }}>
-                    {contactLoad ? 'Envoi...' : 'Envoyer →'}
+                    {contactLoad ? t.contactSubmitting : t.contactSubmit}
                   </button>
                 </form>
               )}
@@ -1082,10 +1481,10 @@ export default function LandingPage() {
           <Reveal>
             <div className="cred-bar" style={{ display: 'flex', alignItems: 'center', gap: 40, flexWrap: 'wrap', justifyContent: 'center' }}>
               {[
-                { icon: '🇫🇷', text: 'Conçu et hébergé en France' },
-                { icon: '🔒', text: 'Paiement sécurisé Stripe' },
-                { icon: '⚽', text: 'Pensé par des passionnés de football' },
-                { icon: '📊', text: 'Propulsé par l\'IA' },
+                { icon: '🇫🇷', text: t.cred1 },
+                { icon: '🔒', text: t.cred2 },
+                { icon: '⚽', text: t.cred3 },
+                { icon: '📊', text: t.cred4 },
               ].map((item, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <span style={{ fontSize: 18 }}>{item.icon}</span>
@@ -1101,7 +1500,7 @@ export default function LandingPage() {
       <div className="cta-band" style={{ background: G.ink, padding: '80px 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 40, flexWrap: 'wrap' }}>
         <div>
           <h2 className="sec-h2" style={{ fontFamily: G.display, fontSize: 'clamp(34px,4vw,54px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.white, marginBottom: 12 }}>
-            Prêt à analyser<br/><span style={{ color: G.gold }}>votre prochain match ?</span>
+            {t.ctaTitle1}<br/><span style={{ color: G.gold }}>{t.ctaTitle2}</span>
           </h2>
 
         </div>
@@ -1109,9 +1508,8 @@ export default function LandingPage() {
           <a href="#waitlist" style={{ ...btnPrimary, fontSize: 16, padding: '16px 36px', textDecoration:'none' }}
             onMouseEnter={e => e.currentTarget.style.background = G.goldD}
             onMouseLeave={e => e.currentTarget.style.background = G.gold}>
-            Demander l'accès →
+            {t.ctaCta}
           </a>
-
         </div>
       </div>
 
@@ -1147,9 +1545,9 @@ export default function LandingPage() {
             </div>
           </div>
           {[
-            { title:'Produit', links:[['#features','Fonctionnalités'],['#pricing','Tarifs'],['#rapport','Exemple rapport'],['#waitlist','Accès anticipé']] },
-            { title:'Entreprise', links:[['#contact','Contact'],['mailto:contact@insightball.com','Support'],['/blog/','Blog']] },
-            { title:'Légal', links:[['/mentions-legales','Mentions légales'],['/cgv','CGV'],['/confidentialite','Confidentialité'],['/cookies','Cookies']] },
+            { title:t.footProduit, links:[['#features',t.footFeatures],['#pricing',t.footPricing],['#rapport',t.footRapport],['#waitlist',t.footEarly]] },
+            { title:t.footEntreprise, links:[['#contact',t.footContact],['mailto:contact@insightball.com',t.footSupport],['/blog/',t.footBlog]] },
+            { title:t.footLegal, links:[['/mentions-legales',t.footMentions],['/cgv',t.footCGV],['/confidentialite',t.footConf],['/cookies',t.footCookies]] },
           ].map(col => (
             <div key={col.title}>
               <div style={{ fontFamily: G.mono, fontSize: 10, fontWeight: 600, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 14 }}>{col.title}</div>
@@ -1166,7 +1564,7 @@ export default function LandingPage() {
           ))}
         </div>
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.10)', paddingTop: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, fontSize: 13, color: 'rgba(255,255,255,0.75)', textAlign: 'center' }}>
-          <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12 }}>© 2026 Insightball — Tous droits réservés</span>
+          <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12 }}>{t.footCopy}</span>
         </div>
       </footer>
     </div>
