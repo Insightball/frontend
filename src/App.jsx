@@ -54,7 +54,7 @@ const PageLoader = () => (
 function SettingsRoute() {
   const { user } = useAuth()
   if (!user) return null
-  return user.plan === 'CLUB' ? <ClubSettings /> : <CoachSettings />
+  return ['CLUB', 'CLUB_PRO'].includes(user.plan) ? <ClubSettings /> : <CoachSettings />
 }
 
 function App() {
