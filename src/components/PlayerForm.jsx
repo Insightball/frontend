@@ -33,12 +33,13 @@ function Field({ label, children }) {
   )
 }
 
-function PlayerForm({ isOpen, onClose, onSubmit, player = null, category }) {
+function PlayerForm({ isOpen, onClose, onSubmit, player = null, category, managedCategory }) {
+  const lockedCategory = managedCategory || null
   const [formData, setFormData] = useState({
     name:           player?.name           || '',
     number:         player?.number         || '',
     position:       player?.position       || 'Milieu',
-    category:       player?.category       || category || 'Seniors',
+    category:       player?.category       || lockedCategory || category || 'Seniors',
     photo_url:      player?.photo_url      || '',
     birth_date:     player?.birth_date     || '',
     height:         player?.height         || '',
@@ -167,11 +168,18 @@ function PlayerForm({ isOpen, onClose, onSubmit, player = null, category }) {
               </select>
             </Field>
             <Field label="Catégorie *">
-              <select name="category" value={formData.category} onChange={handleChange} required
-                style={selectSt('category')}
-                onFocus={() => setFocused('category')} onBlur={() => setFocused(null)}>
-                {['U14','U15','U16','U17','U18','U19','Seniors'].map(c => <option key={c} style={{ background: G.bg2 }}>{c}</option>)}
-              </select>
+              {lockedCategory ? (
+                <div style={{ ...iSt(false), background: 'rgba(255,255,255,0.02)', color: G.gold, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span>{lockedCategory}</span>
+                  <span style={{ fontFamily: G.mono, fontSize: 8, color: G.muted, letterSpacing: '.08em' }}>(assignée)</span>
+                </div>
+              ) : (
+                <select name="category" value={formData.category} onChange={handleChange} required
+                  style={selectSt('category')}
+                  onFocus={() => setFocused('category')} onBlur={() => setFocused(null)}>
+                  {['U14','U15','U16','U17','U18','U19','Seniors'].map(c => <option key={c} style={{ background: G.bg2 }}>{c}</option>)}
+                </select>
+              )}
             </Field>
           </div>
 

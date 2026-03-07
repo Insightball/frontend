@@ -215,7 +215,7 @@ function PlayerManagement() {
         </div>
       )}
 
-      <PlayerForm isOpen={isFormOpen} onClose={() => { setIsFormOpen(false); setEditingPlayer(null) }} onSubmit={editingPlayer ? handleEditPlayer : handleAddPlayer} player={editingPlayer} />
+      <PlayerForm isOpen={isFormOpen} onClose={() => { setIsFormOpen(false); setEditingPlayer(null) }} onSubmit={editingPlayer ? handleEditPlayer : handleAddPlayer} player={editingPlayer} managedCategory={user?.managed_category} />
     </DashboardLayout>
   )
 }
