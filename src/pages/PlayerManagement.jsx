@@ -76,10 +76,11 @@ function PlayerManagement() {
   const [isFormOpen, setIsFormOpen]         = useState(false)
   const [editingPlayer, setEditingPlayer]   = useState(null)
   const [selectedPosition, setSelectedPosition] = useState('all')
+  const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery]       = useState('')
 
   useEffect(() => { loadPlayers() }, [])
-  useEffect(() => { filterPlayers() }, [players, selectedPosition, searchQuery])
+  useEffect(() => { filterPlayers() }, [players, selectedPosition, selectedCategory, searchQuery])
 
   const loadPlayers = async () => {
     try { setLoading(true); const data = await playerService.getPlayers(); setPlayers(data) }
@@ -89,9 +90,13 @@ function PlayerManagement() {
   const filterPlayers = () => {
     let f = [...players]
     if (selectedPosition !== 'all') f = f.filter(p => p.position === selectedPosition)
+    if (selectedCategory !== 'all') f = f.filter(p => p.category === selectedCategory)
     if (searchQuery) f = f.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.number?.toString().includes(searchQuery))
     setFilteredPlayers(f)
   }
+
+  // Catégories disponibles (extraites des joueurs)
+  const availableCategories = [...new Set(players.map(p => p.category).filter(Boolean))].sort()
 
   const handleAddPlayer    = async (data) => { await playerService.createPlayer(data); await loadPlayers(); setIsFormOpen(false) }
   const handleEditPlayer   = async (data) => { await playerService.updatePlayer(editingPlayer.id, data); await loadPlayers(); setEditingPlayer(null); setIsFormOpen(false) }
@@ -168,6 +173,13 @@ function PlayerManagement() {
           <option value="Milieu">Milieux</option>
           <option value="Attaquant">Attaquants</option>
         </select>
+        {availableCategories.length > 1 && (
+          <select value={selectedCategory} onChange={e => setSelectedCategory(e.target.value)}
+            style={{ background: G.card, border: `1px solid ${G.border}`, padding: '11px 16px', color: selectedCategory !== 'all' ? G.gold : G.text, fontFamily: G.mono, fontSize: 11, outline: 'none', cursor: 'pointer', letterSpacing: '.06em' }}>
+            <option value="all">Toutes catégories</option>
+            {availableCategories.map(c => <option key={c} value={c}>{c}</option>)}
+          </select>
+        )}
       </div>
 
       {/* ── LISTE ── */}
