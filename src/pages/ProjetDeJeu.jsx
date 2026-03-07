@@ -3,18 +3,23 @@ import DashboardLayout from '../components/DashboardLayout'
 import { T, globalStyles } from '../theme'
 import CalendrierSaison from '../components/CalendrierSaison'
 
-const API = 'https://backend-pued.onrender.com/api'
+const API = import.meta.env.VITE_API_URL || 'https://backend-pued.onrender.com/api'
 function authH() {
   return { Authorization: `Bearer ${localStorage.getItem('insightball_token')}`, 'Content-Type': 'application/json' }
 }
+async function safeJson(res) {
+  const ct = res.headers.get('content-type') || ''
+  if (!ct.includes('application/json')) throw new Error('Réponse non-JSON')
+  return res.json()
+}
 
 const G = {
-  bg:'#f5f2eb',surface:'#ffffff',dark:'#0a0908',
-  ink:'#1a1916',ink2:'#2d2c2a',muted:'rgba(26,25,22,0.45)',
-  gold:'#c9a227',goldBg:'rgba(201,162,39,0.07)',goldBdr:'rgba(201,162,39,0.22)',
-  rule:'rgba(26,25,22,0.09)',
-  green:'#16a34a',red:'#dc2626',blue:'#2563eb',orange:'#d97706',purple:'#8b5cf6',
-  mono:"'JetBrains Mono',monospace",display:"'Anton',sans-serif",
+  bg:T.bg, surface:T.surface, dark:T.dark,
+  ink:T.ink, ink2:T.ink, muted:T.muted,
+  gold:T.gold, goldBg:T.goldBg, goldBdr:T.goldBdr,
+  rule:T.rule,
+  green:T.green, red:T.red, blue:T.blue, orange:T.orange, purple:'#8b5cf6',
+  mono:T.mono, display:T.display,
 }
 
 /* ═══════════════════════════════
@@ -920,7 +925,7 @@ export default function ProjetDeJeu(){
     ;(async()=>{
       try{
         const res=await fetch(`${API}/game-plan`,{headers:authH()})
-        if(res.ok&&!cancelled){const p=await res.json()
+        if(res.ok&&!cancelled){const p=await safeJson(res)
           if(p&&p.id){
             setFormation(p.formation||'4-3-3');setCategorie(p.category||'Seniors')
             setSel(p.principles||[]);setJours(p.training_days||['mardi','jeudi'])
