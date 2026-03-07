@@ -4,7 +4,7 @@
  */
 import { useState, useEffect } from 'react'
 
-const API = 'https://backend-pued.onrender.com/api/x-admin'
+const API = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL.replace('/api', '')}/api/x-admin` : 'https://backend-pued.onrender.com/api/x-admin'
 
 const G = {
   bg: '#f5f2eb', bg2: '#ede8df', bg3: '#faf8f4',
@@ -85,50 +85,148 @@ function Modal({ title, subtitle, onClose, children, wide }) {
 // ─── Modal détail utilisateur ─────────────────────────────────────────────────
 
 function UserDetailModal({ user, onClose, onToggleActive, onEditPlan }) {
+  const [tab, setTab] = useState('info')
+  const [activity, setActivity] = useState(null)
+  const [loadingActivity, setLoadingActivity] = useState(false)
+
+  const loadActivity = () => {
+    if (activity) { setTab('activity'); return }
+    setLoadingActivity(true)
+    setTab('activity')
+    fetch(`${API}/users/${user.id}/activity`, { headers: authHeaders() })
+      .then(r => r.json()).then(setActivity)
+      .catch(() => setActivity(null))
+      .finally(() => setLoadingActivity(false))
+  }
+
   const Row = ({ label, value, highlight }) => (
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, padding: '10px 0', borderBottom: '1px solid rgba(15,15,13,0.07)' }}>
-      <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: 'rgba(15,15,13,0.45)', width: 140, flexShrink: 0, paddingTop: 2 }}>{label}</div>
-      <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: highlight ? '#c9a227' : '#0f0f0d', flex: 1 }}>{value || '—'}</div>
+      <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: G.muted, width: 140, flexShrink: 0, paddingTop: 2 }}>{label}</div>
+      <div style={{ fontFamily: G.mono, fontSize: 12, color: highlight ? G.gold : G.text, flex: 1 }}>{value || '—'}</div>
     </div>
+  )
+
+  const tabBtn = (id, label) => (
+    <button onClick={() => id === 'activity' ? loadActivity() : setTab(id)} style={{
+      padding: '8px 16px', fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase',
+      background: tab === id ? G.goldBg : 'transparent', border: 'none',
+      borderBottom: tab === id ? `2px solid ${G.gold}` : '2px solid transparent',
+      color: tab === id ? G.gold : G.muted, cursor: 'pointer',
+    }}>{label}</button>
   )
 
   return (
     <Modal title={user.name} subtitle="Fiche utilisateur" onClose={onClose} wide>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32 }}>
+      {/* Onglets */}
+      <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid ${G.border}`, marginBottom: 20 }}>
+        {tabBtn('info', 'Infos')}
+        {tabBtn('activity', 'Activité')}
+      </div>
 
-        <div>
-          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: '#c9a227', marginBottom: 12 }}>— Compte</div>
-          <Row label="Email" value={user.email} />
-          <Row label="Plan" value={<PlanBadge plan={user.plan} />} />
-          <Row label="Club" value={user.club_name} />
-          <Row label="Rôle système" value={user.role} />
-          <Row label="Statut" value={<StatusBadge active={user.is_active} />} />
-          <Row label="Superadmin" value={user.is_superadmin ? '✓ Oui' : 'Non'} highlight={user.is_superadmin} />
-          <Row label="Inscrit le" value={formatDate(user.created_at)} />
-          <Row label="Dernière co." value={formatDate(user.last_login)} />
-          <Row label="Trial utilisé" value={user.trial_match_used ? '✓ Oui' : 'Non'} />
-          <Row label="Stripe customer" value={user.stripe_customer_id ? user.stripe_customer_id.substring(0, 20) + '…' : null} />
-        </div>
-
-        <div>
-          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: '#c9a227', marginBottom: 12 }}>— Profil</div>
-          <Row label="Poste" value={user.profile_role} highlight={!!user.profile_role} />
-          <Row label="Niveau équipe" value={user.profile_level} />
-          <Row label="Téléphone" value={user.profile_phone} />
-          <Row label="Ville" value={user.profile_city} />
-          <Row label="Diplôme" value={user.profile_diploma} />
-
-          <div style={{ marginTop: 28, display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <button onClick={() => { onEditPlan(user); onClose() }} style={{ padding: '11px', background: 'rgba(201,162,39,0.08)', border: '1px solid rgba(201,162,39,0.3)', fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: '#c9a227', cursor: 'pointer' }}>
-              Modifier le plan →
-            </button>
-            <button onClick={() => { onToggleActive(user.id, user.is_active); onClose() }} style={{ padding: '11px', background: user.is_active ? 'rgba(239,68,68,0.06)' : 'rgba(34,197,94,0.06)', border: `1px solid ${user.is_active ? 'rgba(239,68,68,0.2)' : 'rgba(34,197,94,0.2)'}`, fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: user.is_active ? '#ef4444' : '#22c55e', cursor: 'pointer' }}>
-              {user.is_active ? 'Désactiver le compte' : 'Activer le compte'}
-            </button>
+      {tab === 'info' && (
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32 }}>
+          <div>
+            <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>— Compte</div>
+            <Row label="Email" value={user.email} />
+            <Row label="Plan" value={<PlanBadge plan={user.plan} />} />
+            <Row label="Club" value={user.club_name} />
+            <Row label="Rôle système" value={user.role} />
+            <Row label="Statut" value={<StatusBadge active={user.is_active} />} />
+            <Row label="Superadmin" value={user.is_superadmin ? '✓ Oui' : 'Non'} highlight={user.is_superadmin} />
+            <Row label="Inscrit le" value={formatDate(user.created_at)} />
+            <Row label="Dernière co." value={formatDate(user.last_login)} />
+            <Row label="Trial utilisé" value={user.trial_match_used ? '✓ Oui' : 'Non'} />
+            <Row label="Stripe customer" value={user.stripe_customer_id ? user.stripe_customer_id.substring(0, 20) + '…' : null} />
+          </div>
+          <div>
+            <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>— Profil</div>
+            <Row label="Poste" value={user.profile_role} highlight={!!user.profile_role} />
+            <Row label="Niveau équipe" value={user.profile_level} />
+            <Row label="Téléphone" value={user.profile_phone} />
+            <Row label="Ville" value={user.profile_city} />
+            <Row label="Diplôme" value={user.profile_diploma} />
+            <div style={{ marginTop: 28, display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <button onClick={() => { onEditPlan(user); onClose() }} style={{ padding: '11px', background: G.goldBg, border: `1px solid ${G.goldBdr}`, fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.gold, cursor: 'pointer' }}>
+                Modifier le plan →
+              </button>
+              <button onClick={() => { onToggleActive(user.id, user.is_active); onClose() }} style={{ padding: '11px', background: user.is_active ? 'rgba(239,68,68,0.06)' : 'rgba(34,197,94,0.06)', border: `1px solid ${user.is_active ? 'rgba(239,68,68,0.2)' : 'rgba(34,197,94,0.2)'}`, fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: user.is_active ? G.red : G.green, cursor: 'pointer' }}>
+                {user.is_active ? 'Désactiver le compte' : 'Activer le compte'}
+              </button>
+            </div>
           </div>
         </div>
+      )}
 
-      </div>
+      {tab === 'activity' && (
+        <div>
+          {loadingActivity ? <Loader /> : activity ? (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32 }}>
+              {/* Matchs */}
+              <div>
+                <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>— Matchs</div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 1, background: G.border, marginBottom: 16 }}>
+                  {[
+                    { label: 'Total', value: activity.matches.total, color: G.gold },
+                    { label: 'Analysés', value: activity.matches.completed, color: G.green },
+                    { label: 'En attente', value: activity.matches.pending, color: G.orange },
+                  ].map(s => (
+                    <div key={s.label} style={{ background: '#faf8f4', padding: '14px 12px', textAlign: 'center' }}>
+                      <div style={{ fontFamily: G.display, fontSize: 28, color: s.color, lineHeight: 1 }}>{s.value}</div>
+                      <div style={{ fontFamily: G.mono, fontSize: 7, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, marginTop: 4 }}>{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+                {/* Liste matchs récents */}
+                {activity.matches.recent?.length > 0 ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
+                    {activity.matches.recent.map(m => (
+                      <div key={m.id} style={{ background: '#faf8f4', padding: '10px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                          <span style={{ fontFamily: G.mono, fontSize: 11, color: G.text }}>vs {m.opponent}</span>
+                          <span style={{ fontFamily: G.mono, fontSize: 9, color: G.muted, marginLeft: 8 }}>{m.date?.split('T')[0]}</span>
+                        </div>
+                        <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase', padding: '2px 8px', background: m.status === 'completed' ? 'rgba(34,197,94,0.1)' : 'rgba(245,158,11,0.1)', color: m.status === 'completed' ? G.green : G.orange, border: `1px solid ${m.status === 'completed' ? 'rgba(34,197,94,0.2)' : 'rgba(245,158,11,0.2)'}` }}>
+                          {m.status}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, padding: '20px 0', textAlign: 'center' }}>Aucun match</div>
+                )}
+              </div>
+
+              {/* Projet de jeu + joueurs */}
+              <div>
+                <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>— Projet de jeu</div>
+                {activity.game_plan.exists ? (
+                  <div style={{ background: '#faf8f4', border: `1px solid ${G.border}`, borderTop: `2px solid ${G.gold}`, padding: '16px' }}>
+                    <Row label="Formation" value={activity.game_plan.formation} highlight />
+                    <Row label="Catégorie" value={activity.game_plan.category} />
+                    <Row label="Thèmes planifiés" value={activity.game_plan.themes_count} highlight />
+                    <Row label="Dernière modif." value={activity.game_plan.updated_at?.split('T')[0]} />
+                  </div>
+                ) : (
+                  <div style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, padding: '20px', textAlign: 'center', background: '#faf8f4', border: `1px solid ${G.border}` }}>Aucun projet de jeu créé</div>
+                )}
+
+                <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 12, marginTop: 24 }}>— Effectif club</div>
+                <div style={{ background: '#faf8f4', border: `1px solid ${G.border}`, borderTop: `2px solid ${G.blue}`, padding: '20px', textAlign: 'center' }}>
+                  <div style={{ fontFamily: G.display, fontSize: 36, color: G.blue, lineHeight: 1 }}>{activity.players_in_club}</div>
+                  <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, marginTop: 6 }}>Joueurs enregistrés</div>
+                </div>
+
+                <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 12, marginTop: 24 }}>— Notifications</div>
+                <div style={{ background: '#faf8f4', border: `1px solid ${G.border}`, padding: '12px 16px' }}>
+                  <Row label="Non lues" value={activity.notifications_unread} highlight={activity.notifications_unread > 0} />
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div style={{ fontFamily: G.mono, fontSize: 10, color: G.red, padding: '20px', textAlign: 'center' }}>Erreur de chargement</div>
+          )}
+        </div>
+      )}
     </Modal>
   )
 }
@@ -318,7 +416,7 @@ function UsersSection() {
     if (!window.confirm(`Supprimer définitivement le compte de ${user.name} (${user.email}) ?`)) return
     const res = await fetch(`${API}/users/${user.id}`, { method: 'DELETE', headers: authHeaders() })
     if (res.ok) setUsers(prev => prev.filter(u => u.id !== user.id))
-    else alert('Erreur lors de la suppression')
+    else console.error('Erreur suppression', res.status)
   }
 
   return (
@@ -390,7 +488,7 @@ function UsersSection() {
 
 // ─── Invitations CLUB ─────────────────────────────────────────────────────────
 
-const INVITE_API = 'https://backend-pued.onrender.com/api/x-admin'
+const INVITE_API = API
 
 function InviteStatusBadge({ status }) {
   const s = (status || '').toLowerCase()
@@ -516,7 +614,7 @@ function InvitationsSection() {
       : `${INVITE_API}/club-invites/${id}`
     const res = await fetch(url, { method: 'DELETE', headers: authHeaders() })
     if (res.ok) setInvites(prev => prev.filter(i => i.id !== id))
-    else alert('Erreur lors de la suppression')
+    else console.error('Erreur suppression', res.status)
   }
 
   const copyLink = (token) => {
