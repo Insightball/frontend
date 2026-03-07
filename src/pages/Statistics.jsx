@@ -12,7 +12,8 @@ export default function Statistics() {
   const [matches,       setMatches]       = useState([])
   const [loading,       setLoading]       = useState(true)
   const [isMobile,      setIsMobile]      = useState(false)
-  const [quotaBlocked,  setQuotaBlocked]  = useState(false) // trial épuisé ou pas de sub
+  const [quotaBlocked,  setQuotaBlocked]  = useState(false)
+  const [matchTypeFilter, setMatchTypeFilter] = useState('official')
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -40,8 +41,32 @@ export default function Statistics() {
     })()
   }, [])
 
-  const completed = matches.filter(m => m.status === 'completed')
-  const pending   = matches.filter(m => m.status === 'pending' || m.status === 'processing')
+  const allCompleted = matches.filter(m => m.status === 'completed' || m.status === 'COMPLETED')
+  const pending   = matches.filter(m => m.status === 'pending' || m.status === 'processing' || m.status === 'PENDING' || m.status === 'PROCESSING')
+
+  const OFFICIAL_TYPES = ['CHAMPIONNAT', 'COUPE', 'championnat', 'coupe']
+  const FRIENDLY_TYPES = ['AMICAL', 'amical']
+  const PREPA_TYPES = ['PREPARATION', 'preparation']
+
+  const completed = matchTypeFilter === 'official'
+    ? allCompleted.filter(m => OFFICIAL_TYPES.includes(m.type))
+    : matchTypeFilter === 'friendly'
+    ? allCompleted.filter(m => FRIENDLY_TYPES.includes(m.type))
+    : matchTypeFilter === 'preparation'
+    ? allCompleted.filter(m => PREPA_TYPES.includes(m.type))
+    : allCompleted
+
+  // Compteurs pour les tabs
+  const officialCount = allCompleted.filter(m => OFFICIAL_TYPES.includes(m.type)).length
+  const friendlyCount = allCompleted.filter(m => FRIENDLY_TYPES.includes(m.type)).length
+  const prepaCount = allCompleted.filter(m => PREPA_TYPES.includes(m.type)).length
+
+  const TYPE_TABS = [
+    { id: 'official', label: 'Officiels', count: officialCount, color: T.gold },
+    { id: 'friendly', label: 'Amicaux', count: friendlyCount, color: '#3b82f6' },
+    { id: 'preparation', label: 'Prépa', count: prepaCount, color: '#22c55e' },
+    { id: 'all', label: 'Tout', count: allCompleted.length, color: T.muted },
+  ].filter(t => t.count > 0 || t.id === 'official')
 
   const features = [
     'Heatmaps d\'activité par joueur et par poste',
@@ -65,6 +90,30 @@ export default function Statistics() {
           <span style={{ color: T.gold }}>de la saison.</span>
         </h1>
       </div>
+
+      {/* ── FILTRE PAR TYPE ── */}
+      {!loading && allCompleted.length > 0 && (
+        <div style={{ display: 'flex', gap: 0, marginBottom: 20, borderBottom: `1px solid ${T.rule}`, overflowX: 'auto' }}>
+          {TYPE_TABS.map(tab => (
+            <button key={tab.id} onClick={() => setMatchTypeFilter(tab.id)} style={{
+              padding: '10px 18px', fontFamily: T.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase',
+              background: 'transparent', border: 'none',
+              borderBottom: matchTypeFilter === tab.id ? `2px solid ${tab.color}` : '2px solid transparent',
+              color: matchTypeFilter === tab.id ? tab.color : T.muted,
+              cursor: 'pointer', transition: 'all .15s', whiteSpace: 'nowrap',
+              display: 'flex', alignItems: 'center', gap: 6,
+            }}>
+              {tab.label}
+              <span style={{
+                fontFamily: T.mono, fontSize: 8, padding: '1px 6px',
+                background: matchTypeFilter === tab.id ? tab.color + '18' : 'transparent',
+                color: matchTypeFilter === tab.id ? tab.color : T.muted,
+                borderRadius: 2,
+              }}>{tab.count}</span>
+            </button>
+          ))}
+        </div>
+      )}
 
       {loading ? (
         <div style={{ textAlign: 'center', padding: '80px 0' }}>

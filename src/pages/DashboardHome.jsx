@@ -161,7 +161,7 @@ export default function DashboardHome() {
         ])
         setMatches(m); setPlayers(p); setQuotaData(q.data)
         const sorted = [...evo]
-          .filter(m => m.type !== 'AMICAL')
+          .filter(m => !['AMICAL', 'amical', 'PREPARATION', 'preparation'].includes(m.type))
           .sort((a, b) => new Date(a.date) - new Date(b.date))
         setEvoMatches(sorted)
       } catch (e) { console.error(e) }
