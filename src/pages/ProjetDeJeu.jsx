@@ -1,6 +1,11 @@
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import DashboardLayout from '../components/DashboardLayout'
 import { T, globalStyles } from '../theme'
+
+const API = 'https://backend-pued.onrender.com/api'
+function authH() {
+  return { Authorization: `Bearer ${localStorage.getItem('insightball_token')}`, 'Content-Type': 'application/json' }
+}
 
 const G = {
   bg:'#f5f2eb',surface:'#ffffff',dark:'#0a0908',
@@ -412,9 +417,40 @@ export default function ProjetDeJeu(){
   const[horaire,setHoraire]=useState('19:00')
   const[projetSaved,setProjetSaved]=useState(false)
 
+  const[loadingPlan,setLoadingPlan]=useState(true)
+
   // Séance du jour (variable)
   const[nbPresents,setNbPresents]=useState(16)
   const[themeSeance,setThemeSeance]=useState('pressing')
+
+  // Charger le projet sauvegardé au montage
+  useEffect(()=>{
+    let cancelled=false
+    ;(async()=>{
+      try{
+        const res=await fetch(`${API}/game-plan`,{headers:authH()})
+        if(res.ok&&!cancelled){const p=await res.json()
+          if(p&&p.id){
+            setFormation(p.formation||'4-3-3');setCategorie(p.category||'Seniors')
+            setSel(p.principles||[]);setJours(p.training_days||['mardi','jeudi'])
+            setHoraire(p.training_time||'19:00');setDateReprise(p.start_date||'')
+            setProjetSaved(true)
+          }}
+      }catch(e){console.error(e)}
+      finally{if(!cancelled)setLoadingPlan(false)}
+    })()
+    return()=>{cancelled=true}
+  },[])
+
+  // Sauvegarder le projet
+  const saveProjet=async()=>{
+    try{
+      await fetch(`${API}/game-plan`,{method:'PUT',headers:authH(),
+        body:JSON.stringify({formation,category:categorie,principles:sel,
+          training_days:jours,training_time:horaire,start_date:dateReprise||null})})
+      setProjetSaved(true)
+    }catch(e){console.error(e)}
+  }
 
   const toggle=id=>setSel(p=>p.includes(id)?p.filter(x=>x!==id):p.length>=5?p:[...p,id])
   const toggleJ=id=>setJours(p=>p.includes(id)?p.filter(x=>x!==id):[...p,id].sort((a,b)=>JOURS.findIndex(j=>j.id===a)-JOURS.findIndex(j=>j.id===b)))
@@ -434,7 +470,14 @@ export default function ProjetDeJeu(){
 
   return(
     <DashboardLayout>
-      <style>{`@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}@media(max-width:768px){.pdj-g{grid-template-columns:1fr!important;}}`}</style>
+      <style>{`@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}@keyframes spin{to{transform:rotate(360deg);}}@media(max-width:768px){.pdj-g{grid-template-columns:1fr!important;}}`}</style>
+
+            {loadingPlan ? (
+        <div style={{textAlign:'center',padding:'80px 0'}}>
+          <div style={{width:24,height:24,border:`2px solid ${G.goldBdr}`,borderTopColor:G.gold,borderRadius:'50%',animation:'spin .7s linear infinite',margin:'0 auto 12px'}}/>
+          <p style={{fontFamily:G.mono,fontSize:9,letterSpacing:'.12em',textTransform:'uppercase',color:G.muted}}>Chargement...</p>
+        </div>
+      ) : <>
 
       <div style={{marginBottom:18,paddingBottom:12,borderBottom:`1px solid ${G.rule}`}}>
         <p style={{fontFamily:G.mono,fontSize:9,letterSpacing:'.16em',textTransform:'uppercase',color:G.gold,display:'flex',alignItems:'center',gap:8,marginBottom:5}}>
@@ -498,7 +541,7 @@ export default function ProjetDeJeu(){
               {PROG.map((p,i)=><PeriodCard key={i} p={p} sd={periodDates[i]}/>)}
               <div style={{display:'flex',gap:8,marginTop:16}}>
                 <button onClick={()=>setStep(0)} style={{flex:1,padding:'10px',background:'transparent',border:`1px solid ${G.rule}`,fontFamily:G.mono,fontSize:9,textTransform:'uppercase',color:G.muted,cursor:'pointer'}}>← Modifier</button>
-                <button onClick={()=>{setProjetSaved(true);setStep(2)}} style={{flex:2,padding:'10px',background:G.gold,border:'none',fontFamily:G.display,fontSize:13,textTransform:'uppercase',color:'#0f0f0d',cursor:'pointer'}}>Enregistrer et préparer une séance →</button>
+                <button onClick={()=>{saveProjet();setStep(2)}} style={{flex:2,padding:'10px',background:G.gold,border:'none',fontFamily:G.display,fontSize:13,textTransform:'uppercase',color:'#0f0f0d',cursor:'pointer'}}>Enregistrer et préparer une séance →</button>
               </div>
             </div>}
           </>
@@ -570,6 +613,7 @@ export default function ProjetDeJeu(){
           </div>
         )}
       </div>
+      </>}
     </DashboardLayout>
   )
 }
