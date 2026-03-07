@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Home, Film, Users, Settings, LogOut, BarChart3, Trophy, ChevronRight, Menu, X, UserCog } from 'lucide-react'
+import { Home, Film, Users, Settings, LogOut, BarChart3, Trophy, ChevronRight, Menu, X, UserCog, ClipboardList } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import TrialBanner from '../components/TrialBanner'
 import { T, globalStyles } from '../theme'
@@ -29,10 +29,11 @@ function DashboardLayout({ children }) {
   const isClubUser   = isClubAdmin || isClubMember
 
   const navigation = [
-    { name: 'Accueil',      href: '/dashboard',            icon: Home },
-    { name: 'Matchs',       href: '/dashboard/matches',    icon: Film },
-    { name: 'Effectif',     href: '/dashboard/players',    icon: Users },
-    { name: 'Statistiques', href: '/dashboard/stats',      icon: BarChart3 },
+    { name: 'Accueil',        href: '/dashboard',                icon: Home },
+    { name: 'Matchs',         href: '/dashboard/matches',        icon: Film },
+    { name: 'Effectif',       href: '/dashboard/players',        icon: Users },
+    { name: 'Statistiques',   href: '/dashboard/stats',          icon: BarChart3 },
+    { name: 'Projet de jeu',  href: '/dashboard/projet-de-jeu',  icon: ClipboardList },
   ]
   if (isClubUser) {
     navigation.push({ name: 'Vue Club', href: '/dashboard/club', icon: Trophy })
