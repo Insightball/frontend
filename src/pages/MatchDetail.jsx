@@ -77,6 +77,12 @@ function MatchDetail() {
   const [activeTab, setActiveTab] = useState('overview')
   const [editingType, setEditingType] = useState(false)
   const [savingType, setSavingType] = useState(false)
+  const [toast, setToast] = useState(null)
+
+  const showToast = (msg, type = 'success') => {
+    setToast({ msg, type })
+    setTimeout(() => setToast(null), 3000)
+  }
 
   useEffect(() => {
     fetch(`${API}/matches/${matchId}`, { headers: authHeaders() })
@@ -138,12 +144,12 @@ function MatchDetail() {
       const res = await fetch(`${API}/upload/download-url/${encodeURIComponent(match.pdf_url)}`, { headers: authHeaders() })
       const data = await res.json()
       window.open(data.download_url, '_blank')
-    } catch { alert('Erreur téléchargement PDF') }
+    } catch { showToast('Erreur téléchargement PDF', 'error') }
   }
 
   const handleShare = () => {
     navigator.clipboard?.writeText(window.location.href)
-      .then(() => alert('Lien copié'))
+      .then(() => showToast('Lien copié'))
       .catch(() => {})
   }
 
@@ -156,13 +162,31 @@ function MatchDetail() {
       })
       setMatch(prev => ({ ...prev, type: newType }))
       setEditingType(false)
-    } catch { alert('Erreur lors de la modification') }
+    } catch { showToast('Erreur lors de la modification', 'error') }
     finally { setSavingType(false) }
   }
 
   return (
     <DashboardLayout>
-      <style>{globalStyles}</style>
+      <style>{globalStyles}{`
+        @keyframes toastIn { from { opacity:0; transform:translateY(-10px) } to { opacity:1; transform:translateY(0) } }
+      `}</style>
+
+      {/* Toast inline */}
+      {toast && (
+        <div style={{
+          position: 'fixed', top: 24, right: 24, zIndex: 9999,
+          padding: '12px 24px',
+          background: toast.type === 'error' ? T.red : T.gold,
+          color: toast.type === 'error' ? '#fff' : T.dark,
+          fontFamily: T.mono, fontSize: 10, letterSpacing: '.08em', textTransform: 'uppercase', fontWeight: 700,
+          boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
+          animation: 'toastIn .25s ease-out',
+        }}>
+          {toast.msg}
+        </div>
+      )}
+
       {/* Header */}
       <div style={{ marginBottom: 28 }}>
         <button onClick={() => navigate(-1)} style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', cursor: 'pointer', fontFamily: T.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: T.muted, marginBottom: 20, padding: 0, transition: 'color .15s' }}
