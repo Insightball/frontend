@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react"
 import DashboardLayout from '../components/DashboardLayout'
 import { T, globalStyles } from '../theme'
+import CalendrierSaison from '../components/CalendrierSaison'
 
 const API = 'https://backend-pued.onrender.com/api'
 function authH() {
@@ -911,6 +912,7 @@ export default function ProjetDeJeu(){
   // Séance du jour (variable)
   const[nbPresents,setNbPresents]=useState(16)
   const[themeSeance,setThemeSeance]=useState('pressing')
+  const[weekThemes,setWeekThemes]=useState({})
 
   // Charger le projet sauvegardé au montage
   useEffect(()=>{
@@ -923,7 +925,7 @@ export default function ProjetDeJeu(){
             setFormation(p.formation||'4-3-3');setCategorie(p.category||'Seniors')
             setSel(p.principles||[]);setJours(p.training_days||['mardi','jeudi'])
             setHoraire(p.training_time||'19:00');setDateReprise(p.start_date||'')
-            setProjetSaved(true)
+            setWeekThemes(p.programming||{});setProjetSaved(true)
           }}
       }catch(e){console.error(e)}
       finally{if(!cancelled)setLoadingPlan(false)}
@@ -936,7 +938,8 @@ export default function ProjetDeJeu(){
     try{
       await fetch(`${API}/game-plan`,{method:'PUT',headers:authH(),
         body:JSON.stringify({formation,category:categorie,principles:sel,
-          training_days:jours,training_time:horaire,start_date:dateReprise||null})})
+          training_days:jours,training_time:horaire,start_date:dateReprise||null,
+          programming:weekThemes})})
       setProjetSaved(true)
     }catch(e){console.error(e)}
   }
@@ -977,7 +980,7 @@ export default function ProjetDeJeu(){
       <div style={{maxWidth:880}}>
         {!projetSaved ? (
           <>
-            <StepBar step={step} labels={['Identité','Programmation','Préparer une séance']}/>
+            <StepBar step={step} labels={['Identité','Programmation','Calendrier + Séance']}/>
 
             {/* ═══ ÉTAPE 1 : PROJET ═══ */}
             {step===0&&<div style={{animation:'fadeIn .3s ease'}}>
@@ -1048,6 +1051,23 @@ export default function ProjetDeJeu(){
               <button onClick={()=>{setProjetSaved(false);setStep(0)}} style={{fontFamily:G.mono,fontSize:7,color:G.gold,background:'transparent',border:`1px solid ${G.goldBdr}`,padding:'3px 8px',cursor:'pointer'}}>Modifier le projet</button>
             </div>
 
+            
+            {/* ═══ CALENDRIER SAISON ═══ */}
+            {dateReprise && (
+              <div style={{marginBottom:28}}>
+                <h2 style={{fontFamily:G.display,fontSize:22,textTransform:'uppercase',color:G.ink,marginBottom:3}}>Programmation <span style={{color:G.gold}}>annuelle</span></h2>
+                <p style={{fontFamily:G.mono,fontSize:8,color:G.muted,marginBottom:12}}>Glissez-déposez les thèmes · Clic droit pour les options · Cliquez "▶ Séance" pour générer</p>
+                <CalendrierSaison
+                  startDate={dateReprise}
+                  totalWeeks={41}
+                  weekThemes={weekThemes}
+                  onUpdateThemes={(t)=>{setWeekThemes(t);/* auto-save */fetch(`${API}/game-plan`,{method:'PUT',headers:authH(),body:JSON.stringify({formation,category:categorie,principles:sel,training_days:jours,training_time:horaire,start_date:dateReprise,programming:t})}).catch(console.error)}}
+                  onSelectWeek={(wId,tId)=>{if(tId)setThemeSeance(tId)}}
+                />
+              </div>
+            )}
+
+            <div style={{borderTop:`1px solid ${G.rule}`,paddingTop:20,marginTop:4}}/>
             <h2 style={{fontFamily:G.display,fontSize:24,textTransform:'uppercase',color:G.ink,marginBottom:3}}>Préparer <span style={{color:G.gold}}>ma séance</span></h2>
             <p style={{fontFamily:G.mono,fontSize:9,color:G.muted,marginBottom:14}}>Renseignez votre effectif du jour et le thème souhaité.</p>
 
