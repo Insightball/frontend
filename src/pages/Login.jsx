@@ -3,17 +3,19 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { ArrowRight, Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
+import { T } from '../theme'
+
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');`
 
 const G = {
-  bg:      '#0a0908',
-  paper:   '#f5f2eb',
-  ink:     '#0f0f0d',
+  bg:      T.dark,
+  paper:   T.bg,
+  ink:     T.ink,
   ruleW:   'rgba(255,255,255,0.08)',
-  gold:    '#c9a227',
-  goldD:   '#a8861f',
-  mono:    "'JetBrains Mono', monospace",
-  display: "'Anton', sans-serif",
+  gold:    T.gold,
+  goldD:   T.goldD,
+  mono:    T.mono,
+  display: T.display,
 }
 
 function Login() {
@@ -50,7 +52,8 @@ function Login() {
     e.preventDefault()
     setForgotLoading(true)
     try {
-      await fetch('https://backend-pued.onrender.com/api/auth/forgot-password', {
+      const API = import.meta.env.VITE_API_URL || 'https://backend-pued.onrender.com/api'
+      await fetch(`${API}/auth/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: forgotEmail }),

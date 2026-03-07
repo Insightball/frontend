@@ -75,7 +75,8 @@ export default function ClubSettings() {
     setDeleteLoading(true)
     try {
       const token = localStorage.getItem('insightball_token')
-      const res = await fetch('https://backend-pued.onrender.com/api/account/delete', {
+      const API = import.meta.env.VITE_API_URL || 'https://backend-pued.onrender.com/api'
+      const res = await fetch(`${API}/account/delete`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       })

@@ -36,6 +36,7 @@ export default function CoachSettings() {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleteConfirm, setDeleteConfirm] = useState('')
   const [deleteLoading, setDeleteLoading] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
   const [isTrialing, setIsTrialing] = useState(null)
 
   // Membre club = a un club_id + pas de stripe_subscription_id + plan CLUB ou CLUB_PRO
@@ -67,7 +68,8 @@ export default function CoachSettings() {
     setDeleteLoading(true)
     try {
       const token = localStorage.getItem('insightball_token')
-      const res = await fetch('https://backend-pued.onrender.com/api/account/delete', {
+      const API = import.meta.env.VITE_API_URL || 'https://backend-pued.onrender.com/api'
+      const res = await fetch(`${API}/account/delete`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       })
@@ -75,7 +77,7 @@ export default function CoachSettings() {
       localStorage.removeItem('insightball_token')
       window.location.href = '/'
     } catch {
-      alert('Erreur lors de la suppression')
+      setDeleteError('Erreur lors de la suppression')
       setDeleteLoading(false)
     }
   }
@@ -197,8 +199,13 @@ export default function CoachSettings() {
                     outline: 'none', boxSizing: 'border-box', letterSpacing: '.06em',
                   }} />
               </div>
+              {deleteError && (
+                <div style={{ marginBottom: 12, padding: '10px 14px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)' }}>
+                  <p style={{ fontFamily: G.mono, fontSize: 10, color: '#ef4444', margin: 0 }}>{deleteError}</p>
+                </div>
+              )}
               <div style={{ display: 'flex', gap: 10 }}>
-                <button onClick={() => { setShowDeleteModal(false); setDeleteConfirm('') }} style={{
+                <button onClick={() => { setShowDeleteModal(false); setDeleteConfirm(''); setDeleteError('') }} style={{
                   flex: 1, padding: '11px', background: 'transparent',
                   border: `1px solid ${G.border}`, fontFamily: G.mono, fontSize: 9,
                   letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, cursor: 'pointer',
