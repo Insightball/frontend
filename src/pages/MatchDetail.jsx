@@ -75,6 +75,8 @@ function MatchDetail() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [activeTab, setActiveTab] = useState('overview')
+  const [editingType, setEditingType] = useState(false)
+  const [savingType, setSavingType] = useState(false)
 
   useEffect(() => {
     fetch(`${API}/matches/${matchId}`, { headers: authHeaders() })
@@ -145,6 +147,19 @@ function MatchDetail() {
       .catch(() => {})
   }
 
+  const handleUpdateType = async (newType) => {
+    setSavingType(true)
+    try {
+      await fetch(`${API}/matches/${matchId}`, {
+        method: 'PATCH', headers: authHeaders(),
+        body: JSON.stringify({ type: newType }),
+      })
+      setMatch(prev => ({ ...prev, type: newType }))
+      setEditingType(false)
+    } catch { alert('Erreur lors de la modification') }
+    finally { setSavingType(false) }
+  }
+
   return (
     <DashboardLayout>
       <style>{globalStyles}</style>
@@ -158,9 +173,24 @@ function MatchDetail() {
 
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
           <div>
-            <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+            <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, flexWrap: 'wrap' }}>
               <span style={{ width: 16, height: 1, background: G.gold, display: 'inline-block' }} />
-              {match.category} · {match.type} · {new Date(match.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+              {match.category} · {new Date(match.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+              <span style={{ margin: '0 2px' }}>·</span>
+              {editingType ? (
+                <select value={match.type} onChange={e => handleUpdateType(e.target.value)} disabled={savingType}
+                  style={{ fontFamily: T.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', background: T.goldBg, border: `1px solid ${T.goldBdr}`, color: T.gold, padding: '2px 8px', cursor: 'pointer', outline: 'none' }}>
+                  <option value="CHAMPIONNAT">Championnat</option>
+                  <option value="COUPE">Coupe</option>
+                  <option value="AMICAL">Amical</option>
+                  <option value="PREPARATION">Préparation</option>
+                </select>
+              ) : (
+                <span onClick={() => setEditingType(true)} style={{ cursor: 'pointer', borderBottom: `1px dashed ${T.goldBdr}`, paddingBottom: 1, transition: 'color .15s' }}
+                  title="Cliquer pour modifier le type">
+                  {match.type}
+                </span>
+              )}
             </div>
             <h1 style={{ fontFamily: T.display, fontSize: 44, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: T.ink, margin: '0 0 12px' }}>
               vs {match.opponent}

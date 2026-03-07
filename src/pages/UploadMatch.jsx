@@ -384,6 +384,7 @@ export default function UploadMatch() {
                   <option value="CHAMPIONNAT">Championnat</option>
                   <option value="COUPE">Coupe</option>
                   <option value="AMICAL">Amical</option>
+                  <option value="PREPARATION">Préparation</option>
                 </select>
               </Field>
 
