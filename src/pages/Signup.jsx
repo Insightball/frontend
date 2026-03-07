@@ -2,15 +2,16 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import { T } from '../theme'
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap');`
 
 const G = {
-  bg: '#0a0908', ink: '#0f0f0d', paper: '#f5f2eb',
+  bg: T.dark, ink: T.ink, paper: T.bg,
   muted: 'rgba(245,242,235,0.55)', ruleW: 'rgba(255,255,255,0.07)',
-  gold: '#c9a227', goldD: '#a8861f',
-  goldBg: 'rgba(201,162,39,0.07)', goldBdr: 'rgba(201,162,39,0.25)',
-  mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif",
+  gold: T.gold, goldD: T.goldD,
+  goldBg: T.goldBg, goldBdr: T.goldBdr,
+  mono: T.mono, display: T.display,
 }
 
 export default function Signup() {

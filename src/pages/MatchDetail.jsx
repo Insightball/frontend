@@ -7,7 +7,7 @@ import HeatmapPlayer from '../components/HeatmapPlayer'
 import MatchTimeline from '../components/MatchTimeline'
 import { T, globalStyles } from '../theme'
 
-const API = 'https://backend-pued.onrender.com/api'
+const API = import.meta.env.VITE_API_URL || 'https://backend-pued.onrender.com/api'
 
 const G = {
   bg:     T.bg,       bg2:    T.surface,  bg3: T.bgAlt,
