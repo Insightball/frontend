@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Home, Film, Users, Settings, LogOut, BarChart3, Trophy, ChevronRight, Menu, X, UserCog, Layout } from 'lucide-react'
+import { Home, Film, Users, Settings, LogOut, BarChart3, Trophy, ChevronRight, Menu, X, UserCog } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import TrialBanner from '../components/TrialBanner'
 import { T, globalStyles } from '../theme'
@@ -33,7 +33,6 @@ function DashboardLayout({ children }) {
     { name: 'Matchs',       href: '/dashboard/matches',    icon: Film },
     { name: 'Effectif',     href: '/dashboard/players',    icon: Users },
     { name: 'Statistiques', href: '/dashboard/stats',      icon: BarChart3 },
-    { name: 'MatchBoard',   href: '/dashboard/matchboard', icon: Layout },
   ]
   if (isClubUser) {
     navigation.push({ name: 'Vue Club', href: '/dashboard/club', icon: Trophy })
@@ -244,7 +243,7 @@ function DashboardLayout({ children }) {
             display: 'flex', zIndex: 80,
             paddingBottom: 'env(safe-area-inset-bottom)',
           }}>
-            {navigation.filter(i => ['Accueil','Matchs','MatchBoard','Paramètres'].includes(i.name)).map(item => {
+            {navigation.filter(i => ['Accueil','Matchs','Effectif','Paramètres'].includes(i.name)).map(item => {
               const active = isActive(item.href)
               return (
                 <Link key={item.name} to={item.href} style={{
