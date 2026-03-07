@@ -111,6 +111,7 @@ export default function PlayerProfile() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [isFormOpen, setIsFormOpen] = useState(false)
+  const [statsView, setStatsView] = useState('official')
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768)
 
   useEffect(() => {
@@ -174,36 +175,51 @@ export default function PlayerProfile() {
   const status = STATUS[player.status] || STATUS['actif']
   const age = getAge(player.birth_date)
 
-  // Stats from backend aggregation
+  // Stats from backend aggregation — separated by type
+  const currentStats = stats?.[statsView] || stats?.all || null
+
   const matchStats = {
-    played: stats?.matches_played ?? 0,
-    starter: stats?.matches_starter ?? 0,
-    sub: stats?.matches_sub ?? 0,
-    minutes: stats?.total_minutes ?? 0,
-    goals: stats?.goals ?? 0,
-    assists: stats?.assists ?? 0,
+    played: currentStats?.matches_played ?? 0,
+    starter: currentStats?.matches_starter ?? 0,
+    sub: currentStats?.matches_sub ?? 0,
+    minutes: currentStats?.total_minutes ?? 0,
+    goals: currentStats?.goals ?? 0,
+    assists: currentStats?.assists ?? 0,
   }
 
   const techStats = {
-    passes: stats?.total_passes ?? null,
-    passSuccess: stats?.avg_pass_success ?? null,
-    shots: stats?.total_shots ?? null,
-    shotsOnTarget: stats?.shots_on_target ?? null,
-    duels: stats?.total_duels ?? null,
-    duelsWon: stats?.duels_won ?? null,
-    distance: stats?.total_distance_km ?? null,
-    avgDistance: stats?.avg_distance_km ?? null,
-    keyPasses: stats?.total_key_passes ?? null,
-    tackles: stats?.total_tackles ?? null,
-    interceptions: stats?.total_interceptions ?? null,
-    saves: stats?.total_saves ?? null,
-    yellowCards: stats?.yellow_cards ?? null,
+    passes: currentStats?.total_passes ?? null,
+    passSuccess: currentStats?.avg_pass_success ?? null,
+    shots: currentStats?.total_shots ?? null,
+    shotsOnTarget: currentStats?.shots_on_target ?? null,
+    duels: currentStats?.total_duels ?? null,
+    duelsWon: currentStats?.duels_won ?? null,
+    distance: currentStats?.total_distance_km ?? null,
+    avgDistance: currentStats?.avg_distance_km ?? null,
+    keyPasses: currentStats?.total_key_passes ?? null,
+    tackles: currentStats?.total_tackles ?? null,
+    interceptions: currentStats?.total_interceptions ?? null,
+    saves: currentStats?.total_saves ?? null,
+    yellowCards: currentStats?.yellow_cards ?? null,
   }
 
-  const matchHistory = stats?.match_history ?? []
+  const matchHistory = currentStats?.match_history ?? []
 
   const hasTechStats = Object.values(techStats).some(v => v !== null && v > 0)
   const hasMatchStats = matchStats.played > 0
+
+  // Compteurs par type pour les tabs
+  const officialCount = stats?.official?.matches_played ?? 0
+  const friendlyCount = stats?.friendly?.matches_played ?? 0
+  const prepaCount = stats?.preparation?.matches_played ?? 0
+  const allCount = stats?.all?.matches_played ?? 0
+
+  const STATS_TABS = [
+    { id: 'official', label: 'Officiels', count: officialCount, color: G.gold },
+    { id: 'friendly', label: 'Amicaux', count: friendlyCount, color: G.blue },
+    { id: 'preparation', label: 'Prépa', count: prepaCount, color: G.green },
+    { id: 'all', label: 'Tout', count: allCount, color: G.muted },
+  ].filter(t => t.count > 0 || t.id === 'official')
 
   return (
     <DashboardLayout>
@@ -360,6 +376,30 @@ export default function PlayerProfile() {
           </button>
         </div>
       </div>
+
+      {/* ── STATS TYPE TABS ── */}
+      {allCount > 0 && (
+        <div style={{ display: 'flex', gap: 0, marginBottom: 20, borderBottom: `1px solid ${G.border}`, overflowX: 'auto', animation: 'fadeIn .4s ease .05s both' }}>
+          {STATS_TABS.map(tab => (
+            <button key={tab.id} onClick={() => setStatsView(tab.id)} style={{
+              padding: '10px 18px', fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase',
+              background: 'transparent', border: 'none',
+              borderBottom: statsView === tab.id ? `2px solid ${tab.color}` : '2px solid transparent',
+              color: statsView === tab.id ? tab.color : G.muted,
+              cursor: 'pointer', transition: 'all .15s', whiteSpace: 'nowrap',
+              display: 'flex', alignItems: 'center', gap: 6,
+            }}>
+              {tab.label}
+              <span style={{
+                fontFamily: G.mono, fontSize: 8, padding: '1px 6px',
+                background: statsView === tab.id ? tab.color + '18' : 'transparent',
+                color: statsView === tab.id ? tab.color : G.muted,
+                borderRadius: 2,
+              }}>{tab.count}</span>
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* ── CONTENT GRID ── */}
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 20, marginBottom: 28 }}>
