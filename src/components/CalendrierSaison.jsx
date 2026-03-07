@@ -3,16 +3,16 @@
  * Vue mensuelle, drag & drop, duplication, thèmes custom
  * Intégré dans le flux ProjetDeJeu
  */
-import { useState, useMemo, useCallback, useRef } from 'react'
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { T } from '../theme'
 
 const G = {
-  bg:'#f5f2eb',surface:'#ffffff',dark:'#0a0908',
-  ink:'#1a1916',ink2:'#2d2c2a',muted:'rgba(26,25,22,0.45)',
-  gold:'#c9a227',goldBg:'rgba(201,162,39,0.07)',goldBdr:'rgba(201,162,39,0.22)',
-  rule:'rgba(26,25,22,0.09)',
-  green:'#16a34a',red:'#dc2626',blue:'#2563eb',orange:'#d97706',purple:'#8b5cf6',
-  mono:"'JetBrains Mono',monospace",display:"'Anton',sans-serif",
+  bg:T.bg, surface:T.surface, dark:T.dark,
+  ink:T.ink, ink2:T.ink, muted:T.muted,
+  gold:T.gold, goldBg:T.goldBg, goldBdr:T.goldBdr,
+  rule:T.rule,
+  green:T.green, red:T.red, blue:T.blue, orange:T.orange, purple:'#8b5cf6',
+  mono:T.mono, display:T.display,
 }
 
 const MOIS_FR = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre']
@@ -99,6 +99,14 @@ export default function CalendrierSaison({ startDate, totalWeeks = 41, weekTheme
   const [showDuplicateModal, setShowDuplicateModal] = useState(null) // {weekId, theme}
   const [customThemeInput, setCustomThemeInput] = useState('')
   const [contextMenu, setContextMenu] = useState(null) // {weekId, x, y}
+
+  // D2 — Fermer le context menu au clic extérieur
+  useEffect(() => {
+    if (!contextMenu) return
+    const handler = () => setContextMenu(null)
+    document.addEventListener('click', handler)
+    return () => document.removeEventListener('click', handler)
+  }, [contextMenu])
 
   const weeks = useMemo(() => generateWeeks(startDate, totalWeeks), [startDate, totalWeeks])
   const months = useMemo(() => groupByMonth(weeks), [weeks])
