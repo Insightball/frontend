@@ -245,7 +245,7 @@ export default function DashboardHome() {
               </p>
               <h1 style={{ fontFamily: T.display, fontSize: heroFontSize, textTransform: 'uppercase', lineHeight: .88, letterSpacing: '.01em', color: '#f5f2eb' }}>
                 {clubName}<br />
-                <span style={{ color: T.gold }}>Bonjour, {firstName}.</span>
+                <span style={{ color: T.gold, fontSize: isMobile ? 18 : Math.round(heroFontSize * 0.65) }}>Bonjour, {firstName}.</span>
               </h1>
             </div>
           </div>
