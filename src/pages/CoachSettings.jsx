@@ -39,8 +39,9 @@ export default function CoachSettings() {
   const [deleteError, setDeleteError] = useState('')
   const [isTrialing, setIsTrialing] = useState(null)
 
-  // Membre club = a un club_id + pas de stripe_subscription_id + plan CLUB ou CLUB_PRO
-  const isClubMember = user?.club_id && !user?.stripe_subscription_id && ['CLUB', 'CLUB_PRO'].includes((user?.plan || '').toUpperCase())
+  // Membre club = a un club_id + pas de stripe_subscription_id
+  // Le plan peut rester COACH sur un compte membre — on ne filtre pas sur le plan
+  const isClubMember = user?.club_id && !user?.stripe_subscription_id
 
   useEffect(() => {
     if (isClubMember) return // pas besoin de checker le trial pour un membre
