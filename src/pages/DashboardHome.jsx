@@ -194,7 +194,7 @@ export default function DashboardHome() {
   const clubName  = user?.club_name || 'Mon équipe'
   const firstName = user?.name?.split(' ')[0] || 'Coach'
   const maxLen    = Math.max(clubName.length, `Bonjour, ${firstName}.`.length)
-  const heroFontSize = isMobile ? 26 : maxLen > 22 ? 32 : maxLen > 16 ? 40 : maxLen > 12 ? 46 : 52
+  const heroFontSize = isMobile ? 22 : maxLen > 22 ? 26 : maxLen > 16 ? 32 : maxLen > 12 ? 36 : 42
 
   const SkeletonRow = ({ h = 56 }) => (
     <div style={{ height: h, background: `linear-gradient(90deg, ${T.rule} 25%, rgba(26,25,22,0.04) 50%, ${T.rule} 75%)`, backgroundSize: '200% 100%', animation: 'shimmer 1.4s infinite' }} />
