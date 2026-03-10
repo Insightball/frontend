@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import HeroAnimation from '../components/HeroAnimation'
 
 /* ─── Palette ────────────────────────────────── */
 const G = {
@@ -956,7 +957,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="hero-right" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, animation: 'heroUp .6s .3s forwards' }}>
-            <MockupRapport t={t}/>
+            <HeroAnimation />
           </div>
         </div>
         <div className="hero-mobile-mockup" style={{ display: 'none', padding: '0 16px 56px' }}>
