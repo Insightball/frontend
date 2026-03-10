@@ -11,7 +11,6 @@ const G = {
   muted:   '#6b6960',
   gold:    '#c9a227',
   goldD:   '#a8861f',
-  bg:      '#f5f2eb',
   dark:    '#0a0908',
   mono:    "'JetBrains Mono', monospace",
   display: "'Barlow Condensed', sans-serif",
@@ -32,24 +31,24 @@ function setMeta(title, description) {
 
 const FEATURES = [
   {
+    icon: "📱",
+    title: "Filmez avec votre téléphone",
+    desc: "Pas de caméra pro, pas de setup. Vous filmez le match comme vous le faites déjà. C'est suffisant.",
+  },
+  {
     icon: "🗺️",
     title: "Heatmaps joueurs",
-    desc: "Visualisez les zones de jeu de chaque joueur. Identifiez les déséquilibres et ajustez votre animation en conséquence.",
+    desc: "Visualisez les zones de jeu de chaque joueur. Identifiez les déséquilibres et ajustez votre animation.",
   },
   {
     icon: "📊",
     title: "Statistiques match",
-    desc: "Possession, passes, duels, distance parcourue. Des données concrètes pour appuyer vos retours sur des faits.",
+    desc: "Possession, passes, duels, distance parcourue. Des données concrètes pour baser vos retours sur des faits.",
   },
   {
     icon: "📄",
     title: "Rapport PDF export",
     desc: "Un rapport tactique complet en PDF à partager avec vos joueurs, votre staff ou votre président de club.",
-  },
-  {
-    icon: "📅",
-    title: "Projet de jeu",
-    desc: "Calendrier de séances, thèmes d'entraînement, programmation annuelle. Du match à la prochaine séance en un clic.",
   },
 ];
 
@@ -97,7 +96,7 @@ export default function RegionPage() {
     <div style={{ background: G.white, color: G.ink, fontFamily: G.body, fontSize: 16, lineHeight: 1.6, overflowX: 'hidden' }}>
       <style>{FONTS}</style>
 
-      {/* ══ NAV — identique Home.jsx ══ */}
+      {/* ══ NAV ══ */}
       <nav style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200,
         background: G.dark,
@@ -112,22 +111,14 @@ export default function RegionPage() {
             INSIGHT<span style={{ color: G.gold }}>ball</span>
           </span>
         </Link>
-
         <Link
           to="/x-portal-7f2a/signup"
           style={{
-            padding: '9px 20px',
-            background: G.gold,
-            color: G.white,
-            fontFamily: G.display,
-            fontSize: 14,
-            fontWeight: 700,
-            letterSpacing: '.05em',
-            textTransform: 'uppercase',
-            borderRadius: 4,
-            textDecoration: 'none',
-            display: 'inline-flex',
-            alignItems: 'center',
+            padding: '9px 20px', background: G.gold, color: G.white,
+            fontFamily: G.display, fontSize: 14, fontWeight: 700,
+            letterSpacing: '.05em', textTransform: 'uppercase',
+            borderRadius: 4, textDecoration: 'none',
+            display: 'inline-flex', alignItems: 'center',
           }}
           onMouseEnter={e => e.currentTarget.style.background = G.goldD}
           onMouseLeave={e => e.currentTarget.style.background = G.gold}
@@ -139,65 +130,41 @@ export default function RegionPage() {
       {/* ══ HERO ══ */}
       <section style={{
         background: G.dark,
-        paddingTop: 120,
-        paddingBottom: 72,
-        paddingLeft: 40,
-        paddingRight: 40,
+        paddingTop: 120, paddingBottom: 72,
+        paddingLeft: 40, paddingRight: 40,
         textAlign: 'center',
       }}>
         <p style={{
-          fontFamily: G.mono,
-          fontSize: 11,
-          letterSpacing: '.18em',
-          textTransform: 'uppercase',
-          color: G.gold,
-          marginBottom: 20,
-          opacity: 0.85,
+          fontFamily: G.mono, fontSize: 11, letterSpacing: '.18em',
+          textTransform: 'uppercase', color: G.gold, marginBottom: 20, opacity: 0.85,
         }}>
           Football amateur · {region.ligue}
         </p>
 
         <h1 style={{
-          fontFamily: G.display,
-          fontSize: 'clamp(32px, 6vw, 58px)',
-          fontWeight: 800,
-          letterSpacing: '.02em',
-          textTransform: 'uppercase',
-          color: G.white,
-          lineHeight: 1.1,
-          maxWidth: 800,
-          margin: '0 auto 24px',
+          fontFamily: G.display, fontSize: 'clamp(32px, 6vw, 58px)',
+          fontWeight: 800, letterSpacing: '.02em', textTransform: 'uppercase',
+          color: G.white, lineHeight: 1.1, maxWidth: 800, margin: '0 auto 24px',
         }}>
-          L'analyse vidéo football amateur{' '}
+          La data football accessible à tous les coachs{' '}
           <span style={{ color: G.gold }}>en {region.name}</span>
         </h1>
 
         <p style={{
-          fontFamily: G.body,
-          color: 'rgba(255,255,255,0.65)',
-          fontSize: 18,
-          maxWidth: 600,
-          margin: '0 auto 44px',
-          lineHeight: 1.65,
+          fontFamily: G.body, color: 'rgba(255,255,255,0.65)',
+          fontSize: 18, maxWidth: 580, margin: '0 auto 44px', lineHeight: 1.65,
         }}>
-          {region.description}
+          Du District au National, vous filmez le match avec votre téléphone. Insightball transforme cette vidéo en données concrètes sur votre équipe et vos joueurs.
         </p>
 
         <Link
           to="/x-portal-7f2a/signup"
           style={{
-            padding: '16px 36px',
-            background: G.gold,
-            color: G.white,
-            fontFamily: G.display,
-            fontSize: 16,
-            fontWeight: 700,
-            letterSpacing: '.06em',
-            textTransform: 'uppercase',
-            borderRadius: 4,
-            textDecoration: 'none',
-            display: 'inline-flex',
-            alignItems: 'center',
+            padding: '16px 36px', background: G.gold, color: G.white,
+            fontFamily: G.display, fontSize: 16, fontWeight: 700,
+            letterSpacing: '.06em', textTransform: 'uppercase',
+            borderRadius: 4, textDecoration: 'none',
+            display: 'inline-flex', alignItems: 'center',
           }}
           onMouseEnter={e => e.currentTarget.style.background = G.goldD}
           onMouseLeave={e => e.currentTarget.style.background = G.gold}
@@ -206,11 +173,8 @@ export default function RegionPage() {
         </Link>
 
         <p style={{
-          fontFamily: G.mono,
-          fontSize: 11,
-          color: 'rgba(255,255,255,0.3)',
-          marginTop: 16,
-          letterSpacing: '.08em',
+          fontFamily: G.mono, fontSize: 11, color: 'rgba(255,255,255,0.3)',
+          marginTop: 16, letterSpacing: '.08em',
         }}>
           7 JOURS GRATUITS · 1 MATCH OFFERT · SANS ENGAGEMENT
         </p>
@@ -218,18 +182,14 @@ export default function RegionPage() {
 
       {/* ══ BANDEAU STATS ══ */}
       <section style={{
-        background: G.gold,
-        padding: '28px 40px',
-        display: 'flex',
-        justifyContent: 'center',
-        gap: 56,
-        flexWrap: 'wrap',
+        background: G.gold, padding: '28px 40px',
+        display: 'flex', justifyContent: 'center', gap: 56, flexWrap: 'wrap',
       }}>
         {[
-          { value: '40+',          label: 'Métriques analysées par match' },
-          { value: '< 1h',         label: 'Rapport livré après le match' },
+          { value: '40+',           label: 'Métriques analysées par match' },
+          { value: '< 1h',          label: 'Rapport livré après le match' },
           { value: 'U14 → Séniors', label: 'Toutes catégories couvertes' },
-          { value: '0€',           label: 'Matériel supplémentaire requis' },
+          { value: '0€',            label: 'Matériel supplémentaire requis' },
         ].map((s) => (
           <div key={s.value} style={{ textAlign: 'center' }}>
             <div style={{ fontFamily: G.display, fontSize: 28, fontWeight: 800, color: G.dark, letterSpacing: '.02em' }}>{s.value}</div>
@@ -243,83 +203,78 @@ export default function RegionPage() {
         <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>
           {region.ligue}
         </p>
-        <h2 style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.02em', marginBottom: 32, color: G.ink }}>
+        <h2 style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.02em', marginBottom: 16, color: G.ink }}>
           Le football en {region.name}
         </h2>
+        <p style={{ fontFamily: G.body, fontSize: 16, color: G.muted, marginBottom: 36, maxWidth: 600, lineHeight: 1.65 }}>
+          {region.description}
+        </p>
 
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+          display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
           gap: 16,
-          marginBottom: 24,
         }}>
           {[
             { label: 'Clubs affiliés FFF', value: region.clubs.toLocaleString('fr-FR') },
             { label: 'Licenciés',          value: region.licencies.toLocaleString('fr-FR') },
-            { label: 'Divisions actives',  value: region.divisions.length },
+            { label: 'Du District au National', value: 'Toutes\u00a0niveaux' },
           ].map((item) => (
             <div key={item.label} style={{
-              background: G.off,
-              borderRadius: 4,
-              padding: '20px 24px',
-              border: `1px solid ${G.border}`,
+              background: G.off, borderRadius: 4, padding: '20px 24px', border: `1px solid ${G.border}`,
             }}>
-              <div style={{ fontFamily: G.display, fontSize: 32, fontWeight: 800, color: G.gold, letterSpacing: '.01em' }}>{item.value}</div>
-              <div style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted, marginTop: 6 }}>{item.label}</div>
+              <div style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, color: G.gold, letterSpacing: '.01em', lineHeight: 1.1 }}>{item.value}</div>
+              <div style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted, marginTop: 8 }}>{item.label}</div>
             </div>
           ))}
         </div>
+      </section>
 
-        <div style={{
-          background: G.off,
-          borderRadius: 4,
-          padding: '20px 24px',
-          border: `1px solid ${G.border}`,
-        }}>
-          <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted, marginBottom: 14 }}>
-            Divisions concernées
-          </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-            {region.divisions.map((d) => (
-              <span key={d} style={{
-                background: G.white,
-                border: `1px solid ${G.border}`,
-                borderRadius: 3,
-                padding: '6px 12px',
-                fontFamily: G.body,
-                fontSize: 13,
-                color: G.ink2,
-                fontWeight: 500,
-              }}>
-                {d}
-              </span>
-            ))}
-          </div>
+      {/* ══ COMMENT ÇA MARCHE ══ */}
+      <section style={{ maxWidth: 860, margin: '0 auto', padding: '72px 40px 0' }}>
+        <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>
+          Comment ça marche
+        </p>
+        <h2 style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.02em', marginBottom: 40, color: G.ink }}>
+          Filmez. Uploadez. Recevez votre data.
+        </h2>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 0, position: 'relative' }}>
+          {[
+            { num: '01', title: 'Filmez le match', desc: 'Votre téléphone suffit. MP4, MOV, tout format accepté.' },
+            { num: '02', title: 'Uploadez la vidéo', desc: 'Depuis votre dashboard. Deux minutes pour contextualiser le match.' },
+            { num: '03', title: 'Recevez votre analyse', desc: 'Heatmaps, stats joueurs, rapport PDF. Livré en moins d\'une heure.' },
+          ].map((step, i) => (
+            <div key={step.num} style={{
+              padding: '32px 28px',
+              borderLeft: i === 0 ? `3px solid ${G.gold}` : `1px solid ${G.border}`,
+              background: i === 0 ? G.off : G.white,
+            }}>
+              <div style={{ fontFamily: G.mono, fontSize: 11, color: G.gold, letterSpacing: '.12em', marginBottom: 12 }}>{step.num}</div>
+              <div style={{ fontFamily: G.display, fontSize: 18, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.03em', marginBottom: 8, color: G.ink }}>{step.title}</div>
+              <div style={{ fontFamily: G.body, fontSize: 14, color: G.muted, lineHeight: 1.55 }}>{step.desc}</div>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* ══ FEATURES ══ */}
       <section style={{ maxWidth: 860, margin: '0 auto', padding: '72px 40px 0' }}>
         <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>
-          Fonctionnalités
+          Ce que vous recevez
         </p>
         <h2 style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.02em', marginBottom: 8, color: G.ink }}>
-          Ce que vous obtenez après chaque match.
+          Après chaque match.
         </h2>
         <p style={{ fontFamily: G.body, fontSize: 16, color: G.muted, marginBottom: 36, maxWidth: 520 }}>
-          Tout ce dont un coach a besoin pour analyser, comprendre et progresser. Sans formation, sans setup complexe.
+          Des données sur votre équipe et vos joueurs. Sans formation, sans matériel, sans setup.
         </p>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 16 }}>
           {FEATURES.map((f) => (
             <div key={f.title} style={{
-              background: G.off,
-              borderRadius: 4,
-              padding: '24px 28px',
+              background: G.off, borderRadius: 4, padding: '24px 28px',
               border: `1px solid ${G.border}`,
-              display: 'flex',
-              gap: 18,
-              alignItems: 'flex-start',
+              display: 'flex', gap: 18, alignItems: 'flex-start',
             }}>
               <span style={{ fontSize: 26, flexShrink: 0, marginTop: 2 }}>{f.icon}</span>
               <div>
@@ -331,43 +286,31 @@ export default function RegionPage() {
         </div>
       </section>
 
-      {/* ══ POSITIONNEMENT ══ */}
+      {/* ══ QUI SOMMES-NOUS ══ */}
       <section style={{ maxWidth: 860, margin: '72px auto 0', padding: '0 40px' }}>
         <div style={{
-          background: G.dark,
-          borderRadius: 4,
-          padding: '48px',
-          display: 'flex',
-          gap: 40,
-          alignItems: 'center',
-          flexWrap: 'wrap',
+          background: G.dark, borderRadius: 4, padding: '48px',
+          display: 'flex', gap: 40, alignItems: 'center', flexWrap: 'wrap',
         }}>
           <div style={{ flex: 1, minWidth: 260 }}>
             <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, marginBottom: 16 }}>
-              Notre philosophie
+              Insightball
             </p>
             <h3 style={{ fontFamily: G.display, fontSize: 26, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.02em', color: G.white, lineHeight: 1.25, marginBottom: 16 }}>
-              On accompagne les acteurs du football amateur. On ne remplace personne.
+              On accompagne les acteurs du football amateur. Du District au National.
             </h3>
             <p style={{ fontFamily: G.body, fontSize: 15, color: 'rgba(255,255,255,0.55)', lineHeight: 1.65 }}>
-              Insightball donne aux coachs et dirigeants les mêmes données que les pros. Le coach reste le sachant, Insightball est son assistant data. Moins de temps à collecter, plus de temps à coacher.
+              Insightball c'est un outil construit pour les coachs et dirigeants du football amateur. On transforme vos vidéos de match en données exploitables. Vous gardez le contrôle, on vous donne les arguments data pour coacher mieux.
             </p>
           </div>
           <Link
             to="/x-portal-7f2a/signup"
             style={{
-              padding: '14px 28px',
-              background: G.gold,
-              color: G.white,
-              fontFamily: G.display,
-              fontSize: 15,
-              fontWeight: 700,
-              letterSpacing: '.05em',
-              textTransform: 'uppercase',
-              borderRadius: 4,
-              textDecoration: 'none',
-              whiteSpace: 'nowrap',
-              flexShrink: 0,
+              padding: '14px 28px', background: G.gold, color: G.white,
+              fontFamily: G.display, fontSize: 15, fontWeight: 700,
+              letterSpacing: '.05em', textTransform: 'uppercase',
+              borderRadius: 4, textDecoration: 'none',
+              whiteSpace: 'nowrap', flexShrink: 0,
             }}
             onMouseEnter={e => e.currentTarget.style.background = G.goldD}
             onMouseLeave={e => e.currentTarget.style.background = G.gold}
@@ -388,18 +331,11 @@ export default function RegionPage() {
         <Link
           to="/x-portal-7f2a/signup"
           style={{
-            padding: '16px 40px',
-            background: G.gold,
-            color: G.white,
-            fontFamily: G.display,
-            fontSize: 16,
-            fontWeight: 700,
-            letterSpacing: '.06em',
-            textTransform: 'uppercase',
-            borderRadius: 4,
-            textDecoration: 'none',
-            display: 'inline-flex',
-            alignItems: 'center',
+            padding: '16px 40px', background: G.gold, color: G.white,
+            fontFamily: G.display, fontSize: 16, fontWeight: 700,
+            letterSpacing: '.06em', textTransform: 'uppercase',
+            borderRadius: 4, textDecoration: 'none',
+            display: 'inline-flex', alignItems: 'center',
           }}
           onMouseEnter={e => e.currentTarget.style.background = G.goldD}
           onMouseLeave={e => e.currentTarget.style.background = G.gold}
@@ -409,11 +345,7 @@ export default function RegionPage() {
       </section>
 
       {/* ══ FOOTER ══ */}
-      <footer style={{
-        background: G.dark,
-        padding: '28px 40px',
-        textAlign: 'center',
-      }}>
+      <footer style={{ background: G.dark, padding: '28px 40px', textAlign: 'center' }}>
         <p style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(255,255,255,0.28)', letterSpacing: '.06em' }}>
           © 2026 Insightball ·{' '}
           <Link to="/mentions-legales" style={{ color: 'rgba(255,255,255,0.28)', textDecoration: 'underline' }}>Mentions légales</Link>
