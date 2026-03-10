@@ -1526,7 +1526,7 @@ export default function LandingPage() {
               </span>
             </div>
             <p style={{ fontFamily: G.mono, fontSize: 11, color: G.gold, marginBottom: 14, letterSpacing: '.04em' }}>
-              Football Analytics
+              La data football pour tous
             </p>
             <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
               {[
