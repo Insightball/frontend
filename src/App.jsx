@@ -30,6 +30,7 @@ const ClubDashboard     = lazy(() => import('./pages/ClubDashboard'))
 const ClubInvite        = lazy(() => import('./pages/ClubInvite'))
 const PlayerProfile     = lazy(() => import('./pages/PlayerProfile'))
 const ProjetDeJeu       = lazy(() => import('./pages/ProjetDeJeu'))
+const RegionPage        = lazy(() => import('./pages/RegionPage'))
 
 // Pages légales
 const MentionsLegales          = lazy(() => import('./pages/MentionsLegales'))
@@ -79,9 +80,9 @@ function App() {
             <Route path="/club-invite/:token" element={<ClubInvite />} />
 
             {/* Invitation & récupération */}
-            <Route path="/join"    element={<JoinClub />} />
+            <Route path="/join"           element={<JoinClub />} />
             <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/recover" element={<RecoverAccount />} />
+            <Route path="/recover"        element={<RecoverAccount />} />
 
             {/* Demo / Plans / Admin */}
             <Route path="/demo"                element={<Dashboard />} />
@@ -90,23 +91,26 @@ function App() {
 
             {/* Pages légales */}
             <Route path="/mentions-legales" element={<MentionsLegales />} />
-            <Route path="/confidentialite" element={<PolitiqueConfidentialite />} />
-            <Route path="/cookies"         element={<PolitiqueCookies />} />
-            <Route path="/cgv"             element={<CGV />} />
+            <Route path="/confidentialite"  element={<PolitiqueConfidentialite />} />
+            <Route path="/cookies"          element={<PolitiqueCookies />} />
+            <Route path="/cgv"              element={<CGV />} />
+
+            {/* Pages territoire SEO */}
+            <Route path="/football/:slug" element={<RegionPage />} />
 
             {/* Dashboard protégé */}
-            <Route path="/dashboard"                  element={<ProtectedRoute><DashboardHome /></ProtectedRoute>} />
-            <Route path="/dashboard/matches"          element={<ProtectedRoute><DashboardMatches /></ProtectedRoute>} />
-            <Route path="/dashboard/matches/upload"   element={<ProtectedRoute><UploadMatch /></ProtectedRoute>} />
-            <Route path="/dashboard/matches/:matchId" element={<ProtectedRoute><MatchDetail /></ProtectedRoute>} />
+            <Route path="/dashboard"                      element={<ProtectedRoute><DashboardHome /></ProtectedRoute>} />
+            <Route path="/dashboard/matches"              element={<ProtectedRoute><DashboardMatches /></ProtectedRoute>} />
+            <Route path="/dashboard/matches/upload"       element={<ProtectedRoute><UploadMatch /></ProtectedRoute>} />
+            <Route path="/dashboard/matches/:matchId"     element={<ProtectedRoute><MatchDetail /></ProtectedRoute>} />
             <Route path="/dashboard/players"              element={<ProtectedRoute><PlayerManagement /></ProtectedRoute>} />
             <Route path="/dashboard/player/:playerId"     element={<ProtectedRoute><PlayerProfile /></ProtectedRoute>} />
-            <Route path="/dashboard/stats"            element={<ProtectedRoute><Statistics /></ProtectedRoute>} />
-            <Route path="/dashboard/team"             element={<ProtectedRoute><TeamManagement /></ProtectedRoute>} />
-            <Route path="/dashboard/club"             element={<ProtectedRoute><ClubDashboard /></ProtectedRoute>} />
-            <Route path="/dashboard/members"          element={<ProtectedRoute><ClubMembers /></ProtectedRoute>} />
-            <Route path="/dashboard/settings"         element={<ProtectedRoute><SettingsRoute /></ProtectedRoute>} />
-            <Route path="/dashboard/projet-de-jeu"    element={<ProtectedRoute><ProjetDeJeu /></ProtectedRoute>} />
+            <Route path="/dashboard/stats"                element={<ProtectedRoute><Statistics /></ProtectedRoute>} />
+            <Route path="/dashboard/team"                 element={<ProtectedRoute><TeamManagement /></ProtectedRoute>} />
+            <Route path="/dashboard/club"                 element={<ProtectedRoute><ClubDashboard /></ProtectedRoute>} />
+            <Route path="/dashboard/members"              element={<ProtectedRoute><ClubMembers /></ProtectedRoute>} />
+            <Route path="/dashboard/settings"             element={<ProtectedRoute><SettingsRoute /></ProtectedRoute>} />
+            <Route path="/dashboard/projet-de-jeu"        element={<ProtectedRoute><ProjetDeJeu /></ProtectedRoute>} />
           </Routes>
         </Suspense>
       </Router>
