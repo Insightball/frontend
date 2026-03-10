@@ -809,7 +809,7 @@ export default function LandingPage() {
     @media (max-width: 480px) {
       .footer-grid  { grid-template-columns: 1fr !important; }
       .wl-grid      { grid-template-columns: 1fr !important; }
-      .hero-grid    { padding: 80px 16px 32px !important; min-height: unset !important; }
+      .hero-grid    { padding: 20px 16px 24px !important; min-height: unset !important; }
       .wrap, .wrap-inner { padding: 48px 16px !important; }
       .cta-band     { padding: 48px 16px !important; }
       nav           { padding: 0 16px !important; }
@@ -935,7 +935,7 @@ export default function LandingPage() {
       {/* ══ HERO ══ */}
       <div style={{ paddingTop: 60 }}>
         <div className="hero-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', maxWidth: 1200, margin: '0 auto', padding: '100px 48px 60px', gap: 60, minHeight: '100vh' }}>
-          <div style={{ padding: '80px 0' }}>
+          <div style={{ padding: '20px 0' }}>
             <h1 className="hero-title" style={{ fontFamily: G.display, fontSize: 'clamp(48px,6vw,78px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.ink, marginBottom: 24, opacity: 0, animation: 'heroUp .5s .2s forwards' }}>
               {t.heroTitle1}<br/>
               {t.heroTitle2}<br/>
