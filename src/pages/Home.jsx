@@ -783,7 +783,7 @@ export default function LandingPage() {
     @media (max-width: 768px) {
       .nav-links, .nav-cta-d, .nav-lang { display: none !important; }
       .nav-burger   { display: flex !important; }
-      .hero-grid    { padding: 72px 20px 32px !important; min-height: unset !important; }
+      .hero-grid    { padding: 20px 20px 24px !important; min-height: unset !important; }
       .hero-title   { font-size: clamp(36px,10vw,58px) !important; }
       .sec-h2       { font-size: clamp(28px,7vw,42px) !important; }
       .wrap, .wrap-inner { padding: 56px 20px !important; }
@@ -938,9 +938,9 @@ export default function LandingPage() {
           <div style={{ padding: '80px 0' }}>
             <h1 className="hero-title" style={{ fontFamily: G.display, fontSize: 'clamp(48px,6vw,78px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.ink, marginBottom: 24, opacity: 0, animation: 'heroUp .5s .2s forwards' }}>
               {t.heroTitle1}<br/>
-              <span style={{ color: G.gold }}>{t.heroTitle2}<br/>{t.heroTitle3}</span>
+              {t.heroTitle2}<br/>
+              <span style={{ color: G.gold }}>{t.heroTitle3}</span>
             </h1>
-            <p style={{ fontSize: 18, lineHeight: 1.65, color: G.muted, maxWidth: 440, marginBottom: 36, opacity: 0, animation: 'heroUp .5s .35s forwards' }}>
               {t.heroSub}<strong style={{ color: G.ink, fontWeight: 500 }}>{t.heroSubBold}</strong>{t.heroSubEnd}
             </p>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', opacity: 0, animation: 'heroUp .5s .45s forwards' }}>

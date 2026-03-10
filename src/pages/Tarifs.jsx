@@ -40,7 +40,6 @@ const COACH_ITEMS = [
 ]
 
 const CLUB_ITEMS = [
-  'Jusqu\'à 15 matchs / mois selon formule',
   'Toutes tes équipes (Séniors, U19, U17…)',
   'Dashboard directeur sportif',
   'Stats collectives & individuelles',
