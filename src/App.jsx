@@ -31,6 +31,7 @@ const ClubInvite        = lazy(() => import('./pages/ClubInvite'))
 const PlayerProfile     = lazy(() => import('./pages/PlayerProfile'))
 const ProjetDeJeu       = lazy(() => import('./pages/ProjetDeJeu'))
 const RegionPage        = lazy(() => import('./pages/RegionPage'))
+const APropos           = lazy(() => import('./pages/APropos'))
 
 // Pages légales
 const MentionsLegales          = lazy(() => import('./pages/MentionsLegales'))
@@ -94,6 +95,9 @@ function App() {
             <Route path="/confidentialite"  element={<PolitiqueConfidentialite />} />
             <Route path="/cookies"          element={<PolitiqueCookies />} />
             <Route path="/cgv"              element={<CGV />} />
+
+            {/* À propos */}
+            <Route path="/a-propos" element={<APropos />} />
 
             {/* Pages territoire SEO */}
             <Route path="/football/:slug" element={<RegionPage />} />
