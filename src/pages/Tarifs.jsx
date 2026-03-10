@@ -177,13 +177,8 @@ export default function Tarifs() {
                 <span style={{ fontFamily: G.display, fontSize: 56, fontWeight: 800, lineHeight: 1, color: G.white }}>99</span>
                 <span style={{ fontSize: 16, color: 'rgba(255,255,255,0.40)' }}>€ / mois</span>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 12 }}>
-                {[['99€/mois','10 matchs','3-4 équipes'],['139€/mois','15 matchs','5+ équipes']].map(([prix, matchs, eq]) => (
-                  <div key={prix} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(201,162,39,0.15)', borderRadius: 6 }}>
-                    <span style={{ fontFamily: G.display, fontSize: 18, fontWeight: 800, color: G.gold }}>{prix}</span>
-                    <span style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(255,255,255,0.45)', letterSpacing: '.06em' }}>{matchs} · {eq}</span>
-                  </div>
-                ))}
+              <div style={{ fontFamily: 'monospace', fontSize: 11, color: 'rgba(255,255,255,0.35)', letterSpacing: '.06em', marginTop: 6 }}>
+                Multi-équipes · Sur mesure selon ta structure
               </div>
             </div>
             <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 9, marginBottom: 36 }}>
