@@ -6,7 +6,7 @@
     "clubs": 2800,
     "licencies": 185000,
     "divisions": ["National 3 Groupe F", "Régional 1 Occitanie", "Régional 2", "Régional 3"],
-    "description": "Avec plus de 2 800 clubs et 185 000 licenciés, l'Occitanie est l'une des ligues les plus actives de France. Des clubs comme le Toulouse FC, le Nîmes Olympique ou le Gazelec Ajaccio ont émergé de ce vivier. Chaque week-end, des centaines de matchs se jouent du District au National 3 — sans que les coachs aient accès aux outils d'analyse des pros.",
+    "description": "Avec plus de 2 800 clubs et 185 000 licenciés, l'Occitanie est l'une des ligues les plus actives de France. Chaque week-end, des centaines de matchs se jouent du District au National 3 sans que les coachs aient accès aux outils d'analyse des pros. Insightball change ça.",
     "keywords": ["analyse vidéo football Occitanie", "statistiques football amateur Occitanie", "logiciel football Régional Occitanie"],
     "metaTitle": "Analyse vidéo football amateur en Occitanie | Insightball",
     "metaDescription": "Insightball aide les coachs de la Ligue Occitanie à analyser leurs matchs : heatmaps, stats joueurs, rapports tactiques. Essai gratuit 7 jours."
@@ -18,7 +18,7 @@
     "clubs": 2200,
     "licencies": 155000,
     "divisions": ["National 3 Groupe G", "Régional 1 Méditerranée", "Régional 2", "Régional 3"],
-    "description": "La Ligue Méditerranée regroupe plus de 2 200 clubs entre Marseille, Nice et Toulon. Région de forte densité footballistique, elle voit chaque saison des dizaines de clubs semi-professionnels chercher à progresser sans moyens de cellule d'analyse. Insightball leur donne accès à la data match en quelques minutes.",
+    "description": "La Ligue Méditerranée regroupe plus de 2 200 clubs entre Marseille, Nice et Toulon. Région de forte densité footballistique, elle voit chaque saison des clubs semi-professionnels chercher à progresser sans moyens de cellule d'analyse. Insightball leur donne accès à la data match en quelques minutes.",
     "keywords": ["analyse vidéo football PACA", "statistiques football Méditerranée", "logiciel coach football amateur PACA"],
     "metaTitle": "Analyse vidéo football amateur en PACA | Insightball",
     "metaDescription": "Les coachs de la Ligue Méditerranée analysent leurs matchs avec Insightball. Heatmaps, stats, rapports PDF. Essai gratuit 7 jours."
@@ -42,7 +42,7 @@
     "clubs": 1400,
     "licencies": 115000,
     "divisions": ["National 3 Groupe B", "Régional 1 Bretagne", "Régional 2", "Régional 3"],
-    "description": "La Bretagne est une terre de football passion. Avec 1 400 clubs et 115 000 licenciés, la Ligue de Bretagne produit chaque saison des équipes compétitives qui montent jusqu'en National. Les coachs bretons sont exigeants et cherchent à progresser — Insightball leur donne la data pour accompagner cette ambition.",
+    "description": "La Bretagne est une terre de football passion. Avec 1 400 clubs et 115 000 licenciés, la Ligue de Bretagne produit chaque saison des équipes compétitives qui montent jusqu'en National. Les coachs bretons sont exigeants et cherchent à progresser. Insightball leur donne la data pour accompagner cette ambition.",
     "keywords": ["analyse vidéo football Bretagne", "statistiques football amateur Bretagne", "outil analyse match football Rennes"],
     "metaTitle": "Analyse vidéo football amateur en Bretagne | Insightball",
     "metaDescription": "Insightball aide les coachs bretons à analyser leurs matchs avec des heatmaps, des stats et des rapports tactiques. Essai gratuit 7 jours."
@@ -66,7 +66,7 @@
     "clubs": 3000,
     "licencies": 250000,
     "divisions": ["National 3 Groupe C", "Régional 1 AuRA", "Régional 2", "Régional 3"],
-    "description": "Deuxième région de France par le nombre de licenciés, Auvergne-Rhône-Alpes compte 3 000 clubs autour de Lyon, Clermont et Grenoble. Région à forte tradition footballistique portée par l'OL, elle regorge de coachs ambitieux en Régional 1 et National 3 qui cherchent à professionnaliser leur approche.",
+    "description": "Deuxième région de France par le nombre de licenciés, Auvergne-Rhône-Alpes compte 3 000 clubs autour de Lyon, Clermont et Grenoble. Région à forte tradition footballistique, elle regorge de coachs ambitieux en Régional 1 et National 3 qui cherchent à professionnaliser leur approche.",
     "keywords": ["analyse vidéo football Auvergne-Rhône-Alpes", "statistiques football amateur Lyon", "outil analyse tactique football AuRA"],
     "metaTitle": "Analyse vidéo football amateur en Auvergne-Rhône-Alpes | Insightball",
     "metaDescription": "Insightball, l'assistant data des coachs en AuRA. Heatmaps, stats joueurs, rapports tactiques. Essai gratuit 7 jours."
@@ -78,7 +78,7 @@
     "clubs": 2100,
     "licencies": 170000,
     "divisions": ["National 3 Groupe A", "Régional 1 Hauts-de-France", "Régional 2", "Régional 3"],
-    "description": "Les Hauts-de-France ont une identité footballistique forte, portée par des clubs comme Lens ou Valenciennes. Avec 2 100 clubs amateurs, la ligue est compétitive de la Régionale au National 3. Les coachs du Nord savent ce qu'est l'exigence — Insightball leur donne les outils pour aller chercher la montée avec des arguments data.",
+    "description": "Les Hauts-de-France ont une identité footballistique forte avec 2 100 clubs amateurs. La ligue est compétitive de la Régionale au National 3. Les coachs du Nord savent ce qu'est l'exigence. Insightball leur donne les outils pour aller chercher la montée avec des arguments data.",
     "keywords": ["analyse vidéo football Hauts-de-France", "statistiques football amateur Nord", "logiciel coach football Lille"],
     "metaTitle": "Analyse vidéo football amateur dans les Hauts-de-France | Insightball",
     "metaDescription": "Les coachs des Hauts-de-France analysent leurs matchs avec Insightball. Heatmaps, stats, rapports tactiques PDF. Essai gratuit 7 jours."
@@ -90,7 +90,7 @@
     "clubs": 2400,
     "licencies": 160000,
     "divisions": ["National 3 Groupe B", "Régional 1 Grand Est", "Régional 2", "Régional 3"],
-    "description": "Alsace, Lorraine, Champagne-Ardenne — le Grand Est fusionne trois traditions footballistiques avec 2 400 clubs. Une région où l'analyse tactique prend tout son sens face à des championnats denses et équilibrés. Insightball accompagne les coachs du Grand Est dans leur préparation et leur analyse post-match.",
+    "description": "Alsace, Lorraine, Champagne-Ardenne — le Grand Est fusionne trois traditions footballistiques avec 2 400 clubs. Une région où l'analyse tactique prend tout son sens face à des championnats denses et équilibrés. Insightball accompagne les coachs dans leur préparation et leur analyse post-match.",
     "keywords": ["analyse vidéo football Grand Est", "statistiques football amateur Strasbourg", "outil analyse match football Alsace"],
     "metaTitle": "Analyse vidéo football amateur dans le Grand Est | Insightball",
     "metaDescription": "Analysez vos matchs avec Insightball dans le Grand Est. Heatmaps, statistiques joueurs, rapports PDF. Essai gratuit 7 jours."
@@ -102,7 +102,7 @@
     "clubs": 1300,
     "licencies": 95000,
     "divisions": ["National 3 Groupe B", "Régional 1 Normandie", "Régional 2", "Régional 3"],
-    "description": "La Normandie compte 1 300 clubs du Havre à Caen. Malgré une taille modeste, la ligue produit des équipes compétitives qui atteignent régulièrement le National. Les coachs normands cherchent à optimiser leurs séances et leurs analyses avec des outils adaptés à leur réalité — sans budget de cellule d'analyse pro.",
+    "description": "La Normandie compte 1 300 clubs du Havre à Caen. Malgré une taille modeste, la ligue produit des équipes compétitives qui atteignent régulièrement le National. Les coachs normands cherchent à optimiser leurs séances et leurs analyses avec des outils adaptés à leur réalité, sans budget de cellule d'analyse pro.",
     "keywords": ["analyse vidéo football Normandie", "statistiques football amateur Caen", "logiciel coach football amateur Normandie"],
     "metaTitle": "Analyse vidéo football amateur en Normandie | Insightball",
     "metaDescription": "Insightball aide les coachs normands à analyser leurs matchs. Heatmaps, stats joueurs, rapports tactiques. Essai gratuit 7 jours."
@@ -114,7 +114,7 @@
     "clubs": 1600,
     "licencies": 125000,
     "divisions": ["National 3 Groupe C", "Régional 1 Pays de la Loire", "Régional 2", "Régional 3"],
-    "description": "Nantes, Le Mans, Angers — les Pays de la Loire concentrent 1 600 clubs dans une région à forte culture footballistique. Le championnat Régional est dense et les coachs cherchent l'avantage compétitif. Insightball leur fournit les données de match pour préparer et analyser chaque rencontre avec précision.",
+    "description": "Nantes, Le Mans, Angers, les Pays de la Loire concentrent 1 600 clubs dans une région à forte culture footballistique. Le championnat Régional est dense et les coachs cherchent l'avantage compétitif. Insightball leur fournit les données de match pour préparer et analyser chaque rencontre avec précision.",
     "keywords": ["analyse vidéo football Pays de la Loire", "statistiques football amateur Nantes", "logiciel analyse tactique football Loire"],
     "metaTitle": "Analyse vidéo football amateur en Pays de la Loire | Insightball",
     "metaDescription": "Les coachs des Pays de la Loire analysent leurs matchs avec Insightball. Heatmaps, stats, rapports tactiques PDF. Essai gratuit 7 jours."
@@ -138,7 +138,7 @@
     "clubs": 1100,
     "licencies": 80000,
     "divisions": ["National 3 Groupe C", "Régional 1 Bourgogne-Franche-Comté", "Régional 2", "Régional 3"],
-    "description": "La Bourgogne-Franche-Comté regroupe 1 100 clubs entre Dijon et Besançon. Une ligue solide où les clubs Régionaux ont de vraies ambitions. Les coachs de la région n'ont plus à se contenter d'impressions après le match — Insightball leur donne des données concrètes pour progresser.",
+    "description": "La Bourgogne-Franche-Comté regroupe 1 100 clubs entre Dijon et Besançon. Une ligue solide où les clubs Régionaux ont de vraies ambitions. Les coachs de la région n'ont plus à se contenter d'impressions après le match. Insightball leur donne des données concrètes pour progresser.",
     "keywords": ["analyse vidéo football Bourgogne", "statistiques football amateur Dijon", "logiciel coach football Franche-Comté"],
     "metaTitle": "Analyse vidéo football amateur en Bourgogne-Franche-Comté | Insightball",
     "metaDescription": "Insightball, l'outil d'analyse des coachs en Bourgogne-Franche-Comté. Heatmaps, stats, rapports tactiques. Essai gratuit 7 jours."
@@ -150,7 +150,7 @@
     "clubs": 220,
     "licencies": 18000,
     "divisions": ["National 3 Groupe G", "Régional 1 Corse", "Régional 2"],
-    "description": "La Corse compte 220 clubs pour 18 000 licenciés — une communauté footballistique intense et passionnée. Des clubs comme le Gazélec FC Ajaccio ou le SC Bastia incarnent cette culture du foot insulaire. En Régional 1 comme en National 3, les coachs corses méritent les mêmes outils d'analyse que le continent.",
+    "description": "La Corse compte 220 clubs pour 18 000 licenciés, une communauté footballistique intense et passionnée. Des clubs historiques portent cette culture du foot insulaire depuis des décennies. En Régional 1 comme en National 3, les coachs corses méritent les mêmes outils d'analyse que le continent.",
     "keywords": ["analyse vidéo football Corse", "statistiques football amateur Ajaccio", "logiciel coach football Corse"],
     "metaTitle": "Analyse vidéo football amateur en Corse | Insightball",
     "metaDescription": "Insightball aide les coachs corses à analyser leurs matchs. Heatmaps, statistiques joueurs, rapports PDF. Essai gratuit 7 jours."
