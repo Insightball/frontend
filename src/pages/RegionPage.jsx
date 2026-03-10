@@ -217,7 +217,7 @@ export default function RegionPage() {
           {[
             { label: 'Clubs affiliés FFF', value: region.clubs.toLocaleString('fr-FR') },
             { label: 'Licenciés',          value: region.licencies.toLocaleString('fr-FR') },
-            { label: 'Du District au National', value: 'Toutes\u00a0niveaux' },
+            { label: 'Du District au National', value: 'Tous\u00a0niveaux' },
           ].map((item) => (
             <div key={item.label} style={{
               background: G.off, borderRadius: 4, padding: '20px 24px', border: `1px solid ${G.border}`,
