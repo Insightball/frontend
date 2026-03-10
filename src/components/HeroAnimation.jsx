@@ -197,7 +197,7 @@ const STATS = [
 ]
 
 const PHASES = ['raw','tracking','heatmap','report']
-const PHASE_DURATION = [5000, 3500, 3500, 4500]
+const PHASE_DURATION = [7000, 3500, 3500, 4500]
 
 // Interpolation fluide entre position de base et position cible
 function getPlayerPos(base, seq, seqProg, tick) {
@@ -530,12 +530,12 @@ export default function HeroAnimation() {
               <text x={W/2} y={H/2-14} textAnchor="middle"
                 fontSize="12" fontFamily="'JetBrains Mono',monospace"
                 fill="rgba(255,255,255,0.55)" letterSpacing="4">
-                VIDÉO NON ANALYSÉE
+                VIDÉO EN COURS D'ANALYSE
               </text>
               <text x={W/2} y={H/2+8} textAnchor="middle"
                 fontSize="9" fontFamily="'JetBrains Mono',monospace"
                 fill="rgba(255,255,255,0.3)" letterSpacing="2">
-                elle dort sur ton téléphone
+                extraction des données en cours…
               </text>
               {/* Timecode */}
               <text x={PAD+8} y={PAD+FH-8}
