@@ -10,7 +10,7 @@ const G = {
   border2: '#d4d0c8',
   ink:     '#111110',
   ink2:    '#2d2c2a',
-  muted:   '#6b6960',
+  muted:   '#5a5850',
   gold:    '#c9a227',
   goldD:   '#a8861f',
   goldL:   'rgba(201,162,39,0.10)',
@@ -871,7 +871,7 @@ export default function LandingPage() {
         transition: 'box-shadow .2s',
       }}>
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <img src="/logo.svg" alt="Insightball" style={{ height: 36, width: 'auto', display: 'block', mixBlendMode: 'screen' }} />
+          <img src="/logo.svg" alt="Insightball" width="36" height="36" style={{ height: 36, width: 36, display: 'block', mixBlendMode: 'screen' }} />
           <span style={{ fontFamily: G.display, fontSize: 18, fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase', color: G.white }}>
             INSIGHT<span style={{ color: G.gold }}>ball</span>
           </span>
@@ -886,7 +886,7 @@ export default function LandingPage() {
         </div>
 
         {/* Language toggle */}
-        <button className="nav-lang" onClick={toggleLang} style={{
+        <button className="nav-lang" onClick={toggleLang} aria-label="Changer de langue" style={{
           background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
           borderRadius: 4, padding: '5px 10px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
           transition: 'background .15s',
@@ -904,6 +904,7 @@ export default function LandingPage() {
         </a>
 
         <button className="nav-burger" onClick={() => setMenuOpen(o => !o)}
+          aria-label="Menu de navigation"
           style={{ display: 'none', background: 'none', border: 'none', cursor: 'pointer', flexDirection: 'column', gap: 5, padding: 4 }}>
           {[0,1,2].map(i => (
             <span key={i} style={{
@@ -933,6 +934,7 @@ export default function LandingPage() {
         </div>
       )}
 
+      <main>
       {/* ══ HERO ═══════════════════════════════════════ */}
       {/* ══ HERO ══ */}
       <div style={{ paddingTop: 60 }}>
@@ -1090,7 +1092,7 @@ export default function LandingPage() {
                       flexShrink: 0, width: 52,
                     }}>{s.n}</div>
                     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                      <h4 style={{ fontFamily: G.display, fontSize: 20, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.03em', color: s.dark ? G.gold : G.ink, marginBottom: 6 }}>{s.title}</h4>
+                      <h3 style={{ fontFamily: G.display, fontSize: 20, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.03em', color: s.dark ? G.gold : G.ink, marginBottom: 6 }}>{s.title}</h3>
                       <p style={{ fontSize: 14, color: s.dark ? 'rgba(255,255,255,0.55)' : G.muted, lineHeight: 1.6 }}>{s.desc}</p>
                     </div>
                   </div>
@@ -1326,33 +1328,33 @@ export default function LandingPage() {
                 <form onSubmit={handleWaitlist}>
                   <div className="wl-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '0 32px' }}>
                     <div style={inputLineDark(wlFocused==='firstName')}>
-                      <label style={labelStDark}>{t.wlFirstName}</label>
-                      <input type="text" required value={wlForm.firstName} onChange={e => setWlForm({...wlForm, firstName: e.target.value})}
+                      <label htmlFor="wl-firstName" style={labelStDark}>{t.wlFirstName}</label>
+                      <input id="wl-firstName" type="text" required value={wlForm.firstName} onChange={e => setWlForm({...wlForm, firstName: e.target.value})}
                         placeholder="" style={inputStDark}
                         onFocus={() => setWlFocused('firstName')} onBlur={() => setWlFocused(null)} />
                     </div>
                     <div style={inputLineDark(wlFocused==='lastName')}>
-                      <label style={labelStDark}>{t.wlLastName}</label>
-                      <input type="text" required value={wlForm.lastName} onChange={e => setWlForm({...wlForm, lastName: e.target.value})}
+                      <label htmlFor="wl-lastName" style={labelStDark}>{t.wlLastName}</label>
+                      <input id="wl-lastName" type="text" required value={wlForm.lastName} onChange={e => setWlForm({...wlForm, lastName: e.target.value})}
                         placeholder="" style={inputStDark}
                         onFocus={() => setWlFocused('lastName')} onBlur={() => setWlFocused(null)} />
                     </div>
                     <div style={{ ...inputLine(wlFocused==='email'), gridColumn: '1 / 3' }}>
-                      <label style={labelStDark}>{t.wlEmail}</label>
-                      <input type="email" required value={wlForm.email} onChange={e => setWlForm({...wlForm, email: e.target.value})}
+                      <label htmlFor="wl-email" style={labelStDark}>{t.wlEmail}</label>
+                      <input id="wl-email" type="email" required value={wlForm.email} onChange={e => setWlForm({...wlForm, email: e.target.value})}
                         placeholder="" style={inputStDark}
                         onFocus={() => setWlFocused('email')} onBlur={() => setWlFocused(null)} />
                     </div>
                     <div style={{ ...inputLine(wlFocused==='club'), gridColumn: '1 / 3' }}>
-                      <label style={labelStDark}>{t.wlClub}</label>
-                      <input type="text" required value={wlForm.club} onChange={e => setWlForm({...wlForm, club: e.target.value})}
+                      <label htmlFor="wl-club" style={labelStDark}>{t.wlClub}</label>
+                      <input id="wl-club" type="text" required value={wlForm.club} onChange={e => setWlForm({...wlForm, club: e.target.value})}
                         placeholder="" style={inputStDark}
                         onFocus={() => setWlFocused('club')} onBlur={() => setWlFocused(null)} />
                     </div>
                     <div style={{ ...inputLineDark(wlFocused==='role'), marginBottom: 32 }}>
-                      <label style={labelStDark}>{t.wlRole}</label>
+                      <label htmlFor="wl-role" style={labelStDark}>{t.wlRole}</label>
                       <div className="select-wrapper">
-                        <select required value={wlForm.role} onChange={e => setWlForm({...wlForm, role: e.target.value})}
+                        <select id="wl-role" required value={wlForm.role} onChange={e => setWlForm({...wlForm, role: e.target.value})}
                           style={{ ...inputStDark, color: wlForm.role ? G.white : 'rgba(255,255,255,0.55)', cursor:'pointer', appearance:'none', WebkitAppearance:'none', paddingRight: 20 }}
                           onFocus={() => setWlFocused('role')} onBlur={() => setWlFocused(null)}>
                           <option value="" disabled style={{ color: '#888', background: '#1a1917' }}>{t.wlRoleChoose}</option>
@@ -1363,9 +1365,9 @@ export default function LandingPage() {
                       </div>
                     </div>
                     <div style={{ ...inputLineDark(wlFocused==='category'), marginBottom: 32 }}>
-                      <label style={labelStDark}>{t.wlCategory}</label>
+                      <label htmlFor="wl-category" style={labelStDark}>{t.wlCategory}</label>
                       <div className="select-wrapper">
-                        <select required value={wlForm.category} onChange={e => setWlForm({...wlForm, category: e.target.value})}
+                        <select id="wl-category" required value={wlForm.category} onChange={e => setWlForm({...wlForm, category: e.target.value})}
                           style={{ ...inputStDark, color: wlForm.category ? G.white : 'rgba(255,255,255,0.55)', cursor:'pointer', appearance:'none', WebkitAppearance:'none', paddingRight: 20 }}
                           onFocus={() => setWlFocused('category')} onBlur={() => setWlFocused(null)}>
                           <option value="" disabled style={{ color: '#888', background: '#1a1917' }}>{t.wlCatChoose}</option>
@@ -1424,14 +1426,14 @@ export default function LandingPage() {
                 <form onSubmit={handleContact} style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                   {[{l:t.contactName,t:'text',k:'name',p:''},{l:t.contactEmail,t:'email',k:'email',p:''}].map(f => (
                     <div key={f.k} style={{ borderBottom: `1px solid ${G.border}`, paddingBottom: 16, marginBottom: 16 }}>
-                      <label style={labelSt}>{f.l}</label>
-                      <input type={f.t} required value={contactForm[f.k]} onChange={e => setContactForm({...contactForm,[f.k]:e.target.value})} placeholder={f.p}
+                      <label htmlFor={`contact-${f.k}`} style={labelSt}>{f.l}</label>
+                      <input id={`contact-${f.k}`} type={f.t} required value={contactForm[f.k]} onChange={e => setContactForm({...contactForm,[f.k]:e.target.value})} placeholder={f.p}
                         style={{ width: '100%', background: 'transparent', border: 'none', outline: 'none', fontSize: 16, color: G.ink, fontFamily: G.body }}/>
                     </div>
                   ))}
                   <div style={{ borderBottom: `1px solid ${G.border}`, paddingBottom: 16, marginBottom: 24 }}>
-                    <label style={labelSt}>{t.contactMessage}</label>
-                    <textarea required rows={5} value={contactForm.message} onChange={e => setContactForm({...contactForm,message:e.target.value})} placeholder={t.contactPlaceholder}
+                    <label htmlFor="contact-message" style={labelSt}>{t.contactMessage}</label>
+                    <textarea id="contact-message" required rows={5} value={contactForm.message} onChange={e => setContactForm({...contactForm,message:e.target.value})} placeholder={t.contactPlaceholder}
                       style={{ width: '100%', background: 'transparent', border: 'none', outline: 'none', resize: 'none', fontSize: 15, color: G.ink, fontFamily: G.body, lineHeight: 1.6 }}/>
                   </div>
                   <button type="submit" disabled={contactLoad} style={{ ...btnPrimary, alignSelf: 'flex-start', opacity: contactLoad ? .6 : 1 }}
@@ -1465,12 +1467,14 @@ export default function LandingPage() {
         </div>
       </div>
 
+      </main>
+
       {/* ══ FOOTER ═════════════════════════════════════ */}
       <footer style={{ background: G.ink, borderTop: `1px solid rgba(255,255,255,0.08)`, padding: '56px 48px 32px' }}>
         <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr', gap: 40, marginBottom: 48 }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-              <img src="/logo.svg" alt="Insightball" style={{ height: 36, width: 'auto', display: 'block', mixBlendMode: 'screen' }} />
+              <img src="/logo.svg" alt="Insightball" width="36" height="36" style={{ height: 36, width: 36, display: 'block', mixBlendMode: 'screen' }} />
               <span style={{ fontFamily: G.display, fontSize: 18, fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase', color: G.white }}>
                 INSIGHT<span style={{ color: G.gold }}>ball</span>
               </span>
