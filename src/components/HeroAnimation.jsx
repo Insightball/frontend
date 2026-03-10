@@ -370,7 +370,7 @@ export default function HeroAnimation() {
               position:'absolute', inset:0,
               width:'100%', height:'100%',
               objectFit:'cover',
-              opacity: phase===0 ? 0.55 : 0,
+              opacity: phase===0 ? 0.70 : 0,
               transition:'opacity 0.8s ease',
               pointerEvents:'none',
             }}
