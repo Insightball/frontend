@@ -43,7 +43,7 @@ const FEATURES = [
   {
     icon: "📊",
     title: "Statistiques match",
-    desc: "Possession, passes, duels, distance parcourue. Des données concrètes pour baser vos retours sur des faits.",
+    desc: "Possession, passes, duels, distance parcourue. Des stats concrètes pour baser vos retours sur des faits.",
   },
   {
     icon: "📄",
@@ -146,7 +146,7 @@ export default function RegionPage() {
           fontWeight: 800, letterSpacing: '.02em', textTransform: 'uppercase',
           color: G.white, lineHeight: 1.1, maxWidth: 800, margin: '0 auto 24px',
         }}>
-          La data football accessible à tous les coachs{' '}
+          L'analyse de match accessible à tous les coachs{' '}
           <span style={{ color: G.gold }}>en {region.name}</span>
         </h1>
 
@@ -154,7 +154,7 @@ export default function RegionPage() {
           fontFamily: G.body, color: 'rgba(255,255,255,0.65)',
           fontSize: 18, maxWidth: 580, margin: '0 auto 44px', lineHeight: 1.65,
         }}>
-          Du District au National, vous filmez le match avec votre téléphone. Insightball transforme cette vidéo en données concrètes sur votre équipe et vos joueurs.
+          Du District au National, vous filmez le match avec votre téléphone. Insightball transforme cette vidéo en stats concrètes sur votre équipe et vos joueurs.
         </p>
 
         <a
@@ -235,7 +235,7 @@ export default function RegionPage() {
           Comment ça marche
         </p>
         <h2 style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.02em', marginBottom: 40, color: G.ink }}>
-          Filmez. Uploadez. Recevez votre data.
+          Filmez. Uploadez. Recevez vos stats.
         </h2>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 0, position: 'relative' }}>
@@ -266,7 +266,7 @@ export default function RegionPage() {
           Après chaque match.
         </h2>
         <p style={{ fontFamily: G.body, fontSize: 16, color: G.muted, marginBottom: 36, maxWidth: 520 }}>
-          Des données sur votre équipe et vos joueurs. Sans formation, sans matériel, sans setup.
+          Des stats sur votre équipe et vos joueurs. Sans formation, sans matériel, sans setup.
         </p>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 16 }}>
@@ -300,7 +300,7 @@ export default function RegionPage() {
               On accompagne les acteurs du football amateur. Du District au National.
             </h3>
             <p style={{ fontFamily: G.body, fontSize: 15, color: 'rgba(255,255,255,0.55)', lineHeight: 1.65 }}>
-              Insightball c'est un outil construit pour les coachs et dirigeants du football amateur. On transforme vos vidéos de match en données exploitables. Vous gardez le contrôle, on vous donne les arguments data pour coacher mieux.
+              Insightball c'est un outil construit pour les coachs et dirigeants du football amateur. On transforme vos vidéos de match en stats exploitables. Vous gardez le contrôle, on vous donne les arguments pour coacher mieux.
             </p>
           </div>
           <a
