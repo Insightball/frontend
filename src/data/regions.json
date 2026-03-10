@@ -5,7 +5,7 @@
     "ligue": "Ligue de Football d'Occitanie",
     "clubs": 2800,
     "licencies": 180000,
-    "description": "La Ligue de Football d'Occitanie a franchi pour la première fois de son histoire le cap des 180 000 licenciés. Née de la fusion des ligues Midi-Pyrénées et Languedoc-Roussillon en 2016, elle organise aujourd'hui 41 compétitions sur l'ensemble du territoire, du football de District au National. Des milliers de matchs se jouent chaque week-end entre Toulouse, Montpellier et Perpignan, avec des coachs qui s'investissent sans jamais avoir accès à des données sur leur équipe. Insightball leur donne ces données à partir d'une vidéo filmée avec leur téléphone.",
+    "description": "La Ligue de Football d'Occitanie a franchi pour la première fois de son histoire le cap des 180 000 licenciés. Née de la fusion des ligues Midi-Pyrénées et Languedoc-Roussillon en 2016, elle organise aujourd'hui 41 compétitions sur l'ensemble du territoire, du football de District au National. Des milliers de matchs se jouent chaque week-end entre Toulouse, Montpellier et Perpignan, avec des coachs qui s'investissent sans jamais avoir de stats sur leur équipe. Insightball leur donne ces stats à partir d'une vidéo filmée avec leur téléphone.",
     "keywords": ["analyse vidéo football Occitanie", "statistiques football amateur Occitanie", "logiciel coach football Toulouse Montpellier"],
     "metaTitle": "Analyse vidéo football amateur en Occitanie | Insightball",
     "metaDescription": "Insightball aide les coachs de la Ligue Occitanie à analyser leurs matchs : heatmaps, stats joueurs, rapports tactiques. Essai gratuit 7 jours."
@@ -27,7 +27,7 @@
     "ligue": "Ligue de Paris Île-de-France de Football",
     "clubs": 1100,
     "licencies": 325000,
-    "description": "Avec plus de 325 000 licenciés, la Ligue de Paris Île-de-France est la première ligue de France. Elle est répartie sur huit districts et organise 81 compétitions par saison. Du District au National, les championnats franciliens sont parmi les plus disputés du pays. Dans cette région ultra-compétitive, les coachs cherchent le moindre avantage tactique. Insightball leur fournit des données concrètes sur chaque match, à partir d'une simple vidéo.",
+    "description": "Avec plus de 325 000 licenciés, la Ligue de Paris Île-de-France est la première ligue de France. Elle est répartie sur huit districts et organise 81 compétitions par saison. Du District au National, les championnats franciliens sont parmi les plus disputés du pays. Dans cette région ultra-compétitive, les coachs cherchent le moindre avantage tactique. Insightball leur fournit des stats concrètes sur chaque match, à partir d'une simple vidéo.",
     "keywords": ["analyse vidéo football Île-de-France", "statistiques football amateur Paris", "outil analyse tactique football IDF"],
     "metaTitle": "Analyse vidéo football amateur en Île-de-France | Insightball",
     "metaDescription": "Insightball, l'outil d'analyse vidéo des coachs franciliens. Heatmaps, statistiques joueurs, rapports tactiques PDF. Essai gratuit 7 jours."
@@ -82,7 +82,7 @@
     "ligue": "Ligue du Grand Est de Football",
     "clubs": 2400,
     "licencies": 165000,
-    "description": "La Ligue du Grand Est est née en 2016 de la fusion des ligues d'Alsace, de Champagne-Ardenne et de Lorraine, trois territoires avec chacun une histoire footballistique propre. Du District au National, ses championnats s'étendent de Strasbourg à Reims en passant par Metz et Mulhouse. Chaque semaine, des coachs préparent leurs équipes avec engagement, sans jamais disposer de données chiffrées sur leurs matchs. Insightball leur donne accès à ces données simplement.",
+    "description": "La Ligue du Grand Est est née en 2016 de la fusion des ligues d'Alsace, de Champagne-Ardenne et de Lorraine, trois territoires avec chacun une histoire footballistique propre. Du District au National, ses championnats s'étendent de Strasbourg à Reims en passant par Metz et Mulhouse. Chaque semaine, des coachs préparent leurs équipes avec engagement, sans jamais avoir de stats sur leurs matchs. Insightball leur donne accès à ces stats simplement.",
     "keywords": ["analyse vidéo football Grand Est", "statistiques football amateur Strasbourg Metz", "outil analyse match football Alsace Lorraine"],
     "metaTitle": "Analyse vidéo football amateur dans le Grand Est | Insightball",
     "metaDescription": "Analysez vos matchs avec Insightball dans le Grand Est. Heatmaps, statistiques joueurs, rapports PDF. Essai gratuit 7 jours."
@@ -93,7 +93,7 @@
     "ligue": "Ligue de Football de Normandie",
     "clubs": 1400,
     "licencies": 100000,
-    "description": "La Ligue de Football de Normandie résulte de la fusion en 2016 des ligues de Haute-Normandie et Basse-Normandie. Répartie sur cinq départements, de Rouen au Cotentin en passant par Caen, elle porte une tradition footballistique solide. Du District au National, les coachs normands s'investissent week-end après week-end sans disposer de données sur ce qui se passe sur leur terrain. Insightball leur fournit cette analyse à partir d'une vidéo de match.",
+    "description": "La Ligue de Football de Normandie résulte de la fusion en 2016 des ligues de Haute-Normandie et Basse-Normandie. Répartie sur cinq départements, de Rouen au Cotentin en passant par Caen, elle porte une tradition footballistique solide. Du District au National, les coachs normands s'investissent week-end après week-end sans avoir de stats sur ce qui se passe sur leur terrain. Insightball leur fournit cette analyse à partir d'une vidéo de match.",
     "keywords": ["analyse vidéo football Normandie", "statistiques football amateur Rouen Caen", "logiciel coach football amateur Normandie"],
     "metaTitle": "Analyse vidéo football amateur en Normandie | Insightball",
     "metaDescription": "Insightball aide les coachs normands à analyser leurs matchs. Heatmaps, stats joueurs, rapports tactiques. Essai gratuit 7 jours."
@@ -126,7 +126,7 @@
     "ligue": "Ligue de Football de Bourgogne-Franche-Comté",
     "clubs": 1100,
     "licencies": 82000,
-    "description": "La Ligue de Football de Bourgogne-Franche-Comté résulte de la fusion de deux ligues aux identités bien distinctes : Bourgogne, avec ses clubs autour de Dijon et Chalon-sur-Saône, et Franche-Comté, portée par Besançon et Belfort. Du District au National, les championnats sont disputés sur un territoire étendu. Les coachs de la région font face à des déplacements longs et des préparations intenses. Insightball leur donne les données pour optimiser leur travail.",
+    "description": "La Ligue de Football de Bourgogne-Franche-Comté résulte de la fusion de deux ligues aux identités bien distinctes : Bourgogne, avec ses clubs autour de Dijon et Chalon-sur-Saône, et Franche-Comté, portée par Besançon et Belfort. Du District au National, les championnats sont disputés sur un territoire étendu. Les coachs de la région font face à des déplacements longs et des préparations intenses. Insightball leur donne les stats pour optimiser leur travail.",
     "keywords": ["analyse vidéo football Bourgogne", "statistiques football amateur Dijon Besançon", "logiciel coach football Franche-Comté"],
     "metaTitle": "Analyse vidéo football amateur en Bourgogne-Franche-Comté | Insightball",
     "metaDescription": "Insightball, l'outil d'analyse des coachs en Bourgogne-Franche-Comté. Heatmaps, stats, rapports tactiques. Essai gratuit 7 jours."
