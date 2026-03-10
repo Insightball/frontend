@@ -1355,26 +1355,7 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* ══ CRÉDIBILITÉ ═══════════════════════════════ */}
-      <div style={{ background: G.off, borderTop: `1px solid ${G.border}`, borderBottom: `1px solid ${G.border}` }}>
-        <div className="wrap-inner" style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 48px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 40, flexWrap: 'wrap' }}>
-          <Reveal>
-            <div className="cred-bar" style={{ display: 'flex', alignItems: 'center', gap: 40, flexWrap: 'wrap', justifyContent: 'center' }}>
-              {[
-                { icon: '🇫🇷', text: t.cred1 },
-                { icon: '🔒', text: t.cred2 },
-                { icon: '⚽', text: t.cred3 },
-                { icon: '📊', text: t.cred4 },
-              ].map((item, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontSize: 18 }}>{item.icon}</span>
-                  <span style={{ fontFamily: G.mono, fontSize: 12, color: G.muted, letterSpacing: '.04em' }}>{item.text}</span>
-                </div>
-              ))}
-            </div>
-          </Reveal>
-        </div>
-      </div>
+
 
       {/* ══ CTA BAND ═══════════════════════════════════ */}
       <div className="cta-band" style={{ background: G.ink, padding: '80px 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 40, flexWrap: 'wrap' }}>
