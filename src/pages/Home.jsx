@@ -798,6 +798,8 @@ export default function LandingPage() {
       .trial-banner-items { flex-direction: column !important; gap: 8px !important; }
       .cred-bar     { flex-direction: column !important; gap: 16px !important; align-items: flex-start !important; }
       .trust-checks { flex-direction: column !important; gap: 10px !important; align-items: flex-start !important; }
+      .rapport-kpis { grid-template-columns: repeat(2,1fr) !important; }
+      .rapport-kpis > div { font-size: 28px !important; }
     }
     @media (max-width: 1024px) {
       .hero-mobile-mockup { display: block !important; }
@@ -1143,36 +1145,125 @@ export default function LandingPage() {
             </p>
           </Reveal>
 
-          {/* Stats individuelles uniquement — heatmap supprimée */}
+          {/* Mockup dashboard — aperçu réaliste du produit */}
           <Reveal>
-            <div style={{ background: G.white, border: `1px solid ${G.border}`, borderRadius: 8, overflow: 'hidden', boxShadow: '0 1px 6px rgba(0,0,0,0.05)' }}>
-              <div style={panelHd}><span>{t.rapportPanel}</span><b style={{ color: G.gold, fontWeight: 600 }}>{t.rapportPlayers}</b></div>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                  <tr style={{ background: G.off }}>
-                    {t.rapportCols.map(h => (
-                      <th key={h} style={{ fontFamily: G.mono, fontSize: 9, fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, padding: '8px 10px', textAlign: h===t.rapportCols[0]?'left':'center', borderBottom: `1px solid ${G.border}` }}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {PLAYERS.map(p => (
-                    <tr key={p.num} onMouseEnter={e => e.currentTarget.style.background=G.goldL} onMouseLeave={e => e.currentTarget.style.background='transparent'}>
-                      <td style={{ fontSize: 13, color: G.ink2, padding: '8px 10px', borderBottom: `1px solid ${G.border}`, verticalAlign: 'middle' }}>
-                        <span style={{ fontFamily: G.display, fontSize: 15, fontWeight: 700, color: G.gold, marginRight: 4 }}>{p.num}</span>
-                        {p.name}
-                        <span style={{ fontFamily: G.mono, fontSize: 9, background: G.off, border: `1px solid ${G.border}`, padding: '1px 5px', borderRadius: 2, marginLeft: 3, color: G.muted }}>{p.pos}</span>
-                      </td>
-                      {[p.passes, p.duels, p.buts, p.km].map((v,i) => (
-                        <td key={i} style={{ fontSize: 13, fontWeight: 600, color: G.ink2, padding: '8px 10px', textAlign: 'center', borderBottom: `1px solid ${G.border}` }}>{v}</td>
-                      ))}
-                    </tr>
+            <div style={{ background: G.white, border: `1px solid ${G.border}`, borderRadius: 8, overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
+
+              {/* Barre titre style app */}
+              <div style={{ background: G.ink, padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 8 }}>
+                {['#ef4444','#fbbf24','#4ade80'].map(c => <span key={c} style={{ width: 8, height: 8, borderRadius: '50%', background: c, opacity: 0.7 }}/>)}
+                <span style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(255,255,255,0.45)', marginLeft: 8, letterSpacing: '.06em' }}>insightball.com/dashboard</span>
+                <span style={{ marginLeft: 'auto', fontFamily: G.mono, fontSize: 8, letterSpacing: '.1em', textTransform: 'uppercase', padding: '3px 10px', background: 'rgba(201,162,39,0.15)', color: G.gold, border: '1px solid rgba(201,162,39,0.3)' }}>Match analysé</span>
+              </div>
+
+              {/* KPI Cards row */}
+              <div className="rapport-kpis" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 0, borderBottom: `1px solid ${G.border}` }}>
+                {[
+                  { label: 'Possession', value: '63%', accent: true },
+                  { label: 'Passes réussies', value: '88%', accent: false },
+                  { label: 'Pressing haut', value: '18', accent: false },
+                  { label: 'Distance totale', value: '108 km', accent: false },
+                ].map((kpi, i) => (
+                  <div key={kpi.label} style={{ padding: '18px 20px', borderRight: i < 3 ? `1px solid ${G.border}` : 'none', borderTop: `2px solid ${i === 0 ? G.gold : G.border}` }}>
+                    <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted, marginBottom: 8 }}>{kpi.label}</div>
+                    <div style={{ fontFamily: G.display, fontSize: 36, fontWeight: 800, lineHeight: 1, color: kpi.accent ? G.gold : G.ink }}>{kpi.value}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Courbe dynamique du match */}
+              <div style={{ padding: '20px 20px 12px', borderBottom: `1px solid ${G.border}` }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+                  <div style={{ width: 24, height: 24, background: G.goldL, border: `1px solid ${G.goldLx}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={G.gold} strokeWidth="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  </div>
+                  <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted }}>Dynamique du match</span>
+                  <span style={{ marginLeft: 'auto', fontFamily: G.mono, fontSize: 9, color: G.muted }}>0' → 90'</span>
+                </div>
+                <svg width="100%" height="120" viewBox="0 0 800 120" preserveAspectRatio="none" style={{ display: 'block' }}>
+                  <defs>
+                    <linearGradient id="rapportArea" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor={G.gold} stopOpacity="0.18" />
+                      <stop offset="100%" stopColor={G.gold} stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                  {[0,30,60,90,120].map(y => (
+                    <line key={y} x1="0" y1={y} x2="800" y2={y} stroke={G.border} strokeWidth="1" />
                   ))}
-                </tbody>
-              </table>
-              <div style={{ background: G.goldL, borderTop: `1px solid ${G.goldLx}`, padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-                <div style={{ fontSize: 14, color: G.muted }}>
-                  <strong style={{ color: G.ink, fontWeight: 600 }}>{t.rapportPdf}</strong> {t.rapportPdfSub}
+                  <line x1="400" y1="0" x2="400" y2="120" stroke={G.border} strokeWidth="1" strokeDasharray="4 3" />
+                  <path d="M 0 75 Q 60 55 120 62 T 240 48 T 360 58 T 480 42 T 600 50 T 720 38 T 800 45 L 800 120 L 0 120 Z" fill="url(#rapportArea)" />
+                  <path d="M 0 75 Q 60 55 120 62 T 240 48 T 360 58 T 480 42 T 600 50 T 720 38 T 800 45" fill="none" stroke={G.gold} strokeWidth="2.5" />
+                  <circle cx="480" cy="42" r="4" fill={G.gold} stroke={G.white} strokeWidth="2" />
+                  <text x="10" y="115" fill={G.muted} fontSize="9" fontFamily="'JetBrains Mono', monospace">0'</text>
+                  <text x="393" y="115" fill={G.muted} fontSize="9" fontFamily="'JetBrains Mono', monospace">MT</text>
+                  <text x="775" y="115" fill={G.muted} fontSize="9" fontFamily="'JetBrains Mono', monospace">90'</text>
+                </svg>
+              </div>
+
+              {/* Tableau joueurs amélioré */}
+              <div>
+                <div style={{ padding: '12px 20px', background: G.off, borderBottom: `1px solid ${G.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.muted }}>{t.rapportPanel}</span>
+                  <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', color: G.gold, fontWeight: 600 }}>{t.rapportPlayers}</span>
+                </div>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                  <thead>
+                    <tr style={{ background: G.off }}>
+                      {t.rapportCols.map(h => (
+                        <th key={h} style={{ fontFamily: G.mono, fontSize: 8, fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, padding: '8px 14px', textAlign: h===t.rapportCols[0]?'left':'center', borderBottom: `1px solid ${G.border}` }}>{h}</th>
+                      ))}
+                      <th style={{ fontFamily: G.mono, fontSize: 8, fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', color: G.muted, padding: '8px 14px', textAlign: 'center', borderBottom: `1px solid ${G.border}` }}>Forme</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {PLAYERS.map((p, idx) => (
+                      <tr key={p.num}
+                        style={{ transition: 'background .12s' }}
+                        onMouseEnter={e => e.currentTarget.style.background = G.goldL}
+                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                        <td style={{ fontSize: 13, color: G.ink2, padding: '10px 14px', borderBottom: `1px solid ${G.border}`, verticalAlign: 'middle' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <div style={{ width: 28, height: 28, background: G.goldL, border: `1px solid ${G.goldLx}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                              <span style={{ fontFamily: G.display, fontSize: 13, fontWeight: 800, color: G.gold }}>{p.num}</span>
+                            </div>
+                            <div>
+                              <div style={{ fontFamily: G.body, fontSize: 13, fontWeight: 500, color: G.ink }}>{p.name}</div>
+                              <span style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.08em', padding: '1px 6px', background: G.off, border: `1px solid ${G.border}`, color: G.muted }}>{p.pos}</span>
+                            </div>
+                          </div>
+                        </td>
+                        {[p.passes, p.duels, p.buts, p.km].map((v,i) => (
+                          <td key={i} style={{ fontFamily: G.mono, fontSize: 13, fontWeight: 600, color: G.ink2, padding: '10px 14px', textAlign: 'center', borderBottom: `1px solid ${G.border}` }}>{v}</td>
+                        ))}
+                        <td style={{ padding: '10px 14px', textAlign: 'center', borderBottom: `1px solid ${G.border}` }}>
+                          <svg width="48" height="20" viewBox="0 0 48 20">
+                            <polyline
+                              points={[
+                                [0, idx % 2 === 0 ? 16 : 12],
+                                [12, idx % 2 === 0 ? 10 : 14],
+                                [24, idx % 2 === 0 ? 12 : 8],
+                                [36, idx % 2 === 0 ? 6 : 10],
+                                [48, idx % 2 === 0 ? 4 : 6],
+                              ].map(([x,y]) => `${x},${y}`).join(' ')}
+                              fill="none"
+                              stroke={idx < 3 ? '#22c55e' : G.gold}
+                              strokeWidth="1.5"
+                            />
+                          </svg>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Footer barre */}
+              <div style={{ background: G.goldL, borderTop: `1px solid ${G.goldLx}`, padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={G.gold} strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <div style={{ fontSize: 14, color: G.muted }}>
+                    <strong style={{ color: G.ink, fontWeight: 600 }}>{t.rapportPdf}</strong> {t.rapportPdfSub}
+                  </div>
                 </div>
                 <a href="#waitlist" style={{ ...btnPrimary, padding: '8px 18px', fontSize: 12, borderRadius: 4, flexShrink: 0, textDecoration:'none' }}
                   onMouseEnter={e => e.currentTarget.style.background = G.goldD}
@@ -1385,7 +1476,7 @@ export default function LandingPage() {
               </span>
             </div>
             <p style={{ fontFamily: G.mono, fontSize: 11, color: G.gold, marginBottom: 14, letterSpacing: '.04em' }}>
-              Tes stats. Ton terrain.
+              La data football pour tous
             </p>
             <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
               {[
