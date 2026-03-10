@@ -941,7 +941,8 @@ export default function LandingPage() {
               {t.heroTitle2}<br/>
               <span style={{ color: G.gold }}>{t.heroTitle3}</span>
             </h1>
-              {t.heroSub}<strong style={{ color: G.ink, fontWeight: 500 }}>{t.heroSubBold}</strong>{t.heroSubEnd}
+            <p style={{ fontSize: 18, lineHeight: 1.65, color: G.muted, maxWidth: 440, marginBottom: 36, opacity: 0, animation: 'heroUp .5s .35s forwards' }}>
+              {t.heroSub}
             </p>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', opacity: 0, animation: 'heroUp .5s .45s forwards' }}>
               <a href="#waitlist" style={{ ...btnPrimary, textDecoration:'none' }}
