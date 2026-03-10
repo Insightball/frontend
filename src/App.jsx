@@ -32,6 +32,7 @@ const PlayerProfile     = lazy(() => import('./pages/PlayerProfile'))
 const ProjetDeJeu       = lazy(() => import('./pages/ProjetDeJeu'))
 const RegionPage        = lazy(() => import('./pages/RegionPage'))
 const APropos           = lazy(() => import('./pages/APropos'))
+const Tarifs            = lazy(() => import('./pages/Tarifs'))
 
 // Pages légales
 const MentionsLegales          = lazy(() => import('./pages/MentionsLegales'))
@@ -98,6 +99,9 @@ function App() {
 
             {/* À propos */}
             <Route path="/a-propos" element={<APropos />} />
+
+            {/* Tarifs */}
+            <Route path="/tarifs" element={<Tarifs />} />
 
             {/* Pages territoire SEO */}
             <Route path="/football/:slug" element={<RegionPage />} />

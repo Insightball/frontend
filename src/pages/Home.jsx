@@ -783,7 +783,7 @@ export default function LandingPage() {
     @media (max-width: 768px) {
       .nav-links, .nav-cta-d, .nav-lang { display: none !important; }
       .nav-burger   { display: flex !important; }
-      .hero-grid    { padding: 80px 20px 40px !important; min-height: unset !important; }
+      .hero-grid    { padding: 72px 20px 32px !important; min-height: unset !important; }
       .hero-title   { font-size: clamp(36px,10vw,58px) !important; }
       .sec-h2       { font-size: clamp(28px,7vw,42px) !important; }
       .wrap, .wrap-inner { padding: 56px 20px !important; }
@@ -876,7 +876,7 @@ export default function LandingPage() {
         </Link>
 
         <div className="nav-links" style={{ display: 'flex', gap: 28, alignItems: 'center' }}>
-          {[['#features',t.navFeatures],['#pricing',t.navPricing],['#waitlist',t.navEarlyAccess],['/blog/',t.navBlog]].map(([h,l]) => (
+          {[['#features',t.navFeatures],['/tarifs',t.navPricing],['#waitlist',t.navEarlyAccess],['/blog/',t.navBlog]].map(([h,l]) => (
             <a key={h} href={h} style={{ fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.65)', textDecoration: 'none', transition: 'color .15s' }}
               onMouseEnter={e => e.currentTarget.style.color = G.gold}
               onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.65)'}>{l}</a>
@@ -915,7 +915,7 @@ export default function LandingPage() {
 
       {menuOpen && (
         <div style={{ position: 'fixed', top: 60, left: 0, right: 0, zIndex: 199, background: G.ink, borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '16px 24px 20px', display: 'flex', flexDirection: 'column' }}>
-          {[['#features',t.navFeatures],['#pricing',t.navPricing],['#waitlist',t.navEarlyAccess],['/blog/',t.navBlog]].map(([h,l]) => (
+          {[['#features',t.navFeatures],['/tarifs',t.navPricing],['#waitlist',t.navEarlyAccess],['/blog/',t.navBlog]].map(([h,l]) => (
             <a key={h} href={h} onClick={() => setMenuOpen(false)} style={{ fontSize: 15, fontWeight: 500, color: 'rgba(255,255,255,0.75)', textDecoration: 'none', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>{l}</a>
           ))}
           <div style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
@@ -960,8 +960,8 @@ export default function LandingPage() {
             <HeroAnimation />
           </div>
         </div>
-        <div className="hero-mobile-mockup" style={{ display: 'none', padding: '0 16px 56px' }}>
-          <MockupRapport mobile t={t}/>
+        <div className="hero-mobile-mockup" style={{ display: 'none', padding: '0 16px 40px' }}>
+          <HeroAnimation />
         </div>
       </div>
 
@@ -1184,132 +1184,8 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* ══ PRICING ════════════════════════════════════ */}
-      <div id="pricing" style={{ background: G.off }}>
-        <div className="wrap-inner" style={{ maxWidth: 1200, margin: '0 auto', padding: '96px 48px' }}>
-          <Reveal>
-            <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ width: 18, height: 1.5, background: G.gold }}/>{t.priceLabel}
-            </div>
-            <h2 className="sec-h2" style={{ fontFamily: G.display, fontSize: 'clamp(34px,4vw,54px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.ink, marginBottom: 16 }}>
-              {t.priceTitle1}<br/><span style={{ color: G.gold }}>{t.priceTitle2}</span>
-            </h2>
-            <p style={{ fontSize: 17, color: G.muted, lineHeight: 1.65, maxWidth: 480, marginBottom: 32 }}>
-              {t.priceSub}
-            </p>
-
-            {/* ── Bandeau trial ── */}
-            <div className="trial-banner" style={{ display: 'inline-flex', alignItems: 'center', gap: 16, background: G.ink, border: `1.5px solid ${G.gold}`, borderRadius: 6, padding: '14px 24px', marginBottom: 48 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ width: 8, height: 8, background: G.gold, borderRadius: '50%', flexShrink: 0, boxShadow: `0 0 0 3px rgba(201,162,39,0.25)` }}/>
-                <span style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: G.gold }}>{t.priceBannerLabel}</span>
-              </div>
-              <div className="trial-banner-sep" style={{ width: 1, height: 20, background: 'rgba(201,162,39,0.3)' }}/>
-              <div className="trial-banner-items" style={{ display: 'flex', gap: 20 }}>
-                {[t.priceBanner1, t.priceBanner2, t.priceBanner3].map((txt, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <span style={{ color: G.gold, fontSize: 13 }}>✓</span>
-                    <span style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(255,255,255,0.75)', letterSpacing: '.04em' }}>{txt}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Reveal>
-
-          <div className="price-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, maxWidth: 940, alignItems: 'start' }}>
-
-            {/* ── COACH ── */}
-            <Reveal delay={0}>
-              <div style={{ background: G.white, border: `1.5px solid ${G.border}`, borderRadius: 8, padding: '36px 32px', transition: 'box-shadow .2s' }}
-                onMouseEnter={e => e.currentTarget.style.boxShadow = '0 8px 40px rgba(0,0,0,0.08)'}
-                onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>
-                <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted, marginBottom: 6 }}>{t.coachFor}</div>
-                <div style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', color: G.ink, marginBottom: 4 }}>{t.coachName}</div>
-                {/* Badge trial */}
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: G.goldL, border: `1px solid ${G.goldLx}`, borderRadius: 4, padding: '5px 12px', marginBottom: 16 }}>
-                  <span style={{ width: 6, height: 6, background: G.gold, borderRadius: '50%' }}/>
-                  <span style={{ fontFamily: G.mono, fontSize: 10, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: G.gold }}>{t.coachBadge}</span>
-                </div>
-                <div style={{ fontSize: 14, color: G.muted, marginBottom: 20, lineHeight: 1.55 }}>
-                  {t.coachDesc}
-                </div>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 6 }}>
-                  <span style={{ fontFamily: G.display, fontSize: 68, fontWeight: 800, lineHeight: 1, color: G.ink }}>39</span>
-                  <span style={{ fontSize: 15, color: G.muted }}>€ / mois</span>
-                </div>
-                <p style={{ fontSize: 12, color: G.muted, marginBottom: 24, fontFamily: G.mono, letterSpacing: '.04em' }}>{t.coachAfter}</p>
-                <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 32 }}>
-                  {t.coachItems.map(item => (
-                    <li key={item} style={{ fontSize: 14, color: G.ink2, display: 'flex', alignItems: 'flex-start', gap: 9, lineHeight: 1.5 }}>
-                      <span style={{ color: G.gold, fontWeight: 700, flexShrink: 0 }}>✓</span>{item}
-                    </li>
-                  ))}
-                </ul>
-                <a href="#waitlist" style={{ display: 'block', width: '100%', padding: 14, fontFamily: G.display, fontSize: 15, fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase', textAlign: 'center', textDecoration: 'none', borderRadius: 4, transition: 'all .15s', background: G.gold, color: G.ink, border: 'none', boxSizing: 'border-box' }}
-                  onMouseEnter={e => e.currentTarget.style.background = G.goldD}
-                  onMouseLeave={e => e.currentTarget.style.background = G.gold}>
-                  {t.coachCta}
-                </a>
-              </div>
-            </Reveal>
-
-            {/* ── CLUB ── */}
-            <Reveal delay={0.1}>
-              <div style={{ background: G.ink, border: `1.5px solid ${G.gold}`, borderRadius: 8, padding: '36px 32px', boxShadow: '0 8px 48px rgba(201,162,39,0.15)', boxSizing: 'border-box' }}>
-                <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, marginBottom: 6 }}>{t.clubFor}</div>
-                <div style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', color: G.white, marginBottom: 4 }}>{t.clubName}</div>
-                <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', marginBottom: 20, lineHeight: 1.6 }}>
-                  {t.clubDesc}
-                </div>
-                <div style={{ marginBottom: 28 }}>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 6 }}>
-                    <span style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(255,255,255,0.35)', letterSpacing: '.1em', textTransform: 'uppercase' }}>{t.clubFrom}</span>
-                    <span style={{ fontFamily: G.display, fontSize: 52, fontWeight: 800, lineHeight: 1, color: G.white }}>99</span>
-                    <span style={{ fontSize: 15, color: 'rgba(255,255,255,0.40)' }}>€ / mois</span>
-                  </div>
-                  <p style={{ fontFamily: G.mono, fontSize: 11, color: 'rgba(255,255,255,0.35)', letterSpacing: '.04em', margin: 0 }}>{t.clubAdapted}</p>
-                </div>
-
-                {/* 2 blocs valeur */}
-                <div style={{ marginBottom: 24 }}>
-                  <div style={{ padding: '13px 15px', background: 'rgba(201,162,39,0.10)', border: '1px solid rgba(201,162,39,0.20)', borderRadius: 6 }}>
-                    <div style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', color: G.gold, marginBottom: 5 }}>👁 {t.clubVis}</div>
-                    <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', lineHeight: 1.6 }}>
-                      {t.clubVisDesc}
-                    </div>
-                  </div>
-                </div>
-
-                <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 32 }}>
-                  {t.clubItems.map(item => (
-                    <li key={item} style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', display: 'flex', alignItems: 'flex-start', gap: 9, lineHeight: 1.5 }}>
-                      <span style={{ color: G.gold, fontWeight: 700, flexShrink: 0 }}>✓</span>{item}
-                    </li>
-                  ))}
-                </ul>
-
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', fontFamily: G.mono, letterSpacing: '.04em', marginBottom: 16, textAlign: 'center' }}>
-                  {t.clubDemo}
-                </div>
-                <a href="#contact" style={{ display: 'block', width: '100%', padding: 14, fontFamily: G.display, fontSize: 15, fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase', textAlign: 'center', textDecoration: 'none', borderRadius: 4, transition: 'background .15s', background: G.gold, color: G.ink, boxSizing: 'border-box' }}
-                  onMouseEnter={e => e.currentTarget.style.background = G.goldD}
-                  onMouseLeave={e => e.currentTarget.style.background = G.gold}>
-                  {t.clubCta}
-                </a>
-              </div>
-            </Reveal>
-
-          </div>
-
-          <Reveal delay={0.2}>
-            <p style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, marginTop: 28, maxWidth: 940 }}>
-              {t.priceFooter}
-            </p>
-          </Reveal>
-
-        </div>
-      </div>
-
+      {/* ══ PRICING → /tarifs ══════════════════════════ */}
+      {/* Section retirée de la landing — page dédiée /tarifs */}
 
       {/* ══ WAITLIST ═══════════════════════════════════ */}
       <div id="waitlist" style={{ background: G.ink }}>
