@@ -1,0 +1,2 @@
+import{a as s}from"./index-CZtYmeyj.js";const t="/players/",o={async getPlayers(e={}){const a=new URLSearchParams(e);return(await s.get(`${t}?${a}`)).data},async getPlayer(e){return(await s.get(`${t}${e}`)).data},async getPlayerStats(e){return(await s.get(`${t}${e}/stats`)).data},async createPlayer(e){return(await s.post(t,e)).data},async updatePlayer(e,a){return(await s.patch(`${t}${e}`,a)).data},async deletePlayer(e){return(await s.delete(`${t}${e}`)).data}};export{o as p};
+//# sourceMappingURL=playerService--4H_tKLK.js.map

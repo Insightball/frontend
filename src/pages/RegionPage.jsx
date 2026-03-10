@@ -111,8 +111,8 @@ export default function RegionPage() {
             INSIGHT<span style={{ color: G.gold }}>ball</span>
           </span>
         </Link>
-        <Link
-          to="/x-portal-7f2a/signup"
+        <a
+          href="/#waitlist"
           style={{
             padding: '9px 20px', background: G.gold, color: G.white,
             fontFamily: G.display, fontSize: 14, fontWeight: 700,
@@ -124,7 +124,7 @@ export default function RegionPage() {
           onMouseLeave={e => e.currentTarget.style.background = G.gold}
         >
           Essai gratuit 7 jours
-        </Link>
+        </a>
       </nav>
 
       {/* ══ HERO ══ */}
@@ -157,8 +157,8 @@ export default function RegionPage() {
           Du District au National, vous filmez le match avec votre téléphone. Insightball transforme cette vidéo en données concrètes sur votre équipe et vos joueurs.
         </p>
 
-        <Link
-          to="/x-portal-7f2a/signup"
+        <a
+          href="/#waitlist"
           style={{
             padding: '16px 36px', background: G.gold, color: G.white,
             fontFamily: G.display, fontSize: 16, fontWeight: 700,
@@ -170,7 +170,7 @@ export default function RegionPage() {
           onMouseLeave={e => e.currentTarget.style.background = G.gold}
         >
           Démarrer l'essai gratuit →
-        </Link>
+        </a>
 
         <p style={{
           fontFamily: G.mono, fontSize: 11, color: 'rgba(255,255,255,0.3)',
@@ -303,8 +303,8 @@ export default function RegionPage() {
               Insightball c'est un outil construit pour les coachs et dirigeants du football amateur. On transforme vos vidéos de match en données exploitables. Vous gardez le contrôle, on vous donne les arguments data pour coacher mieux.
             </p>
           </div>
-          <Link
-            to="/x-portal-7f2a/signup"
+          <a
+            href="/#waitlist"
             style={{
               padding: '14px 28px', background: G.gold, color: G.white,
               fontFamily: G.display, fontSize: 15, fontWeight: 700,
@@ -316,7 +316,7 @@ export default function RegionPage() {
             onMouseLeave={e => e.currentTarget.style.background = G.gold}
           >
             Essayer gratuitement →
-          </Link>
+          </a>
         </div>
       </section>
 
@@ -328,8 +328,8 @@ export default function RegionPage() {
         <p style={{ fontFamily: G.body, fontSize: 16, color: G.muted, marginBottom: 36 }}>
           7 jours gratuits. 1 match analysé offert. Sans engagement.
         </p>
-        <Link
-          to="/x-portal-7f2a/signup"
+        <a
+          href="/#waitlist"
           style={{
             padding: '16px 40px', background: G.gold, color: G.white,
             fontFamily: G.display, fontSize: 16, fontWeight: 700,
@@ -341,7 +341,7 @@ export default function RegionPage() {
           onMouseLeave={e => e.currentTarget.style.background = G.gold}
         >
           Démarrer l'essai gratuit →
-        </Link>
+        </a>
       </section>
 
       {/* ══ FOOTER ══ */}
