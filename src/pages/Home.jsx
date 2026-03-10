@@ -1548,7 +1548,7 @@ export default function LandingPage() {
           </div>
           {[
             { title:t.footProduit, links:[['#features',t.footFeatures],['#pricing',t.footPricing],['#rapport',t.footRapport],['#waitlist',t.footEarly]] },
-            { title:t.footEntreprise, links:[['#contact',t.footContact],['mailto:contact@insightball.com',t.footSupport],['/blog/',t.footBlog]] },
+            { title:t.footEntreprise, links:[['#contact',t.footContact],['mailto:contact@insightball.com',t.footSupport],['/a-propos','À propos'],['/blog/',t.footBlog]] },
             { title:t.footLegal, links:[['/mentions-legales',t.footMentions],['/cgv',t.footCGV],['/confidentialite',t.footConf],['/cookies',t.footCookies]] },
           ].map(col => (
             <div key={col.title}>
