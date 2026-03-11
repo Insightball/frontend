@@ -4,7 +4,8 @@ import { T, globalStyles } from '../theme'
 import CalendrierSaison from '../components/CalendrierSaison'
 import exercicesData from '../data/exercises_database.json'
 
-const API = import.meta.env.VITE_API_URL || 'https://backend-pued.onrender.com/api'
+const _base = import.meta.env.VITE_API_URL || 'https://backend-pued.onrender.com'
+const API = _base.endsWith('/api') ? _base : `${_base}/api`
 function authH() {
   return { Authorization: `Bearer ${localStorage.getItem('insightball_token')}`, 'Content-Type': 'application/json' }
 }
