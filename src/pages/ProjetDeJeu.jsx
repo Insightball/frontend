@@ -212,7 +212,41 @@ function PrincipeCard({p,sel,onToggle}){return(
 )}
 
 /* ═══════════════════════════════
-   COMPOSANTS SÉANCE — NOUVEAU
+   ZONES TERRAIN
+═══════════════════════════════ */
+const ZONES_TERRAIN = {
+  plein:         { label:'Terrain complet',    z:[0,0,100,100] },
+  trois_quarts:  { label:'¾ terrain',          z:[0,0,100,75] },
+  demi:          { label:'Demi-terrain',        z:[0,0,100,50] },
+  quart:         { label:'Quart terrain',       z:[0,0,50,50] },
+  surface:       { label:'Surface',             z:[20,0,60,25] },
+  couloir:       { label:'Couloir central',     z:[15,10,70,80] },
+  largeur:       { label:'Toute la largeur',    z:[0,25,100,50] },
+  reduite:       { label:'Zone réduite',        z:[30,30,40,40] },
+}
+
+function ZoneIndicator({zoneKey}){
+  const z = ZONES_TERRAIN[zoneKey]
+  if(!z) return null
+  const [x,y,w,h] = z.z
+  return(
+    <div style={{display:'flex',alignItems:'center',gap:6}}>
+      <svg width="38" height="54" viewBox="0 0 100 140" style={{border:'1px solid #3a7a33',background:'#2d5a27'}}>
+        <rect x="2" y="2" width="96" height="136" fill="none" stroke="white" strokeWidth="1.5" opacity="0.25" rx="1"/>
+        <line x1="2" y1="70" x2="98" y2="70" stroke="white" strokeWidth="1" opacity="0.18"/>
+        <circle cx="50" cy="70" r="14" fill="none" stroke="white" strokeWidth="0.8" opacity="0.12"/>
+        <rect x="25" y="2" width="50" height="20" fill="none" stroke="white" strokeWidth="0.8" opacity="0.12"/>
+        <rect x="25" y="118" width="50" height="20" fill="none" stroke="white" strokeWidth="0.8" opacity="0.12"/>
+        <rect x={x*.96+2} y={y*1.36+2} width={w*.96} height={h*1.36} fill={G.gold} opacity="0.35" rx="2"/>
+        <rect x={x*.96+2} y={y*1.36+2} width={w*.96} height={h*1.36} fill="none" stroke={G.gold} strokeWidth="1.5" rx="2"/>
+      </svg>
+      <span style={{fontFamily:G.mono,fontSize:7,color:G.gold,fontWeight:600,letterSpacing:'.04em'}}>{z.label}</span>
+    </div>
+  )
+}
+
+/* ═══════════════════════════════
+   COMPOSANTS SÉANCE
 ═══════════════════════════════ */
 
 function IntensityBar({level}){
@@ -258,9 +292,13 @@ function ExerciceCard({ex,isOpen,onToggle,onAdd,inSession,sessionFull}){
       </div>
       {isOpen && (
         <div style={{padding:'0 12px 12px',borderTop:`1px solid ${G.rule}`}}>
-          <div style={{marginTop:8}}>
-            <div style={{fontFamily:G.mono,fontSize:7,letterSpacing:'.12em',textTransform:'uppercase',color:dc,marginBottom:3}}>Objectif</div>
-            <p style={{fontFamily:G.mono,fontSize:9,color:G.ink2,lineHeight:1.55,margin:0}}>{ex.objectif}</p>
+          {/* Zone terrain + Objectif */}
+          <div style={{marginTop:8,display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:12}}>
+            <div style={{flex:1}}>
+              <div style={{fontFamily:G.mono,fontSize:7,letterSpacing:'.12em',textTransform:'uppercase',color:dc,marginBottom:3}}>Objectif</div>
+              <p style={{fontFamily:G.mono,fontSize:9,color:G.ink2,lineHeight:1.55,margin:0}}>{ex.objectif}</p>
+            </div>
+            {ex.zone && <ZoneIndicator zoneKey={ex.zone}/>}
           </div>
           <div style={{marginTop:8,background:G.goldBg,border:`1px solid ${G.goldBdr}`,padding:'7px 9px'}}>
             <div style={{fontFamily:G.mono,fontSize:7,letterSpacing:'.12em',textTransform:'uppercase',color:G.muted,marginBottom:3}}>Mise en place</div>
@@ -432,14 +470,25 @@ export default function ProjetDeJeu(){
     ;(async()=>{
       try{
         const res=await fetch(`${API}/game-plan`,{headers:authH()})
-        if(res.ok&&!cancelled){const p=await safeJson(res)
+        if(res.ok&&!cancelled){
+          const p=await safeJson(res)
           if(p&&p.id){
-            setFormation(p.formation||'4-3-3');setCategorie(p.category||'Seniors')
-            setSel(p.principles||[]);setJours(p.training_days||['mardi','jeudi'])
-            setHoraire(p.training_time||'19:00');setDateReprise(p.start_date||'')
-            setWeekThemes(p.programming||{});setProjetSaved(true)
-          }}
-      }catch(e){console.error(e)}
+            setFormation(p.formation||'4-3-3')
+            setCategorie(p.category||'Seniors')
+            setSel(Array.isArray(p.principles)?p.principles:[])
+            setJours(Array.isArray(p.training_days)?p.training_days:['mardi','jeudi'])
+            setHoraire(p.training_time||'19:00')
+            // start_date peut arriver comme "2026-08-01" ou "2026-08-01T00:00:00" — on garde juste la date
+            const sd = p.start_date ? String(p.start_date).slice(0,10) : ''
+            setDateReprise(sd)
+            setWeekThemes(p.programming&&typeof p.programming==='object'?p.programming:{})
+            // Ne marquer comme sauvé que si les données sont suffisantes
+            if(sd && Array.isArray(p.principles) && p.principles.length>=3){
+              setProjetSaved(true)
+            }
+          }
+        }
+      }catch(e){console.error('Erreur chargement projet:',e)}
       finally{if(!cancelled)setLoadingPlan(false)}
     })()
     return()=>{cancelled=true}
@@ -447,12 +496,18 @@ export default function ProjetDeJeu(){
 
   const saveProjet=async()=>{
     try{
-      await fetch(`${API}/game-plan`,{method:'PUT',headers:authH(),
+      const res = await fetch(`${API}/game-plan`,{method:'PUT',headers:authH(),
         body:JSON.stringify({formation,category:categorie,principles:sel,
           training_days:jours,training_time:horaire,start_date:dateReprise||null,
           programming:weekThemes})})
+      if(!res.ok){
+        const err = await res.text().catch(()=>'')
+        console.error('Erreur sauvegarde projet:',res.status,err)
+        return false
+      }
       setProjetSaved(true)
-    }catch(e){console.error(e)}
+      return true
+    }catch(e){console.error('Erreur réseau sauvegarde:',e);return false}
   }
 
   const toggle=id=>setSel(p=>p.includes(id)?p.filter(x=>x!==id):p.length>=5?p:[...p,id])
@@ -564,7 +619,7 @@ export default function ProjetDeJeu(){
               {PROG.map((p,i)=><PeriodCard key={i} p={p} sd={periodDates[i]}/>)}
               <div style={{display:'flex',gap:8,marginTop:16}}>
                 <button onClick={()=>setStep(0)} style={{flex:1,padding:'10px',background:'transparent',border:`1px solid ${G.rule}`,fontFamily:G.mono,fontSize:9,textTransform:'uppercase',color:G.muted,cursor:'pointer'}}>← Modifier</button>
-                <button onClick={()=>{saveProjet();setStep(2)}} style={{flex:2,padding:'10px',background:G.gold,border:'none',fontFamily:G.display,fontSize:13,textTransform:'uppercase',color:'#0f0f0d',cursor:'pointer'}}>Enregistrer et préparer une séance →</button>
+                <button onClick={async()=>{const ok=await saveProjet();if(ok)setStep(2)}} style={{flex:2,padding:'10px',background:G.gold,border:'none',fontFamily:G.display,fontSize:13,textTransform:'uppercase',color:'#0f0f0d',cursor:'pointer'}}>Enregistrer et préparer une séance →</button>
               </div>
             </div>}
           </>
