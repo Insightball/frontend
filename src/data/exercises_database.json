@@ -1,0 +1,2145 @@
+{
+  "version": "2.0",
+  "last_updated": "2026-03-12",
+  "lot": 1,
+  "total": 50,
+  "exercices": [
+    {
+      "id": "ech_001",
+      "nom": "Rondo positionnel 5c2 progressif",
+      "domaine": "tactique_offensive",
+      "sous_theme": "Conservation",
+      "type": "echauffement",
+      "zone": "reduite",
+      "objectif": "Échauffer avec ballon en travaillant la conservation sous pression, la prise d'information et l'accélération du tempo de passe.",
+      "mise_en_place": {
+        "dimensions": "10m × 10m",
+        "organisation": "5 joueurs sur les côtés du carré, 2 presseurs au centre. Le joueur qui perd le ballon remplace un presseur."
+      },
+      "deroulement": "Phase 1 (4 min) : touches libres. Phase 2 (4 min) : 2 touches max. Phase 3 (4 min) : 1 touche obligatoire. 10 passes consécutives = presseurs font 5 pompes.",
+      "coaching": [
+        "Bouger en permanence sans ballon pour créer des angles de passe",
+        "Recevoir avec le corps ouvert, orienté vers le jeu, jamais face au passeur",
+        "En 1 touche : tout se joue avant la réception — regarder où passer avant que le ballon arrive"
+      ],
+      "materiel": [
+        "4 plots",
+        "Ballons"
+      ],
+      "j_min": 7,
+      "j_max": 12,
+      "duree": 12,
+      "cats": [
+        "U14",
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "faible",
+      "variantes": [
+        "Élargir en 8c3 (15m) pour intégrer des transversales",
+        "Imposer que chaque joueur touche le ballon avant de valider le point"
+      ]
+    },
+    {
+      "id": "ech_002",
+      "nom": "Jeu des couleurs 4c4+4 neutres",
+      "domaine": "tactique_offensive",
+      "sous_theme": "Conservation",
+      "type": "echauffement",
+      "zone": "reduite",
+      "objectif": "Activation cardio et cognitive avec prise d'information rapide et changement de partenaire selon la consigne du coach.",
+      "mise_en_place": {
+        "dimensions": "20m × 20m",
+        "organisation": "3 équipes de 4 en chasubles (3 couleurs). 2 équipes jouent ensemble contre la 3e (8c4). Le coach annonce quelle couleur passe en défense."
+      },
+      "deroulement": "Les 2 équipes associées conservent le ballon en 2 touches max. Quand le coach crie une couleur, cette équipe passe immédiatement en défense et l'ancienne équipe défensive rejoint les attaquants. Transition rapide : les joueurs doivent identifier instantanément leur nouveau rôle. 3 min par rotation, 4 rotations.",
+      "coaching": [
+        "Au changement de rôle, les nouveaux défenseurs doivent presser immédiatement, pas attendre",
+        "Les nouveaux attaquants s'écartent pour offrir de la largeur dès qu'ils passent en conservation",
+        "Toujours lever la tête pour identifier la couleur qui défend — ne pas jouer les yeux baissés"
+      ],
+      "materiel": [
+        "Plots",
+        "Chasubles 3 couleurs",
+        "Ballons"
+      ],
+      "j_min": 12,
+      "j_max": 16,
+      "duree": 12,
+      "cats": [
+        "U14",
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "faible",
+      "variantes": [
+        "Passer en 1 touche pour les attaquants",
+        "Le coach crie 2 couleurs : les 2 passent en défense, 4c8 pendant 10 secondes"
+      ]
+    },
+    {
+      "id": "ech_003",
+      "nom": "Possession 3 zones avec progression",
+      "domaine": "tactique_offensive",
+      "sous_theme": "Construction",
+      "type": "echauffement",
+      "zone": "demi",
+      "objectif": "Échauffement collectif en travaillant la circulation de balle et la progression zone par zone, du gardien vers l'attaque.",
+      "mise_en_place": {
+        "dimensions": "40m × 30m divisé en 3 zones de 13m",
+        "organisation": "4c2 en zone 1 (construction), 3c3 en zone 2 (milieu), 2c2 en zone 3 (finition). Les joueurs restent dans leur zone."
+      },
+      "deroulement": "L'équipe en possession construit depuis la zone 1 (4c2, surnombre confortable). Quand une passe traverse vers la zone 2, les milieux doivent trouver une solution pour progresser en zone 3 (3c3). En zone 3, les 2 attaquants doivent combiner pour marquer en stop-ball sur la ligne de fond. Si perte, l'autre équipe repart de sa zone 1. Rotation des zones toutes les 4 min.",
+      "coaching": [
+        "En zone 1, patience : ne pas forcer la passe vers la zone 2 tant que la ligne de passe n'est pas ouverte",
+        "En zone 2, se montrer entre les lignes pour recevoir — proposer des solutions au porteur",
+        "En zone 3, jeu rapide en 1-2 touches — le temps de décision doit être court face à la pression"
+      ],
+      "materiel": [
+        "Coupelles (3 zones)",
+        "Chasubles",
+        "Ballons"
+      ],
+      "j_min": 14,
+      "j_max": 18,
+      "duree": 15,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "faible",
+      "variantes": [
+        "Les joueurs de zone 1 peuvent accompagner en zone 2 (1 joueur monte)",
+        "Ajouter un GB en zone 1 qui relance le jeu"
+      ]
+    },
+    {
+      "id": "ech_004",
+      "nom": "Toro 4c1 en losange",
+      "domaine": "technique",
+      "sous_theme": "Passes courtes",
+      "type": "echauffement",
+      "zone": "reduite",
+      "objectif": "Échauffer les appuis et la qualité de passe courte dans un espace réduit avec un seul presseur.",
+      "mise_en_place": {
+        "dimensions": "6m × 6m (carré serré)",
+        "organisation": "4 joueurs aux 4 coins du losange, 1 presseur au centre. Rotation : celui qui perd le ballon prend la place du presseur."
+      },
+      "deroulement": "Conservation en 2 touches max. Le presseur essaie d'intercepter ou de forcer une passe hors du losange. Séries de 2 min. Si 15 passes consécutives, le presseur fait 3 pompes. Variante progressive : passer en 1 touche après 4 min d'échauffement.",
+      "coaching": [
+        "Passes au sol tendues, jamais de passe molle qui laisse le temps au presseur de couper",
+        "Anticiper : le receveur doit déjà savoir où il passe avant de recevoir le ballon",
+        "Le presseur travaille ses appuis : rester sur les pointes de pieds, pas à plat"
+      ],
+      "materiel": [
+        "4 plots",
+        "Ballons"
+      ],
+      "j_min": 5,
+      "j_max": 15,
+      "duree": 10,
+      "cats": [
+        "U14",
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "faible",
+      "variantes": [
+        "Passer en 5c2 (même losange, 2 presseurs)",
+        "Le joueur au centre peut marquer un point en jouant un petit pont"
+      ]
+    },
+    {
+      "id": "ech_005",
+      "nom": "Activation physique avec ballon",
+      "domaine": "physique_integre",
+      "sous_theme": "Coordination",
+      "type": "echauffement",
+      "zone": "reduite",
+      "objectif": "Activation musculaire et articulaire progressive en intégrant le ballon pour rester spécifique football dès l'échauffement.",
+      "mise_en_place": {
+        "dimensions": "20m × 15m",
+        "organisation": "1 ballon pour 2 joueurs, face à face à 5m de distance. Travail en miroir."
+      },
+      "deroulement": "Phase 1 (3 min) : échanges au sol, contrôle-passe, en marchant puis en trottinant. Phase 2 (3 min) : passes en mouvement latéral (pas chassés), le duo avance et recule ensemble. Phase 3 (3 min) : jongles à 2 (cuisse-pied, poitrine-pied), le partenaire renvoie en 1 touche aérienne. Phase 4 (3 min) : conduite libre dans la zone avec changements de direction au signal du coach (coup de sifflet = demi-tour, 2 coups = accélération).",
+      "coaching": [
+        "Commencer doucement et monter l'intensité progressivement — pas de sprint avant la phase 4",
+        "En phases 2-3, garder les genoux légèrement fléchis et les appuis dynamiques",
+        "Phase 4 : relever la tête pendant la conduite, ne pas regarder le ballon"
+      ],
+      "materiel": [
+        "Plots",
+        "1 ballon pour 2"
+      ],
+      "j_min": 6,
+      "j_max": 20,
+      "duree": 12,
+      "cats": [
+        "U14",
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "faible",
+      "variantes": [
+        "Ajouter des gammes athlétiques entre les phases (montées de genoux, talons-fesses)",
+        "En phase 4, ajouter un jeu de duel : au signal, le premier qui touche le ballon du partenaire marque"
+      ]
+    },
+    {
+      "id": "tech_001",
+      "nom": "Passes et déplacements en triangle",
+      "domaine": "technique",
+      "sous_theme": "Passes courtes",
+      "type": "analytique",
+      "zone": "reduite",
+      "objectif": "Améliorer la qualité de passe courte au sol et le timing du déplacement après la passe.",
+      "mise_en_place": {
+        "dimensions": "15m de côté, 3 plots en triangle",
+        "organisation": "Groupes de 3 joueurs par triangle avec 1 ballon. Plusieurs triangles en parallèle."
+      },
+      "deroulement": "Phase 1 — Passe et suit (5 min) : le passeur prend la place du receveur. Rotation horaire puis inversée. Phase 2 — Passe et va (5 min) : le passeur sprinte vers le plot LIBRE. Le receveur ajuste. Phase 3 — 1 touche (5 min) : passe directe, orientation du corps essentielle.",
+      "coaching": [
+        "Passe au sol ferme, dans le bon pied du receveur",
+        "Contrôle orienté préparé AVANT l'arrivée du ballon",
+        "Sprint après la passe, pas de trottinement"
+      ],
+      "materiel": [
+        "3 plots par triangle",
+        "1 ballon par groupe"
+      ],
+      "j_min": 6,
+      "j_max": 18,
+      "duree": 15,
+      "cats": [
+        "U14",
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "faible",
+      "variantes": [
+        "Triangle de 20m avec passes longues",
+        "Défenseur passif au centre du triangle"
+      ]
+    },
+    {
+      "id": "tech_002",
+      "nom": "Contrôle orienté et enchaînement",
+      "domaine": "technique",
+      "sous_theme": "Contrôle orienté",
+      "type": "analytique",
+      "zone": "reduite",
+      "objectif": "Travailler le contrôle orienté dans différentes directions pour éliminer un adversaire fictif puis réel à la réception.",
+      "mise_en_place": {
+        "dimensions": "15m × 15m avec un plot central et 4 plots en croix à 8m",
+        "organisation": "1 passeur au plot central, 4 files de joueurs aux plots extérieurs. 1 ballon par file."
+      },
+      "deroulement": "Le joueur de la file passe au joueur central, qui contrôle orienté vers un des 4 côtés (annoncé par le coach ou choisi librement), puis remet au joueur suivant de ce côté. Rotation : le passeur va au centre, le central va dans la file. Phase 1 (5 min) : sans opposition, le coach annonce la direction. Phase 2 (5 min) : un plot-mannequin au centre simule un défenseur, le joueur choisit seul la direction d'élimination. Phase 3 (5 min) : un vrai défenseur semi-actif au centre, le joueur doit lire et s'adapter.",
+      "coaching": [
+        "Prise d'information AVANT la réception : jeter un regard par-dessus l'épaule pour savoir où est l'espace libre",
+        "Le contrôle se fait avec l'extérieur du pied ou la semelle dans la direction choisie — jamais en stoppant le ballon",
+        "Enchaîner contrôle + passe en 2 temps fluides, pas de temps d'arrêt"
+      ],
+      "materiel": [
+        "5 plots",
+        "Ballons"
+      ],
+      "j_min": 8,
+      "j_max": 16,
+      "duree": 15,
+      "cats": [
+        "U14",
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "faible",
+      "variantes": [
+        "Le défenseur en phase 3 peut intercepter — le contrôle doit être précis et rapide",
+        "Enchaîner contrôle orienté + conduite sur 5m + frappe au but"
+      ]
+    },
+    {
+      "id": "tech_003",
+      "nom": "Conduite en espace réduit et élimination",
+      "domaine": "technique",
+      "sous_theme": "Conduite-dribble",
+      "type": "analytique",
+      "zone": "reduite",
+      "objectif": "Améliorer la conduite de balle en espace réduit et la capacité à éliminer en 1c1 avec différents gestes techniques.",
+      "mise_en_place": {
+        "dimensions": "15m × 10m, 2 petites portes (2m) à chaque extrémité",
+        "organisation": "2 files face à face. 1 ballon par passage. Le joueur doit passer dans une des 2 portes en conduisant et en éliminant le défenseur qui arrive face à lui."
+      },
+      "deroulement": "Le porteur part en conduite depuis sa file. Le défenseur part en même temps de la file opposée. Le porteur doit éliminer le défenseur et passer en conduite dans une des 2 portes. Le défenseur essaie de récupérer ou de forcer le porteur hors de la zone. Alternance attaquant/défenseur à chaque passage. 5-6 passages par joueur. Le coach impose un geste technique différent toutes les 2 min : crochet, passement de jambes, feinte de corps, roulette.",
+      "coaching": [
+        "Conduire tête levée pour lire la position et le mouvement du défenseur",
+        "Accélérer le geste technique — le dribble lent se fait récupérer, le dribble rapide élimine",
+        "Après l'élimination, changer de rythme immédiatement : accélération franche vers la porte"
+      ],
+      "materiel": [
+        "4 plots (portes)",
+        "Coupelles (zone)",
+        "Ballons"
+      ],
+      "j_min": 8,
+      "j_max": 16,
+      "duree": 15,
+      "cats": [
+        "U14",
+        "U15-U18"
+      ],
+      "intensite": "moyenne",
+      "variantes": [
+        "Ajouter un 2e défenseur qui entre avec 2 secondes de retard — le porteur doit éliminer vite",
+        "Remplacer les portes par un mini-but avec GB — finition après élimination"
+      ]
+    },
+    {
+      "id": "tech_004",
+      "nom": "Jeu de tête offensif et défensif",
+      "domaine": "technique",
+      "sous_theme": "Jeu de tête",
+      "type": "analytique",
+      "zone": "surface",
+      "objectif": "Travailler le jeu de tête en situation de centre : placement, timing de saut et orientation de la tête vers le but ou en dégagement.",
+      "mise_en_place": {
+        "dimensions": "Demi-terrain, zone entre l'entrée de la surface et le point de penalty",
+        "organisation": "1 centreur sur chaque côté (gauche et droite). 2 files de joueurs : 1 file d'attaquants, 1 file de défenseurs. 1 GB. Cônes pour matérialiser les zones d'appel."
+      },
+      "deroulement": "Phase 1 — Sans opposition (5 min) : le centreur envoie un centre aérien, l'attaquant prend son appel de balle (course courbée) et reprend de la tête vers le but. Alterner côté gauche et droit. Phase 2 — Avec opposition (10 min) : un défenseur se place devant l'attaquant. L'attaquant doit prendre position (corps entre le défenseur et le ballon), devancer le défenseur au premier poteau ou décrocher au second poteau. Le défenseur cherche à dégager de la tête. Phase 3 — Situation réelle (5 min) : 2 attaquants contre 2 défenseurs sur les centres.",
+      "coaching": [
+        "L'appel de balle est courbé : partir de l'extérieur de la surface et courir vers le centre du but pour attaquer le ballon de face",
+        "Timing du saut : sauter AVANT l'adversaire — celui qui saute le premier gagne le duel aérien",
+        "Orienter la tête vers le but : front sur le ballon, yeux ouverts, rediriger vers le bas"
+      ],
+      "materiel": [
+        "Plots (zones d'appel)",
+        "Ballons",
+        "1 but"
+      ],
+      "j_min": 8,
+      "j_max": 14,
+      "duree": 20,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "moyenne",
+      "variantes": [
+        "Le centreur varie : centre rasant, centre au 2e poteau, centre en retrait",
+        "Ajouter un 3e attaquant en zone de retrait pour les remises de la tête"
+      ]
+    },
+    {
+      "id": "tech_005",
+      "nom": "Frappe en 1 touche après remise",
+      "domaine": "technique",
+      "sous_theme": "Frappe-finition",
+      "type": "analytique",
+      "zone": "surface",
+      "objectif": "Travailler la frappe en 1 touche après une remise courte, en variant les positions autour de la surface.",
+      "mise_en_place": {
+        "dimensions": "Aux abords de la surface de réparation",
+        "organisation": "1 remiseur dos au but à l'entrée de la surface. Files de frappeurs à 20m du but, décalées (axe gauche, axe central, axe droit). 1 GB."
+      },
+      "deroulement": "Le frappeur passe au remiseur qui remet en 1 touche (latéralement ou en retrait). Le frappeur enchaîne une frappe en 1 touche vers le but. Le remiseur varie ses remises : à droite, à gauche, en retrait. Le frappeur doit s'adapter. Alterner les 3 axes d'arrivée. 5 frappes par joueur par axe. Rotation : frappeur → remiseur → file.",
+      "coaching": [
+        "Se positionner sur le côté du ballon, pas derrière — corps légèrement ouvert vers le but",
+        "Verrouiller la cheville au moment de la frappe, pied ferme, pas de frappe flottante",
+        "Viser les coins bas — un tir cadré puissant au ras du sol est plus difficile à arrêter qu'une frappe en hauteur"
+      ],
+      "materiel": [
+        "Plots (positions)",
+        "Ballons",
+        "1 but"
+      ],
+      "j_min": 6,
+      "j_max": 14,
+      "duree": 15,
+      "cats": [
+        "U14",
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "moyenne",
+      "variantes": [
+        "Ajouter un défenseur qui sort au moment de la remise — le frappeur a 1 seconde pour décider",
+        "Frappe obligatoire du pied faible sur un axe"
+      ]
+    },
+    {
+      "id": "tech_006",
+      "nom": "Centres et finition en mouvement",
+      "domaine": "technique",
+      "sous_theme": "Centres",
+      "type": "situation",
+      "zone": "demi",
+      "objectif": "Travailler la qualité du centre en course et la capacité des attaquants à se coordonner pour attaquer les 3 zones (1er poteau, 2e poteau, retrait).",
+      "mise_en_place": {
+        "dimensions": "Demi-terrain",
+        "organisation": "1 centreur de chaque côté qui part en conduite depuis la ligne médiane. 3 attaquants qui font des appels : 1 au 1er poteau, 1 au 2e poteau, 1 en retrait à l'entrée de la surface. 1 GB."
+      },
+      "deroulement": "Le centreur part en conduite sur le couloir, accélère, puis centre. Les 3 attaquants déclenchent leurs courses au moment où le centreur arrive à 5m de la ligne de fond. L'attaquant au 1er poteau coupe au devant, celui au 2e poteau attaque l'espace derrière, celui en retrait reste disponible pour une frappe. Le centreur choisit sa cible. 4-5 rotations par côté, puis échange des rôles.",
+      "coaching": [
+        "Le centre se fait en pleine course, pied d'appui à côté du ballon, regarder la zone de centre AVANT de frapper",
+        "Les appels doivent être déclenchés EN MÊME TEMPS — si un attaquant part trop tôt, il est hors timing",
+        "L'attaquant en retrait est souvent le plus dangereux : il arrive lancé avec tout le jeu devant lui"
+      ],
+      "materiel": [
+        "Plots",
+        "Ballons",
+        "1 but"
+      ],
+      "j_min": 8,
+      "j_max": 16,
+      "duree": 20,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "moyenne",
+      "variantes": [
+        "Ajouter 2 défenseurs dans la surface pour créer une opposition réelle sur les centres",
+        "Le centreur a le choix de centrer ou de rentrer pour frapper — les attaquants doivent s'adapter"
+      ]
+    },
+    {
+      "id": "tech_007",
+      "nom": "Passes longues changement d'aile",
+      "domaine": "technique",
+      "sous_theme": "Passes longues",
+      "type": "analytique",
+      "zone": "demi",
+      "objectif": "Améliorer la qualité de la passe longue transversale pour changer le jeu d'un côté à l'autre du terrain avec précision.",
+      "mise_en_place": {
+        "dimensions": "Largeur du terrain × 30m de profondeur",
+        "organisation": "2 groupes positionnés sur chaque aile à hauteur des lignes de touche. 1 ballon par groupe. Un plot-cible au sol de l'autre côté à atteindre."
+      },
+      "deroulement": "Phase 1 (5 min) : passe longue arrêtée. Le joueur pose le ballon, vise la zone cible de l'autre côté (cercle de 3m), le receveur contrôle et renvoie. Phase 2 (5 min) : passe longue après contrôle. Le joueur reçoit une passe courte d'un partenaire, contrôle orienté, puis transversale vers l'autre côté. Phase 3 (5 min) : passe longue en mouvement. Le joueur conduit sur 5m puis envoie la transversale dans la course du receveur qui démarre au signal.",
+      "coaching": [
+        "Le pied d'appui pointe vers la cible — c'est la direction du pied d'appui qui détermine la trajectoire",
+        "Frapper sous le ballon avec le coup de pied (lacets) pour les longues distances — pas l'intérieur du pied",
+        "En phase 3, la passe doit arriver dans la course du receveur : viser 2-3m devant lui, pas dans ses pieds"
+      ],
+      "materiel": [
+        "Plots-cibles",
+        "Coupelles",
+        "Ballons"
+      ],
+      "j_min": 8,
+      "j_max": 16,
+      "duree": 15,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "faible",
+      "variantes": [
+        "Concours : chaque passe qui atterrit dans le cercle-cible rapporte 1 point, l'équipe qui atteint 10 points gagne",
+        "Ajouter un défenseur passif sur la trajectoire pour forcer une passe lobée avec plus de courbe"
+      ]
+    },
+    {
+      "id": "tech_008",
+      "nom": "Appuis-remise en zone axiale",
+      "domaine": "technique",
+      "sous_theme": "Passes courtes",
+      "type": "situation",
+      "zone": "demi",
+      "objectif": "Travailler le jeu court en zone axiale : appui-remise, déviation, 3e homme, pour créer de l'avancée dans un espace réduit.",
+      "mise_en_place": {
+        "dimensions": "20m × 15m avec un but et GB",
+        "organisation": "1 joueur dos au but (pivot), 2 joueurs de chaque côté en soutien, 1 file de passeurs à 20m du but. 2 défenseurs semi-actifs autour du pivot."
+      },
+      "deroulement": "Le passeur cherche le pivot. Le pivot reçoit dos au but et a 3 options : remise directe au passeur qui enchaîne une frappe, déviation latérale vers un soutien qui frappe, ou fixation du défenseur + passe au 3e homme. Le passeur doit lire l'option choisie par le pivot. 4-5 passages puis rotation des rôles. Alterner les remises à droite et à gauche.",
+      "coaching": [
+        "Le pivot protège son ballon avec le corps AVANT de remettre — sentir la position du défenseur sans le regarder",
+        "La remise doit être orientée : pas un simple renvoi, mais une passe dirigée vers le tireur dans sa course",
+        "Le passeur appelle le ballon puis enchaîne le mouvement — pas d'arrêt entre la passe et la course vers le but"
+      ],
+      "materiel": [
+        "Plots",
+        "Ballons",
+        "1 but"
+      ],
+      "j_min": 8,
+      "j_max": 14,
+      "duree": 18,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "moyenne",
+      "variantes": [
+        "Le pivot a le droit de se retourner et frapper si le défenseur est trop loin",
+        "Ajouter un pressing actif : le pivot a 2 secondes max pour jouer"
+      ]
+    },
+    {
+      "id": "toff_001",
+      "nom": "Fixer et renverser 6c4 + 2 jokers",
+      "domaine": "tactique_offensive",
+      "sous_theme": "Fixer-renverser",
+      "type": "jeu_a_theme",
+      "zone": "demi",
+      "objectif": "Fixer le bloc adverse d'un côté par des passes courtes puis renverser d'une transversale pour exploiter l'espace à l'opposé.",
+      "mise_en_place": {
+        "dimensions": "40m × 30m, 3 couloirs verticaux",
+        "organisation": "6c4 + 2 jokers neutres sur les lignes de touche (1 touche). 1 mini-but à chaque extrémité des couloirs extérieurs."
+      },
+      "deroulement": "Minimum 3 passes dans un couloir avant de pouvoir renverser vers l'opposé. Point marqué en stop-ball ou mini-but du couloir opposé. Les jokers accélèrent le renversement.",
+      "coaching": [
+        "Attirer les défenseurs d'un côté par 3-4 passes rapides AVANT de renverser",
+        "Contrôle orienté vers l'avant au moment du renversement",
+        "Rythme : passes courtes rapides pour fixer, une longue transversale pour changer de côté"
+      ],
+      "materiel": [
+        "Coupelles",
+        "4 mini-buts",
+        "Chasubles",
+        "Ballons"
+      ],
+      "j_min": 12,
+      "j_max": 16,
+      "duree": 20,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "moyenne",
+      "variantes": [
+        "2 touches max dans le couloir de fixation",
+        "Ajouter un 5e défenseur"
+      ]
+    },
+    {
+      "id": "toff_002",
+      "nom": "Jeu entre les lignes 4c4+4 appuis",
+      "domaine": "tactique_offensive",
+      "sous_theme": "Entre les lignes",
+      "type": "jeu_reduit",
+      "zone": "demi",
+      "objectif": "Trouver et servir un joueur positionné entre les lignes adverses, et apprendre à se rendre disponible dans cet espace intermédiaire.",
+      "mise_en_place": {
+        "dimensions": "30m × 25m, 3 bandes horizontales de 10m",
+        "organisation": "4c4 zones extérieures + 4 appuis (2/équipe) en zone intermédiaire. Appuis protégés 2s après réception."
+      },
+      "deroulement": "Possession depuis zone basse, trouver un appui en zone intermédiaire. Retournement = 1pt, remise 1 touche = 2pts. Interception en zone intermédiaire = 3pts. Rotation appuis toutes les 3 min.",
+      "coaching": [
+        "L'appui bouge AVANT la passe — timing quand le porteur lève la tête",
+        "Réception dos au jeu : contrôle orienté sur le côté, jamais vers sa propre défense",
+        "Varier : passe au sol dans les pieds ou lob par-dessus la ligne de milieux"
+      ],
+      "materiel": [
+        "Plots/coupelles",
+        "Chasubles 3 couleurs",
+        "Ballons"
+      ],
+      "j_min": 12,
+      "j_max": 16,
+      "duree": 20,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "moyenne",
+      "variantes": [
+        "Supprimer les 2s de protection",
+        "Joker offensif permanent en zone intermédiaire"
+      ]
+    },
+    {
+      "id": "toff_003",
+      "nom": "Jeu sur les côtés : débordement et centre",
+      "domaine": "tactique_offensive",
+      "sous_theme": "Jeu sur les côtés",
+      "type": "jeu_a_theme",
+      "zone": "demi",
+      "objectif": "Travailler l'attaque par les couloirs avec débordement du latéral, combinaison ailier-latéral, et centre vers les attaquants.",
+      "mise_en_place": {
+        "dimensions": "Demi-terrain avec 1 but et GB",
+        "organisation": "5 attaquants (2 ailiers, 2 centraux, 1 latéral qui monte) contre 4 défenseurs + GB. Le jeu démarre par une passe du milieu central vers l'ailier ou le latéral."
+      },
+      "deroulement": "La construction se fait par un côté. L'ailier et le latéral combinent pour déborder (appui-remise, dédoublement, 1-2). Une fois le débordement réussi, le centreur choisit : centre au 1er poteau, au 2e poteau, ou en retrait. Les 2 centraux et l'ailier côté opposé attaquent les 3 zones. 5 attaques par côté, puis inverser. Le bloc défensif de 4 essaie de fermer le côté et de protéger la surface.",
+      "coaching": [
+        "Le dédoublement du latéral doit être déclenché quand l'ailier fixe son défenseur — pas avant, sinon le défenseur lit la combinaison",
+        "Les appels dans la surface doivent être coordonnés : 1er poteau coupe au devant, 2e poteau attaque derrière",
+        "Si le côté fort est fermé, le joueur doit être capable de renverser sur l'ailier opposé qui est démarqué"
+      ],
+      "materiel": [
+        "Plots",
+        "Chasubles",
+        "Ballons",
+        "1 but"
+      ],
+      "j_min": 10,
+      "j_max": 14,
+      "duree": 20,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "moyenne",
+      "variantes": [
+        "Le bloc défensif peut contre-attaquer dans 2 mini-buts s'il récupère",
+        "Imposer un temps limite de 15 secondes pour centrer depuis le déclenchement"
+      ]
+    },
+    {
+      "id": "toff_004",
+      "nom": "Jeu vers l'avant : verticalité en 6c6",
+      "domaine": "tactique_offensive",
+      "sous_theme": "Jeu vers l'avant",
+      "type": "jeu_a_theme",
+      "zone": "trois_quarts",
+      "objectif": "Encourager la prise de risque vers l'avant : jouer la passe verticale en priorité plutôt que de conserver latéralement quand l'option existe.",
+      "mise_en_place": {
+        "dimensions": "60m × 40m avec 2 buts et GB",
+        "organisation": "6c6 avec 2 GB. 3 lignes horizontales tracées au sol tous les 20m. La passe qui franchit une ligne vers l'avant rapporte 1 point bonus en plus du but."
+      },
+      "deroulement": "Jeu libre 6c6 avec règle spéciale : chaque passe vers l'avant qui franchit une ligne horizontale rapporte 1 point. Un but classique vaut 3 points. L'équipe qui atteint 15 points en premier gagne. Les joueurs sont donc incités à chercher la verticalité plutôt que de conserver latéralement. Le GB peut lancer le jeu court ou long.",
+      "coaching": [
+        "Avant de jouer latéral, toujours regarder si une passe vers l'avant est possible — la verticalité d'abord",
+        "Le porteur doit lever la tête : la première info recherchée est le joueur le plus avancé démarqué",
+        "Les receveurs sans ballon doivent proposer des solutions vers l'avant : appels dans la profondeur, décrochages entre les lignes"
+      ],
+      "materiel": [
+        "Plots (lignes)",
+        "2 buts",
+        "Chasubles",
+        "Ballons"
+      ],
+      "j_min": 12,
+      "j_max": 16,
+      "duree": 20,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "moyenne",
+      "variantes": [
+        "Les passes en profondeur au-delà de la dernière ligne valent 2 points bonus",
+        "Limiter à 3 passes latérales max avant d'obliger une passe vers l'avant"
+      ]
+    },
+    {
+      "id": "toff_005",
+      "nom": "Combinaisons rapides en triangle offensif",
+      "domaine": "tactique_offensive",
+      "sous_theme": "Combinaisons",
+      "type": "situation",
+      "zone": "quart",
+      "objectif": "Automatiser les combinaisons à 3 joueurs en zone de finition : mur, déviation, 3e homme, appui-remise-frappe.",
+      "mise_en_place": {
+        "dimensions": "Quart de terrain côté but",
+        "organisation": "3 joueurs (ailier, milieu offensif, attaquant) contre 2 défenseurs + GB. Le jeu démarre par une passe du milieu vers l'un des 2 autres."
+      },
+      "deroulement": "Le trio doit combiner en maximum 4 passes pour finir au but. Combinaisons travaillées : 1) Mur classique : passe-mur avec le pivot, 3e homme enchaîne la frappe. 2) Déviation : le milieu passe à l'attaquant qui dévie pour l'ailier lancé. 3) Double appui : passe au pivot qui remet, remise du milieu vers l'ailier qui frappe. Le coach impose la combinaison les 10 premières minutes, puis laisse libre les 10 suivantes. 5-6 passages par combinaison.",
+      "coaching": [
+        "Le timing de la course du 3e homme est crucial — partir au moment de la 1re passe, pas après",
+        "Les remises doivent être fermes et dans la course du receveur, pas dans ses pieds",
+        "Après la combinaison, enchaîner la finition immédiatement — ne pas chercher une passe de plus si le tir est possible"
+      ],
+      "materiel": [
+        "Plots",
+        "Ballons",
+        "1 but"
+      ],
+      "j_min": 8,
+      "j_max": 14,
+      "duree": 20,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "moyenne",
+      "variantes": [
+        "Ajouter un 3e défenseur pour augmenter la pression sur la combinaison",
+        "Limiter à 3 touches max par joueur dans la séquence"
+      ]
+    },
+    {
+      "id": "toff_006",
+      "nom": "Construction depuis le GB en 4-3-3",
+      "domaine": "tactique_offensive",
+      "sous_theme": "Construction",
+      "type": "jeu_a_theme",
+      "zone": "demi",
+      "objectif": "Travailler la sortie de balle depuis le gardien avec les centraux et les milieux, en imposant de construire proprement malgré le pressing adverse.",
+      "mise_en_place": {
+        "dimensions": "Demi-terrain avec 1 but (relance) + 2 mini-buts à la médiane (objectif attaquant)",
+        "organisation": "GB + 4 défenseurs + 3 milieux (équipe qui construit) contre 4 presseurs. Les constructeurs doivent franchir la médiane en conduite ou passe pour marquer dans un des 2 mini-buts."
+      },
+      "deroulement": "Le GB relance au sol sur un central. Le bloc de 7 joueurs doit construire et franchir la médiane malgré le pressing de 4 adversaires. Si les presseurs récupèrent, ils attaquent directement le but du GB. Séries de 3 min. Alterner relance courte (au central) et relance mi-longue (au milieu). L'objectif est de sortir proprement sans perte dans le premier tiers du terrain.",
+      "coaching": [
+        "Le GB doit lire le pressing : si les 2 attaquants pressent les centraux, le milieu défensif est libre entre les lignes",
+        "Les centraux s'écartent pour offrir de la largeur et attirer les presseurs, ce qui libère l'axe",
+        "Le milieu défensif doit se montrer entre les 2 lignes de pressing : c'est souvent la clé de la sortie de balle"
+      ],
+      "materiel": [
+        "Plots",
+        "2 mini-buts",
+        "Chasubles",
+        "Ballons",
+        "1 but"
+      ],
+      "j_min": 12,
+      "j_max": 14,
+      "duree": 20,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "moyenne",
+      "variantes": [
+        "Ajouter un 5e presseur pour augmenter la difficulté",
+        "Le GB a le droit de jouer long si le pressing est trop haut — l'attaquant de pointe doit être disponible"
+      ]
+    },
+    {
+      "id": "toff_007",
+      "nom": "Supériorité numérique en zone de finition",
+      "domaine": "tactique_offensive",
+      "sous_theme": "Jeu vers l'avant",
+      "type": "situation",
+      "zone": "quart",
+      "objectif": "Exploiter une situation de supériorité numérique en zone de finition pour conclure rapidement et efficacement.",
+      "mise_en_place": {
+        "dimensions": "30m × 25m devant le but",
+        "organisation": "Situations progressives : 2c1, 3c2, 4c3 devant le but avec GB. Le jeu démarre par une passe du coach ou d'un joueur neutre."
+      },
+      "deroulement": "Phase 1 (5 min) : 2c1 — le porteur doit fixer le défenseur et servir au bon moment. Phase 2 (8 min) : 3c2 — combinaison rapide avec le 3e homme qui se démarque. Phase 3 (7 min) : 4c3 — situation la plus réaliste, les attaquants doivent jouer vite pour conserver leur avantage numérique. À chaque phase, le départ se fait depuis 30m du but, les défenseurs reculent. Finition obligatoire en 4 passes maximum.",
+      "coaching": [
+        "Le porteur fixe le défenseur en conduisant vers lui AVANT de passer — ne jamais passer sans fixer",
+        "En 3c2 et 4c3, le joueur libre doit appeler le ballon par un appel de balle clair (course + geste)",
+        "4 passes maximum : si on passe trop, on perd le surnombre car les défenseurs ont le temps de se replacer"
+      ],
+      "materiel": [
+        "Plots",
+        "Ballons",
+        "1 but"
+      ],
+      "j_min": 8,
+      "j_max": 16,
+      "duree": 20,
+      "cats": [
+        "U14",
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "moyenne",
+      "variantes": [
+        "En 3c2, un 3e défenseur entre au bout de 4 secondes — course contre la montre",
+        "Le coach impose le nombre de touches : 2 touches max en phase 3"
+      ]
+    },
+    {
+      "id": "toff_008",
+      "nom": "Déséquilibrer par la passe et le mouvement",
+      "domaine": "tactique_offensive",
+      "sous_theme": "Combinaisons",
+      "type": "jeu_reduit",
+      "zone": "demi",
+      "objectif": "Créer et exploiter des décalages par le mouvement sans ballon et la qualité de passe dans un jeu réduit.",
+      "mise_en_place": {
+        "dimensions": "35m × 25m avec 2 mini-buts de chaque côté (4 total)",
+        "organisation": "5c5 sans GB. Les 4 mini-buts sont placés dans les coins du terrain. L'équipe en possession peut marquer dans les 2 mini-buts adverses."
+      },
+      "deroulement": "Jeu libre 5c5 avec la règle suivante : un but ne compte que si le buteur a reçu le ballon en mouvement (pas arrêté). Cela oblige les appels de balle et les déplacements constants. 3 touches maximum par joueur. Matchs de 4 min, l'équipe perdante est remplacée si un 3e groupe attend.",
+      "coaching": [
+        "Les appels de balle doivent être faits dans le bon timing : partir quand le porteur est en position de passer, pas trop tôt ni trop tard",
+        "Varier les courses : appels courts vers le porteur (soutien) et appels longs dans la profondeur — l'alternance crée le décalage",
+        "Le porteur doit valoriser le mouvement du partenaire : si quelqu'un appelle, il faut le servir dans sa course"
+      ],
+      "materiel": [
+        "4 mini-buts",
+        "Chasubles",
+        "Coupelles",
+        "Ballons"
+      ],
+      "j_min": 10,
+      "j_max": 15,
+      "duree": 20,
+      "cats": [
+        "U14",
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "moyenne",
+      "variantes": [
+        "Passer en 2 touches pour accélérer le rythme de jeu",
+        "Ajouter un joker offensif permanent pour créer du surnombre"
+      ]
+    },
+    {
+      "id": "tdef_001",
+      "nom": "Coulissage défensif 4c3 sur largeur",
+      "domaine": "tactique_defensive",
+      "sous_theme": "Bloc défensif",
+      "type": "situation",
+      "zone": "largeur",
+      "objectif": "Apprendre à une ligne de 4 défenseurs à coulisser collectivement côté ballon et combler les espaces quand un défenseur sort au pressing.",
+      "mise_en_place": {
+        "dimensions": "Largeur terrain × 25-30m",
+        "organisation": "4 mini-buts (attaque) + 2 mini-buts (défense). 4 défenseurs face à 3 attaquants + 2 relanceurs excentrés."
+      },
+      "deroulement": "Les attaquants circulent pour trouver la faille. La ligne de 4 coulisse en bloc. Un défenseur sort sur le porteur, le voisin comble. Récupération = contre sur les 2 mini-buts.",
+      "coaching": [
+        "Glisser ENSEMBLE — si un joueur reste planté, un trou s'ouvre",
+        "Le défenseur qui sort ferme l'intérieur, le voisin couvre dans son dos",
+        "Décalages en profondeur selon la position du ballon — la ligne n'est jamais parfaitement plate"
+      ],
+      "materiel": [
+        "6 mini-buts ou 12 plots",
+        "Chasubles",
+        "Ballons"
+      ],
+      "j_min": 8,
+      "j_max": 12,
+      "duree": 20,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "moyenne",
+      "variantes": [
+        "2 touches max pour les attaquants",
+        "Temps limite 45s sinon point défense"
+      ]
+    },
+    {
+      "id": "tdef_002",
+      "nom": "Pressing déclenché 6c6 zone de récup",
+      "domaine": "tactique_defensive",
+      "sous_theme": "Pressing",
+      "type": "jeu_a_theme",
+      "zone": "demi",
+      "objectif": "Déclencher le pressing collectif au bon signal et coordonner la montée du bloc en limitant l'effort à 6 secondes.",
+      "mise_en_place": {
+        "dimensions": "40m × 35m avec médiane",
+        "organisation": "6c6 + 2 GB. Zone de pressing identifiée dans la moitié adverse."
+      },
+      "deroulement": "Signaux de pressing : passe en retrait, mauvais contrôle. Au signal, le bloc monte et presse 6s max. But en zone pressing = double. Pressing cassé = replacement bloc bas immédiat.",
+      "coaching": [
+        "Pressing ENSEMBLE — un joueur seul qui part crée un déséquilibre",
+        "Le 1er presseur courbe sa course pour orienter le porteur",
+        "6s max : pressing stérile = fatigue et espaces concédés"
+      ],
+      "materiel": [
+        "Plots",
+        "2 buts",
+        "Chasubles",
+        "Ballons"
+      ],
+      "j_min": 12,
+      "j_max": 16,
+      "duree": 20,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "haute",
+      "variantes": [
+        "7c7 + joker offensif",
+        "3s de pressing seulement pour l'explosivité"
+      ]
+    },
+    {
+      "id": "tdef_003",
+      "nom": "Fermeture du côté fort 6c4+GB",
+      "domaine": "tactique_defensive",
+      "sous_theme": "Bloc défensif",
+      "type": "situation",
+      "zone": "demi",
+      "objectif": "Travailler le resserrement défensif côté ballon pour fermer le côté fort et forcer l'adversaire à renverser ou à jouer en retrait.",
+      "mise_en_place": {
+        "dimensions": "Demi-terrain avec 1 but et GB",
+        "organisation": "4 défenseurs + GB contre 6 attaquants. Les attaquants doivent marquer dans le but. Les défenseurs peuvent contre-attaquer dans 2 mini-buts à la médiane."
+      },
+      "deroulement": "Les attaquants construisent librement. Le bloc de 4 défenseurs ferme le côté où se trouve le ballon : les 2 défenseurs côté ballon montent au pressing et à la couverture, les 2 côté opposé resserrent vers l'axe (pas de grand espace au centre). Si les attaquants renversent, le bloc doit coulisser rapidement de l'autre côté. Séries de 4 min. Si la défense récupère, contre-attaque immédiate sur mini-buts.",
+      "coaching": [
+        "Côté ballon : le défenseur le plus proche sort au pressing, l'autre couvre en retrait — jamais les 2 sur la même ligne",
+        "Côté opposé : les défenseurs rentrent dans l'axe pour protéger le centre du but — pas besoin de couvrir le couloir loin du ballon",
+        "Quand le jeu est renversé, les 4 doivent coulisser en 2-3 secondes — le retard de coulissage est le danger principal"
+      ],
+      "materiel": [
+        "Plots",
+        "2 mini-buts",
+        "1 but",
+        "Chasubles",
+        "Ballons"
+      ],
+      "j_min": 10,
+      "j_max": 14,
+      "duree": 20,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "moyenne",
+      "variantes": [
+        "Ajouter un 5e défenseur (milieu défensif) qui protège la zone axiale",
+        "Les attaquants ont 20 secondes max pour marquer sinon point à la défense"
+      ]
+    },
+    {
+      "id": "tdef_004",
+      "nom": "Défendre en infériorité 4c6",
+      "domaine": "tactique_defensive",
+      "sous_theme": "Bloc défensif",
+      "type": "situation",
+      "zone": "demi",
+      "objectif": "Apprendre à défendre en infériorité numérique en compactant le bloc et en retardant l'attaque adverse.",
+      "mise_en_place": {
+        "dimensions": "Demi-terrain avec but et GB",
+        "organisation": "4 défenseurs + GB contre 6 attaquants. Les défenseurs se replacent en losange compact devant leur surface."
+      },
+      "deroulement": "Les 6 attaquants construisent depuis la médiane. Les 4 défenseurs reculent ensemble, compactent le bloc, et essaient de retarder l'attaque. L'objectif des défenseurs n'est pas de récupérer le ballon mais de ne pas prendre de but. S'ils tiennent 30 secondes sans but, ils marquent un point. S'ils récupèrent le ballon, ils doivent le dégager au-delà de la médiane (pas de contre). Séries de 30s à 1 min.",
+      "coaching": [
+        "Protéger l'axe du but en priorité : se compacter au centre, laisser les couloirs",
+        "Reculer ensemble sans se faire écarter — si un défenseur sort, tout le monde recule d'un cran",
+        "Ne pas se jeter dans les pieds : rester debout, temporiser, et forcer l'adversaire à la passe de trop"
+      ],
+      "materiel": [
+        "Plots",
+        "1 but",
+        "Chasubles",
+        "Ballons"
+      ],
+      "j_min": 10,
+      "j_max": 14,
+      "duree": 15,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "haute",
+      "variantes": [
+        "3c6 pour rendre l'exercice encore plus extrême",
+        "Un défenseur supplémentaire entre toutes les 10 secondes — les attaquants doivent finir vite"
+      ]
+    },
+    {
+      "id": "tdef_005",
+      "nom": "Prise à 2 sur le côté",
+      "domaine": "tactique_defensive",
+      "sous_theme": "Marquage",
+      "type": "situation",
+      "zone": "quart",
+      "objectif": "Travailler la coordination entre le latéral et le milieu excentré pour piéger le porteur adverse par une prise à 2 côté ligne de touche.",
+      "mise_en_place": {
+        "dimensions": "30m × 15m le long de la ligne de touche",
+        "organisation": "1 latéral + 1 milieu (défenseurs) contre 1 ailier + 1 milieu adverse. Le jeu démarre par une passe vers l'ailier."
+      },
+      "deroulement": "L'ailier reçoit le ballon le long de la ligne de touche. Le latéral monte et ferme l'intérieur pour empêcher le crochet vers le centre. Le milieu excentré rabat vers le latéral et ferme l'extérieur. L'ailier est pris en étau entre les 2 défenseurs et la ligne de touche. Si l'ailier parvient à combiner avec son milieu pour sortir de la prise à 2, un 2e exercice s'enclenche. Phase 1 (8 min) : prise à 2 analytique (les défenseurs communiquent avant). Phase 2 (12 min) : situation réelle 2c2 avec finition possible.",
+      "coaching": [
+        "Le latéral ferme d'abord l'intérieur : orientation du corps de trois-quarts, pousser l'ailier vers la touche",
+        "Le milieu commande le latéral par la voix : 'je suis là', 'ferme', 'envoie-le vers moi'",
+        "Ne pas faire faute dans la prise à 2 : le but est de bloquer, pas de tacler — la ligne de touche fait le travail"
+      ],
+      "materiel": [
+        "Plots",
+        "Ballons",
+        "Chasubles"
+      ],
+      "j_min": 6,
+      "j_max": 12,
+      "duree": 20,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "moyenne",
+      "variantes": [
+        "L'ailier a le droit de centrer s'il arrive à lever la tête — les défenseurs doivent le bloquer avant",
+        "Ajouter un 3e attaquant en soutien pour simuler une combinaison plus complexe"
+      ]
+    },
+    {
+      "id": "tdef_006",
+      "nom": "Récupération collective 8c8 bloc médian",
+      "domaine": "tactique_defensive",
+      "sous_theme": "Récupération collective",
+      "type": "jeu_a_theme",
+      "zone": "trois_quarts",
+      "objectif": "Travailler le positionnement du bloc en zone médiane et la capacité collective à récupérer le ballon par le pressing coordonné.",
+      "mise_en_place": {
+        "dimensions": "60m × 40m avec 2 buts et GB",
+        "organisation": "8c8 en 4-4 (2 lignes de 4). Une ligne de référence tracée à 40m du but défendu (hauteur du bloc). 2 GB."
+      },
+      "deroulement": "L'équipe qui défend se positionne en bloc médian : la ligne défensive sur la ligne de référence, la ligne de milieux 10-15m devant. L'équipe qui attaque tente de franchir le bloc. Le pressing se déclenche quand le ballon entre dans la zone entre les 2 lignes. Récupération = contre-attaque vers le but adverse. L'équipe qui défend doit récupérer le ballon au moins 3 fois en 5 min pour valider la série.",
+      "coaching": [
+        "Les 2 lignes de 4 doivent rester compactes : maximum 10-12m entre la défense et le milieu",
+        "Le pressing se déclenche sur le porteur entre les lignes : le milieu le plus proche sort, les autres resserrent",
+        "Dès la récupération, jouer vite vers l'avant — le moment de la récupération est celui où l'adversaire est le plus désorganisé"
+      ],
+      "materiel": [
+        "Plots",
+        "2 buts",
+        "Chasubles",
+        "Ballons"
+      ],
+      "j_min": 16,
+      "j_max": 18,
+      "duree": 25,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "haute",
+      "variantes": [
+        "Ajouter un joker offensif pour obliger le bloc à défendre en infériorité",
+        "L'équipe attaquante a 30 secondes pour marquer sinon la balle change de camp"
+      ]
+    },
+    {
+      "id": "tdef_007",
+      "nom": "Défense sur les centres 4c3+GB",
+      "domaine": "tactique_defensive",
+      "sous_theme": "Bloc défensif",
+      "type": "situation",
+      "zone": "surface",
+      "objectif": "Travailler le positionnement défensif sur les centres : marquage individuel dans la surface, couverture du 1er poteau, gestion du 2e poteau.",
+      "mise_en_place": {
+        "dimensions": "Demi-terrain, travail dans et autour de la surface",
+        "organisation": "1 centreur de chaque côté, 3 attaquants qui attaquent les zones (1er poteau, 2e poteau, retrait), 4 défenseurs + GB dans la surface."
+      },
+      "deroulement": "Le centreur envoie un centre depuis le couloir. Les 4 défenseurs doivent se positionner : 1 au 1er poteau (devant l'attaquant, entre lui et le but), 1 au 2e poteau (en couverture), 1 en zone de retrait (à l'entrée de la surface), 1 en couverture axiale. Le marquage est individuel : chaque défenseur prend en charge un attaquant et un 4e couvre. 5 centres de chaque côté. Le défenseur doit passer DEVANT l'attaquant pour dégager.",
+      "coaching": [
+        "Toujours se positionner entre l'attaquant et le but — jamais derrière l'attaquant",
+        "Attaquer le ballon : aller à l'impact, ne pas attendre que le ballon arrive — celui qui va au ballon gagne le duel",
+        "Le GB communique les positions : 'sortie', 'laisse', 'à toi' — la voix du GB organise toute la surface"
+      ],
+      "materiel": [
+        "Plots",
+        "Ballons",
+        "1 but"
+      ],
+      "j_min": 8,
+      "j_max": 12,
+      "duree": 20,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "moyenne",
+      "variantes": [
+        "Le centreur a le choix de centrer en l'air ou au sol — les défenseurs doivent s'adapter",
+        "Ajouter un 4e attaquant qui arrive lancé depuis l'extérieur de la surface"
+      ]
+    },
+    {
+      "id": "tdef_008",
+      "nom": "Pressing immédiat après perte 5c5",
+      "domaine": "tactique_defensive",
+      "sous_theme": "Pressing",
+      "type": "jeu_a_theme",
+      "zone": "demi",
+      "objectif": "Travailler le contre-pressing : récupérer le ballon dans les 5 secondes suivant la perte pour empêcher la relance adverse.",
+      "mise_en_place": {
+        "dimensions": "30m × 25m avec 4 mini-buts (2 par équipe)",
+        "organisation": "5c5 sans GB. Chaque équipe défend 2 mini-buts et attaque les 2 autres. Chasubles."
+      },
+      "deroulement": "Jeu libre 5c5. Règle spéciale : quand une équipe perd le ballon, elle a 5 secondes pour le récupérer (contre-pressing). Si elle récupère en moins de 5 secondes, le but marqué dans la foulée vaut double. Si elle ne récupère pas en 5 secondes, elle se replace et défend normalement. Le coach compte à voix haute les 5 secondes. Matchs de 4 min.",
+      "coaching": [
+        "À la perte, le joueur le plus proche presse immédiatement le nouveau porteur — pas de temps de réflexion",
+        "Les 2 joueurs les plus proches convergent vers le ballon, les 3 autres ferment les lignes de passe courtes",
+        "Si le contre-pressing échoue à 5 secondes, STOPPER le pressing et se replacer — ne pas courir dans le vide"
+      ],
+      "materiel": [
+        "4 mini-buts",
+        "Chasubles",
+        "Coupelles",
+        "Ballons"
+      ],
+      "j_min": 10,
+      "j_max": 15,
+      "duree": 16,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "haute",
+      "variantes": [
+        "Réduire à 3 secondes pour augmenter l'urgence du contre-pressing",
+        "L'équipe qui récupère en contre-pressing a 2 touches max pour finir"
+      ]
+    },
+    {
+      "id": "trans_off_001",
+      "nom": "Récupérer et percuter 4c2 en zones",
+      "domaine": "transition_offensive",
+      "sous_theme": "Contre-attaque",
+      "type": "situation",
+      "zone": "couloir",
+      "objectif": "Changement de statut immédiat à la récupération : défenseur → attaquant en moins de 3 secondes.",
+      "mise_en_place": {
+        "dimensions": "40m × 10m, 3 zones",
+        "organisation": "4c2 zone centrale, 2 joueurs en attente par zone latérale, 1 GB par but."
+      },
+      "deroulement": "4 conservent contre 2 presseurs (2 touches). Dès interception, le récupérateur part en 1c1 face au GB. Le perdant revient défendre. Rotation continue.",
+      "coaching": [
+        "Premier réflexe : pousser vers l'avant, pas de contrôle inutile",
+        "Lire la position du GB pendant la conduite",
+        "Conservateurs en 2 touches max pour maintenir le pressing"
+      ],
+      "materiel": [
+        "Plots",
+        "2 buts",
+        "Ballons"
+      ],
+      "j_min": 10,
+      "j_max": 16,
+      "duree": 15,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "haute",
+      "variantes": [
+        "4c3 pour plus de difficulté",
+        "Temps limite 4s pour finir après récup"
+      ]
+    },
+    {
+      "id": "trans_off_002",
+      "nom": "Contre-attaque rapide 3c2 après récupération",
+      "domaine": "transition_offensive",
+      "sous_theme": "Contre-attaque",
+      "type": "situation",
+      "zone": "demi",
+      "objectif": "Exploiter une supériorité numérique en transition après récupération du ballon pour marquer en moins de 8 secondes.",
+      "mise_en_place": {
+        "dimensions": "Demi-terrain avec 1 but et GB",
+        "organisation": "3 attaquants partent de la ligne médiane. 2 défenseurs partent de l'entrée de la surface. Le coach ou un relanceur déclenche le départ avec une passe."
+      },
+      "deroulement": "Le coach envoie le ballon à un des 3 attaquants. Les 3 partent en contre-attaque face aux 2 défenseurs qui reculent. Les attaquants doivent finir en moins de 8 secondes (le coach compte). Alternance : une fois les 3 attaquants au centre, une fois décentrés (2 centraux + 1 excentré). 5-6 passages par trio.",
+      "coaching": [
+        "La conduite du porteur central doit être rapide et rectiligne — pas de crochets inutiles, avancer",
+        "Le joueur libre doit écarter large pour étirer les défenseurs — plus on écarte, plus l'espace central s'ouvre",
+        "La dernière passe est décisive : la faire au bon moment (quand le défenseur s'engage sur le porteur) et dans la course du finisseur"
+      ],
+      "materiel": [
+        "Plots",
+        "Ballons",
+        "1 but"
+      ],
+      "j_min": 8,
+      "j_max": 14,
+      "duree": 15,
+      "cats": [
+        "U14",
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "haute",
+      "variantes": [
+        "Ajouter un 3e défenseur qui entre avec 3 secondes de retard — la contre doit être finie avant",
+        "Le coach varie le côté de la passe initiale pour forcer l'adaptation"
+      ]
+    },
+    {
+      "id": "trans_off_003",
+      "nom": "Récupérer et jouer long : transition directe",
+      "domaine": "transition_offensive",
+      "sous_theme": "Transition directe",
+      "type": "situation",
+      "zone": "demi",
+      "objectif": "Travailler la transition longue après récupération : envoyer un ballon long direct vers un attaquant en profondeur plutôt que de construire court.",
+      "mise_en_place": {
+        "dimensions": "Demi-terrain avec 1 but et GB + 2 mini-buts à la médiane",
+        "organisation": "4c4 en zone médiane (20m × 30m). 1 attaquant de pointe en attente au-delà de la médiane. Le GB relance dans la zone médiane."
+      },
+      "deroulement": "Le GB relance court dans la zone médiane où se joue un 4c4. L'équipe qui récupère le ballon a 2 options : soit elle joue long direct vers l'attaquant de pointe qui part en profondeur (but qui vaut 3 points), soit elle construit pour marquer dans les mini-buts (1 point). L'objectif est de travailler la lecture : quand la longue est jouable, il faut la jouer sans hésiter. 5 min par série, rotation des rôles.",
+      "coaching": [
+        "À la récupération, la première info est de regarder si l'attaquant de pointe est jouable en profondeur",
+        "La passe longue doit être dans la course de l'attaquant, pas dans ses pieds — viser l'espace devant lui",
+        "L'attaquant de pointe doit lancer sa course AU MOMENT de la récupération, pas après la passe"
+      ],
+      "materiel": [
+        "Plots",
+        "2 mini-buts",
+        "1 but",
+        "Chasubles",
+        "Ballons"
+      ],
+      "j_min": 10,
+      "j_max": 14,
+      "duree": 20,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "haute",
+      "variantes": [
+        "Ajouter un défenseur qui suit l'attaquant de pointe — la passe longue doit être précise",
+        "L'attaquant de pointe a le droit de décrocher court si la longue n'est pas jouable"
+      ]
+    },
+    {
+      "id": "trans_off_004",
+      "nom": "Transition et finition en 2c1 rapide",
+      "domaine": "transition_offensive",
+      "sous_theme": "Contre-attaque",
+      "type": "situation",
+      "zone": "demi",
+      "objectif": "Finir en 2 contre 1 après une récupération, en travaillant la fixation du défenseur et le timing de la dernière passe.",
+      "mise_en_place": {
+        "dimensions": "35m × 20m avec 1 but et GB",
+        "organisation": "Files de 2 attaquants à la médiane. 1 défenseur part de l'entrée de la surface. Le coach donne le ballon à un des 2 attaquants."
+      },
+      "deroulement": "Les 2 attaquants partent en 2c1 face au défenseur qui recule. Le porteur doit conduire droit vers le défenseur pour le fixer, puis passer au bon moment : ni trop tôt (le défenseur se replace), ni trop tard (le défenseur ferme la passe). Le non-porteur doit écarter et proposer une course en profondeur. Finition obligatoire en 3 touches max après réception de la dernière passe. 5-6 passages par duo.",
+      "coaching": [
+        "Le porteur conduit droit vers le défenseur — pas en diagonale, sinon il perd l'angle de passe",
+        "La dernière passe se fait quand le défenseur s'engage sur le porteur : c'est à ce moment qu'il ne peut plus se retourner",
+        "Le receveur doit être légèrement en retrait du défenseur pour ne pas être hors-jeu, puis accélérer au moment de la passe"
+      ],
+      "materiel": [
+        "Plots",
+        "Ballons",
+        "1 but"
+      ],
+      "j_min": 6,
+      "j_max": 14,
+      "duree": 15,
+      "cats": [
+        "U14",
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "haute",
+      "variantes": [
+        "Le défenseur a le droit de sortir plus haut pour réduire le temps de réaction des attaquants",
+        "Ajouter un 2e défenseur en retard de 3 secondes pour créer l'urgence"
+      ]
+    },
+    {
+      "id": "trans_off_005",
+      "nom": "Récupérer-construire-finir en 3 zones",
+      "domaine": "transition_offensive",
+      "sous_theme": "Transition progressive",
+      "type": "jeu_a_theme",
+      "zone": "trois_quarts",
+      "objectif": "Enchaîner récupération, construction rapide et finition en passant progressivement à travers 3 zones du terrain.",
+      "mise_en_place": {
+        "dimensions": "60m × 40m, divisé en 3 zones de 20m",
+        "organisation": "6c6. Zone 1 (récupération) : 3c3. Zone 2 (construction) : 2c2. Zone 3 (finition) : 1c1 + GB. Les joueurs ne changent pas de zone. 2 buts avec GB."
+      },
+      "deroulement": "L'action démarre par un 3c3 en zone 1. L'équipe qui récupère doit jouer une passe vers un coéquipier en zone 2 dans les 5 secondes. En zone 2, les 2 joueurs combinent en 2c2 pour avancer vers la zone 3. En zone 3, l'attaquant finit en 1c1 face au GB avec le défenseur qui le suit. Si le ballon est perdu dans une zone, l'action repart dans cette zone. Rotation des zones toutes les 5 min.",
+      "coaching": [
+        "En zone 1, la transition doit être immédiate : pas de conservation inutile, chercher la passe vers la zone 2",
+        "En zone 2, la qualité de la première touche détermine tout : contrôle orienté vers la zone 3",
+        "En zone 3, le 1c1 doit être décisif : fixer le défenseur, l'éliminer ou frapper dès que l'angle est ouvert"
+      ],
+      "materiel": [
+        "Plots (3 zones)",
+        "2 buts",
+        "Chasubles",
+        "Ballons"
+      ],
+      "j_min": 12,
+      "j_max": 16,
+      "duree": 25,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "haute",
+      "variantes": [
+        "Un joueur de zone 1 peut accompagner en zone 2 (créant un 3c2 temporaire)",
+        "Réduire le temps de transition zone 1→2 à 3 secondes"
+      ]
+    },
+    {
+      "id": "trans_off_006",
+      "nom": "Contre-attaque sur récup haute 4c3",
+      "domaine": "transition_offensive",
+      "sous_theme": "Récupération haute",
+      "type": "situation",
+      "zone": "demi",
+      "objectif": "Exploiter une récupération haute pour finir au but rapidement en supériorité, sans laisser le temps à l'adversaire de se replacer.",
+      "mise_en_place": {
+        "dimensions": "40m × 30m avec 1 but et GB + 2 mini-buts à 40m",
+        "organisation": "4 presseurs face à 3 constructeurs + GB. Les constructeurs essaient de franchir la médiane, les presseurs essaient de récupérer et d'attaquer le but."
+      },
+      "deroulement": "Le GB relance sur les 3 constructeurs. Les 4 presseurs essaient de récupérer le ballon dans les 30 premiers mètres. Si récupération, les 4 partent en contre-attaque immédiate vers le but (4c3 ou 4c2 selon le nombre de défenseurs replacés). Si les constructeurs franchissent la médiane, ils marquent dans les mini-buts. Séries de 3 min, rotation des rôles.",
+      "coaching": [
+        "Le pressing doit être intelligent : le 1er presseur ferme la relance longue, les 2 suivants coupent les passes latérales",
+        "À la récupération, ne pas passer par le milieu si le côté est ouvert — la contre-attaque la plus dangereuse passe souvent par un couloir",
+        "Le joueur le plus avancé au moment de la récupération doit partir immédiatement en profondeur, sans attendre la passe"
+      ],
+      "materiel": [
+        "Plots",
+        "2 mini-buts",
+        "1 but",
+        "Chasubles",
+        "Ballons"
+      ],
+      "j_min": 8,
+      "j_max": 12,
+      "duree": 18,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "haute",
+      "variantes": [
+        "Les constructeurs passent en 4 joueurs pour équilibrer la situation",
+        "Le GB a le droit de jouer long au-dessus du pressing — les presseurs doivent adapter leur positionnement"
+      ]
+    },
+    {
+      "id": "trans_def_001",
+      "nom": "Repli défensif après but marqué 6c6",
+      "domaine": "transition_defensive",
+      "sous_theme": "Repli défensif",
+      "type": "jeu_a_theme",
+      "zone": "demi",
+      "objectif": "Replacement défensif immédiat pour empêcher la contre-attaque en infériorité numérique.",
+      "mise_en_place": {
+        "dimensions": "Demi-terrain avec 2 buts et 2 GB",
+        "organisation": "6c6. Plots de contournement à 20m derrière chaque but."
+      },
+      "deroulement": "Quand une équipe marque, 2 joueurs contournent les plots derrière le but adverse. L'adversaire contre-attaque en 6c4. Les 4 restants se compactent et retardent.",
+      "coaching": [
+        "Protéger l'axe du but d'abord — ne pas sortir large",
+        "Reculer orienté de trois-quarts — pas de course dos au jeu",
+        "En supériorité : attaquer VITE avant le retour des 2 joueurs"
+      ],
+      "materiel": [
+        "Plots",
+        "2 buts",
+        "Chasubles",
+        "Ballons"
+      ],
+      "j_min": 12,
+      "j_max": 16,
+      "duree": 20,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "haute",
+      "variantes": [
+        "3 joueurs contournent (6c3)",
+        "L'équipe en infériorité marque double si elle conserve"
+      ]
+    },
+    {
+      "id": "trans_def_002",
+      "nom": "Gestion de la contre-attaque 2c3",
+      "domaine": "transition_defensive",
+      "sous_theme": "Repli défensif",
+      "type": "situation",
+      "zone": "demi",
+      "objectif": "Apprendre à défendre en infériorité 2 contre 3 en reculant, temporisant et en forçant le porteur à faire un choix difficile.",
+      "mise_en_place": {
+        "dimensions": "40m × 30m avec 1 but et GB",
+        "organisation": "3 attaquants partent de la médiane. 2 défenseurs partent de 25m du but en reculant. Le coach déclenche la contre-attaque."
+      },
+      "deroulement": "Les 3 attaquants contre-attaquent face aux 2 défenseurs qui reculent ensemble. Les défenseurs doivent reculer en tandem (l'un devant l'autre ou côte à côte selon la position du ballon), temporiser et obliger les attaquants à faire une passe de trop. Le but des défenseurs est de tenir jusqu'à ce qu'un coéquipier fictif ait le temps de revenir (le coach siffle à 8 secondes). Si pas de but en 8 secondes, point pour la défense.",
+      "coaching": [
+        "Ne jamais s'engager sur le porteur dans un 2c3 — reculer en couvrant le centre, le porteur ne peut pas marquer de loin",
+        "Le défenseur le plus avancé bloque la ligne de passe vers le centre, l'autre protège la profondeur",
+        "Forcer le porteur à aller vers le côté : c'est l'angle le moins dangereux pour un tir"
+      ],
+      "materiel": [
+        "Plots",
+        "Ballons",
+        "1 but"
+      ],
+      "j_min": 6,
+      "j_max": 12,
+      "duree": 15,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "haute",
+      "variantes": [
+        "Un 3e défenseur entre après 5 secondes — les attaquants doivent finir avant",
+        "Passer en 2c4 pour rendre l'exercice encore plus exigeant pour la défense"
+      ]
+    },
+    {
+      "id": "trans_def_003",
+      "nom": "Replacement après perte : règle des 5 secondes",
+      "domaine": "transition_defensive",
+      "sous_theme": "Pressing immédiat",
+      "type": "jeu_a_theme",
+      "zone": "demi",
+      "objectif": "Travailler la réaction collective à la perte du ballon : contre-pressing immédiat ou replacement rapide en bloc bas.",
+      "mise_en_place": {
+        "dimensions": "40m × 30m avec 4 mini-buts (2 par équipe)",
+        "organisation": "6c6 sans GB. Chasubles 2 couleurs."
+      },
+      "deroulement": "Jeu libre 6c6. À chaque perte de balle, l'équipe a exactement 5 secondes (comptées par le coach) pour : Option A — Contre-presser et récupérer le ballon. Si récupération en 5s, but double. Option B — Se replacer en bloc compact dans son camp. Si l'équipe est bien replacée à 5 secondes (jugement du coach), elle reçoit 1 point. Si ni l'un ni l'autre : l'adversaire a un tir libre depuis 20m. Matchs de 5 min.",
+      "coaching": [
+        "À la perte, les 2 joueurs les plus proches du ballon contre-pressent immédiatement — pas de temps de réflexion",
+        "Les 4 autres doivent instantanément choisir : sont-ils assez proches pour aider le contre-pressing ou doivent-ils se replacer ?",
+        "La communication est clé : un joueur doit crier 'PRESS' ou 'ON SE REPLACE' pour donner la consigne collective"
+      ],
+      "materiel": [
+        "4 mini-buts",
+        "Chasubles",
+        "Coupelles",
+        "Ballons"
+      ],
+      "j_min": 12,
+      "j_max": 16,
+      "duree": 20,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "haute",
+      "variantes": [
+        "Réduire à 3 secondes pour augmenter l'intensité de la réaction",
+        "L'équipe qui vient de récupérer a 2 touches max pour relancer — forçant un jeu rapide en transition"
+      ]
+    },
+    {
+      "id": "trans_def_004",
+      "nom": "Repli et fermeture des couloirs 4c4+GB",
+      "domaine": "transition_defensive",
+      "sous_theme": "Repli défensif",
+      "type": "jeu_a_theme",
+      "zone": "demi",
+      "objectif": "Travailler le repli défensif organisé : les joueurs reviennent en courant dans les bons couloirs plutôt que de courir en désordre vers le but.",
+      "mise_en_place": {
+        "dimensions": "Demi-terrain avec 1 but et GB + 3 mini-buts à la médiane",
+        "organisation": "4c4 + GB. Le jeu se joue dans le demi-terrain. Les 3 mini-buts à la médiane sont l'objectif de l'équipe qui construit depuis le but."
+      },
+      "deroulement": "L'équipe A construit depuis le GB pour atteindre les 3 mini-buts à la médiane. L'équipe B presse haut pour récupérer. Quand l'équipe B récupère, elle attaque immédiatement le but. Les 4 joueurs de l'équipe A qui étaient en phase offensive doivent se replier et se réorganiser pour défendre. Le repli doit être organisé : chaque joueur couvre un couloir (gauche, centre-gauche, centre-droit, droit). Séries de 4 min.",
+      "coaching": [
+        "Au moment de la perte, chaque joueur identifie son couloir de repli et y court directement — pas de repli groupé au centre",
+        "Le joueur le plus proche du porteur adverse retarde la progression (il ne récupère pas, il temporise)",
+        "Les 3 autres sprintent vers les 3 couloirs de la surface pour être en place quand le ballon arrive dans la zone de finition"
+      ],
+      "materiel": [
+        "Plots",
+        "3 mini-buts",
+        "1 but",
+        "Chasubles",
+        "Ballons"
+      ],
+      "j_min": 8,
+      "j_max": 12,
+      "duree": 20,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "haute",
+      "variantes": [
+        "L'équipe qui contre-attaque a 8 secondes max pour finir",
+        "Ajouter un joueur de l'équipe A qui revient avec 4 secondes de retard (simuler un joueur haut)"
+      ]
+    },
+    {
+      "id": "phy_001",
+      "nom": "Intermittent 30/30 avec finition",
+      "domaine": "physique_integre",
+      "sous_theme": "Endurance puissance",
+      "type": "situation",
+      "zone": "demi",
+      "objectif": "Puissance aérobie haute intensité avec gestes techniques intégrés.",
+      "mise_en_place": {
+        "dimensions": "Demi-terrain, parcours en boucle",
+        "organisation": "Circuit : course → appuis → frappe au but. Mini-buts sur les côtés. 1 GB. 15-20 ballons autour du parcours."
+      },
+      "deroulement": "30s travail / 30s repos × 8 min. Course, atelier coordination, frappe. 2 séries, 3 min repos entre séries.",
+      "coaching": [
+        "Intensité maximale — qualité de frappe constante même en fin de série",
+        "Appuis réalisés proprement malgré la fatigue",
+        "Zéro temps mort : ballons placés partout"
+      ],
+      "materiel": [
+        "Plots",
+        "Haies/cerceaux",
+        "Ballons ×15-20",
+        "2 mini-buts"
+      ],
+      "j_min": 8,
+      "j_max": 16,
+      "duree": 20,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "haute",
+      "variantes": [
+        "Format 20/20 pour plus d'explosivité",
+        "Duel 1c1 avant la frappe"
+      ]
+    },
+    {
+      "id": "phy_002",
+      "nom": "Parcours coordination et frappe",
+      "domaine": "physique_integre",
+      "sous_theme": "Coordination",
+      "type": "analytique",
+      "zone": "demi",
+      "objectif": "Coordination motrice enchaînée avec un geste de frappe en course.",
+      "mise_en_place": {
+        "dimensions": "Demi-terrain, 2 parcours de 20m",
+        "organisation": "2 files parallèles. Échelle → cerceaux → slalom → frappe. 1 GB."
+      },
+      "deroulement": "Échelle (2 pieds/case), cerceaux bicolores (dissociation D/G), slalom pas chassés, sprint 5m + frappe. 4-5 passages. Alterner pied droit / pied gauche.",
+      "coaching": [
+        "Appuis propres, pas de précipitation",
+        "Frappe en pleine course sans temps d'arrêt",
+        "Varier le pied de frappe à chaque passage"
+      ],
+      "materiel": [
+        "2 échelles",
+        "8-10 cerceaux",
+        "6 piquets",
+        "Ballons"
+      ],
+      "j_min": 6,
+      "j_max": 16,
+      "duree": 15,
+      "cats": [
+        "U14",
+        "U15-U18"
+      ],
+      "intensite": "moyenne",
+      "variantes": [
+        "Duel : 2 joueurs partent, 1er frappe, 2nd défend",
+        "Centre + tête au lieu de frappe"
+      ]
+    },
+    {
+      "id": "phy_003",
+      "nom": "Circuit force-vitesse avec ballon",
+      "domaine": "physique_integre",
+      "sous_theme": "Force",
+      "type": "situation",
+      "zone": "demi",
+      "objectif": "Travailler la force explosive et la vitesse avec un enchaînement d'ateliers intégrant le ballon pour rester spécifique football.",
+      "mise_en_place": {
+        "dimensions": "Demi-terrain, 4 ateliers en carré",
+        "organisation": "4 ateliers : A) 6 sauts verticaux départ assis sur banc, B) sprint 15m avec ballon, C) duel épaule contre épaule sur 10m, D) frappe au but. 2-3 joueurs par atelier. Rotation toutes les 90 secondes."
+      },
+      "deroulement": "Le joueur enchaîne : atelier A (force explosive : 6 sauts verticaux depuis la position assise), sprint vers atelier B (conduite rapide sur 15m), atelier C (duel physique épaule contre épaule avec un partenaire qui résiste, le porteur doit garder le ballon sur 10m), atelier D (frappe au but à l'arrivée). 45 secondes de récupération entre les passages. 4-5 passages au total.",
+      "coaching": [
+        "Les sauts doivent être explosifs : engagement maximal à chaque saut, pas de sauts mous",
+        "Dans le duel épaule, abaisser le centre de gravité et pousser avec les jambes, pas avec les bras",
+        "La frappe en fin de circuit simule la finition sous fatigue : rester lucide et technique malgré l'effort"
+      ],
+      "materiel": [
+        "1 banc ou haie haute",
+        "Plots",
+        "Ballons",
+        "1 but"
+      ],
+      "j_min": 8,
+      "j_max": 16,
+      "duree": 20,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "haute",
+      "variantes": [
+        "Remplacer les sauts verticaux par des bondissements latéraux au-dessus de haies",
+        "Ajouter un GB que l'attaquant doit battre en 1c1 après le sprint"
+      ]
+    },
+    {
+      "id": "phy_004",
+      "nom": "Endurance capacité en jeu réduit 4c4",
+      "domaine": "physique_integre",
+      "sous_theme": "Endurance capacité",
+      "type": "jeu_reduit",
+      "zone": "reduite",
+      "objectif": "Développer l'endurance fondamentale (capacité aérobie) par un jeu réduit continu à intensité modérée avec ballon.",
+      "mise_en_place": {
+        "dimensions": "25m × 20m avec 4 mini-buts (2 par équipe)",
+        "organisation": "4c4 sans GB. 3 équipes de 4 en rotation : 2 jouent, 1 récupère. Matchs de 6 min."
+      },
+      "deroulement": "Jeu libre 4c4 en continu pendant 6 min. L'intensité est modérée (70-75% de la fréquence cardiaque max) : le coach régule en imposant 3 touches max pour éviter les accélérations excessives. À la fin des 6 min, l'équipe perdante sort et est remplacée par l'équipe en attente. 3 min de récupération active entre les matchs. 4-5 rotations au total.",
+      "coaching": [
+        "L'intensité doit rester régulière : pas de phases de marche ni de sprints incontrôlés",
+        "Les 3 touches imposées obligent à bouger sans ballon pour offrir des solutions — travail de mouvement constant",
+        "Encourager le jeu collectif plutôt que le dribble : l'objectif physique est le volume de course, pas l'intensité des duels"
+      ],
+      "materiel": [
+        "4 mini-buts",
+        "Chasubles 3 couleurs",
+        "Coupelles",
+        "Ballons"
+      ],
+      "j_min": 12,
+      "j_max": 16,
+      "duree": 30,
+      "cats": [
+        "U14",
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "moyenne",
+      "variantes": [
+        "Matchs de 8 min pour augmenter le volume",
+        "Ajouter un joker offensif pour fluidifier le jeu et maintenir l'intensité de course"
+      ]
+    },
+    {
+      "id": "phy_005",
+      "nom": "Vitesse réactive avec choix et frappe",
+      "domaine": "physique_integre",
+      "sous_theme": "Vitesse",
+      "type": "analytique",
+      "zone": "demi",
+      "objectif": "Travailler la vitesse de réaction, la prise de décision sous pression temporelle, et l'enchaînement course-frappe.",
+      "mise_en_place": {
+        "dimensions": "Demi-terrain, 3 ateliers devant le but",
+        "organisation": "2 joueurs face à face de chaque côté d'un carré. 3 mini-ateliers colorés devant eux : rouge (cerceaux), jaune (haie + slalom), vert (échelle + course arrière). Ballon posé à 20m du but. 1 GB."
+      },
+      "deroulement": "Le coach annonce une couleur. Les 2 joueurs réagissent, font l'atelier de la couleur annoncée, puis sprintent vers le ballon. Le premier arrivé frappe, le second défend (ou revient en couverture). 4-5 passages par joueur. 45 secondes de récupération minimum entre les passages.",
+      "coaching": [
+        "Réaction explosive au signal : les premières foulées déterminent qui arrive le premier au ballon",
+        "Garder la qualité des appuis dans l'atelier malgré l'urgence — bâcler les appuis fait perdre du temps",
+        "En arrivant au ballon, lever la tête pour voir le but et le GB AVANT de frapper — pas de frappe aveugle"
+      ],
+      "materiel": [
+        "Cerceaux",
+        "Haies",
+        "Échelle de rythme",
+        "Plots couleur",
+        "Ballons",
+        "1 but"
+      ],
+      "j_min": 4,
+      "j_max": 14,
+      "duree": 18,
+      "cats": [
+        "U14",
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "haute",
+      "variantes": [
+        "Le coach annonce 2 couleurs : les joueurs doivent faire les 2 ateliers avant de sprinter",
+        "Ajouter un 2e ballon : le joueur peut choisir de frapper ou de centrer pour un 3e joueur"
+      ]
+    },
+    {
+      "id": "phy_006",
+      "nom": "Jeu réduit haute intensité 3c3+1",
+      "domaine": "physique_integre",
+      "sous_theme": "Endurance puissance",
+      "type": "jeu_reduit",
+      "zone": "reduite",
+      "objectif": "Développer la puissance aérobie par un jeu réduit en espace restreint avec un rythme imposé élevé.",
+      "mise_en_place": {
+        "dimensions": "20m × 15m avec 2 mini-buts",
+        "organisation": "3c3 + 1 joker offensif permanent. 4 équipes de 3, 2 jouent, 2 récupèrent. Matchs de 3 min."
+      },
+      "deroulement": "Jeu intense 3c3+1 (le joker joue avec l'équipe qui a le ballon = 4c3 permanent). 2 touches max. Le joker joue en 1 touche. Matchs de 3 min avec 2 min de récupération. L'équipe perdante est remplacée. Le joker reste sur le terrain. 6-8 matchs au total. L'espace réduit et le joker forcent un rythme de jeu très élevé.",
+      "coaching": [
+        "L'espace est réduit : les passes doivent être ultra-précises, chaque passe approximative est une perte",
+        "Le mouvement sans ballon est permanent : en 3c3, il n'y a pas de place pour rester statique",
+        "Le joker doit jouer en 1 touche rapide : il est le métronome qui accélère le tempo du jeu"
+      ],
+      "materiel": [
+        "2 mini-buts",
+        "Chasubles",
+        "Coupelles",
+        "Ballons"
+      ],
+      "j_min": 12,
+      "j_max": 16,
+      "duree": 25,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "haute",
+      "variantes": [
+        "Passer en 4c4+1 pour augmenter le nombre de joueurs impliqués",
+        "Matchs de 2 min avec 1 min de récup pour maximiser l'intensité"
+      ]
+    },
+    {
+      "id": "tech_009",
+      "nom": "Conduite de balle et changement de direction",
+      "domaine": "technique",
+      "sous_theme": "Conduite-dribble",
+      "type": "analytique",
+      "zone": "reduite",
+      "objectif": "Améliorer la conduite de balle en changeant de direction rapidement et proprement, avec les 2 pieds.",
+      "mise_en_place": {
+        "dimensions": "20m × 20m avec 8 plots formant un parcours",
+        "organisation": "1 ballon par joueur. Les joueurs conduisent simultanément dans la zone. 8 plots disposés de manière aléatoire dans la zone."
+      },
+      "deroulement": "Phase 1 (3 min) : conduite libre dans la zone, éviter les autres joueurs. Phase 2 (4 min) : au signal du coach, changer de direction en utilisant un geste imposé (crochet intérieur, extérieur, demi-tour semelle, feinte de corps). Phase 3 (4 min) : le coach retire 2 plots toutes les 30 secondes — l'espace se réduit, les changements de direction doivent être plus rapides. Phase 4 (4 min) : même exercice mais les joueurs essaient de sortir le ballon des autres joueurs de la zone tout en gardant le leur.",
+      "coaching": [
+        "La conduite se fait avec le ballon proche du pied : pas plus d'un mètre devant soi — le ballon doit rester jouable à tout moment",
+        "Utiliser les 2 pieds : le coach peut imposer 'pied gauche uniquement' sur une phase",
+        "La tête relevée en permanence : le joueur doit voir les autres joueurs et les plots, pas son ballon"
+      ],
+      "materiel": [
+        "8 plots",
+        "1 ballon par joueur"
+      ],
+      "j_min": 8,
+      "j_max": 18,
+      "duree": 15,
+      "cats": [
+        "U14",
+        "U15-U18"
+      ],
+      "intensite": "faible",
+      "variantes": [
+        "En phase 4, les joueurs éliminés font des jongles sur le côté et reviennent au tour suivant",
+        "Ajouter des portes de plots : le joueur doit passer en conduite dans un maximum de portes en 1 min"
+      ]
+    },
+    {
+      "id": "tech_010",
+      "nom": "Passe et mouvement en losange dynamique",
+      "domaine": "technique",
+      "sous_theme": "Passes courtes",
+      "type": "analytique",
+      "zone": "reduite",
+      "objectif": "Travailler la passe courte en mouvement avec changement de position et enchaînement rapide dans un losange à 4 joueurs.",
+      "mise_en_place": {
+        "dimensions": "4 plots en losange, 12m entre chaque plot",
+        "organisation": "4 joueurs, 1 par plot, 2 ballons dans le losange. Les joueurs passent et se déplacent selon un schéma prédéfini."
+      },
+      "deroulement": "Schéma 1 (5 min) : les 2 ballons circulent dans le même sens (horaire). Passe → course vers le plot suivant. Le joueur qui reçoit le ballon le contrôle orienté et relance immédiatement vers le plot suivant. Schéma 2 (5 min) : les 2 ballons circulent en sens inverse — les joueurs doivent gérer 2 flux simultanés. Schéma 3 (5 min) : libre — le joueur choisit à qui il passe et va où il veut, les autres s'adaptent.",
+      "coaching": [
+        "Avec 2 ballons, la prise d'information est double : savoir où est son ballon ET où est l'autre",
+        "Le contrôle orienté est crucial : recevoir face au prochain receveur, pas face au passeur",
+        "En schéma 3, la communication verbale devient indispensable : appeler le ballon, annoncer où on va"
+      ],
+      "materiel": [
+        "4 plots",
+        "2 ballons"
+      ],
+      "j_min": 4,
+      "j_max": 16,
+      "duree": 15,
+      "cats": [
+        "U14",
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "faible",
+      "variantes": [
+        "Ajouter un 3e ballon pour augmenter la difficulté cognitive",
+        "Passer en 1 touche obligatoire sur le schéma 1"
+      ]
+    },
+    {
+      "id": "toff_009",
+      "nom": "Attaque placée 7c7 avec consignes",
+      "domaine": "tactique_offensive",
+      "sous_theme": "Animation offensive",
+      "type": "jeu_a_theme",
+      "zone": "trois_quarts",
+      "objectif": "Travailler l'animation offensive collective en 7c7 avec des consignes tactiques spécifiques imposées par le coach.",
+      "mise_en_place": {
+        "dimensions": "60m × 45m avec 2 buts et GB",
+        "organisation": "7c7 en 3-3-1 ou 4-2-1 selon le système du coach. Chasubles. Le coach impose une consigne offensive différente toutes les 5 min."
+      },
+      "deroulement": "Séquence 1 (5 min) : obligation de passer par un côté avant de finir (pas de tir direct depuis l'axe sans être passé par un couloir). Séquence 2 (5 min) : minimum 1 changement de côté (renversement) avant de tirer. Séquence 3 (5 min) : obligation d'impliquer le joueur de pointe (appui-remise ou déviation) avant la finition. Séquence 4 (5 min) : jeu libre, le coach observe si les automatismes des 3 consignes sont intégrés naturellement.",
+      "coaching": [
+        "Les consignes ne sont pas des contraintes artificielles : elles reflètent les principes de jeu du coach pour les matchs",
+        "En séquence 4, vérifier que les joueurs utilisent spontanément le renversement, le jeu sur les côtés et l'appui-remise",
+        "Le rythme de jeu ne doit pas baisser à cause des consignes : si les joueurs hésitent, simplifier"
+      ],
+      "materiel": [
+        "Plots",
+        "2 buts",
+        "Chasubles",
+        "Ballons"
+      ],
+      "j_min": 14,
+      "j_max": 18,
+      "duree": 20,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "moyenne",
+      "variantes": [
+        "Ajouter un joker offensif pour créer du surnombre en phase d'attaque",
+        "Les buts marqués en 1 touche comptent double pour encourager le jeu rapide"
+      ]
+    },
+    {
+      "id": "toff_010",
+      "nom": "Jeu positionnel 6c3 en 3 zones",
+      "domaine": "tactique_offensive",
+      "sous_theme": "Construction",
+      "type": "jeu_reduit",
+      "zone": "demi",
+      "objectif": "Travailler la supériorité numérique en conservation pour apprendre à occuper les bonnes positions et à accélérer la circulation.",
+      "mise_en_place": {
+        "dimensions": "30m × 20m divisé en 3 bandes verticales de 10m",
+        "organisation": "6 joueurs en conservation contre 3 presseurs. Règle : maximum 2 joueurs par bande. Cela force l'occupation de la largeur."
+      },
+      "deroulement": "Les 6 joueurs conservent le ballon en 2 touches max face à 3 presseurs. La règle des 2 joueurs max par bande oblige à s'écarter et à occuper tout l'espace. Quand les 6 joueurs enchaînent 8 passes, ils marquent 1 point et les 3 presseurs sont remplacés. Si un presseur récupère, il marque 3 points pour son équipe et on change. 3 min par série.",
+      "coaching": [
+        "La bande où il y a de l'espace est toujours la plus éloignée du ballon — la prise d'info côté opposé est clé",
+        "Les joueurs dans la bande du porteur offrent des solutions courtes, le joueur de la bande opposée est le déclencheur du changement de rythme",
+        "Le mouvement entre les bandes est essentiel : dès qu'un joueur quitte une bande, un autre doit y entrer"
+      ],
+      "materiel": [
+        "Coupelles (3 bandes)",
+        "Chasubles",
+        "Ballons"
+      ],
+      "j_min": 9,
+      "j_max": 18,
+      "duree": 18,
+      "cats": [
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "moyenne",
+      "variantes": [
+        "Passer en 1 touche pour accélérer le tempo",
+        "Ajouter un 4e presseur pour réduire la supériorité et augmenter la difficulté"
+      ]
+    },
+    {
+      "id": "tech_011",
+      "nom": "Protection de balle et ressortie sous pression",
+      "domaine": "technique",
+      "sous_theme": "Protection de balle",
+      "type": "situation",
+      "zone": "reduite",
+      "objectif": "Apprendre à protéger son ballon dos à l'adversaire et à ressortir proprement sous la pression d'un défenseur.",
+      "mise_en_place": {
+        "dimensions": "10m × 10m, 2 mini-buts à chaque extrémité",
+        "organisation": "1c1 dans le carré. Le porteur reçoit dos au défenseur. 2 mini-buts de chaque côté (4 total). Files d'attente sur les côtés."
+      },
+      "deroulement": "Le coach (ou un passeur) envoie le ballon au joueur dos au défenseur. Le porteur doit : contrôler en protégeant (corps entre le défenseur et le ballon), résister à la pression physique, puis se retourner ou pivoter pour marquer dans un des 2 mini-buts de son côté. Le défenseur presse dès la réception. Alternance des rôles à chaque passage. 5-6 passages par joueur.",
+      "coaching": [
+        "Abaisser le centre de gravité à la réception : genoux fléchis, fesses en arrière, bras écartés pour créer un écran",
+        "Utiliser la semelle pour déplacer le ballon latéralement sous pression — ne jamais laisser le ballon entre ses jambes",
+        "Le pivot se fait sur un appui fort : pousser le défenseur avec l'épaule puis pivoter vite du côté libre"
+      ],
+      "materiel": [
+        "4 mini-buts",
+        "Coupelles",
+        "Ballons"
+      ],
+      "j_min": 6,
+      "j_max": 14,
+      "duree": 15,
+      "cats": [
+        "U14",
+        "U15-U18",
+        "Seniors"
+      ],
+      "intensite": "moyenne",
+      "variantes": [
+        "Le porteur a 5 secondes max pour marquer — sinon point au défenseur",
+        "Ajouter un 2e passeur : le porteur peut remettre et recevoir à nouveau (appui-remise) avant de se retourner"
+      ]
+    }
+  ],
+  "seances_suggerees": {
+    "pressing": {
+      "label": "Pressing haut",
+      "seances": [
+        {
+          "nom": "Pressing — déclencheurs et coordination",
+          "objectif": "Coordonner le pressing collectif sur signal, récupérer en moins de 6 secondes.",
+          "duree_totale": 90,
+          "procedes": [
+            "ech_001",
+            "tdef_002",
+            "tdef_008",
+            "trans_off_001",
+            "phy_006"
+          ],
+          "debrief": "Quand déclencher le pressing ? Que faire si on ne récupère pas en 6 secondes ?"
+        },
+        {
+          "nom": "Pressing — récupération haute et transition",
+          "objectif": "Presser haut pour récupérer et enchaîner immédiatement vers le but.",
+          "duree_totale": 87,
+          "procedes": [
+            "ech_002",
+            "tdef_005",
+            "trans_off_006",
+            "tdef_008",
+            "trans_off_002"
+          ],
+          "debrief": "Comment orienter le porteur pour le piéger ? Quelle est la 1re intention après la récup ?"
+        }
+      ]
+    },
+    "construction": {
+      "label": "Construction depuis le GB",
+      "seances": [
+        {
+          "nom": "Construction — sortie de balle propre",
+          "objectif": "Construire depuis le gardien malgré le pressing, progresser zone par zone.",
+          "duree_totale": 85,
+          "procedes": [
+            "ech_003",
+            "tech_001",
+            "toff_006",
+            "toff_010",
+            "toff_009"
+          ],
+          "debrief": "Quand jouer court depuis le GB ? Quand jouer long ? Quel est le rôle du milieu défensif ?"
+        },
+        {
+          "nom": "Construction — patience et progression",
+          "objectif": "Maîtriser la circulation de balle et trouver les solutions vers l'avant.",
+          "duree_totale": 82,
+          "procedes": [
+            "ech_001",
+            "tech_010",
+            "toff_006",
+            "toff_002",
+            "toff_004"
+          ],
+          "debrief": "Comment on progresse quand le pressing est haut ? Quand accélérer la passe ?"
+        }
+      ]
+    },
+    "transition_off": {
+      "label": "Transition offensive",
+      "seances": [
+        {
+          "nom": "Transition OFF — verticalité immédiate",
+          "objectif": "Exploiter la récupération pour attaquer vite en supériorité numérique.",
+          "duree_totale": 82,
+          "procedes": [
+            "ech_002",
+            "trans_off_001",
+            "trans_off_002",
+            "trans_off_004",
+            "trans_off_005"
+          ],
+          "debrief": "1re intention après la récup ? Quand accélérer, quand sécuriser ?"
+        },
+        {
+          "nom": "Transition OFF — récupérer et percuter",
+          "objectif": "Changer de statut en moins de 3 secondes et finir au but.",
+          "duree_totale": 80,
+          "procedes": [
+            "ech_004",
+            "trans_off_003",
+            "trans_off_006",
+            "trans_off_004",
+            "phy_006"
+          ],
+          "debrief": "Quand jouer long direct ? Quand construire court après la récup ?"
+        }
+      ]
+    },
+    "transition_def": {
+      "label": "Transition défensive",
+      "seances": [
+        {
+          "nom": "Transition DEF — repli et réaction à la perte",
+          "objectif": "Réagir collectivement à la perte, se replacer ou contre-presser en 5 secondes.",
+          "duree_totale": 87,
+          "procedes": [
+            "ech_001",
+            "trans_def_003",
+            "trans_def_002",
+            "trans_def_001",
+            "trans_def_004"
+          ],
+          "debrief": "On contre-presse ou on se replace ? Comment on décide en 1 seconde ?"
+        },
+        {
+          "nom": "Transition DEF — défendre en infériorité",
+          "objectif": "Temporiser en infériorité numérique en attendant le retour des coéquipiers.",
+          "duree_totale": 82,
+          "procedes": [
+            "ech_005",
+            "tdef_004",
+            "trans_def_002",
+            "trans_def_001",
+            "tdef_006"
+          ],
+          "debrief": "Comment retarder la contre-attaque ? Quelle zone protéger en priorité ?"
+        }
+      ]
+    },
+    "entre_lignes": {
+      "label": "Jeu entre les lignes",
+      "seances": [
+        {
+          "nom": "Entre les lignes — trouver le joueur libre",
+          "objectif": "Identifier et servir le joueur positionné entre les lignes adverses.",
+          "duree_totale": 87,
+          "procedes": [
+            "ech_001",
+            "tech_002",
+            "toff_002",
+            "toff_008",
+            "toff_004"
+          ],
+          "debrief": "C'est quoi l'espace entre les lignes ? Comment on se montre au bon moment ?"
+        },
+        {
+          "nom": "Entre les lignes — décrochages et remises",
+          "objectif": "Travailler les appuis-remises et les déviations en zone axiale.",
+          "duree_totale": 85,
+          "procedes": [
+            "ech_004",
+            "tech_008",
+            "toff_002",
+            "toff_005",
+            "toff_009"
+          ],
+          "debrief": "Le pivot reçoit dos au but : quelles options ? Quand se retourner, quand remettre ?"
+        }
+      ]
+    },
+    "cote_fort": {
+      "label": "Jeu côté fort / triangles",
+      "seances": [
+        {
+          "nom": "Côté fort — débordement et centre",
+          "objectif": "Combiner sur un côté pour déborder et centrer vers les attaquants.",
+          "duree_totale": 90,
+          "procedes": [
+            "ech_005",
+            "tech_006",
+            "toff_003",
+            "toff_001",
+            "toff_009"
+          ],
+          "debrief": "Quand déborder ? Quand rentrer ? Comment attaquer les 3 zones sur le centre ?"
+        },
+        {
+          "nom": "Côté fort — combinaisons et renversement",
+          "objectif": "Fixer d'un côté par les triangles puis renverser si le côté fort est fermé.",
+          "duree_totale": 85,
+          "procedes": [
+            "ech_001",
+            "tech_007",
+            "toff_005",
+            "toff_001",
+            "toff_008"
+          ],
+          "debrief": "Quand fixer ? Quand renverser ? Comment lire la position du bloc adverse ?"
+        }
+      ]
+    },
+    "finition": {
+      "label": "Finition + efficacité",
+      "seances": [
+        {
+          "nom": "Finition — frappe et efficacité devant le but",
+          "objectif": "Concrétiser les occasions dans et autour de la surface.",
+          "duree_totale": 88,
+          "procedes": [
+            "ech_005",
+            "tech_005",
+            "tech_006",
+            "toff_007",
+            "toff_005"
+          ],
+          "debrief": "Je tire ou je passe — comment je décide ? Quelle zone je vise quand je frappe ?"
+        },
+        {
+          "nom": "Finition — centres et jeu de tête",
+          "objectif": "Travailler la finition sur les centres et les situations aériennes.",
+          "duree_totale": 85,
+          "procedes": [
+            "ech_004",
+            "tech_004",
+            "tech_006",
+            "toff_003",
+            "toff_009"
+          ],
+          "debrief": "Comment attaquer le ballon de la tête ? Quelles courses dans la surface sur un centre ?"
+        }
+      ]
+    },
+    "bloc": {
+      "label": "Bloc défensif",
+      "seances": [
+        {
+          "nom": "Bloc — compacité et coulissage",
+          "objectif": "Organiser le bloc défensif, coulisser en ligne, combler les espaces.",
+          "duree_totale": 92,
+          "procedes": [
+            "ech_001",
+            "tdef_001",
+            "tdef_003",
+            "tdef_004",
+            "tdef_006"
+          ],
+          "debrief": "C'est quoi un bloc compact ? Quand on monte ? Quand on descend ?"
+        },
+        {
+          "nom": "Bloc — défense sur les centres et duels",
+          "objectif": "Se positionner dans la surface sur les centres et gagner les duels aériens.",
+          "duree_totale": 85,
+          "procedes": [
+            "ech_005",
+            "tdef_007",
+            "tdef_005",
+            "tdef_001",
+            "tdef_006"
+          ],
+          "debrief": "Comment se placer entre l'attaquant et le but ? Le GB communique quoi sur les centres ?"
+        }
+      ]
+    },
+    "cpa_off": {
+      "label": "CPA offensifs",
+      "seances": [
+        {
+          "nom": "CPA — corners et coups francs offensifs",
+          "objectif": "Installer 2-3 schémas de corners et travailler le jeu de tête offensif.",
+          "duree_totale": 80,
+          "procedes": [
+            "ech_005",
+            "tech_004",
+            "toff_005",
+            "tech_005",
+            "toff_009"
+          ],
+          "debrief": "Quel schéma on préfère ? Comment surprendre la défense adverse ?"
+        }
+      ]
+    },
+    "physique": {
+      "label": "Physique intégré",
+      "seances": [
+        {
+          "nom": "Physique — endurance et puissance avec ballon",
+          "objectif": "Travail physique intégré aux situations de jeu. Pas de course sans ballon.",
+          "duree_totale": 90,
+          "procedes": [
+            "ech_005",
+            "phy_002",
+            "phy_001",
+            "phy_004",
+            "phy_006"
+          ],
+          "debrief": "Comment vous avez géré l'effort ? Qu'est-ce qui a changé quand vous étiez fatigués ?"
+        },
+        {
+          "nom": "Physique — vitesse et coordination",
+          "objectif": "Vitesse de réaction, coordination motrice et force explosive avec ballon.",
+          "duree_totale": 85,
+          "procedes": [
+            "ech_005",
+            "phy_005",
+            "phy_003",
+            "phy_002",
+            "phy_006"
+          ],
+          "debrief": "La qualité technique baisse-t-elle sous fatigue ? Comment maintenir la lucidité ?"
+        }
+      ]
+    }
+  }
+}
