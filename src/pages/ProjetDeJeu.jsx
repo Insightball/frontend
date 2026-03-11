@@ -454,6 +454,8 @@ export default function ProjetDeJeu(){
   const[horaire,setHoraire]=useState('19:00')
   const[projetSaved,setProjetSaved]=useState(false)
   const[loadingPlan,setLoadingPlan]=useState(true)
+  const[saving,setSaving]=useState(false)
+  const[saveError,setSaveError]=useState('')
 
   // Séance
   const[themeSeance,setThemeSeance]=useState('pressing')
@@ -495,6 +497,8 @@ export default function ProjetDeJeu(){
   },[])
 
   const saveProjet=async()=>{
+    setSaving(true)
+    setSaveError('')
     try{
       const res = await fetch(`${API}/game-plan`,{method:'PUT',headers:authH(),
         body:JSON.stringify({formation,category:categorie,principles:sel,
@@ -503,11 +507,19 @@ export default function ProjetDeJeu(){
       if(!res.ok){
         const err = await res.text().catch(()=>'')
         console.error('Erreur sauvegarde projet:',res.status,err)
+        setSaveError(`Erreur ${res.status} — vérifiez votre connexion`)
+        setSaving(false)
         return false
       }
       setProjetSaved(true)
+      setSaving(false)
       return true
-    }catch(e){console.error('Erreur réseau sauvegarde:',e);return false}
+    }catch(e){
+      console.error('Erreur réseau sauvegarde:',e)
+      setSaveError('Erreur réseau — vérifiez votre connexion')
+      setSaving(false)
+      return false
+    }
   }
 
   const toggle=id=>setSel(p=>p.includes(id)?p.filter(x=>x!==id):p.length>=5?p:[...p,id])
@@ -617,9 +629,12 @@ export default function ProjetDeJeu(){
               <h2 style={{fontFamily:G.display,fontSize:20,textTransform:'uppercase',color:G.ink,marginBottom:2}}>Programmation <span style={{color:G.gold}}>annuelle</span></h2>
               <p style={{fontFamily:G.mono,fontSize:8,color:G.muted,marginBottom:14}}>{PROG.reduce((a,p)=>a+p.wk,0)} semaines · calée depuis votre reprise</p>
               {PROG.map((p,i)=><PeriodCard key={i} p={p} sd={periodDates[i]}/>)}
-              <div style={{display:'flex',gap:8,marginTop:16}}>
-                <button onClick={()=>setStep(0)} style={{flex:1,padding:'10px',background:'transparent',border:`1px solid ${G.rule}`,fontFamily:G.mono,fontSize:9,textTransform:'uppercase',color:G.muted,cursor:'pointer'}}>← Modifier</button>
-                <button onClick={async()=>{const ok=await saveProjet();if(ok)setStep(2)}} style={{flex:2,padding:'10px',background:G.gold,border:'none',fontFamily:G.display,fontSize:13,textTransform:'uppercase',color:'#0f0f0d',cursor:'pointer'}}>Enregistrer et préparer une séance →</button>
+              <div style={{display:'flex',gap:8,marginTop:16,flexDirection:'column'}}>
+                {saveError&&<div style={{fontFamily:G.mono,fontSize:9,color:G.red,background:G.redBg||'rgba(220,38,38,0.08)',border:`1px solid rgba(220,38,38,0.2)`,padding:'8px 10px'}}>{saveError}</div>}
+                <div style={{display:'flex',gap:8}}>
+                  <button onClick={()=>setStep(0)} disabled={saving} style={{flex:1,padding:'10px',background:'transparent',border:`1px solid ${G.rule}`,fontFamily:G.mono,fontSize:9,textTransform:'uppercase',color:G.muted,cursor:saving?'not-allowed':'pointer'}}>← Modifier</button>
+                  <button onClick={async()=>{await saveProjet()}} disabled={saving} style={{flex:2,padding:'10px',background:saving?G.goldBg:G.gold,border:saving?`1px solid ${G.goldBdr}`:'none',fontFamily:G.display,fontSize:13,textTransform:'uppercase',color:saving?G.gold:'#0f0f0d',cursor:saving?'wait':'pointer'}}>{saving?'Enregistrement...':'Enregistrer et préparer une séance →'}</button>
+                </div>
               </div>
             </div>}
           </>
