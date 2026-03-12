@@ -93,8 +93,6 @@ export default function RegionPage() {
   if (!region) return <Navigate to="/" replace />;
 
   const hasDistricts = region.districts && region.districts.length > 0;
-  const hasFaq = region.faq && region.faq.length > 0;
-  const hasClubs = region.clubsEmblematiques && region.clubsEmblematiques.length > 0;
 
   return (
     <div style={{ background: G.white, color: G.ink, fontFamily: G.body, fontSize: 16, lineHeight: 1.6, overflowX: 'hidden' }}>
@@ -288,29 +286,6 @@ export default function RegionPage() {
         </section>
       )}
 
-      {/* ══ CLUBS EMBLÉMATIQUES ══ */}
-      {hasClubs && (
-        <section style={{ maxWidth: 860, margin: '0 auto', padding: '56px 40px 0' }}>
-          <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>
-            Clubs de la région
-          </p>
-          <h3 style={{ fontFamily: G.display, fontSize: 24, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.02em', marginBottom: 20, color: G.ink }}>
-            Clubs emblématiques en {region.name}
-          </h3>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-            {region.clubsEmblematiques.map((c) => (
-              <span key={c} style={{
-                fontFamily: G.body, fontSize: 14, fontWeight: 500,
-                padding: '10px 16px', background: G.dark, color: G.white,
-                borderRadius: 4,
-              }}>
-                {c}
-              </span>
-            ))}
-          </div>
-        </section>
-      )}
-
       {/* ══ COMMENT ÇA MARCHE ══ */}
       <section style={{ maxWidth: 860, margin: '0 auto', padding: '72px 40px 0' }}>
         <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>
@@ -367,37 +342,6 @@ export default function RegionPage() {
           ))}
         </div>
       </section>
-
-      {/* ══ FAQ LOCALE ══ */}
-      {hasFaq && (
-        <section style={{ maxWidth: 860, margin: '0 auto', padding: '72px 40px 0' }}>
-          <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.18em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>
-            Questions fréquentes
-          </p>
-          <h2 style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.02em', marginBottom: 32, color: G.ink }}>
-            Insightball en {region.name}
-          </h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {region.faq.map((item, i) => (
-              <div key={i} style={{
-                background: G.off, borderRadius: 4, padding: '28px 32px',
-                border: `1px solid ${G.border}`,
-              }}>
-                <h3 style={{
-                  fontFamily: G.display, fontSize: 18, fontWeight: 700,
-                  textTransform: 'uppercase', letterSpacing: '.02em',
-                  color: G.ink, marginBottom: 12, lineHeight: 1.3,
-                }}>
-                  {item.question}
-                </h3>
-                <p style={{ fontFamily: G.body, fontSize: 15, color: G.muted, lineHeight: 1.65, margin: 0 }}>
-                  {item.answer}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
 
       {/* ══ QUI SOMMES-NOUS ══ */}
       <section style={{ maxWidth: 860, margin: '72px auto 0', padding: '0 40px' }}>
