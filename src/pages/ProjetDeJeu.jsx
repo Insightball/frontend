@@ -213,37 +213,137 @@ function PrincipeCard({p,sel,onToggle}){return(
 )}
 
 /* ═══════════════════════════════
-   ZONES TERRAIN
+   TERRAIN SVG — ADAPTATIF
+   reduit = carré, demi = paysage avec marquages,
+   largeur = horizontal avec but+surface
 ═══════════════════════════════ */
-const ZONES_TERRAIN = {
-  plein:         { label:'Terrain complet',    z:[0,0,100,100] },
-  trois_quarts:  { label:'¾ terrain',          z:[0,0,100,75] },
-  demi:          { label:'Demi-terrain',        z:[0,0,100,50] },
-  quart:         { label:'Quart terrain',       z:[0,0,50,50] },
-  surface:       { label:'Surface',             z:[20,0,60,25] },
-  couloir:       { label:'Couloir central',     z:[15,10,70,80] },
-  largeur:       { label:'Toute la largeur',    z:[0,25,100,50] },
-  reduite:       { label:'Zone réduite',        z:[30,30,40,40] },
+const ROLE_COLORS = { att:G.gold, def:'#dc2626', gk:'#16a34a', neutre:'#94a3b8' }
+const COURSE_COLORS = { course:G.gold, sprint:'#dc2626', appel:G.gold, coulissage:'#2563eb', sortie:'#dc2626' }
+
+function SvgDefs(){return(
+  <defs>
+    <pattern id="tgr" width="10" height="10" patternUnits="userSpaceOnUse">
+      <rect width="10" height="10" fill="#2b6b22"/><rect y="0" width="10" height="5" fill="#2f7226" opacity="0.35"/>
+    </pattern>
+    {[['tag',G.gold],['tar','#dc2626'],['tab','#2563eb']].map(([id,c])=>(
+      <marker key={id} id={id} markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill={c}/></marker>
+    ))}
+  </defs>
+)}
+
+function SvgJoueur({x,y,role,label}){
+  const col=ROLE_COLORS[role]||G.muted
+  return(<g><circle cx={x} cy={y} r={10} fill={col} stroke="white" strokeWidth="1.5" opacity="0.9"/>
+    {label&&<text x={x} y={y+1} textAnchor="middle" dominantBaseline="central" fill="white" fontSize="6.5" fontWeight="700" fontFamily={G.mono}>{label}</text>}
+  </g>)
+}
+function SvgPasse({x1,y1,x2,y2}){return <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="white" strokeWidth="1.5" strokeDasharray="5,4" opacity="0.45"/>}
+function SvgCourse({x1,y1,x2,y2,type}){
+  const col=COURSE_COLORS[type]||G.gold
+  const m={[G.gold]:'url(#tag)','#dc2626':'url(#tar)','#2563eb':'url(#tab)'}
+  return <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={col} strokeWidth="2" strokeDasharray={type==='appel'?'4,3':''} markerEnd={m[col]||'url(#tag)'} opacity="0.85"/>
+}
+function SvgPlot({x,y}){return <circle cx={x} cy={y} r={3.5} fill={G.orange} stroke="white" strokeWidth="0.5"/>}
+
+function RenderSchema({schema,W,H,P}){
+  const fw=W-P*2,fh=H-P*2
+  const px=p=>P+(p/100)*fw, py=p=>P+(p/100)*fh
+  const j=schema.joueurs||[],pa=schema.passes||[],co=schema.courses||[],el=schema.elements||[]
+  return(<>
+    {pa.map(([f,t],i)=>j[f]&&j[t]?<SvgPasse key={`p${i}`} x1={px(j[f].x)} y1={py(j[f].y)} x2={px(j[t].x)} y2={py(j[t].y)}/>:null)}
+    {co.map((c,i)=><SvgCourse key={`c${i}`} x1={px(c.from[0])} y1={py(c.from[1])} x2={px(c.to[0])} y2={py(c.to[1])} type={c.type}/>)}
+    {el.map((e,i)=>e.type==='plot'?<SvgPlot key={`e${i}`} x={px(e.x)} y={py(e.y)}/>:null)}
+    {j.map((p,i)=><SvgJoueur key={`j${i}`} x={px(p.x)} y={py(p.y)} role={p.role} label={p.label}/>)}
+    <text x={W/2} y={H-3} textAnchor="middle" fill="rgba(255,255,255,0.35)" fontSize="7" fontFamily={G.mono}>{schema.dimensions}</text>
+  </>)
 }
 
+function TerrainReduit({schema}){
+  const W=180,H=180,P=14
+  return(<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{borderRadius:4,flexShrink:0}}>
+    <SvgDefs/><rect width={W} height={H} rx="4" fill="url(#tgr)"/>
+    <rect x={P} y={P} width={W-P*2} height={H-P*2} fill="none" stroke="white" strokeWidth="1.5" opacity="0.3" rx="2"/>
+    <RenderSchema schema={schema} W={W} H={H} P={P}/>
+  </svg>)
+}
+
+function TerrainDemi({schema}){
+  const W=240,H=195,P=12
+  const fw=W-P*2,fh=H-P*2,cx=W/2
+  const surfW=fw*0.593,surfH=fh*0.314,surfX=cx-surfW/2
+  const pSurfW=fw*0.269,pSurfH=fh*0.105,pSurfX=cx-pSurfW/2
+  const penY=P+fh*0.209
+  const arcR=fw*0.134,arcBot=P+surfH
+  const dy=arcBot-penY,halfW=Math.sqrt(Math.max(0,arcR*arcR-dy*dy))
+  const butW=fw*0.108,rcR=fw*0.10
+  return(<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{borderRadius:4,flexShrink:0}}>
+    <SvgDefs/><rect width={W} height={H} rx="4" fill="url(#tgr)"/>
+    <rect x={P} y={P} width={fw} height={fh} fill="none" stroke="white" strokeWidth="1.5" opacity="0.3"/>
+    <line x1={P} y1={P+fh} x2={W-P} y2={P+fh} stroke="white" strokeWidth="1.5" opacity="0.3"/>
+    <path d={`M ${cx-rcR} ${P+fh} A ${rcR} ${rcR} 0 0 0 ${cx+rcR} ${P+fh}`} fill="none" stroke="white" strokeWidth="0.8" opacity="0.15"/>
+    <circle cx={cx} cy={P+fh} r={1.5} fill="white" opacity="0.2"/>
+    <rect x={surfX} y={P} width={surfW} height={surfH} fill="none" stroke="white" strokeWidth="1" opacity="0.3"/>
+    <rect x={pSurfX} y={P} width={pSurfW} height={pSurfH} fill="none" stroke="white" strokeWidth="0.8" opacity="0.22"/>
+    <circle cx={cx} cy={penY} r={1.5} fill="white" opacity="0.3"/>
+    {halfW>2&&<path d={`M ${cx-halfW} ${arcBot} A ${arcR} ${arcR} 0 0 0 ${cx+halfW} ${arcBot}`} fill="none" stroke="white" strokeWidth="0.8" opacity="0.18"/>}
+    <rect x={cx-butW/2} y={P-4} width={butW} height={5} fill="none" stroke="white" strokeWidth="1.2" opacity="0.5" rx="1"/>
+    <line x1={cx-butW/2} y1={P} x2={cx+butW/2} y2={P} stroke="white" strokeWidth="1.5" opacity="0.5"/>
+    <RenderSchema schema={schema} W={W} H={H} P={P}/>
+  </svg>)
+}
+
+function TerrainLargeur({schema}){
+  const W=260,H=175,P=12
+  const fw=W-P*2,fh=H-P*2,cx=W/2
+  const surfW=fw*0.45,surfH=fh*0.28,surfX=cx-surfW/2
+  const pSurfW=fw*0.24,pSurfH=fh*0.12,pSurfX=cx-pSurfW/2
+  const penY=P+fh*0.22
+  const arcR=fw*0.10,arcBot=P+surfH
+  const dy=arcBot-penY,halfW=Math.sqrt(Math.max(0,arcR*arcR-dy*dy))
+  const butW=fw*0.12
+  return(<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{borderRadius:4,flexShrink:0}}>
+    <SvgDefs/><rect width={W} height={H} rx="4" fill="url(#tgr)"/>
+    <rect x={P} y={P} width={fw} height={fh} fill="none" stroke="white" strokeWidth="1.5" opacity="0.3"/>
+    <rect x={surfX} y={P} width={surfW} height={surfH} fill="none" stroke="white" strokeWidth="0.8" opacity="0.25"/>
+    <rect x={pSurfX} y={P} width={pSurfW} height={pSurfH} fill="none" stroke="white" strokeWidth="0.8" opacity="0.2"/>
+    <circle cx={cx} cy={penY} r={1.5} fill="white" opacity="0.3"/>
+    {halfW>2&&<path d={`M ${cx-halfW} ${arcBot} A ${arcR} ${arcR} 0 0 0 ${cx+halfW} ${arcBot}`} fill="none" stroke="white" strokeWidth="0.8" opacity="0.18"/>}
+    <rect x={cx-butW/2} y={P-4} width={butW} height={5} fill="none" stroke="white" strokeWidth="1.2" opacity="0.5" rx="1"/>
+    <line x1={cx-butW/2} y1={P} x2={cx+butW/2} y2={P} stroke="white" strokeWidth="1.5" opacity="0.5"/>
+    <RenderSchema schema={schema} W={W} H={H} P={P}/>
+  </svg>)
+}
+
+function TerrainSVG({schema}){
+  if(!schema||!schema.terrain) return null
+  if(schema.terrain==='reduit') return <TerrainReduit schema={schema}/>
+  if(schema.terrain==='demi') return <TerrainDemi schema={schema}/>
+  if(schema.terrain==='largeur') return <TerrainLargeur schema={schema}/>
+  return <TerrainReduit schema={schema}/>
+}
+
+// Fallback pour les exercices sans schema — affiche l'ancien ZoneIndicator
+const ZONES_TERRAIN = {
+  plein:{label:'Terrain complet',z:[0,0,100,100]}, trois_quarts:{label:'¾ terrain',z:[0,0,100,75]},
+  demi:{label:'Demi-terrain',z:[0,0,100,50]}, quart:{label:'Quart terrain',z:[0,0,50,50]},
+  surface:{label:'Surface',z:[20,0,60,25]}, couloir:{label:'Couloir central',z:[15,10,70,80]},
+  largeur:{label:'Toute la largeur',z:[0,25,100,50]}, reduite:{label:'Zone réduite',z:[30,30,40,40]},
+}
 function ZoneIndicator({zoneKey}){
-  const z = ZONES_TERRAIN[zoneKey]
-  if(!z) return null
-  const [x,y,w,h] = z.z
-  return(
-    <div style={{display:'flex',alignItems:'center',gap:6}}>
-      <svg width="38" height="54" viewBox="0 0 100 140" style={{border:'1px solid #3a7a33',background:'#2d5a27'}}>
-        <rect x="2" y="2" width="96" height="136" fill="none" stroke="white" strokeWidth="1.5" opacity="0.25" rx="1"/>
-        <line x1="2" y1="70" x2="98" y2="70" stroke="white" strokeWidth="1" opacity="0.18"/>
-        <circle cx="50" cy="70" r="14" fill="none" stroke="white" strokeWidth="0.8" opacity="0.12"/>
-        <rect x="25" y="2" width="50" height="20" fill="none" stroke="white" strokeWidth="0.8" opacity="0.12"/>
-        <rect x="25" y="118" width="50" height="20" fill="none" stroke="white" strokeWidth="0.8" opacity="0.12"/>
-        <rect x={x*.96+2} y={y*1.36+2} width={w*.96} height={h*1.36} fill={G.gold} opacity="0.35" rx="2"/>
-        <rect x={x*.96+2} y={y*1.36+2} width={w*.96} height={h*1.36} fill="none" stroke={G.gold} strokeWidth="1.5" rx="2"/>
-      </svg>
-      <span style={{fontFamily:G.mono,fontSize:7,color:G.gold,fontWeight:600,letterSpacing:'.04em'}}>{z.label}</span>
-    </div>
-  )
+  const z=ZONES_TERRAIN[zoneKey]; if(!z) return null
+  const [x,y,w,h]=z.z
+  return(<div style={{display:'flex',alignItems:'center',gap:6}}>
+    <svg width="38" height="54" viewBox="0 0 100 140" style={{border:'1px solid #3a7a33',background:'#2d5a27'}}>
+      <rect x="2" y="2" width="96" height="136" fill="none" stroke="white" strokeWidth="1.5" opacity="0.25" rx="1"/>
+      <line x1="2" y1="70" x2="98" y2="70" stroke="white" strokeWidth="1" opacity="0.18"/>
+      <circle cx="50" cy="70" r="14" fill="none" stroke="white" strokeWidth="0.8" opacity="0.12"/>
+      <rect x="25" y="2" width="50" height="20" fill="none" stroke="white" strokeWidth="0.8" opacity="0.12"/>
+      <rect x="25" y="118" width="50" height="20" fill="none" stroke="white" strokeWidth="0.8" opacity="0.12"/>
+      <rect x={x*.96+2} y={y*1.36+2} width={w*.96} height={h*1.36} fill={G.gold} opacity="0.35" rx="2"/>
+      <rect x={x*.96+2} y={y*1.36+2} width={w*.96} height={h*1.36} fill="none" stroke={G.gold} strokeWidth="1.5" rx="2"/>
+    </svg>
+    <span style={{fontFamily:G.mono,fontSize:7,color:G.gold,fontWeight:600,letterSpacing:'.04em'}}>{z.label}</span>
+  </div>)
 }
 
 /* ═══════════════════════════════
@@ -266,6 +366,7 @@ function IntensityBar({level}){
 function ExerciceCard({ex,isOpen,onToggle,onAdd,inSession,sessionFull}){
   const dc = DOMAINE_COLORS[ex.domaine] || G.muted
   const tc = TYPE_COLORS[ex.type] || G.muted
+  const hasSchema = ex.schema && ex.schema.terrain
   return(
     <div style={{background:G.surface,border:`1px solid ${isOpen?dc:G.rule}`,borderLeft:`3px solid ${dc}`,marginBottom:4,transition:'all .15s'}}>
       <div style={{padding:'10px 12px',cursor:'pointer',display:'flex',alignItems:'center',gap:8}}>
@@ -293,25 +394,46 @@ function ExerciceCard({ex,isOpen,onToggle,onAdd,inSession,sessionFull}){
       </div>
       {isOpen && (
         <div style={{padding:'0 12px 12px',borderTop:`1px solid ${G.rule}`}}>
-          {/* Zone terrain + Objectif */}
-          <div style={{marginTop:8,display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:12}}>
-            <div style={{flex:1}}>
+          {/* Terrain SVG + Objectif + Mise en place */}
+          <div style={{marginTop:8,display:'flex',gap:14,flexWrap:'wrap',alignItems:'flex-start'}}>
+            {hasSchema ? <TerrainSVG schema={ex.schema}/> : ex.zone ? <ZoneIndicator zoneKey={ex.zone}/> : null}
+            <div style={{flex:1,minWidth:180}}>
               <div style={{fontFamily:G.mono,fontSize:7,letterSpacing:'.12em',textTransform:'uppercase',color:dc,marginBottom:3}}>Objectif</div>
-              <p style={{fontFamily:G.mono,fontSize:9,color:G.ink2,lineHeight:1.55,margin:0}}>{ex.objectif}</p>
+              <p style={{fontFamily:G.mono,fontSize:9,color:G.ink2,lineHeight:1.55,margin:'0 0 8px'}}>{ex.objectif}</p>
+              <div style={{background:G.goldBg,border:`1px solid ${G.goldBdr}`,padding:'7px 9px'}}>
+                <div style={{fontFamily:G.mono,fontSize:7,letterSpacing:'.12em',textTransform:'uppercase',color:G.muted,marginBottom:3}}>Mise en place</div>
+                <div style={{fontFamily:G.mono,fontSize:8,color:G.ink2,lineHeight:1.5}}>
+                  <div style={{marginBottom:2}}><strong style={{color:dc}}>Dimensions :</strong> {ex.mise_en_place.dimensions}</div>
+                  <div><strong style={{color:dc}}>Organisation :</strong> {ex.mise_en_place.organisation}</div>
+                </div>
+              </div>
             </div>
-            {ex.zone && <ZoneIndicator zoneKey={ex.zone}/>}
           </div>
-          <div style={{marginTop:8,background:G.goldBg,border:`1px solid ${G.goldBdr}`,padding:'7px 9px'}}>
-            <div style={{fontFamily:G.mono,fontSize:7,letterSpacing:'.12em',textTransform:'uppercase',color:G.muted,marginBottom:3}}>Mise en place</div>
-            <div style={{fontFamily:G.mono,fontSize:8,color:G.ink2,lineHeight:1.5}}>
-              <div style={{marginBottom:2}}><strong style={{color:dc}}>Dimensions :</strong> {ex.mise_en_place.dimensions}</div>
-              <div><strong style={{color:dc}}>Organisation :</strong> {ex.mise_en_place.organisation}</div>
-            </div>
-          </div>
+          {/* Déroulement */}
           <div style={{marginTop:8}}>
             <div style={{fontFamily:G.mono,fontSize:7,letterSpacing:'.12em',textTransform:'uppercase',color:G.muted,marginBottom:3}}>Déroulement</div>
             <p style={{fontFamily:G.mono,fontSize:9,color:G.ink2,lineHeight:1.6,margin:0}}>{ex.deroulement}</p>
           </div>
+          {/* Transfert en match */}
+          {ex.impact_match && (
+            <div style={{marginTop:8,background:G.dark,padding:'8px 10px',borderLeft:`3px solid ${G.gold}`}}>
+              <div style={{fontFamily:G.mono,fontSize:7,letterSpacing:'.12em',textTransform:'uppercase',color:G.gold,marginBottom:3,fontWeight:700}}>Transfert en match</div>
+              <p style={{fontFamily:G.mono,fontSize:8,color:'rgba(245,242,235,0.7)',lineHeight:1.55,margin:0}}>{ex.impact_match}</p>
+            </div>
+          )}
+          {/* Comportements attendus */}
+          {ex.comportements_attendus && ex.comportements_attendus.length>0 && (
+            <div style={{marginTop:8}}>
+              <div style={{fontFamily:G.mono,fontSize:7,letterSpacing:'.12em',textTransform:'uppercase',color:'#16a34a',marginBottom:4,fontWeight:700}}>Comportements attendus</div>
+              {ex.comportements_attendus.map((c,i)=>(
+                <div key={i} style={{display:'flex',gap:5,marginBottom:2,padding:'3px 7px',background:i%2===0?'rgba(22,163,74,0.04)':'transparent',borderLeft:'2px solid rgba(22,163,74,0.2)'}}>
+                  <span style={{fontFamily:G.mono,fontSize:8,color:'#16a34a',fontWeight:700,flexShrink:0}}>{i+1}.</span>
+                  <span style={{fontFamily:G.mono,fontSize:8,color:G.ink2,lineHeight:1.5}}>{c}</span>
+                </div>
+              ))}
+            </div>
+          )}
+          {/* Points de coaching */}
           <div style={{marginTop:8,background:'rgba(26,25,22,0.02)',border:`1px solid ${G.rule}`,padding:'7px 9px'}}>
             <div style={{fontFamily:G.mono,fontSize:7,letterSpacing:'.12em',textTransform:'uppercase',color:G.gold,marginBottom:4}}>Points de coaching</div>
             {ex.coaching.map((c,i)=>(
@@ -321,6 +443,7 @@ function ExerciceCard({ex,isOpen,onToggle,onAdd,inSession,sessionFull}){
               </div>
             ))}
           </div>
+          {/* Matériel + Catégories */}
           <div style={{marginTop:8,display:'flex',gap:12,flexWrap:'wrap'}}>
             <div>
               <div style={{fontFamily:G.mono,fontSize:7,letterSpacing:'.12em',textTransform:'uppercase',color:G.muted,marginBottom:3}}>Matériel</div>
@@ -335,10 +458,16 @@ function ExerciceCard({ex,isOpen,onToggle,onAdd,inSession,sessionFull}){
               </div>
             </div>
           </div>
+          {/* Variantes */}
           {ex.variantes&&ex.variantes.length>0&&(
             <div style={{marginTop:8}}>
-              <div style={{fontFamily:G.mono,fontSize:7,letterSpacing:'.12em',textTransform:'uppercase',color:G.muted,marginBottom:3}}>Variantes</div>
-              {ex.variantes.map((v,i)=><div key={i} style={{fontFamily:G.mono,fontSize:8,color:G.muted,lineHeight:1.45,paddingLeft:8,borderLeft:`2px solid ${G.rule}`,marginBottom:2}}>{v}</div>)}
+              <div style={{fontFamily:G.mono,fontSize:7,letterSpacing:'.12em',textTransform:'uppercase',color:'#2563eb',marginBottom:3,fontWeight:700}}>Variantes & progressions</div>
+              {ex.variantes.map((v,i)=>(
+                <div key={i} style={{display:'flex',gap:5,marginBottom:2,padding:'3px 7px',borderLeft:'2px solid rgba(37,99,235,0.2)',background:i%2===0?'rgba(37,99,235,0.03)':'transparent'}}>
+                  <span style={{fontFamily:G.mono,fontSize:8,color:'#2563eb',fontWeight:700,flexShrink:0}}>→</span>
+                  <span style={{fontFamily:G.mono,fontSize:8,color:G.muted,lineHeight:1.45}}>{v}</span>
+                </div>
+              ))}
             </div>
           )}
         </div>
