@@ -148,7 +148,7 @@ export default function RegionPage() {
           fontWeight: 800, letterSpacing: '.02em', textTransform: 'uppercase',
           color: G.white, lineHeight: 1.1, maxWidth: 800, margin: '0 auto 24px',
         }}>
-          L'analyse de match accessible à tous les entraîneurs{' '}
+          L'analyse de match accessible à tous les staffs{' '}
           <span style={{ color: G.gold }}>en {region.name}</span>
         </h1>
 
