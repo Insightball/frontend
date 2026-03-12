@@ -148,7 +148,7 @@ export default function RegionPage() {
           fontWeight: 800, letterSpacing: '.02em', textTransform: 'uppercase',
           color: G.white, lineHeight: 1.1, maxWidth: 800, margin: '0 auto 24px',
         }}>
-          L'analyse de match accessible à tous les coachs{' '}
+          L'analyse de match accessible à tous les entraîneurs{' '}
           <span style={{ color: G.gold }}>en {region.name}</span>
         </h1>
 
@@ -357,7 +357,7 @@ export default function RegionPage() {
               On accompagne les acteurs du football amateur. Du District au National.
             </h3>
             <p style={{ fontFamily: G.body, fontSize: 15, color: 'rgba(255,255,255,0.55)', lineHeight: 1.65 }}>
-              Insightball c'est un outil construit pour les coachs et dirigeants du football amateur. On transforme vos vidéos de match en données exploitables. Vous gardez le contrôle, on vous donne les arguments pour coacher mieux.
+              Insightball c'est un outil construit pour les entraîneurs, éducateurs et dirigeants du football amateur. On transforme vos vidéos de match en stats exploitables. Vous gardez le contrôle, on vous donne les arguments pour progresser.
             </p>
           </div>
           <a

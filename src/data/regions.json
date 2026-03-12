@@ -5,7 +5,7 @@
     "ligue": "Ligue de Football d'Occitanie",
     "clubs": 2800,
     "licencies": 180000,
-    "description": "La Ligue de Football d'Occitanie a franchi pour la première fois de son histoire le cap des 180 000 licenciés. Née de la fusion des ligues Midi-Pyrénées et Languedoc-Roussillon en 2016, elle organise aujourd'hui 41 compétitions sur l'ensemble du territoire, du football de District au National. Des milliers de matchs se jouent chaque week-end entre Toulouse, Montpellier et Perpignan, avec des coachs qui s'investissent sans jamais avoir de stats sur leur équipe. Insightball leur donne ces stats à partir d'une vidéo filmée avec leur téléphone.",
+    "description": "La Ligue de Football d'Occitanie a franchi pour la première fois de son histoire le cap des 180 000 licenciés. Née de la fusion des ligues Midi-Pyrénées et Languedoc-Roussillon en 2016, elle organise aujourd'hui 41 compétitions sur l'ensemble du territoire, du football de District au National. Des milliers de matchs se jouent chaque week-end entre Toulouse, Montpellier et Perpignan, avec des entraîneurs et éducateurs qui s'investissent sans jamais avoir de stats sur leur équipe. Insightball leur donne ces stats à partir d'une vidéo filmée avec leur téléphone.",
     "districts": [
       "Ariège",
       "Aude",
@@ -20,14 +20,14 @@
       "Tarn",
       "Tarn-et-Garonne"
     ],
-    "specificites": "L'Occitanie est la région la plus étendue de France par sa superficie, ce qui impose aux équipes des déplacements parfois très longs entre le littoral méditerranéen et les Pyrénées. Les coachs de District doivent souvent jongler entre la préparation tactique et la logistique des trajets. L'analyse vidéo permet de compenser ces contraintes en tirant le maximum de chaque match joué.",
+    "specificites": "L'Occitanie est la région la plus étendue de France par sa superficie, ce qui impose aux équipes des déplacements parfois très longs entre le littoral méditerranéen et les Pyrénées. Les entraîneurs et éducateurs doivent souvent jongler entre la préparation tactique et la logistique des trajets. L'analyse vidéo permet de compenser ces contraintes en tirant le maximum de chaque match joué.",
     "keywords": [
       "analyse vidéo football Occitanie",
       "statistiques football amateur Occitanie",
       "logiciel coach football Toulouse Montpellier"
     ],
     "metaTitle": "Analyse vidéo football amateur en Occitanie | Insightball",
-    "metaDescription": "Insightball aide les coachs de la Ligue Occitanie à analyser leurs matchs : heatmaps, stats joueurs, rapports tactiques. Essai gratuit 7 jours."
+    "metaDescription": "Insightball aide les entraîneurs et éducateurs de la Ligue Occitanie à analyser leurs matchs : heatmaps, stats joueurs, rapports tactiques. Essai gratuit 7 jours."
   },
   {
     "slug": "paca",
@@ -43,14 +43,14 @@
       "Var",
       "Vaucluse"
     ],
-    "specificites": "La Ligue Méditerranée se distingue par la densité de ses championnats, notamment dans les Bouches-du-Rhône où la compétition est féroce dès le niveau District. Les derbys locaux attirent du public et les coachs sont sous pression pour obtenir des résultats. L'accès aux stats de match donne aux staffs un levier supplémentaire pour objectiver leurs choix tactiques.",
+    "specificites": "La Ligue Méditerranée se distingue par la densité de ses championnats, notamment dans les Bouches-du-Rhône où la compétition est féroce dès le niveau District. Les derbys locaux attirent du public et les entraîneurs sont sous pression pour obtenir des résultats. L'accès aux stats de match donne aux staffs un levier supplémentaire pour objectiver leurs choix tactiques.",
     "keywords": [
       "analyse vidéo football PACA",
       "statistiques football Méditerranée",
       "logiciel coach football amateur Marseille Nice"
     ],
     "metaTitle": "Analyse vidéo football amateur en PACA | Insightball",
-    "metaDescription": "Les coachs de la Ligue Méditerranée analysent leurs matchs avec Insightball. Heatmaps, stats, rapports PDF. Essai gratuit 7 jours."
+    "metaDescription": "Les entraîneurs de la Ligue Méditerranée analysent leurs matchs avec Insightball. Heatmaps, stats, rapports PDF. Essai gratuit 7 jours."
   },
   {
     "slug": "ile-de-france",
@@ -58,7 +58,7 @@
     "ligue": "Ligue de Paris Île-de-France de Football",
     "clubs": 1100,
     "licencies": 325000,
-    "description": "Avec plus de 325 000 licenciés, la Ligue de Paris Île-de-France est la première ligue de France. Elle est répartie sur huit districts et organise 81 compétitions par saison. Du District au National, les championnats franciliens sont parmi les plus disputés du pays. Dans cette région ultra-compétitive, les coachs cherchent le moindre avantage tactique. Insightball leur fournit des stats concrètes sur chaque match, à partir d'une simple vidéo.",
+    "description": "Avec plus de 325 000 licenciés, la Ligue de Paris Île-de-France est la première ligue de France. Elle est répartie sur huit districts et organise 81 compétitions par saison. Du District au National, les championnats franciliens sont parmi les plus disputés du pays. Dans cette région ultra-compétitive, les entraîneurs et éducateurs cherchent le moindre avantage tactique. Insightball leur fournit des stats concrètes sur chaque match, à partir d'une simple vidéo.",
     "districts": [
       "Paris",
       "Seine-et-Marne",
@@ -69,14 +69,14 @@
       "Val-de-Marne",
       "Val-d'Oise"
     ],
-    "specificites": "L'Île-de-France concentre le plus grand bassin de joueurs de France avec 325 000 licenciés répartis sur huit districts. La densité de clubs y est exceptionnelle, ce qui rend les championnats très disputés. Beaucoup d'équipes jouent à quelques kilomètres les unes des autres mais ne se sont jamais analysées. C'est un terrain idéal pour Insightball : les enjeux sont élevés et les coachs veulent progresser.",
+    "specificites": "L'Île-de-France concentre le plus grand bassin de joueurs de France avec 325 000 licenciés répartis sur huit districts. La densité de clubs y est exceptionnelle, ce qui rend les championnats très disputés. Beaucoup d'équipes jouent à quelques kilomètres les unes des autres mais ne se sont jamais analysées. C'est un terrain idéal pour Insightball : les enjeux sont élevés et les staffs veulent progresser.",
     "keywords": [
       "analyse vidéo football Île-de-France",
       "statistiques football amateur Paris",
       "outil analyse tactique football IDF"
     ],
     "metaTitle": "Analyse vidéo football amateur en Île-de-France | Insightball",
-    "metaDescription": "Insightball, l'outil d'analyse vidéo des coachs franciliens. Heatmaps, statistiques joueurs, rapports tactiques PDF. Essai gratuit 7 jours."
+    "metaDescription": "Insightball, l'outil d'analyse vidéo des entraîneurs franciliens. Heatmaps, statistiques joueurs, rapports tactiques PDF. Essai gratuit 7 jours."
   },
   {
     "slug": "bretagne",
@@ -84,21 +84,21 @@
     "ligue": "Ligue de Bretagne de Football",
     "clubs": 1190,
     "licencies": 161000,
-    "description": "La Ligue de Bretagne a enregistré 160 855 licenciés lors de la saison 2023-2024, un record depuis 2008. Organisée en quatre districts (Côtes-d'Armor, Finistère, Ille-et-Vilaine, Morbihan), elle est l'une des ligues les plus dynamiques de France. Du District au National, le football breton est porté par des milliers de bénévoles et de coachs investis chaque semaine sur les terrains. Insightball leur apporte une dimension nouvelle : les stats de match.",
+    "description": "La Ligue de Bretagne a enregistré 160 855 licenciés lors de la saison 2023-2024, un record depuis 2008. Organisée en quatre districts (Côtes-d'Armor, Finistère, Ille-et-Vilaine, Morbihan), elle est l'une des ligues les plus dynamiques de France. Du District au National, le football breton est porté par des milliers de bénévoles et d'entraîneurs et éducateurs investis chaque semaine sur les terrains. Insightball leur apporte une dimension nouvelle : les stats de match.",
     "districts": [
       "Côtes-d'Armor",
       "Finistère",
       "Ille-et-Vilaine",
       "Morbihan"
     ],
-    "specificites": "Le football breton a une identité forte. Première ligue de France par le nombre de clubs pendant des décennies, la Bretagne reste un vivier majeur. Le tissu associatif y est dense et les coachs bénévoles s'investissent énormément. Pourtant, peu d'entre eux ont accès à des outils d'analyse. Insightball comble ce manque en rendant les stats accessibles sans formation ni matériel supplémentaire.",
+    "specificites": "Le football breton a une identité forte. Première ligue de France par le nombre de clubs pendant des décennies, la Bretagne reste un vivier majeur. Le tissu associatif y est dense et les entraîneurs bénévoles s'investissent énormément. Pourtant, peu d'entre eux ont accès à des outils d'analyse. Insightball comble ce manque en rendant les stats accessibles sans formation ni matériel supplémentaire.",
     "keywords": [
       "analyse vidéo football Bretagne",
       "statistiques football amateur Bretagne",
       "outil analyse match football Rennes Brest"
     ],
     "metaTitle": "Analyse vidéo football amateur en Bretagne | Insightball",
-    "metaDescription": "Insightball aide les coachs bretons à analyser leurs matchs avec des heatmaps, des stats et des rapports tactiques. Essai gratuit 7 jours."
+    "metaDescription": "Insightball aide les entraîneurs et éducateurs bretons à analyser leurs matchs avec des heatmaps, des stats et des rapports tactiques. Essai gratuit 7 jours."
   },
   {
     "slug": "nouvelle-aquitaine",
@@ -106,7 +106,7 @@
     "ligue": "Ligue de Football de Nouvelle-Aquitaine",
     "clubs": 2800,
     "licencies": 190000,
-    "description": "La Ligue de Football de Nouvelle-Aquitaine est née en 2016 de la fusion des ligues d'Aquitaine, du Limousin et du Centre-Ouest. Avec douze districts couvrant de la Gironde aux Deux-Sèvres, c'est l'une des ligues les plus vastes de France. Du District au National, les championnats de Bordeaux à Bayonne en passant par Limoges et Poitiers réunissent des coachs passionnés qui s'investissent sans accès à des stats sur leur équipe. Insightball comble ce manque.",
+    "description": "La Ligue de Football de Nouvelle-Aquitaine est née en 2016 de la fusion des ligues d'Aquitaine, du Limousin et du Centre-Ouest. Avec douze districts couvrant de la Gironde aux Deux-Sèvres, c'est l'une des ligues les plus vastes de France. Du District au National, les championnats de Bordeaux à Bayonne en passant par Limoges et Poitiers réunissent des entraîneurs et éducateurs passionnés qui s'investissent sans accès à des stats sur leur équipe. Insightball comble ce manque.",
     "districts": [
       "Charente",
       "Charente-Maritime",
@@ -121,14 +121,14 @@
       "Pyrénées-Atlantiques",
       "Vienne"
     ],
-    "specificites": "La Nouvelle-Aquitaine est la plus grande région de France par sa superficie. Les distances entre clubs sont parfois considérables, rendant les déplacements en R1 ou R2 très chronophages. Pour un coach qui passe 3 heures dans un bus avant un match, pouvoir ensuite analyser la rencontre en détail depuis chez lui est un gain de temps et de qualité considérable.",
+    "specificites": "La Nouvelle-Aquitaine est la plus grande région de France par sa superficie. Les distances entre clubs sont parfois considérables, rendant les déplacements en R1 ou R2 très chronophages. Pour un entraîneur qui passe 3 heures dans un bus avant un match, pouvoir ensuite analyser la rencontre en détail depuis chez lui est un gain de temps et de qualité considérable.",
     "keywords": [
       "analyse vidéo football Nouvelle-Aquitaine",
       "statistiques football Bordeaux Bayonne",
       "logiciel coach football amateur Aquitaine"
     ],
     "metaTitle": "Analyse vidéo football amateur en Nouvelle-Aquitaine | Insightball",
-    "metaDescription": "Analysez vos matchs avec Insightball en Nouvelle-Aquitaine. Heatmaps, statistiques, rapports PDF pour coachs amateurs. Essai gratuit 7 jours."
+    "metaDescription": "Analysez vos matchs avec Insightball en Nouvelle-Aquitaine. Heatmaps, statistiques, rapports PDF pour entraîneurs amateurs. Essai gratuit 7 jours."
   },
   {
     "slug": "auvergne-rhone-alpes",
@@ -136,7 +136,7 @@
     "ligue": "Ligue Auvergne-Rhône-Alpes de Football (LAuRAFoot)",
     "clubs": 3000,
     "licencies": 250000,
-    "description": "La LAuRAFoot est née en 2016 de la fusion des ligues Rhône-Alpes et Auvergne, héritières de la Ligue du Lyonnais fondée en 1920. Avec onze districts couvrant un territoire de Lyon à Clermont-Ferrand en passant par Grenoble, Chambéry et Annecy, c'est la deuxième ligue de France par le nombre de licenciés. Du District au National, des milliers de matchs se jouent chaque week-end. Insightball donne aux coachs de la région les outils pour analyser leurs performances concrètement.",
+    "description": "La LAuRAFoot est née en 2016 de la fusion des ligues Rhône-Alpes et Auvergne, héritières de la Ligue du Lyonnais fondée en 1920. Avec onze districts couvrant un territoire de Lyon à Clermont-Ferrand en passant par Grenoble, Chambéry et Annecy, c'est la deuxième ligue de France par le nombre de licenciés. Du District au National, des milliers de matchs se jouent chaque week-end. Insightball donne aux entraîneurs et éducateurs de la région les outils pour analyser leurs performances concrètement.",
     "districts": [
       "Ain",
       "Allier",
@@ -150,14 +150,14 @@
       "Rhône",
       "Savoie"
     ],
-    "specificites": "L'Auvergne-Rhône-Alpes combine des zones urbaines très denses (Lyon, Grenoble, Saint-Étienne) et des territoires ruraux de montagne. Les conditions de jeu varient fortement selon l'altitude et la saison. C'est aussi une région avec une tradition tactique forte : beaucoup de coachs cherchent à structurer leur jeu. Insightball leur donne les stats pour valider ou ajuster leurs choix.",
+    "specificites": "L'Auvergne-Rhône-Alpes combine des zones urbaines très denses (Lyon, Grenoble, Saint-Étienne) et des territoires ruraux de montagne. Les conditions de jeu varient fortement selon l'altitude et la saison. C'est aussi une région avec une tradition tactique forte : beaucoup d'entraîneurs cherchent à structurer leur jeu. Insightball leur donne les stats pour valider ou ajuster leurs choix.",
     "keywords": [
       "analyse vidéo football Auvergne-Rhône-Alpes",
       "statistiques football amateur Lyon Grenoble",
       "outil analyse tactique football AuRA"
     ],
     "metaTitle": "Analyse vidéo football amateur en Auvergne-Rhône-Alpes | Insightball",
-    "metaDescription": "Insightball, l'outil d'analyse des coachs en AuRA. Heatmaps, stats joueurs, rapports tactiques. Essai gratuit 7 jours."
+    "metaDescription": "Insightball, l'outil d'analyse des entraîneurs en AuRA. Heatmaps, stats joueurs, rapports tactiques. Essai gratuit 7 jours."
   },
   {
     "slug": "hauts-de-france",
@@ -165,7 +165,7 @@
     "ligue": "Ligue de Football des Hauts-de-France",
     "clubs": 2500,
     "licencies": 210000,
-    "description": "La Ligue de Football des Hauts-de-France a été créée en 2017 par la fusion des ligues du Nord-Pas-de-Calais et de Picardie. Troisième ligue nationale par le nombre de licenciés, elle couvre sept districts et organise les championnats du District au National. Dans cette région où le football est une affaire collective et populaire, les coachs s'impliquent énormément sur et en dehors du terrain. Insightball leur apporte les stats pour renforcer leur préparation.",
+    "description": "La Ligue de Football des Hauts-de-France a été créée en 2017 par la fusion des ligues du Nord-Pas-de-Calais et de Picardie. Troisième ligue nationale par le nombre de licenciés, elle couvre sept districts et organise les championnats du District au National. Dans cette région où le football est une affaire collective et populaire, les entraîneurs et éducateurs s'impliquent énormément sur et en dehors du terrain. Insightball leur apporte les stats pour renforcer leur préparation.",
     "districts": [
       "Aisne",
       "Artois",
@@ -175,14 +175,14 @@
       "Oise",
       "Somme"
     ],
-    "specificites": "Le Nord est une terre de football depuis plus d'un siècle. La densité de clubs y est parmi les plus élevées de France, avec des rivalités locales historiques dans le bassin minier, les Flandres et l'Artois. Les coachs de cette région ont une culture du collectif et du travail. Insightball renforce cette approche en apportant des faits concrets après chaque match.",
+    "specificites": "Le Nord est une terre de football depuis plus d'un siècle. La densité de clubs y est parmi les plus élevées de France, avec des rivalités locales historiques dans le bassin minier, les Flandres et l'Artois. Les entraîneurs de cette région ont une culture du collectif et du travail. Insightball renforce cette approche en apportant des faits concrets après chaque match.",
     "keywords": [
       "analyse vidéo football Hauts-de-France",
       "statistiques football amateur Nord Pas-de-Calais",
       "logiciel coach football Lille Amiens"
     ],
     "metaTitle": "Analyse vidéo football amateur dans les Hauts-de-France | Insightball",
-    "metaDescription": "Les coachs des Hauts-de-France analysent leurs matchs avec Insightball. Heatmaps, stats, rapports tactiques PDF. Essai gratuit 7 jours."
+    "metaDescription": "Les entraîneurs des Hauts-de-France analysent leurs matchs avec Insightball. Heatmaps, stats, rapports tactiques PDF. Essai gratuit 7 jours."
   },
   {
     "slug": "grand-est",
@@ -190,7 +190,7 @@
     "ligue": "Ligue du Grand Est de Football",
     "clubs": 2400,
     "licencies": 165000,
-    "description": "La Ligue du Grand Est est née en 2016 de la fusion des ligues d'Alsace, de Champagne-Ardenne et de Lorraine, trois territoires avec chacun une histoire footballistique propre. Du District au National, ses championnats s'étendent de Strasbourg à Reims en passant par Metz et Mulhouse. Chaque semaine, des coachs préparent leurs équipes avec engagement, sans jamais avoir de stats sur leurs matchs. Insightball leur donne accès à ces stats simplement.",
+    "description": "La Ligue du Grand Est est née en 2016 de la fusion des ligues d'Alsace, de Champagne-Ardenne et de Lorraine, trois territoires avec chacun une histoire footballistique propre. Du District au National, ses championnats s'étendent de Strasbourg à Reims en passant par Metz et Mulhouse. Chaque semaine, des entraîneurs et éducateurs préparent leurs équipes avec engagement, sans jamais avoir de stats sur leurs matchs. Insightball leur donne accès à ces stats simplement.",
     "districts": [
       "Alsace",
       "Ardennes",
@@ -202,7 +202,7 @@
       "Moselle",
       "Vosges"
     ],
-    "specificites": "Le Grand Est réunit trois identités footballistiques distinctes : l'Alsace avec sa tradition germanique, la Lorraine industrielle avec ses clubs historiques, et la Champagne-Ardenne. Cette diversité crée des championnats régionaux variés où les styles de jeu s'affrontent. Les coachs qui analysent leurs adversaires disposent d'un avantage réel dans cette mosaïque tactique.",
+    "specificites": "Le Grand Est réunit trois identités footballistiques distinctes : l'Alsace avec sa tradition germanique, la Lorraine industrielle avec ses clubs historiques, et la Champagne-Ardenne. Cette diversité crée des championnats régionaux variés où les styles de jeu s'affrontent. Les staffs qui analysent leurs adversaires disposent d'un avantage réel dans cette mosaïque tactique.",
     "keywords": [
       "analyse vidéo football Grand Est",
       "statistiques football amateur Strasbourg Metz",
@@ -217,7 +217,7 @@
     "ligue": "Ligue de Football de Normandie",
     "clubs": 1400,
     "licencies": 100000,
-    "description": "La Ligue de Football de Normandie résulte de la fusion en 2016 des ligues de Haute-Normandie et Basse-Normandie. Répartie sur cinq départements, de Rouen au Cotentin en passant par Caen, elle porte une tradition footballistique solide. Du District au National, les coachs normands s'investissent week-end après week-end sans avoir de stats sur ce qui se passe sur leur terrain. Insightball leur fournit cette analyse à partir d'une vidéo de match.",
+    "description": "La Ligue de Football de Normandie résulte de la fusion en 2016 des ligues de Haute-Normandie et Basse-Normandie. Répartie sur cinq départements, de Rouen au Cotentin en passant par Caen, elle porte une tradition footballistique solide. Du District au National, les entraîneurs normands s'investissent week-end après week-end sans avoir de stats sur ce qui se passe sur leur terrain. Insightball leur fournit cette analyse à partir d'une vidéo de match.",
     "districts": [
       "Calvados",
       "Eure",
@@ -225,14 +225,14 @@
       "Orne",
       "Seine-Maritime"
     ],
-    "specificites": "La Normandie est une terre de football populaire avec une culture du match physique et engagé. Les terrains sont souvent humides en hiver, ce qui influence le style de jeu. Les coachs normands sont pragmatiques et cherchent des outils concrets pour progresser. Les stats Insightball correspondent à cette mentalité : pas de fioritures, des faits.",
+    "specificites": "La Normandie est une terre de football populaire avec une culture du match physique et engagé. Les terrains sont souvent humides en hiver, ce qui influence le style de jeu. Les entraîneurs normands sont pragmatiques et cherchent des outils concrets pour progresser. Les stats Insightball correspondent à cette mentalité : pas de fioritures, des faits.",
     "keywords": [
       "analyse vidéo football Normandie",
       "statistiques football amateur Rouen Caen",
       "logiciel coach football amateur Normandie"
     ],
     "metaTitle": "Analyse vidéo football amateur en Normandie | Insightball",
-    "metaDescription": "Insightball aide les coachs normands à analyser leurs matchs. Heatmaps, stats joueurs, rapports tactiques. Essai gratuit 7 jours."
+    "metaDescription": "Insightball aide les entraîneurs et éducateurs normands à analyser leurs matchs. Heatmaps, stats joueurs, rapports tactiques. Essai gratuit 7 jours."
   },
   {
     "slug": "pays-de-la-loire",
@@ -240,7 +240,7 @@
     "ligue": "Ligue de Football des Pays de la Loire",
     "clubs": 1700,
     "licencies": 135000,
-    "description": "La Ligue de Football des Pays de la Loire est née en 2016 de la fusion des ligues Atlantique et du Maine. Elle regroupe les clubs de cinq départements, de Nantes à Le Mans en passant par Angers et La Roche-sur-Yon. Du District au National, les championnats ligériens sont serrés et les montées se jouent souvent au détail. Les coachs qui analysent leurs matchs prennent un avantage réel. Insightball leur fournit cette analyse à partir d'une simple vidéo.",
+    "description": "La Ligue de Football des Pays de la Loire est née en 2016 de la fusion des ligues Atlantique et du Maine. Elle regroupe les clubs de cinq départements, de Nantes à Le Mans en passant par Angers et La Roche-sur-Yon. Du District au National, les championnats ligériens sont serrés et les montées se jouent souvent au détail. Les staffs qui analysent leurs matchs prennent un avantage réel. Insightball leur fournit cette analyse à partir d'une simple vidéo.",
     "districts": [
       "Loire-Atlantique",
       "Maine-et-Loire",
@@ -248,14 +248,14 @@
       "Sarthe",
       "Vendée"
     ],
-    "specificites": "Les Pays de la Loire sont un vivier du football amateur avec une densité de clubs élevée, notamment en Loire-Atlantique et en Vendée. Les championnats y sont compétitifs et les montées très disputées. Le tissu associatif est solide et les coachs bénévoles ont une vraie culture de la préparation. Insightball s'intègre dans cette démarche de progression.",
+    "specificites": "Les Pays de la Loire sont un vivier du football amateur avec une densité de clubs élevée, notamment en Loire-Atlantique et en Vendée. Les championnats y sont compétitifs et les montées très disputées. Le tissu associatif est solide et les entraîneurs bénévoles ont une vraie culture de la préparation. Insightball s'intègre dans cette démarche de progression.",
     "keywords": [
       "analyse vidéo football Pays de la Loire",
       "statistiques football amateur Nantes Le Mans",
       "logiciel analyse tactique football Loire"
     ],
     "metaTitle": "Analyse vidéo football amateur en Pays de la Loire | Insightball",
-    "metaDescription": "Les coachs des Pays de la Loire analysent leurs matchs avec Insightball. Heatmaps, stats, rapports tactiques PDF. Essai gratuit 7 jours."
+    "metaDescription": "Les entraîneurs des Pays de la Loire analysent leurs matchs avec Insightball. Heatmaps, stats, rapports tactiques PDF. Essai gratuit 7 jours."
   },
   {
     "slug": "centre-val-de-loire",
@@ -263,7 +263,7 @@
     "ligue": "Ligue du Centre-Val de Loire de Football",
     "clubs": 950,
     "licencies": 72000,
-    "description": "La Ligue du Centre-Val de Loire, anciennement Ligue du Centre, est l'une des ligues historiques du football français. Elle organise les compétitions de six départements, d'Orléans à Tours en passant par Chartres et Bourges. Du District au National, les clubs s'affrontent dans une pyramide compétitive où chaque match compte. Insightball permet aux coachs de la région d'analyser leurs rencontres avec des heatmaps, des stats joueurs et des rapports tactiques.",
+    "description": "La Ligue du Centre-Val de Loire, anciennement Ligue du Centre, est l'une des ligues historiques du football français. Elle organise les compétitions de six départements, d'Orléans à Tours en passant par Chartres et Bourges. Du District au National, les clubs s'affrontent dans une pyramide compétitive où chaque match compte. Insightball permet aux entraîneurs et éducateurs de la région d'analyser leurs rencontres avec des heatmaps, des stats joueurs et des rapports tactiques.",
     "districts": [
       "Cher",
       "Eure-et-Loir",
@@ -272,7 +272,7 @@
       "Loir-et-Cher",
       "Loiret"
     ],
-    "specificites": "Le Centre-Val de Loire est une région rurale à dominante avec des clubs qui font vivre le football dans des communes parfois petites. La passion y est forte mais les moyens sont limités. Insightball répond à ce besoin : un outil professionnel à un prix accessible, sans matériel supplémentaire. Les coachs de la région peuvent enfin analyser leurs matchs comme les clubs plus structurés.",
+    "specificites": "Le Centre-Val de Loire est une région rurale à dominante avec des clubs qui font vivre le football dans des communes parfois petites. La passion y est forte mais les moyens sont limités. Insightball répond à ce besoin : un outil professionnel à un prix accessible, sans matériel supplémentaire. Les entraîneurs et éducateurs de la région peuvent enfin analyser leurs matchs comme les clubs plus structurés.",
     "keywords": [
       "analyse vidéo football Centre-Val de Loire",
       "statistiques football amateur Orléans Tours",
@@ -287,7 +287,7 @@
     "ligue": "Ligue de Football de Bourgogne-Franche-Comté",
     "clubs": 1100,
     "licencies": 82000,
-    "description": "La Ligue de Football de Bourgogne-Franche-Comté résulte de la fusion de deux ligues aux identités bien distinctes : Bourgogne, avec ses clubs autour de Dijon et Chalon-sur-Saône, et Franche-Comté, portée par Besançon et Belfort. Du District au National, les championnats sont disputés sur un territoire étendu. Les coachs de la région font face à des déplacements longs et des préparations intenses. Insightball leur donne les stats pour optimiser leur travail.",
+    "description": "La Ligue de Football de Bourgogne-Franche-Comté résulte de la fusion de deux ligues aux identités bien distinctes : Bourgogne, avec ses clubs autour de Dijon et Chalon-sur-Saône, et Franche-Comté, portée par Besançon et Belfort. Du District au National, les championnats sont disputés sur un territoire étendu. Les entraîneurs et éducateurs de la région font face à des déplacements longs et des préparations intenses. Insightball leur donne les stats pour optimiser leur travail.",
     "districts": [
       "Côte-d'Or",
       "Doubs-Territoire de Belfort",
@@ -304,7 +304,7 @@
       "logiciel coach football Franche-Comté"
     ],
     "metaTitle": "Analyse vidéo football amateur en Bourgogne-Franche-Comté | Insightball",
-    "metaDescription": "Insightball, l'outil d'analyse des coachs en Bourgogne-Franche-Comté. Heatmaps, stats, rapports tactiques. Essai gratuit 7 jours."
+    "metaDescription": "Insightball, l'outil d'analyse des entraîneurs en Bourgogne-Franche-Comté. Heatmaps, stats, rapports tactiques. Essai gratuit 7 jours."
   },
   {
     "slug": "corse",
@@ -312,16 +312,16 @@
     "ligue": "Ligue Corse de Football",
     "clubs": 220,
     "licencies": 18000,
-    "description": "La Ligue Corse de Football est la plus petite ligue métropolitaine de France par le nombre de clubs, mais l'une des plus passionnées. Avec 220 clubs et 18 000 licenciés sur l'île, le football corse a une identité forte, portée par des clubs comme le Gazelec Ajaccio qui a évolué jusqu'en Ligue 2. Du District au National, chaque match est une affaire de territoire et d'honneur. Insightball accompagne les coachs corses dans leur analyse et leur préparation.",
+    "description": "La Ligue Corse de Football est la plus petite ligue métropolitaine de France par le nombre de clubs, mais l'une des plus passionnées. Avec 220 clubs et 18 000 licenciés sur l'île, le football corse a une identité forte, portée par des clubs comme le Gazelec Ajaccio qui a évolué jusqu'en Ligue 2. Du District au National, chaque match est une affaire de territoire et d'honneur. Insightball accompagne les entraîneurs et éducateurs corses dans leur analyse et leur préparation.",
     "districts": [],
     "districtNote": "Particularité : la Corse est la seule ligue métropolitaine sans district départemental. Les compétitions sont organisées directement par la Ligue, du Régional 1 au Régional 4.",
-    "specificites": "La Corse est un cas unique dans le football français : pas de districts départementaux, des championnats organisés directement par la Ligue, et une identité footballistique insulaire forte. Les derbys corses sont des événements à part entière. Pour les coachs de l'île, l'analyse vidéo est un moyen de professionnaliser leur approche sans dépendre de ressources extérieures.",
+    "specificites": "La Corse est un cas unique dans le football français : pas de districts départementaux, des championnats organisés directement par la Ligue, et une identité footballistique insulaire forte. Les derbys corses sont des événements à part entière. Pour les entraîneurs de l'île, l'analyse vidéo est un moyen de professionnaliser leur approche sans dépendre de ressources extérieures.",
     "keywords": [
       "analyse vidéo football Corse",
       "statistiques football amateur Ajaccio Bastia",
       "logiciel coach football Corse"
     ],
     "metaTitle": "Analyse vidéo football amateur en Corse | Insightball",
-    "metaDescription": "Insightball aide les coachs corses à analyser leurs matchs. Heatmaps, stats joueurs, rapports tactiques PDF. Essai gratuit 7 jours."
+    "metaDescription": "Insightball aide les entraîneurs et éducateurs corses à analyser leurs matchs. Heatmaps, stats joueurs, rapports tactiques PDF. Essai gratuit 7 jours."
   }
 ]
