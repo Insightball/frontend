@@ -1,5 +1,5 @@
 {
-  "version": "2.0",
+  "version": "3.0",
   "last_updated": "2026-03-12",
   "lot": 1,
   "total": 50,
@@ -38,7 +38,86 @@
       "variantes": [
         "Élargir en 8c3 (15m) pour intégrer des transversales",
         "Imposer que chaque joueur touche le ballon avant de valider le point"
-      ]
+      ],
+      "comportements_attendus": [
+        "Les joueurs extérieurs se repositionnent à chaque passe pour offrir au moins 2 lignes de passe au porteur",
+        "Le receveur oriente son corps vers sa prochaine cible avant le contrôle",
+        "En phase 1 touche, la prise d'information se fait avant la réception",
+        "Les 2 presseurs coordonnent leur placement — l'un ferme la ligne directe, l'autre couvre l'angle"
+      ],
+      "impact_match": "Travaille la capacité à conserver sous pression dans un espace réduit. Transférable aux situations où le milieu de terrain est pressé et doit ressortir proprement.",
+      "schema": {
+        "terrain": "reduit",
+        "dimensions": "10m × 10m",
+        "joueurs": [
+          {
+            "x": 50,
+            "y": 5,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 95,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 95,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 5,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 28,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 38,
+            "y": 52,
+            "role": "def",
+            "label": "P"
+          },
+          {
+            "x": 62,
+            "y": 48,
+            "role": "def",
+            "label": "P"
+          }
+        ],
+        "passes": [
+          [
+            0,
+            4
+          ],
+          [
+            4,
+            1
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              5,
+              50
+            ],
+            "to": [
+              18,
+              35
+            ],
+            "type": "appel"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "ech_002",
@@ -75,7 +154,104 @@
       "variantes": [
         "Passer en 1 touche pour les attaquants",
         "Le coach crie 2 couleurs : les 2 passent en défense, 4c8 pendant 10 secondes"
-      ]
+      ],
+      "comportements_attendus": [
+        "Au changement de couleur, les nouveaux défenseurs pressent immédiatement sans temps de latence",
+        "Les nouveaux attaquants s'écartent instantanément pour offrir de la largeur",
+        "Les joueurs lèvent la tête en permanence pour identifier qui défend et qui attaque",
+        "La transition entre les rôles se fait en moins de 2 secondes"
+      ],
+      "impact_match": "Travaille la réactivité cognitive dans les transitions. En match, chaque perte de balle impose un changement de rôle immédiat — cet exercice conditionne cette bascule.",
+      "schema": {
+        "terrain": "reduit",
+        "dimensions": "20m × 20m",
+        "joueurs": [
+          {
+            "x": 20,
+            "y": 20,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 80,
+            "y": 20,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 20,
+            "y": 80,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 80,
+            "y": 80,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 30,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 70,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 35,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 65,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 40,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 40,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 60,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 60,
+            "role": "def",
+            "label": ""
+          }
+        ],
+        "passes": [
+          [
+            0,
+            6
+          ],
+          [
+            6,
+            5
+          ]
+        ],
+        "courses": [],
+        "elements": []
+      }
     },
     {
       "id": "ech_003",
@@ -111,7 +287,128 @@
       "variantes": [
         "Les joueurs de zone 1 peuvent accompagner en zone 2 (1 joueur monte)",
         "Ajouter un GB en zone 1 qui relance le jeu"
-      ]
+      ],
+      "comportements_attendus": [
+        "En zone 1, les joueurs patientent et ne forcent pas la passe vers la zone 2 tant que la ligne n'est pas ouverte",
+        "En zone 2, les milieux se montrent entre les lignes pour proposer des solutions au porteur",
+        "En zone 3, le jeu est rapide en 1-2 touches — la décision doit être prise avant la réception",
+        "La circulation de balle est fluide d'une zone à l'autre sans rupture de rythme"
+      ],
+      "impact_match": "Reproduit la construction du jeu depuis l'arrière : sortie de balle, progression au milieu, finition. Chaque zone correspond à un tiers du terrain en match.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "40m × 30m en 3 zones",
+        "joueurs": [
+          {
+            "x": 20,
+            "y": 82,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 85,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 80,
+            "y": 82,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 35,
+            "y": 78,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 65,
+            "y": 78,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 30,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 52,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 52,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 35,
+            "y": 28,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 65,
+            "y": 28,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 45,
+            "y": 25,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 55,
+            "y": 25,
+            "role": "def",
+            "label": ""
+          }
+        ],
+        "passes": [
+          [
+            1,
+            6
+          ],
+          [
+            6,
+            10
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              50,
+              85
+            ],
+            "to": [
+              50,
+              55
+            ],
+            "type": "appel"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "ech_004",
@@ -147,7 +444,83 @@
       "variantes": [
         "Passer en 5c2 (même losange, 2 presseurs)",
         "Le joueur au centre peut marquer un point en jouant un petit pont"
-      ]
+      ],
+      "comportements_attendus": [
+        "Les passes sont tendues au sol, pas de passe molle qui laisse le temps au presseur d'intercepter",
+        "Le receveur sait déjà où il passe avant de recevoir le ballon",
+        "Le presseur travaille ses appuis : sur les pointes, réactif, pas à plat",
+        "Les joueurs extérieurs se décalent pour toujours offrir un angle au porteur"
+      ],
+      "impact_match": "Travaille la qualité de passe courte sous pression minimale. Base de toute conservation — un joueur qui ne perd pas le ballon en 4c1 ne le perdra pas en match dans des situations similaires.",
+      "schema": {
+        "terrain": "reduit",
+        "dimensions": "6m × 6m",
+        "joueurs": [
+          {
+            "x": 50,
+            "y": 10,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 90,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 90,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 10,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 50,
+            "role": "def",
+            "label": "P"
+          }
+        ],
+        "passes": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "courses": [],
+        "elements": [
+          {
+            "type": "plot",
+            "x": 50,
+            "y": 10
+          },
+          {
+            "type": "plot",
+            "x": 90,
+            "y": 50
+          },
+          {
+            "type": "plot",
+            "x": 50,
+            "y": 90
+          },
+          {
+            "type": "plot",
+            "x": 10,
+            "y": 50
+          }
+        ]
+      }
     },
     {
       "id": "ech_005",
@@ -183,7 +556,72 @@
       "variantes": [
         "Ajouter des gammes athlétiques entre les phases (montées de genoux, talons-fesses)",
         "En phase 4, ajouter un jeu de duel : au signal, le premier qui touche le ballon du partenaire marque"
-      ]
+      ],
+      "comportements_attendus": [
+        "L'intensité monte progressivement — pas de sprint avant la phase 4",
+        "En phases 2-3, les appuis sont fléchis et dynamiques, pas raides",
+        "En phase 4, la tête est relevée pendant la conduite, pas les yeux sur le ballon",
+        "Les joueurs réagissent au signal du coach dans la seconde"
+      ],
+      "impact_match": "Prépare le corps et l'esprit à l'effort spécifique football. Un échauffement avec ballon est plus efficace qu'un tour de terrain car il active aussi la coordination œil-pied.",
+      "schema": {
+        "terrain": "reduit",
+        "dimensions": "20m × 15m",
+        "joueurs": [
+          {
+            "x": 25,
+            "y": 40,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 25,
+            "y": 60,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 40,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 60,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 75,
+            "y": 40,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 75,
+            "y": 60,
+            "role": "att",
+            "label": ""
+          }
+        ],
+        "passes": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        "courses": [],
+        "elements": []
+      }
     },
     {
       "id": "tech_001",
@@ -209,7 +647,7 @@
       ],
       "j_min": 6,
       "j_max": 18,
-      "duree": 15,
+      "duree": 8,
       "cats": [
         "U14",
         "U15-U18",
@@ -219,7 +657,89 @@
       "variantes": [
         "Triangle de 20m avec passes longues",
         "Défenseur passif au centre du triangle"
-      ]
+      ],
+      "comportements_attendus": [
+        "Le joueur enchaîne passe + course immédiatement, sans temps d'arrêt",
+        "La passe arrive au sol, tendue, dans le bon pied du receveur",
+        "Le receveur prépare ses appuis pour jouer en 1 touche vers le joueur suivant",
+        "Le circuit fonctionne dans les deux sens avec la même fluidité"
+      ],
+      "impact_match": "Installe le réflexe passe-et-va. Applicable directement sur les combinaisons latéral-milieu-ailier.",
+      "schema": {
+        "terrain": "reduit",
+        "dimensions": "15m de côté",
+        "joueurs": [
+          {
+            "x": 50,
+            "y": 8,
+            "role": "att",
+            "label": "A"
+          },
+          {
+            "x": 10,
+            "y": 88,
+            "role": "att",
+            "label": "B"
+          },
+          {
+            "x": 90,
+            "y": 88,
+            "role": "att",
+            "label": "C"
+          }
+        ],
+        "passes": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              50,
+              8
+            ],
+            "to": [
+              10,
+              88
+            ],
+            "type": "course"
+          },
+          {
+            "from": [
+              10,
+              88
+            ],
+            "to": [
+              90,
+              88
+            ],
+            "type": "course"
+          }
+        ],
+        "elements": [
+          {
+            "type": "plot",
+            "x": 50,
+            "y": 8
+          },
+          {
+            "type": "plot",
+            "x": 10,
+            "y": 88
+          },
+          {
+            "type": "plot",
+            "x": 90,
+            "y": 88
+          }
+        ]
+      }
     },
     {
       "id": "tech_002",
@@ -245,7 +765,7 @@
       ],
       "j_min": 8,
       "j_max": 16,
-      "duree": 15,
+      "duree": 10,
       "cats": [
         "U14",
         "U15-U18",
@@ -255,7 +775,100 @@
       "variantes": [
         "Le défenseur en phase 3 peut intercepter — le contrôle doit être précis et rapide",
         "Enchaîner contrôle orienté + conduite sur 5m + frappe au but"
-      ]
+      ],
+      "comportements_attendus": [
+        "Le joueur central regarde par-dessus son épaule AVANT de recevoir pour identifier l'espace libre",
+        "Le contrôle s'effectue dans la direction choisie, jamais en stoppant le ballon sur place",
+        "L'enchaînement contrôle + passe se fait en 2 temps fluides sans rupture",
+        "En phase 3 avec défenseur, le joueur adapte sa direction en fonction du positionnement adverse"
+      ],
+      "impact_match": "Le contrôle orienté est le geste qui fait gagner 1 à 2 secondes sur chaque possession. Un milieu qui contrôle orienté élimine la pression sans avoir besoin de dribbler.",
+      "schema": {
+        "terrain": "reduit",
+        "dimensions": "15m × 15m",
+        "joueurs": [
+          {
+            "x": 50,
+            "y": 50,
+            "role": "att",
+            "label": "C"
+          },
+          {
+            "x": 50,
+            "y": 10,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 90,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 90,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 10,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          }
+        ],
+        "passes": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            2
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              50,
+              50
+            ],
+            "to": [
+              90,
+              50
+            ],
+            "type": "course"
+          }
+        ],
+        "elements": [
+          {
+            "type": "plot",
+            "x": 50,
+            "y": 50
+          },
+          {
+            "type": "plot",
+            "x": 50,
+            "y": 10
+          },
+          {
+            "type": "plot",
+            "x": 90,
+            "y": 50
+          },
+          {
+            "type": "plot",
+            "x": 50,
+            "y": 90
+          },
+          {
+            "type": "plot",
+            "x": 10,
+            "y": 50
+          }
+        ]
+      }
     },
     {
       "id": "tech_003",
@@ -282,7 +895,7 @@
       ],
       "j_min": 8,
       "j_max": 16,
-      "duree": 15,
+      "duree": 12,
       "cats": [
         "U14",
         "U15-U18"
@@ -291,7 +904,79 @@
       "variantes": [
         "Ajouter un 2e défenseur qui entre avec 2 secondes de retard — le porteur doit éliminer vite",
         "Remplacer les portes par un mini-but avec GB — finition après élimination"
-      ]
+      ],
+      "comportements_attendus": [
+        "Le porteur conduit tête levée pour lire la position du défenseur",
+        "Le geste technique est exécuté avec accélération — pas de dribble lent",
+        "Après l'élimination, le joueur change de rythme immédiatement vers la porte",
+        "Le défenseur reste sur ses appuis et ne plonge pas dans le duel"
+      ],
+      "impact_match": "Capacité à éliminer en 1c1 dans les 20 derniers mètres. Un ailier ou un latéral qui élimine son vis-à-vis crée du danger immédiat.",
+      "schema": {
+        "terrain": "reduit",
+        "dimensions": "15m × 10m",
+        "joueurs": [
+          {
+            "x": 20,
+            "y": 15,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 80,
+            "y": 85,
+            "role": "def",
+            "label": ""
+          }
+        ],
+        "passes": [],
+        "courses": [
+          {
+            "from": [
+              20,
+              15
+            ],
+            "to": [
+              50,
+              50
+            ],
+            "type": "course"
+          },
+          {
+            "from": [
+              80,
+              85
+            ],
+            "to": [
+              50,
+              50
+            ],
+            "type": "course"
+          }
+        ],
+        "elements": [
+          {
+            "type": "plot",
+            "x": 10,
+            "y": 50
+          },
+          {
+            "type": "plot",
+            "x": 35,
+            "y": 50
+          },
+          {
+            "type": "plot",
+            "x": 65,
+            "y": 50
+          },
+          {
+            "type": "plot",
+            "x": 90,
+            "y": 50
+          }
+        ]
+      }
     },
     {
       "id": "tech_004",
@@ -327,7 +1012,93 @@
       "variantes": [
         "Le centreur varie : centre rasant, centre au 2e poteau, centre en retrait",
         "Ajouter un 3e attaquant en zone de retrait pour les remises de la tête"
-      ]
+      ],
+      "comportements_attendus": [
+        "L'appel de balle est courbé : l'attaquant part de l'extérieur pour attaquer le ballon de face",
+        "Le timing du saut : sauter AVANT l'adversaire pour gagner le duel aérien",
+        "La tête est orientée vers le bas en direction du but, yeux ouverts au moment du contact",
+        "Le défenseur se place entre l'attaquant et le but, pas à côté"
+      ],
+      "impact_match": "Les coups de pied arrêtés représentent 30 à 40% des buts en football amateur. La maîtrise du jeu de tête offensif et défensif est directement impactante.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Surface de réparation",
+        "joueurs": [
+          {
+            "x": 30,
+            "y": 22,
+            "role": "att",
+            "label": "ATT"
+          },
+          {
+            "x": 60,
+            "y": 25,
+            "role": "att",
+            "label": "ATT"
+          },
+          {
+            "x": 35,
+            "y": 28,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 55,
+            "y": 28,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 10,
+            "y": 45,
+            "role": "att",
+            "label": "C"
+          },
+          {
+            "x": 90,
+            "y": 45,
+            "role": "att",
+            "label": "C"
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [
+          [
+            4,
+            0
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              30,
+              40
+            ],
+            "to": [
+              30,
+              22
+            ],
+            "type": "appel"
+          },
+          {
+            "from": [
+              60,
+              40
+            ],
+            "to": [
+              60,
+              25
+            ],
+            "type": "appel"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "tech_005",
@@ -364,7 +1135,74 @@
       "variantes": [
         "Ajouter un défenseur qui sort au moment de la remise — le frappeur a 1 seconde pour décider",
         "Frappe obligatoire du pied faible sur un axe"
-      ]
+      ],
+      "comportements_attendus": [
+        "Le frappeur se positionne sur le côté du ballon, corps légèrement ouvert vers le but",
+        "La cheville est verrouillée au moment de la frappe, pied ferme",
+        "Le joueur vise les coins bas — tirs cadrés au sol prioritaires",
+        "L'enchaînement remise-frappe est fluide, pas de temps de préparation excessif"
+      ],
+      "impact_match": "Situation de frappe la plus fréquente en match : recevoir un ballon en retrait à l'entrée de la surface et frapper en 1 touche. La qualité de cette frappe fait la différence.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Entrée de surface",
+        "joueurs": [
+          {
+            "x": 50,
+            "y": 35,
+            "role": "att",
+            "label": "REM"
+          },
+          {
+            "x": 30,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              30,
+              55
+            ],
+            "to": [
+              35,
+              42
+            ],
+            "type": "course"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "tech_006",
@@ -400,7 +1238,87 @@
       "variantes": [
         "Ajouter 2 défenseurs dans la surface pour créer une opposition réelle sur les centres",
         "Le centreur a le choix de centrer ou de rentrer pour frapper — les attaquants doivent s'adapter"
-      ]
+      ],
+      "comportements_attendus": [
+        "Le centreur regarde la zone de centre AVANT de frapper le ballon",
+        "Les 3 appels se déclenchent EN MÊME TEMPS quand le centreur arrive à 5m de la ligne",
+        "L'attaquant au 1er poteau coupe en diagonale, celui au 2e attaque l'espace derrière",
+        "L'attaquant en retrait reste disponible pour une frappe de 20m"
+      ],
+      "impact_match": "Coordination des appels sur les centres. En match, les équipes qui marquent sur centre sont celles où les 3 courses sont synchronisées et prévisibles pour le centreur.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 88,
+            "y": 50,
+            "role": "att",
+            "label": "C"
+          },
+          {
+            "x": 35,
+            "y": 28,
+            "role": "att",
+            "label": "1er"
+          },
+          {
+            "x": 55,
+            "y": 25,
+            "role": "att",
+            "label": "2nd"
+          },
+          {
+            "x": 50,
+            "y": 42,
+            "role": "att",
+            "label": "RET"
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [],
+        "courses": [
+          {
+            "from": [
+              88,
+              50
+            ],
+            "to": [
+              88,
+              20
+            ],
+            "type": "course"
+          },
+          {
+            "from": [
+              50,
+              45
+            ],
+            "to": [
+              35,
+              28
+            ],
+            "type": "appel"
+          },
+          {
+            "from": [
+              60,
+              40
+            ],
+            "to": [
+              55,
+              25
+            ],
+            "type": "appel"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "tech_007",
@@ -436,7 +1354,69 @@
       "variantes": [
         "Concours : chaque passe qui atterrit dans le cercle-cible rapporte 1 point, l'équipe qui atteint 10 points gagne",
         "Ajouter un défenseur passif sur la trajectoire pour forcer une passe lobée avec plus de courbe"
-      ]
+      ],
+      "comportements_attendus": [
+        "La passe longue est tendue et précise, pas lobée — le receveur peut la contrôler en 1 touche",
+        "Le receveur se démarque avant la passe en faisant un appel-contre-appel",
+        "Le passeur lève la tête et identifie le côté libre AVANT de frapper",
+        "Après le changement d'aile, le jeu accélère immédiatement côté réception"
+      ],
+      "impact_match": "Le changement d'aile est l'arme principale pour déstabiliser un bloc compact. Une équipe qui sait renverser rapidement trouve des espaces libres côté faible.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 15,
+            "y": 60,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 85,
+            "y": 60,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          }
+        ],
+        "passes": [
+          [
+            0,
+            1
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              85,
+              60
+            ],
+            "to": [
+              85,
+              45
+            ],
+            "type": "appel"
+          }
+        ],
+        "elements": [
+          {
+            "type": "plot",
+            "x": 15,
+            "y": 60
+          },
+          {
+            "type": "plot",
+            "x": 85,
+            "y": 60
+          }
+        ]
+      }
     },
     {
       "id": "tech_008",
@@ -472,7 +1452,79 @@
       "variantes": [
         "Le pivot a le droit de se retourner et frapper si le défenseur est trop loin",
         "Ajouter un pressing actif : le pivot a 2 secondes max pour jouer"
-      ]
+      ],
+      "comportements_attendus": [
+        "Le joueur en appui reçoit dos au but et remet en 1 touche proprement",
+        "Le joueur qui fait la remise se retourne immédiatement pour proposer un nouveau appel",
+        "L'enchaînement appui-remise-frappe se fait en 3 touches maximum",
+        "Le timing de la course du frappeur est calé sur la remise, pas avant"
+      ],
+      "impact_match": "Situation classique du jeu axial : un attaquant dos au but remet pour un milieu qui arrive lancé. C'est une des combinaisons les plus efficaces en zone de finition.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Zone axiale",
+        "joueurs": [
+          {
+            "x": 50,
+            "y": 35,
+            "role": "att",
+            "label": "APP"
+          },
+          {
+            "x": 50,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 35,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              50,
+              55
+            ],
+            "to": [
+              50,
+              38
+            ],
+            "type": "course"
+          },
+          {
+            "from": [
+              50,
+              35
+            ],
+            "to": [
+              45,
+              42
+            ],
+            "type": "course"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "toff_001",
@@ -509,7 +1561,118 @@
       "variantes": [
         "2 touches max dans le couloir de fixation",
         "Ajouter un 5e défenseur"
-      ]
+      ],
+      "comportements_attendus": [
+        "Le porteur fixe le bloc adverse avant de renverser — pas de changement d'aile précipité",
+        "Les jokers se positionnent en permanence côté faible pour offrir la solution de renversement",
+        "Après le renversement, l'accélération est immédiate côté réception",
+        "Les joueurs intérieurs créent du mouvement pour attirer les défenseurs et libérer les jokers"
+      ],
+      "impact_match": "Capacité à fixer un bloc puis renverser rapidement. En match, les équipes qui savent renverser créent des situations de surnombre côté faible.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 20,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 80,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 35,
+            "y": 35,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 65,
+            "y": 35,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 10,
+            "y": 40,
+            "role": "att",
+            "label": "J"
+          },
+          {
+            "x": 90,
+            "y": 40,
+            "role": "att",
+            "label": "J"
+          },
+          {
+            "x": 30,
+            "y": 38,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 45,
+            "y": 35,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 55,
+            "y": 35,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 38,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [
+          [
+            1,
+            7
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              90,
+              40
+            ],
+            "to": [
+              85,
+              25
+            ],
+            "type": "course"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "toff_002",
@@ -545,7 +1708,124 @@
       "variantes": [
         "Supprimer les 2s de protection",
         "Joker offensif permanent en zone intermédiaire"
-      ]
+      ],
+      "comportements_attendus": [
+        "Les appuis extérieurs se montrent entre les lignes pour recevoir dans l'intervalle",
+        "Le porteur intérieur lève la tête pour identifier quel appui est libre",
+        "Le joueur entre les lignes se retourne face au but dès qu'il reçoit",
+        "Les rotations entre intérieur et appui sont fluides et coordonnées"
+      ],
+      "impact_match": "Capacité à trouver le joueur entre les lignes adverses. En match, les équipes qui cassent les lignes de passe créent des décalages et des occasions.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 25,
+            "y": 65,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 65,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 75,
+            "y": 65,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 25,
+            "y": 35,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 25,
+            "role": "att",
+            "label": "APP"
+          },
+          {
+            "x": 75,
+            "y": 35,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 50,
+            "role": "att",
+            "label": "APP"
+          },
+          {
+            "x": 25,
+            "y": 50,
+            "role": "att",
+            "label": "APP"
+          },
+          {
+            "x": 75,
+            "y": 50,
+            "role": "att",
+            "label": "APP"
+          },
+          {
+            "x": 35,
+            "y": 45,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 42,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 65,
+            "y": 45,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 55,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [
+          [
+            1,
+            6
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              50,
+              50
+            ],
+            "to": [
+              50,
+              35
+            ],
+            "type": "course"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "toff_003",
@@ -582,7 +1862,133 @@
       "variantes": [
         "Le bloc défensif peut contre-attaquer dans 2 mini-buts s'il récupère",
         "Imposer un temps limite de 15 secondes pour centrer depuis le déclenchement"
-      ]
+      ],
+      "comportements_attendus": [
+        "Le latéral déclenche sa montée dans les 3 secondes suivant la prise de balle du milieu",
+        "L'ailier fixe son vis-à-vis en rentrant à l'intérieur, ce qui libère le couloir",
+        "Au moment du centre, un attaquant attaque le 1er poteau, l'autre couvre le 2nd",
+        "Le milieu non impliqué se replace à 25m pour couvrir une éventuelle perte"
+      ],
+      "impact_match": "Installe les automatismes sur les attaques côté : qui déborde, qui fixe, qui occupe la surface. Réduit le temps de décision en situation de centre.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 50,
+            "y": 80,
+            "role": "att",
+            "label": "MIL"
+          },
+          {
+            "x": 78,
+            "y": 65,
+            "role": "att",
+            "label": "AIL"
+          },
+          {
+            "x": 88,
+            "y": 78,
+            "role": "att",
+            "label": "LAT"
+          },
+          {
+            "x": 42,
+            "y": 35,
+            "role": "att",
+            "label": "ATT"
+          },
+          {
+            "x": 58,
+            "y": 38,
+            "role": "att",
+            "label": "ATT"
+          },
+          {
+            "x": 22,
+            "y": 48,
+            "role": "def",
+            "label": "DG"
+          },
+          {
+            "x": 38,
+            "y": 44,
+            "role": "def",
+            "label": "DC"
+          },
+          {
+            "x": 55,
+            "y": 44,
+            "role": "def",
+            "label": "DC"
+          },
+          {
+            "x": 72,
+            "y": 48,
+            "role": "def",
+            "label": "DD"
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [
+          [
+            0,
+            2
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              88,
+              78
+            ],
+            "to": [
+              90,
+              35
+            ],
+            "type": "course"
+          },
+          {
+            "from": [
+              78,
+              65
+            ],
+            "to": [
+              62,
+              50
+            ],
+            "type": "course"
+          },
+          {
+            "from": [
+              42,
+              35
+            ],
+            "to": [
+              38,
+              22
+            ],
+            "type": "appel"
+          },
+          {
+            "from": [
+              58,
+              38
+            ],
+            "to": [
+              62,
+              25
+            ],
+            "type": "appel"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "toff_004",
@@ -619,7 +2025,129 @@
       "variantes": [
         "Les passes en profondeur au-delà de la dernière ligne valent 2 points bonus",
         "Limiter à 3 passes latérales max avant d'obliger une passe vers l'avant"
-      ]
+      ],
+      "comportements_attendus": [
+        "Le jeu progresse vers l'avant dès que la ligne de passe verticale est ouverte",
+        "Les joueurs sans ballon font des appels en profondeur pour étirer la défense",
+        "Le porteur choisit entre passe courte et passe longue en fonction de la position du bloc",
+        "Les ailiers restent hauts et larges pour étirer la défense"
+      ],
+      "impact_match": "Travaille la verticalité dans le jeu. En match, les équipes qui jouent trop latéralement deviennent prévisibles — cet exercice impose de chercher la profondeur.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "3/4 terrain",
+        "joueurs": [
+          {
+            "x": 25,
+            "y": 75,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 70,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 75,
+            "y": 75,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 35,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 65,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 30,
+            "role": "att",
+            "label": "ATT"
+          },
+          {
+            "x": 30,
+            "y": 55,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 45,
+            "y": 48,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 55,
+            "y": 48,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 55,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 35,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 35,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [
+          [
+            1,
+            3
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              35,
+              50
+            ],
+            "to": [
+              40,
+              35
+            ],
+            "type": "course"
+          },
+          {
+            "from": [
+              50,
+              30
+            ],
+            "to": [
+              50,
+              18
+            ],
+            "type": "appel"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "toff_005",
@@ -655,7 +2183,91 @@
       "variantes": [
         "Ajouter un 3e défenseur pour augmenter la pression sur la combinaison",
         "Limiter à 3 touches max par joueur dans la séquence"
-      ]
+      ],
+      "comportements_attendus": [
+        "Les combinaisons s'enchaînent en 1-2 touches maximum",
+        "Le 3e joueur arrive lancé dans l'espace libéré par les 2 premiers",
+        "Les appels sont coordonnés : un fixe, l'autre s'échappe",
+        "La finition suit immédiatement la dernière combinaison"
+      ],
+      "impact_match": "Les combinaisons en triangle sont la base du jeu court en zone de finition. Quand 3 joueurs se comprennent, ils éliminent 2 défenseurs en 2 passes.",
+      "schema": {
+        "terrain": "reduit",
+        "dimensions": "Quart de terrain",
+        "joueurs": [
+          {
+            "x": 50,
+            "y": 70,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 30,
+            "y": 45,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 45,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 55,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 55,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              70,
+              45
+            ],
+            "to": [
+              65,
+              25
+            ],
+            "type": "course"
+          },
+          {
+            "from": [
+              50,
+              70
+            ],
+            "to": [
+              50,
+              45
+            ],
+            "type": "appel"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "toff_006",
@@ -693,7 +2305,114 @@
       "variantes": [
         "Ajouter un 5e presseur pour augmenter la difficulté",
         "Le GB a le droit de jouer long si le pressing est trop haut — l'attaquant de pointe doit être disponible"
-      ]
+      ],
+      "comportements_attendus": [
+        "Le GB participe activement à la construction — il est le 1er relanceur",
+        "Les défenseurs centraux s'écartent pour offrir de la largeur à la relance",
+        "Le milieu de terrain se montre entre les lignes de pressing pour recevoir",
+        "La progression se fait par étapes : GB → DC → milieu → ailier, pas de passe longue forcée"
+      ],
+      "impact_match": "Installe les circuits de construction depuis le gardien. Une équipe qui ressort proprement le ballon depuis l'arrière met l'adversaire en difficulté dès la relance.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 50,
+            "y": 92,
+            "role": "gk",
+            "label": "GB"
+          },
+          {
+            "x": 30,
+            "y": 78,
+            "role": "att",
+            "label": "DC"
+          },
+          {
+            "x": 70,
+            "y": 78,
+            "role": "att",
+            "label": "DC"
+          },
+          {
+            "x": 10,
+            "y": 65,
+            "role": "att",
+            "label": "LAT"
+          },
+          {
+            "x": 90,
+            "y": 65,
+            "role": "att",
+            "label": "LAT"
+          },
+          {
+            "x": 40,
+            "y": 60,
+            "role": "att",
+            "label": "MIL"
+          },
+          {
+            "x": 60,
+            "y": 60,
+            "role": "att",
+            "label": "MIL"
+          },
+          {
+            "x": 50,
+            "y": 45,
+            "role": "att",
+            "label": "10"
+          },
+          {
+            "x": 35,
+            "y": 55,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 65,
+            "y": 55,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 52,
+            "role": "def",
+            "label": ""
+          }
+        ],
+        "passes": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            5,
+            7
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              40,
+              60
+            ],
+            "to": [
+              45,
+              50
+            ],
+            "type": "appel"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "toff_007",
@@ -730,7 +2449,93 @@
       "variantes": [
         "En 3c2, un 3e défenseur entre au bout de 4 secondes — course contre la montre",
         "Le coach impose le nombre de touches : 2 touches max en phase 3"
-      ]
+      ],
+      "comportements_attendus": [
+        "Les attaquants créent du surnombre en zone de finition par leurs déplacements",
+        "Le porteur identifie la situation de surnombre et l'exploite immédiatement",
+        "Les joueurs sans ballon se démarquent dans le dos des défenseurs",
+        "La finition est rapide après la création du surnombre — pas de possession inutile"
+      ],
+      "impact_match": "En match, les buts se marquent quand on crée du surnombre dans les 20 derniers mètres. Cet exercice apprend à identifier et exploiter ces situations.",
+      "schema": {
+        "terrain": "reduit",
+        "dimensions": "Quart de terrain",
+        "joueurs": [
+          {
+            "x": 30,
+            "y": 60,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 65,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 60,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 40,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 35,
+            "y": 42,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 65,
+            "y": 42,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [
+          [
+            1,
+            3
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              30,
+              60
+            ],
+            "to": [
+              35,
+              35
+            ],
+            "type": "appel"
+          },
+          {
+            "from": [
+              70,
+              60
+            ],
+            "to": [
+              65,
+              35
+            ],
+            "type": "appel"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "toff_008",
@@ -768,7 +2573,103 @@
       "variantes": [
         "Passer en 2 touches pour accélérer le rythme de jeu",
         "Ajouter un joker offensif permanent pour créer du surnombre"
-      ]
+      ],
+      "comportements_attendus": [
+        "Le ballon circule rapidement — 2 touches maximum par joueur",
+        "Les déplacements sans ballon créent des décalages dans la défense",
+        "Le joueur qui reçoit dans un espace libre accélère immédiatement",
+        "Les permutations entre les lignes sont fluides et coordonnées"
+      ],
+      "impact_match": "Apprend à déséquilibrer une défense par le mouvement collectif plutôt que par le dribble individuel. C'est la base du jeu de position.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 20,
+            "y": 60,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 80,
+            "y": 60,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 30,
+            "y": 35,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 32,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 35,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              40,
+              55
+            ],
+            "to": [
+              45,
+              38
+            ],
+            "type": "course"
+          },
+          {
+            "from": [
+              80,
+              60
+            ],
+            "to": [
+              75,
+              42
+            ],
+            "type": "appel"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "tdef_001",
@@ -795,7 +2696,7 @@
       ],
       "j_min": 8,
       "j_max": 12,
-      "duree": 20,
+      "duree": 18,
       "cats": [
         "U15-U18",
         "Seniors"
@@ -804,7 +2705,104 @@
       "variantes": [
         "2 touches max pour les attaquants",
         "Temps limite 45s sinon point défense"
-      ]
+      ],
+      "comportements_attendus": [
+        "La ligne entière se déplace comme un bloc — aucun joueur isolé",
+        "Le défenseur côté ballon sort presser, les 3 autres resserrent à 8-10m d'intervalle",
+        "Le déplacement collectif s'anticipe : la ligne bouge AVANT la passe, pas en réaction",
+        "Le central côté ballon communique en permanence pour guider le mouvement"
+      ],
+      "impact_match": "Une ligne défensive qui coulisse correctement limite les passes intérieures adverses et réduit les espaces exploitables. Applicable immédiatement en match.",
+      "schema": {
+        "terrain": "largeur",
+        "dimensions": "Largeur × 25m",
+        "joueurs": [
+          {
+            "x": 22,
+            "y": 42,
+            "role": "def",
+            "label": "DG"
+          },
+          {
+            "x": 38,
+            "y": 40,
+            "role": "def",
+            "label": "DC"
+          },
+          {
+            "x": 55,
+            "y": 40,
+            "role": "def",
+            "label": "DC"
+          },
+          {
+            "x": 72,
+            "y": 42,
+            "role": "def",
+            "label": "DD"
+          },
+          {
+            "x": 15,
+            "y": 72,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 68,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 85,
+            "y": 72,
+            "role": "att",
+            "label": ""
+          }
+        ],
+        "passes": [
+          [
+            4,
+            6
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              22,
+              42
+            ],
+            "to": [
+              38,
+              40
+            ],
+            "type": "coulissage"
+          },
+          {
+            "from": [
+              38,
+              40
+            ],
+            "to": [
+              55,
+              40
+            ],
+            "type": "coulissage"
+          },
+          {
+            "from": [
+              72,
+              42
+            ],
+            "to": [
+              80,
+              35
+            ],
+            "type": "sortie"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "tdef_002",
@@ -841,7 +2839,118 @@
       "variantes": [
         "7c7 + joker offensif",
         "3s de pressing seulement pour l'explosivité"
-      ]
+      ],
+      "comportements_attendus": [
+        "Le pressing se déclenche sur un signal collectif : la mauvaise passe adverse ou le contrôle manqué",
+        "Les joueurs les plus proches du ballon pressent immédiatement, les autres coupent les lignes de passe",
+        "La zone de récupération ciblée est respectée — pas de pressing anarchique sur tout le terrain",
+        "Après la récupération, la transition offensive est immédiate"
+      ],
+      "impact_match": "Le pressing organisé est l'arme principale des équipes qui veulent imposer leur jeu. Récupérer haut réduit la distance au but adverse et crée des occasions.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 25,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 45,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 75,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 35,
+            "y": 35,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 65,
+            "y": 35,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 25,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 25,
+            "y": 65,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 70,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 75,
+            "y": 65,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 35,
+            "y": 80,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 65,
+            "y": 80,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 90,
+            "role": "def",
+            "label": ""
+          }
+        ],
+        "passes": [],
+        "courses": [
+          {
+            "from": [
+              50,
+              45
+            ],
+            "to": [
+              50,
+              70
+            ],
+            "type": "sprint"
+          },
+          {
+            "from": [
+              25,
+              50
+            ],
+            "to": [
+              25,
+              65
+            ],
+            "type": "sprint"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "tdef_003",
@@ -879,7 +2988,112 @@
       "variantes": [
         "Ajouter un 5e défenseur (milieu défensif) qui protège la zone axiale",
         "Les attaquants ont 20 secondes max pour marquer sinon point à la défense"
-      ]
+      ],
+      "comportements_attendus": [
+        "Les défenseurs ferment le côté fort en resserrant les intervalles",
+        "Le côté faible est volontairement laissé avec moins de couverture pour compacter côté ballon",
+        "Le pressing se fait de l'extérieur vers l'intérieur pour orienter l'adversaire",
+        "La communication entre défenseurs est constante pour ajuster le positionnement"
+      ],
+      "impact_match": "Fermer le côté fort oblige l'adversaire à renverser vers le côté faible. Pendant ce temps, l'équipe se replace. C'est le principe de base du pressing orienté.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 55,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 80,
+            "y": 45,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 55,
+            "y": 40,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 65,
+            "y": 35,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 75,
+            "y": 30,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 30,
+            "y": 55,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 60,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 65,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 85,
+            "y": 60,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [],
+        "courses": [
+          {
+            "from": [
+              55,
+              55
+            ],
+            "to": [
+              70,
+              50
+            ],
+            "type": "sprint"
+          },
+          {
+            "from": [
+              65,
+              35
+            ],
+            "to": [
+              75,
+              30
+            ],
+            "type": "sprint"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "tdef_004",
@@ -916,7 +3130,106 @@
       "variantes": [
         "3c6 pour rendre l'exercice encore plus extrême",
         "Un défenseur supplémentaire entre toutes les 10 secondes — les attaquants doivent finir vite"
-      ]
+      ],
+      "comportements_attendus": [
+        "Les 4 défenseurs restent compacts et ne se font pas étirer par les déplacements adverses",
+        "La priorité est de protéger l'axe central — accepter de laisser les côtés",
+        "Le bloc recule ensemble, pas de défenseur qui monte seul",
+        "La communication est essentielle pour organiser les prises à 2"
+      ],
+      "impact_match": "Situation fréquente en match : exclusion, blessure, ou transition où l'équipe se retrouve en sous-nombre. Savoir défendre en infériorité évite de prendre des buts facilement.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 30,
+            "y": 42,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 45,
+            "y": 38,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 55,
+            "y": 38,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 42,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 20,
+            "y": 60,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 35,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 65,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 65,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 80,
+            "y": 60,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [
+          [
+            2,
+            4
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              30,
+              42
+            ],
+            "to": [
+              35,
+              38
+            ],
+            "type": "coulissage"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "tdef_005",
@@ -952,7 +3265,70 @@
       "variantes": [
         "L'ailier a le droit de centrer s'il arrive à lever la tête — les défenseurs doivent le bloquer avant",
         "Ajouter un 3e attaquant en soutien pour simuler une combinaison plus complexe"
-      ]
+      ],
+      "comportements_attendus": [
+        "Le 1er défenseur oriente le porteur vers la ligne de touche",
+        "Le 2e défenseur se positionne pour couper la passe intérieure",
+        "Les 2 défenseurs communiquent : qui prend le porteur, qui couvre",
+        "Après la récupération, la relance est immédiate vers l'avant"
+      ],
+      "impact_match": "La prise à 2 sur le côté est la base de la défense en zone. Quand le latéral et le milieu coordonnent leur pressing, l'adversaire est enfermé sur la touche.",
+      "schema": {
+        "terrain": "reduit",
+        "dimensions": "Quart de terrain",
+        "joueurs": [
+          {
+            "x": 75,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 85,
+            "y": 30,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 60,
+            "role": "def",
+            "label": "D1"
+          },
+          {
+            "x": 60,
+            "y": 45,
+            "role": "def",
+            "label": "D2"
+          }
+        ],
+        "passes": [],
+        "courses": [
+          {
+            "from": [
+              70,
+              60
+            ],
+            "to": [
+              80,
+              48
+            ],
+            "type": "sprint"
+          },
+          {
+            "from": [
+              60,
+              45
+            ],
+            "to": [
+              70,
+              38
+            ],
+            "type": "course"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "tdef_006",
@@ -989,7 +3365,137 @@
       "variantes": [
         "Ajouter un joker offensif pour obliger le bloc à défendre en infériorité",
         "L'équipe attaquante a 30 secondes pour marquer sinon la balle change de camp"
-      ]
+      ],
+      "comportements_attendus": [
+        "Le bloc médian se positionne entre 30m et 50m — ni trop haut, ni trop bas",
+        "Les lignes sont resserrées : max 25m entre la ligne défensive et la ligne offensive",
+        "Le pressing se déclenche quand le ballon entre dans la zone prédéfinie",
+        "Les joueurs à contre-pied du ballon ferment les espaces au lieu de regarder"
+      ],
+      "impact_match": "Le bloc médian est le choix défensif le plus courant en amateur. Bien exécuté, il laisse peu d'espace à l'adversaire et permet de récupérer dans de bonnes conditions.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "3/4 terrain",
+        "joueurs": [
+          {
+            "x": 20,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 35,
+            "y": 45,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 42,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 65,
+            "y": 45,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 80,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 30,
+            "y": 35,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 30,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 35,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 25,
+            "y": 65,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 60,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 58,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 60,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 75,
+            "y": 65,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 35,
+            "y": 72,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 75,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 65,
+            "y": 72,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 92,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [],
+        "courses": [
+          {
+            "from": [
+              50,
+              42
+            ],
+            "to": [
+              50,
+              58
+            ],
+            "type": "sprint"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "tdef_007",
@@ -1025,7 +3531,111 @@
       "variantes": [
         "Le centreur a le choix de centrer en l'air ou au sol — les défenseurs doivent s'adapter",
         "Ajouter un 4e attaquant qui arrive lancé depuis l'extérieur de la surface"
-      ]
+      ],
+      "comportements_attendus": [
+        "Les défenseurs se positionnent entre l'attaquant et le but, jamais à côté",
+        "Le GB communique sur les placements et annonce les courses adverses",
+        "Au moment du centre, les défenseurs se tournent vers le ballon sans perdre leur attaquant",
+        "Le dégagement se fait loin et haut — pas de remise hasardeuse dans la surface"
+      ],
+      "impact_match": "La défense sur les centres est une situation récurrente en match. Les équipes qui maîtrisent le placement dans la surface et le duel aérien encaissent moins.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Surface + abords",
+        "joueurs": [
+          {
+            "x": 30,
+            "y": 25,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 45,
+            "y": 22,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 55,
+            "y": 22,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 25,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 35,
+            "y": 30,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 55,
+            "y": 28,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 45,
+            "y": 35,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 90,
+            "y": 50,
+            "role": "att",
+            "label": "C"
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [],
+        "courses": [
+          {
+            "from": [
+              90,
+              50
+            ],
+            "to": [
+              88,
+              22
+            ],
+            "type": "course"
+          },
+          {
+            "from": [
+              35,
+              40
+            ],
+            "to": [
+              35,
+              30
+            ],
+            "type": "appel"
+          },
+          {
+            "from": [
+              55,
+              40
+            ],
+            "to": [
+              55,
+              28
+            ],
+            "type": "appel"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "tdef_008",
@@ -1062,7 +3672,106 @@
       "variantes": [
         "Réduire à 3 secondes pour augmenter l'urgence du contre-pressing",
         "L'équipe qui récupère en contre-pressing a 2 touches max pour finir"
-      ]
+      ],
+      "comportements_attendus": [
+        "Le pressing se déclenche dans les 2 secondes après la perte de balle",
+        "Le joueur le plus proche du ballon presse, les autres coupent les lignes de passe proches",
+        "Si la récupération n'est pas faite en 5 secondes, l'équipe se replace en bloc",
+        "La transition pressing → bloc est fluide et coordonnée"
+      ],
+      "impact_match": "Le contre-pressing immédiat est le moyen le plus efficace de récupérer le ballon en zone offensive. Applicable sur chaque perte de balle en match.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 30,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 45,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 35,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 35,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 60,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 55,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 30,
+            "y": 65,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 70,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 65,
+            "role": "def",
+            "label": ""
+          }
+        ],
+        "passes": [],
+        "courses": [
+          {
+            "from": [
+              50,
+              45
+            ],
+            "to": [
+              50,
+              60
+            ],
+            "type": "sprint"
+          },
+          {
+            "from": [
+              30,
+              50
+            ],
+            "to": [
+              30,
+              65
+            ],
+            "type": "sprint"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "trans_off_001",
@@ -1098,7 +3807,93 @@
       "variantes": [
         "4c3 pour plus de difficulté",
         "Temps limite 4s pour finir après récup"
-      ]
+      ],
+      "comportements_attendus": [
+        "La 1ère passe après récupération est vers l'avant, pas latérale",
+        "Les joueurs sans ballon sprintent pour créer du surnombre en transition",
+        "Le porteur lève la tête immédiatement pour identifier les options de progression",
+        "La finition intervient dans les 8 secondes après la récupération"
+      ],
+      "impact_match": "Les 5 premières secondes après une récupération sont les plus dangereuses pour l'adversaire. Savoir percuter immédiatement crée des occasions de but.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Couloir + profondeur",
+        "joueurs": [
+          {
+            "x": 30,
+            "y": 65,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 60,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 40,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 45,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 45,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [
+          [
+            0,
+            1
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              50,
+              55
+            ],
+            "to": [
+              50,
+              30
+            ],
+            "type": "sprint"
+          },
+          {
+            "from": [
+              70,
+              60
+            ],
+            "to": [
+              65,
+              35
+            ],
+            "type": "sprint"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "trans_off_002",
@@ -1135,7 +3930,98 @@
       "variantes": [
         "Ajouter un 3e défenseur qui entre avec 3 secondes de retard — la contre doit être finie avant",
         "Le coach varie le côté de la passe initiale pour forcer l'adaptation"
-      ]
+      ],
+      "comportements_attendus": [
+        "Le 1er joueur qui récupère lève la tête et lance la contre-attaque en 1 passe",
+        "Les 2 autres attaquants sprintent pour créer la supériorité numérique",
+        "Le porteur choisit entre passe et conduite en fonction de la position des défenseurs",
+        "La finition est rapide — pas de possession inutile après avoir passé les défenseurs"
+      ],
+      "impact_match": "La contre-attaque 3c2 est la situation de surnombre la plus fréquente en match. Savoir la jouer efficacement transforme les récupérations en buts.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 50,
+            "y": 70,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 30,
+            "y": 60,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 60,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 40,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 40,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [
+          [
+            0,
+            2
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              50,
+              70
+            ],
+            "to": [
+              50,
+              40
+            ],
+            "type": "sprint"
+          },
+          {
+            "from": [
+              30,
+              60
+            ],
+            "to": [
+              30,
+              30
+            ],
+            "type": "sprint"
+          },
+          {
+            "from": [
+              70,
+              60
+            ],
+            "to": [
+              70,
+              30
+            ],
+            "type": "sprint"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "trans_off_003",
@@ -1173,7 +4059,93 @@
       "variantes": [
         "Ajouter un défenseur qui suit l'attaquant de pointe — la passe longue doit être précise",
         "L'attaquant de pointe a le droit de décrocher court si la longue n'est pas jouable"
-      ]
+      ],
+      "comportements_attendus": [
+        "La passe longue part dans les 3 secondes après la récupération",
+        "L'attaquant cible est déjà en mouvement AVANT la récupération",
+        "Les milieux accompagnent la transition en sprintant derrière le ballon long",
+        "Si la passe longue n'est pas possible, l'équipe sécurise et construit"
+      ],
+      "impact_match": "La transition directe par une passe longue est l'option la plus rapide pour attaquer. Quand l'adversaire est mal replacé, c'est souvent la meilleure solution.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 50,
+            "y": 75,
+            "role": "att",
+            "label": "RÉC"
+          },
+          {
+            "x": 50,
+            "y": 30,
+            "role": "att",
+            "label": "CIB"
+          },
+          {
+            "x": 30,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 42,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 42,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [
+          [
+            0,
+            1
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              50,
+              30
+            ],
+            "to": [
+              50,
+              18
+            ],
+            "type": "sprint"
+          },
+          {
+            "from": [
+              30,
+              55
+            ],
+            "to": [
+              35,
+              35
+            ],
+            "type": "sprint"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "trans_off_004",
@@ -1210,7 +4182,75 @@
       "variantes": [
         "Le défenseur a le droit de sortir plus haut pour réduire le temps de réaction des attaquants",
         "Ajouter un 2e défenseur en retard de 3 secondes pour créer l'urgence"
-      ]
+      ],
+      "comportements_attendus": [
+        "Le porteur accélère immédiatement après la récupération vers le but",
+        "Le partenaire se positionne pour offrir une solution de passe ou d'appel",
+        "Le 2c1 se joue en vitesse — pas de ralentissement devant le défenseur",
+        "La finition est la priorité : tirer dès que possible"
+      ],
+      "impact_match": "Le 2c1 est la situation de transition la plus simple et la plus efficace. Si les joueurs la maîtrisent, chaque récupération haute devient une occasion.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 45,
+            "y": 60,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 35,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [
+          [
+            0,
+            1
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              45,
+              60
+            ],
+            "to": [
+              45,
+              35
+            ],
+            "type": "sprint"
+          },
+          {
+            "from": [
+              60,
+              55
+            ],
+            "to": [
+              60,
+              30
+            ],
+            "type": "sprint"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "trans_off_005",
@@ -1247,7 +4287,109 @@
       "variantes": [
         "Un joueur de zone 1 peut accompagner en zone 2 (créant un 3c2 temporaire)",
         "Réduire le temps de transition zone 1→2 à 3 secondes"
-      ]
+      ],
+      "comportements_attendus": [
+        "La récupération se fait dans la zone prévue (zone 1)",
+        "La construction en zone 2 se fait en 3-4 passes maximum",
+        "L'accélération en zone 3 est immédiate avec recherche de la finition",
+        "Les transitions entre les 3 zones sont fluides, pas de rupture de rythme"
+      ],
+      "impact_match": "Reproduit le cheminement complet d'une attaque : récupérer, construire, finir. En match, les meilleures occasions viennent de transitions bien structurées en 3 phases.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "3/4 terrain en 3 zones",
+        "joueurs": [
+          {
+            "x": 30,
+            "y": 80,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 78,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 80,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 35,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 65,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 30,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 30,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [
+          [
+            1,
+            5
+          ],
+          [
+            5,
+            6
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              50,
+              50
+            ],
+            "to": [
+              50,
+              35
+            ],
+            "type": "course"
+          },
+          {
+            "from": [
+              40,
+              30
+            ],
+            "to": [
+              40,
+              18
+            ],
+            "type": "sprint"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "trans_off_006",
@@ -1285,7 +4427,99 @@
       "variantes": [
         "Les constructeurs passent en 4 joueurs pour équilibrer la situation",
         "Le GB a le droit de jouer long au-dessus du pressing — les presseurs doivent adapter leur positionnement"
-      ]
+      ],
+      "comportements_attendus": [
+        "La récupération haute déclenche immédiatement l'attaque — pas de temporisation",
+        "Le porteur a 2 options de passe vers l'avant dans les 2 secondes",
+        "Les joueurs sans ballon sprintent pour occuper les espaces laissés par l'adversaire",
+        "La finition intervient rapidement après la récupération"
+      ],
+      "impact_match": "Récupérer haut et attaquer immédiatement est le schéma offensif le plus efficace. L'adversaire n'a pas le temps de se replacer.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 40,
+            "y": 55,
+            "role": "att",
+            "label": "RÉC"
+          },
+          {
+            "x": 60,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 30,
+            "y": 40,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 40,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 45,
+            "y": 35,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 55,
+            "y": 38,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 65,
+            "y": 35,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [
+          [
+            0,
+            1
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              60,
+              50
+            ],
+            "to": [
+              55,
+              30
+            ],
+            "type": "sprint"
+          },
+          {
+            "from": [
+              30,
+              40
+            ],
+            "to": [
+              30,
+              22
+            ],
+            "type": "sprint"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "trans_def_001",
@@ -1322,7 +4556,129 @@
       "variantes": [
         "3 joueurs contournent (6c3)",
         "L'équipe en infériorité marque double si elle conserve"
-      ]
+      ],
+      "comportements_attendus": [
+        "Dès que le but est marqué (ou le ballon perdu), les joueurs se replacent en sprintant",
+        "Les milieux sont les premiers à revenir — ils forment le 1er rideau défensif",
+        "Les défenseurs reculent vers leur surface en gardant le ballon devant eux",
+        "Le replacement est complet en moins de 8 secondes"
+      ],
+      "impact_match": "En match, les buts encaissés juste après avoir marqué sont fréquents. Le repli immédiat après un temps fort évite ces erreurs de concentration.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 25,
+            "y": 35,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 30,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 30,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 75,
+            "y": 35,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 35,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 65,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 25,
+            "y": 65,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 60,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 60,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 75,
+            "y": 65,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 75,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 92,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [],
+        "courses": [
+          {
+            "from": [
+              25,
+              35
+            ],
+            "to": [
+              25,
+              55
+            ],
+            "type": "sprint"
+          },
+          {
+            "from": [
+              40,
+              30
+            ],
+            "to": [
+              40,
+              50
+            ],
+            "type": "sprint"
+          },
+          {
+            "from": [
+              60,
+              30
+            ],
+            "to": [
+              60,
+              50
+            ],
+            "type": "sprint"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "trans_def_002",
@@ -1358,7 +4714,87 @@
       "variantes": [
         "Un 3e défenseur entre après 5 secondes — les attaquants doivent finir avant",
         "Passer en 2c4 pour rendre l'exercice encore plus exigeant pour la défense"
-      ]
+      ],
+      "comportements_attendus": [
+        "Les 2 défenseurs reculent ensemble, sans se faire séparer",
+        "Le défenseur le plus proche temporise et ne plonge pas dans le duel",
+        "Le 2e défenseur couvre la profondeur et communique",
+        "L'objectif est de retarder la contre-attaque jusqu'à ce que les coéquipiers reviennent"
+      ],
+      "impact_match": "Situation fréquente en match après une perte haute. Savoir gérer un 2c3 sans encaisser de but permet à l'équipe de se replacer.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 40,
+            "y": 35,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 38,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 30,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [
+          [
+            3,
+            2
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              40,
+              35
+            ],
+            "to": [
+              38,
+              28
+            ],
+            "type": "course"
+          },
+          {
+            "from": [
+              60,
+              38
+            ],
+            "to": [
+              55,
+              30
+            ],
+            "type": "course"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "trans_def_003",
@@ -1395,7 +4831,111 @@
       "variantes": [
         "Réduire à 3 secondes pour augmenter l'intensité de la réaction",
         "L'équipe qui vient de récupérer a 2 touches max pour relancer — forçant un jeu rapide en transition"
-      ]
+      ],
+      "comportements_attendus": [
+        "Le joueur le plus proche presse immédiatement pour ralentir l'adversaire",
+        "Les autres sprintent vers leur position défensive, pas vers le ballon",
+        "Si la récupération n'est pas faite en 5 secondes, tout le monde se replace en bloc bas",
+        "La communication permet d'organiser qui presse et qui se replace"
+      ],
+      "impact_match": "La règle des 5 secondes est un repère collectif clair. En match, ça donne un cadre à toute l'équipe : on presse 5 secondes, si on n'a pas récupéré, on se replace.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 50,
+            "y": 55,
+            "role": "att",
+            "label": "PRESSE"
+          },
+          {
+            "x": 30,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 65,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 65,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 68,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 30,
+            "y": 72,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 72,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 80,
+            "role": "def",
+            "label": ""
+          }
+        ],
+        "passes": [],
+        "courses": [
+          {
+            "from": [
+              50,
+              55
+            ],
+            "to": [
+              50,
+              68
+            ],
+            "type": "sprint"
+          },
+          {
+            "from": [
+              30,
+              50
+            ],
+            "to": [
+              30,
+              65
+            ],
+            "type": "sprint"
+          },
+          {
+            "from": [
+              70,
+              50
+            ],
+            "to": [
+              70,
+              65
+            ],
+            "type": "sprint"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "trans_def_004",
@@ -1433,7 +4973,122 @@
       "variantes": [
         "L'équipe qui contre-attaque a 8 secondes max pour finir",
         "Ajouter un joueur de l'équipe A qui revient avec 4 secondes de retard (simuler un joueur haut)"
-      ]
+      ],
+      "comportements_attendus": [
+        "Les 4 défenseurs ferment les couloirs en priorité",
+        "Le repli se fait en diagonale vers son propre but, pas en reculant droit",
+        "Le GB sort pour couvrir la profondeur si nécessaire et communique",
+        "La ligne défensive est reformée en moins de 6 secondes"
+      ],
+      "impact_match": "Fermer les couloirs en transition défensive empêche l'adversaire de centrer facilement. C'est la base du repli défensif organisé.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 15,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 85,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 25,
+            "y": 65,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 62,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 62,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 75,
+            "y": 65,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [],
+        "courses": [
+          {
+            "from": [
+              15,
+              55
+            ],
+            "to": [
+              20,
+              40
+            ],
+            "type": "sprint"
+          },
+          {
+            "from": [
+              85,
+              55
+            ],
+            "to": [
+              80,
+              40
+            ],
+            "type": "sprint"
+          },
+          {
+            "from": [
+              40,
+              50
+            ],
+            "to": [
+              40,
+              35
+            ],
+            "type": "sprint"
+          },
+          {
+            "from": [
+              60,
+              50
+            ],
+            "to": [
+              60,
+              35
+            ],
+            "type": "sprint"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "phy_001",
@@ -1470,7 +5125,103 @@
       "variantes": [
         "Format 20/20 pour plus d'explosivité",
         "Duel 1c1 avant la frappe"
-      ]
+      ],
+      "comportements_attendus": [
+        "La qualité technique de frappe se maintient au fil des répétitions — critère principal",
+        "Les appuis restent dynamiques, pas de relâchement dans les changements de direction",
+        "Le joueur cadre sa frappe à chaque passage, y compris sur les dernières répétitions",
+        "La récupération active est respectée : trot léger, pas d'arrêt complet"
+      ],
+      "impact_match": "Prépare les joueurs à rester efficaces techniquement en fin de match, quand la fatigue dégrade la qualité de frappe et de décision.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 12,
+            "y": 88,
+            "role": "att",
+            "label": "DÉP"
+          },
+          {
+            "x": 12,
+            "y": 55,
+            "role": "neutre",
+            "label": ""
+          },
+          {
+            "x": 35,
+            "y": 42,
+            "role": "neutre",
+            "label": ""
+          },
+          {
+            "x": 52,
+            "y": 25,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [],
+        "courses": [
+          {
+            "from": [
+              12,
+              88
+            ],
+            "to": [
+              12,
+              55
+            ],
+            "type": "sprint"
+          },
+          {
+            "from": [
+              12,
+              55
+            ],
+            "to": [
+              35,
+              42
+            ],
+            "type": "course"
+          },
+          {
+            "from": [
+              35,
+              42
+            ],
+            "to": [
+              52,
+              25
+            ],
+            "type": "sprint"
+          }
+        ],
+        "elements": [
+          {
+            "type": "plot",
+            "x": 12,
+            "y": 55
+          },
+          {
+            "type": "plot",
+            "x": 24,
+            "y": 48
+          },
+          {
+            "type": "plot",
+            "x": 35,
+            "y": 42
+          }
+        ]
+      }
     },
     {
       "id": "phy_002",
@@ -1507,7 +5258,103 @@
       "variantes": [
         "Duel : 2 joueurs partent, 1er frappe, 2nd défend",
         "Centre + tête au lieu de frappe"
-      ]
+      ],
+      "comportements_attendus": [
+        "Les gestes de coordination sont exécutés proprement même à vitesse élevée",
+        "Le joueur enchaîne le parcours et la frappe sans temps de pause",
+        "La frappe est cadrée malgré l'enchaînement coordination + vitesse",
+        "Le joueur reste concentré sur la qualité même en fin de série"
+      ],
+      "impact_match": "La coordination sous fatigue est ce qui différencie un joueur efficace en 2e mi-temps. Les appuis, l'équilibre et la frappe doivent rester propres.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 15,
+            "y": 85,
+            "role": "att",
+            "label": "DÉP"
+          },
+          {
+            "x": 15,
+            "y": 55,
+            "role": "neutre",
+            "label": ""
+          },
+          {
+            "x": 30,
+            "y": 40,
+            "role": "neutre",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 22,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [],
+        "courses": [
+          {
+            "from": [
+              15,
+              85
+            ],
+            "to": [
+              15,
+              55
+            ],
+            "type": "course"
+          },
+          {
+            "from": [
+              15,
+              55
+            ],
+            "to": [
+              30,
+              40
+            ],
+            "type": "course"
+          },
+          {
+            "from": [
+              30,
+              40
+            ],
+            "to": [
+              50,
+              22
+            ],
+            "type": "sprint"
+          }
+        ],
+        "elements": [
+          {
+            "type": "plot",
+            "x": 15,
+            "y": 55
+          },
+          {
+            "type": "plot",
+            "x": 22,
+            "y": 48
+          },
+          {
+            "type": "plot",
+            "x": 30,
+            "y": 40
+          }
+        ]
+      }
     },
     {
       "id": "phy_003",
@@ -1544,7 +5391,103 @@
       "variantes": [
         "Remplacer les sauts verticaux par des bondissements latéraux au-dessus de haies",
         "Ajouter un GB que l'attaquant doit battre en 1c1 après le sprint"
-      ]
+      ],
+      "comportements_attendus": [
+        "L'enchaînement force + vitesse ne dégrade pas la qualité du geste technique final",
+        "Les exercices de force sont exécutés avec amplitude complète, pas bâclés",
+        "Le sprint qui suit l'exercice de force est à intensité maximale",
+        "Le ballon est maîtrisé dès la 1ère touche après le sprint"
+      ],
+      "impact_match": "En match, un joueur doit souvent sprinter après un duel physique. Ce circuit reproduit cette séquence force → vitesse → technique.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 10,
+            "y": 85,
+            "role": "att",
+            "label": "DÉP"
+          },
+          {
+            "x": 10,
+            "y": 60,
+            "role": "neutre",
+            "label": "FORCE"
+          },
+          {
+            "x": 40,
+            "y": 40,
+            "role": "neutre",
+            "label": ""
+          },
+          {
+            "x": 55,
+            "y": 22,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [],
+        "courses": [
+          {
+            "from": [
+              10,
+              85
+            ],
+            "to": [
+              10,
+              60
+            ],
+            "type": "course"
+          },
+          {
+            "from": [
+              10,
+              60
+            ],
+            "to": [
+              40,
+              40
+            ],
+            "type": "sprint"
+          },
+          {
+            "from": [
+              40,
+              40
+            ],
+            "to": [
+              55,
+              22
+            ],
+            "type": "sprint"
+          }
+        ],
+        "elements": [
+          {
+            "type": "plot",
+            "x": 10,
+            "y": 60
+          },
+          {
+            "type": "plot",
+            "x": 25,
+            "y": 50
+          },
+          {
+            "type": "plot",
+            "x": 40,
+            "y": 40
+          }
+        ]
+      }
     },
     {
       "id": "phy_004",
@@ -1582,7 +5525,76 @@
       "variantes": [
         "Matchs de 8 min pour augmenter le volume",
         "Ajouter un joker offensif pour fluidifier le jeu et maintenir l'intensité de course"
-      ]
+      ],
+      "comportements_attendus": [
+        "L'intensité reste élevée pendant toute la durée du jeu réduit",
+        "Les joueurs ne marchent pas entre les actions — la récupération se fait en trottinant",
+        "La qualité technique ne baisse pas en 2e moitié d'exercice",
+        "Les transitions attaque-défense sont immédiates"
+      ],
+      "impact_match": "Le jeu réduit 4c4 reproduit la densité et l'intensité d'un match en réduisant l'espace. C'est le meilleur outil pour travailler l'endurance spécifique football.",
+      "schema": {
+        "terrain": "reduit",
+        "dimensions": "25m × 20m",
+        "joueurs": [
+          {
+            "x": 25,
+            "y": 25,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 75,
+            "y": 25,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 25,
+            "y": 75,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 75,
+            "y": 75,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 30,
+            "y": 40,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 40,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 30,
+            "y": 60,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 60,
+            "role": "def",
+            "label": ""
+          }
+        ],
+        "passes": [
+          [
+            0,
+            1
+          ]
+        ],
+        "courses": [],
+        "elements": []
+      }
     },
     {
       "id": "phy_005",
@@ -1622,7 +5634,86 @@
       "variantes": [
         "Le coach annonce 2 couleurs : les joueurs doivent faire les 2 ateliers avant de sprinter",
         "Ajouter un 2e ballon : le joueur peut choisir de frapper ou de centrer pour un 3e joueur"
-      ]
+      ],
+      "comportements_attendus": [
+        "La réaction au signal est instantanée — moins d'1 seconde",
+        "Le sprint est à intensité maximale, pas à 80%",
+        "Le choix (direction, frappe, passe) est fait en pleine vitesse, pas après l'arrêt",
+        "La frappe est cadrée malgré la vitesse d'exécution"
+      ],
+      "impact_match": "La vitesse de réaction et la prise de décision en mouvement sont déterminantes en match. Un joueur qui réagit plus vite prend l'avantage sur chaque action.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain",
+        "joueurs": [
+          {
+            "x": 50,
+            "y": 75,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 30,
+            "y": 75,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 70,
+            "y": 75,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [],
+        "courses": [
+          {
+            "from": [
+              50,
+              75
+            ],
+            "to": [
+              50,
+              30
+            ],
+            "type": "sprint"
+          },
+          {
+            "from": [
+              30,
+              75
+            ],
+            "to": [
+              35,
+              35
+            ],
+            "type": "sprint"
+          }
+        ],
+        "elements": [
+          {
+            "type": "plot",
+            "x": 50,
+            "y": 75
+          },
+          {
+            "type": "plot",
+            "x": 50,
+            "y": 50
+          },
+          {
+            "type": "plot",
+            "x": 50,
+            "y": 30
+          }
+        ]
+      }
     },
     {
       "id": "phy_006",
@@ -1659,7 +5750,74 @@
       "variantes": [
         "Passer en 4c4+1 pour augmenter le nombre de joueurs impliqués",
         "Matchs de 2 min avec 1 min de récup pour maximiser l'intensité"
-      ]
+      ],
+      "comportements_attendus": [
+        "Les 3 joueurs de chaque équipe sont en mouvement permanent — pas de joueur statique",
+        "Le joker s'adapte en permanence pour créer le surnombre côté ballon",
+        "L'intensité ne baisse pas dans les dernières minutes",
+        "Les transitions sont immédiates à chaque changement de possession"
+      ],
+      "impact_match": "Le 3c3+1 est le format le plus exigeant physiquement en jeu réduit. Il reproduit la haute intensité des duels en match avec un ratio effort/repos élevé.",
+      "schema": {
+        "terrain": "reduit",
+        "dimensions": "20m × 15m",
+        "joueurs": [
+          {
+            "x": 25,
+            "y": 30,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 20,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 75,
+            "y": 30,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 25,
+            "y": 70,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 80,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 75,
+            "y": 70,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 50,
+            "role": "neutre",
+            "label": "J"
+          }
+        ],
+        "passes": [
+          [
+            0,
+            6
+          ],
+          [
+            6,
+            1
+          ]
+        ],
+        "courses": [],
+        "elements": []
+      }
     },
     {
       "id": "tech_009",
@@ -1685,7 +5843,7 @@
       ],
       "j_min": 8,
       "j_max": 18,
-      "duree": 15,
+      "duree": 10,
       "cats": [
         "U14",
         "U15-U18"
@@ -1694,7 +5852,90 @@
       "variantes": [
         "En phase 4, les joueurs éliminés font des jongles sur le côté et reviennent au tour suivant",
         "Ajouter des portes de plots : le joueur doit passer en conduite dans un maximum de portes en 1 min"
-      ]
+      ],
+      "comportements_attendus": [
+        "La conduite se fait tête levée, pas les yeux sur le ballon",
+        "Les changements de direction sont nets et rapides — pas de courbe large",
+        "Le ballon reste proche du pied à chaque changement de direction",
+        "L'accélération après le changement de direction est franche"
+      ],
+      "impact_match": "Un joueur qui conduit tête levée voit les espaces et les partenaires. Les changements de direction nets permettent d'éliminer un adversaire sans dribble.",
+      "schema": {
+        "terrain": "reduit",
+        "dimensions": "15m × 15m",
+        "joueurs": [
+          {
+            "x": 50,
+            "y": 85,
+            "role": "att",
+            "label": "DÉP"
+          },
+          {
+            "x": 50,
+            "y": 15,
+            "role": "att",
+            "label": "ARR"
+          }
+        ],
+        "passes": [],
+        "courses": [
+          {
+            "from": [
+              50,
+              85
+            ],
+            "to": [
+              25,
+              60
+            ],
+            "type": "course"
+          },
+          {
+            "from": [
+              25,
+              60
+            ],
+            "to": [
+              75,
+              40
+            ],
+            "type": "course"
+          },
+          {
+            "from": [
+              75,
+              40
+            ],
+            "to": [
+              50,
+              15
+            ],
+            "type": "course"
+          }
+        ],
+        "elements": [
+          {
+            "type": "plot",
+            "x": 50,
+            "y": 85
+          },
+          {
+            "type": "plot",
+            "x": 25,
+            "y": 60
+          },
+          {
+            "type": "plot",
+            "x": 75,
+            "y": 40
+          },
+          {
+            "type": "plot",
+            "x": 50,
+            "y": 15
+          }
+        ]
+      }
     },
     {
       "id": "tech_010",
@@ -1720,7 +5961,7 @@
       ],
       "j_min": 4,
       "j_max": 16,
-      "duree": 15,
+      "duree": 10,
       "cats": [
         "U14",
         "U15-U18",
@@ -1730,7 +5971,97 @@
       "variantes": [
         "Ajouter un 3e ballon pour augmenter la difficulté cognitive",
         "Passer en 1 touche obligatoire sur le schéma 1"
-      ]
+      ],
+      "comportements_attendus": [
+        "Le losange tourne fluidement — chaque joueur sait où il doit aller après sa passe",
+        "Les passes sont au sol, tendues, avec le bon dosage",
+        "Le mouvement ne s'arrête jamais — passer et bouger immédiatement",
+        "Les joueurs alternent passes courtes et passes longues selon la position dans le losange"
+      ],
+      "impact_match": "Le losange est la forme géométrique la plus fréquente en jeu de possession. Milieu-ailier-attaquant-milieu : c'est un losange qui tourne en permanence.",
+      "schema": {
+        "terrain": "reduit",
+        "dimensions": "20m × 20m",
+        "joueurs": [
+          {
+            "x": 50,
+            "y": 10,
+            "role": "att",
+            "label": "A"
+          },
+          {
+            "x": 90,
+            "y": 50,
+            "role": "att",
+            "label": "B"
+          },
+          {
+            "x": 50,
+            "y": 90,
+            "role": "att",
+            "label": "C"
+          },
+          {
+            "x": 10,
+            "y": 50,
+            "role": "att",
+            "label": "D"
+          }
+        ],
+        "passes": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              50,
+              10
+            ],
+            "to": [
+              90,
+              50
+            ],
+            "type": "course"
+          }
+        ],
+        "elements": [
+          {
+            "type": "plot",
+            "x": 50,
+            "y": 10
+          },
+          {
+            "type": "plot",
+            "x": 90,
+            "y": 50
+          },
+          {
+            "type": "plot",
+            "x": 50,
+            "y": 90
+          },
+          {
+            "type": "plot",
+            "x": 10,
+            "y": 50
+          }
+        ]
+      }
     },
     {
       "id": "toff_009",
@@ -1767,7 +6098,130 @@
       "variantes": [
         "Ajouter un joker offensif pour créer du surnombre en phase d'attaque",
         "Les buts marqués en 1 touche comptent double pour encourager le jeu rapide"
-      ]
+      ],
+      "comportements_attendus": [
+        "Les consignes tactiques sont respectées par tous les joueurs pendant toute la durée",
+        "Les mouvements offensifs sont coordonnés et pas individuels",
+        "Les joueurs s'adaptent en temps réel quand la défense change de positionnement",
+        "La patience dans la circulation précède l'accélération vers le but"
+      ],
+      "impact_match": "Reproduit le plus fidèlement la réalité du match en attaque placée. Les automatismes installés ici se transfèrent directement le dimanche.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "3/4 terrain",
+        "joueurs": [
+          {
+            "x": 15,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 35,
+            "y": 60,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 65,
+            "y": 60,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 85,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 40,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 40,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 25,
+            "y": 45,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 40,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 38,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 40,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 75,
+            "y": 45,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 28,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 28,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [
+          [
+            2,
+            0
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              15,
+              55
+            ],
+            "to": [
+              20,
+              38
+            ],
+            "type": "course"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "toff_010",
@@ -1803,7 +6257,104 @@
       "variantes": [
         "Passer en 1 touche pour accélérer le tempo",
         "Ajouter un 4e presseur pour réduire la supériorité et augmenter la difficulté"
-      ]
+      ],
+      "comportements_attendus": [
+        "Les 6 attaquants maintiennent la possession face à 3 presseurs — min 8 passes avant de progresser",
+        "La progression de zone en zone se fait par une passe verticale, pas par la conduite",
+        "En zone finale, le jeu accélère et la recherche du but est prioritaire",
+        "Les joueurs restent dans leur zone sauf quand un appel est nécessaire"
+      ],
+      "impact_match": "Le jeu positionnel apprend la patience et la progression structurée. En match, les équipes qui construisent zone par zone déstabilisent les défenses compactes.",
+      "schema": {
+        "terrain": "demi",
+        "dimensions": "Demi-terrain en 3 zones",
+        "joueurs": [
+          {
+            "x": 25,
+            "y": 78,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 80,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 75,
+            "y": 78,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 35,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 65,
+            "y": 55,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 40,
+            "y": 32,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 60,
+            "y": 32,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 55,
+            "role": "def",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 8,
+            "role": "gk",
+            "label": "GB"
+          }
+        ],
+        "passes": [
+          [
+            1,
+            5
+          ],
+          [
+            5,
+            3
+          ]
+        ],
+        "courses": [
+          {
+            "from": [
+              50,
+              50
+            ],
+            "to": [
+              50,
+              35
+            ],
+            "type": "course"
+          }
+        ],
+        "elements": []
+      }
     },
     {
       "id": "tech_011",
@@ -1830,7 +6381,7 @@
       ],
       "j_min": 6,
       "j_max": 14,
-      "duree": 15,
+      "duree": 12,
       "cats": [
         "U14",
         "U15-U18",
@@ -1840,7 +6391,70 @@
       "variantes": [
         "Le porteur a 5 secondes max pour marquer — sinon point au défenseur",
         "Ajouter un 2e passeur : le porteur peut remettre et recevoir à nouveau (appui-remise) avant de se retourner"
-      ]
+      ],
+      "comportements_attendus": [
+        "Le joueur garde son corps entre le ballon et le défenseur",
+        "La ressortie se fait dans la direction opposée au pressing — pas vers le danger",
+        "Le joueur utilise les 2 pieds pour protéger et ressortir",
+        "Sous pression, la 1ère touche est sécurisée, pas risquée"
+      ],
+      "impact_match": "La protection de balle est essentielle pour les milieux et attaquants dos au jeu. Garder le ballon sous pression permet de temporiser et d'attendre les soutiens.",
+      "schema": {
+        "terrain": "reduit",
+        "dimensions": "10m × 10m",
+        "joueurs": [
+          {
+            "x": 50,
+            "y": 50,
+            "role": "att",
+            "label": ""
+          },
+          {
+            "x": 50,
+            "y": 65,
+            "role": "def",
+            "label": "P"
+          },
+          {
+            "x": 25,
+            "y": 35,
+            "role": "att",
+            "label": "S"
+          },
+          {
+            "x": 75,
+            "y": 35,
+            "role": "att",
+            "label": "S"
+          }
+        ],
+        "passes": [],
+        "courses": [
+          {
+            "from": [
+              50,
+              50
+            ],
+            "to": [
+              25,
+              35
+            ],
+            "type": "appel"
+          },
+          {
+            "from": [
+              50,
+              50
+            ],
+            "to": [
+              75,
+              35
+            ],
+            "type": "appel"
+          }
+        ],
+        "elements": []
+      }
     }
   ],
   "seances_suggerees": {
