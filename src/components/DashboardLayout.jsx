@@ -184,7 +184,7 @@ function DashboardLayout({ children }) {
   )
 
   return (
-    <div style={{ minHeight: '100vh', background: T.bg, display: 'flex' }}>
+    <div style={{ minHeight: '100vh', background: T.bg, display: 'flex', overflowX: 'hidden', width: '100%' }}>
       <style>{globalStyles}</style>
 
       {/* Desktop sidebar */}
@@ -275,6 +275,8 @@ function DashboardLayout({ children }) {
         minHeight: '100vh',
         background: T.bg,
         padding: isMobile ? '64px 16px 88px' : '32px 36px 48px',
+        overflowX: 'hidden',
+        maxWidth: '100vw',
       }}>
         <TrialBanner />
         {children}
