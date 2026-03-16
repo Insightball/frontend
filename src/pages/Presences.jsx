@@ -94,7 +94,7 @@ export default function Presences() {
   /* ── Charger le calendrier ── */
   const loadCalendar = useCallback(async () => {
     try {
-      const res = await fetch(`${API}/training-sessions/calendar?month=${calMonth}&year=${calYear}`, { headers })
+      const res = await fetch(`${API}/training-sessions/calendar/?month=${calMonth}&year=${calYear}`, { headers })
       const data = await safeJson(res)
       if (Array.isArray(data)) setCalDays(data)
     } catch (e) {
@@ -105,7 +105,7 @@ export default function Presences() {
   /* ── Charger le classement (1 seule requête) ── */
   const loadRanking = useCallback(async () => {
     try {
-      const res = await fetch(`${API}/training-sessions/ranking`, { headers })
+      const res = await fetch(`${API}/training-sessions/ranking/`, { headers })
       const data = await safeJson(res)
       if (Array.isArray(data)) setRanking(data)
     } catch (e) {
@@ -148,7 +148,7 @@ export default function Presences() {
       }))
 
       if (entries.length > 0) {
-        await fetch(`${API}/training-sessions/${session.id}/attendance`, {
+        await fetch(`${API}/training-sessions/${session.id}/attendance/`, {
           method: 'PUT', headers,
           body: JSON.stringify({ entries })
         })
