@@ -114,7 +114,7 @@ export default function RegionPage() {
           </span>
         </Link>
         <a
-          href="/#waitlist"
+          href="/#contact"
           style={{
             padding: '9px 20px', background: G.gold, color: G.white,
             fontFamily: G.display, fontSize: 14, fontWeight: 700,
@@ -160,7 +160,7 @@ export default function RegionPage() {
         </p>
 
         <a
-          href="/#waitlist"
+          href="/#contact"
           style={{
             padding: '16px 36px', background: G.gold, color: G.white,
             fontFamily: G.display, fontSize: 16, fontWeight: 700,
@@ -361,7 +361,7 @@ export default function RegionPage() {
             </p>
           </div>
           <a
-            href="/#waitlist"
+            href="/#contact"
             style={{
               padding: '14px 28px', background: G.gold, color: G.white,
               fontFamily: G.display, fontSize: 15, fontWeight: 700,
@@ -408,7 +408,7 @@ export default function RegionPage() {
           7 jours gratuits. 1 match analysé offert. Sans engagement.
         </p>
         <a
-          href="/#waitlist"
+          href="/#contact"
           style={{
             padding: '16px 40px', background: G.gold, color: G.white,
             fontFamily: G.display, fontSize: 16, fontWeight: 700,

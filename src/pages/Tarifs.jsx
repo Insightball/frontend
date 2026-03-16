@@ -156,11 +156,11 @@ export default function Tarifs() {
                 </li>
               ))}
             </ul>
-            <Link to="/signup" style={{ ...btnPrimary, display: 'block', textAlign: 'center', width: '100%' }}
+            <a href="/#contact" style={{ ...btnPrimary, display: 'block', textAlign: 'center', width: '100%' }}
               onMouseEnter={e => e.currentTarget.style.background = G.goldD}
               onMouseLeave={e => e.currentTarget.style.background = G.gold}>
-              Commencer gratuitement →
-            </Link>
+              Nous contacter →
+            </a>
           </div>
 
           {/* ── CLUB ── */}

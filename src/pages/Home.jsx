@@ -30,9 +30,8 @@ const LANG = {
     // Nav
     navFeatures: 'Fonctionnalités',
     navPricing: 'Tarifs',
-    navEarlyAccess: 'Accès anticipé',
     navBlog: 'Blog',
-    navCta: 'Accès anticipé',
+    navCta: 'Nous contacter',
     // Hero
     heroTitle1: 'Ta vidéo.',
     heroTitle2: 'Tes stats.',
@@ -40,7 +39,7 @@ const LANG = {
     heroSub: "Filme ton match. Reçois tes stats en moins d'une heure.",
     heroSubBold: '',
     heroSubEnd: '',
-    heroCta1: 'Demander un accès →',
+    heroCta1: 'Demander une démo →',
     heroCta2: 'Voir un exemple',
     // Features
     featLabel: 'Fonctionnalités',
@@ -94,7 +93,7 @@ const LANG = {
     rapportCols: ['Joueur','Passes','Duels','Buts','Km'],
     rapportPdf: 'Rapport PDF prêt',
     rapportPdfSub: 'à être partagé.',
-    rapportCta: 'Accès anticipé →',
+    rapportCta: 'Nous contacter →',
     // Mockup rapport
     mockupTitle: 'Rapport de match',
     mockupHeatmapLabel: 'Heatmap collective',
@@ -133,29 +132,6 @@ const LANG = {
     clubCta: 'Demander un devis →',
     priceFooter: '🔒 Paiement sécurisé Stripe · Résiliable à tout moment · Sans engagement · Offre de lancement limitée',
     // Waitlist
-    wlLabel: 'Accès anticipé',
-    wlTitle1: 'Demande ton',
-    wlTitle2: 'accès en avant-première.',
-    wlSub1: 'Lancement prévu en ',
-    wlSub1Bold: 'mars 2026',
-    wlSub2: ". Inscris-toi maintenant pour en bénéficier en priorité.",
-    wlPerk1: 'Accès avant ouverture publique',
-    wlPerk2: 'Onboarding personnalisé',
-    wlPerk3: 'Tarif early adopter',
-    wlSentTitle: 'Demande reçue',
-    wlSentSub: "Ta demande a bien été enregistrée. On te contacte en priorité dès l'ouverture.",
-    wlFormTitle: 'Remplissez le formulaire',
-    wlFirstName: 'Prénom *',
-    wlLastName: 'Nom *',
-    wlEmail: 'Email *',
-    wlClub: 'Nom du club *',
-    wlRole: 'Poste *',
-    wlRoleChoose: 'Choisir...',
-    wlRoleOptions: ['Éducateur','Entraîneur','Directeur Sportif'],
-    wlCategory: 'Catégorie entraînée *',
-    wlCatChoose: 'Choisir...',
-    wlSubmit: '→ Demander mon accès anticipé',
-    wlSubmitting: 'Envoi...',
     // Contact
     contactLabel: 'Contact',
     contactTitle1: 'Une question ?',
@@ -177,7 +153,7 @@ const LANG = {
     // CTA band
     ctaTitle1: 'Prêt à analyser',
     ctaTitle2: 'ton prochain match ?',
-    ctaCta: "Demander l'accès →",
+    ctaCta: 'Nous contacter →',
     // Footer
     footProduit: 'Produit',
     footEntreprise: 'Entreprise',
@@ -185,7 +161,6 @@ const LANG = {
     footFeatures: 'Fonctionnalités',
     footPricing: 'Tarifs',
     footRapport: 'Exemple rapport',
-    footEarly: 'Accès anticipé',
     footContact: 'Contact',
     footSupport: 'Support',
     footBlog: 'Blog',
@@ -216,9 +191,8 @@ const LANG = {
     // Nav
     navFeatures: 'Features',
     navPricing: 'Pricing',
-    navEarlyAccess: 'Early Access',
     navBlog: 'Blog',
-    navCta: 'Early Access',
+    navCta: 'Contact us',
     // Hero
     heroTitle1: 'Your video.',
     heroTitle2: 'Your stats.',
@@ -226,7 +200,7 @@ const LANG = {
     heroSub: "Film your match. Get your stats in under one hour.",
     heroSubBold: '',
     heroSubEnd: '',
-    heroCta1: 'Request access →',
+    heroCta1: 'Request a demo →',
     heroCta2: 'See an example',
     // Features
     featLabel: 'Features',
@@ -280,7 +254,7 @@ const LANG = {
     rapportCols: ['Player','Passes','Duels','Goals','Km'],
     rapportPdf: 'PDF report ready',
     rapportPdfSub: 'to share.',
-    rapportCta: 'Early access →',
+    rapportCta: 'Contact us →',
     // Mockup rapport
     mockupTitle: 'Match report',
     mockupHeatmapLabel: 'Team heatmap',
@@ -319,29 +293,6 @@ const LANG = {
     clubCta: 'Request a quote →',
     priceFooter: '🔒 Secure Stripe payment · Cancel anytime · No commitment · Limited launch offer',
     // Waitlist
-    wlLabel: 'Early Access',
-    wlTitle1: 'Request your',
-    wlTitle2: 'early access.',
-    wlSub1: 'Launch planned for ',
-    wlSub1Bold: 'March 2026',
-    wlSub2: '. Sign up now for priority access.',
-    wlPerk1: 'Access before public launch',
-    wlPerk2: 'Personalized onboarding',
-    wlPerk3: 'Early adopter pricing',
-    wlSentTitle: 'Request received',
-    wlSentSub: "Your request has been recorded. We'll contact you as a priority when we launch.",
-    wlFormTitle: 'Fill in the form',
-    wlFirstName: 'First name *',
-    wlLastName: 'Last name *',
-    wlEmail: 'Email *',
-    wlClub: 'Club name *',
-    wlRole: 'Role *',
-    wlRoleChoose: 'Choose...',
-    wlRoleOptions: ['Educator','Head Coach','Sporting Director'],
-    wlCategory: 'Age group coached *',
-    wlCatChoose: 'Choose...',
-    wlSubmit: '→ Request my early access',
-    wlSubmitting: 'Sending...',
     // Contact
     contactLabel: 'Contact',
     contactTitle1: 'Got a question?',
@@ -363,7 +314,7 @@ const LANG = {
     // CTA band
     ctaTitle1: 'Ready to analyze',
     ctaTitle2: 'your next match?',
-    ctaCta: 'Request access →',
+    ctaCta: 'Contact us →',
     // Footer
     footProduit: 'Product',
     footEntreprise: 'Company',
@@ -371,7 +322,6 @@ const LANG = {
     footFeatures: 'Features',
     footPricing: 'Pricing',
     footRapport: 'Report example',
-    footEarly: 'Early Access',
     footContact: 'Contact',
     footSupport: 'Support',
     footBlog: 'Blog',
@@ -694,39 +644,7 @@ export default function LandingPage() {
   const [contactForm, setContactForm]   = useState({ name: '', email: '', message: '' })
   const [contactSent, setContactSent]   = useState(false)
   const [contactLoad, setContactLoad]   = useState(false)
-  const [wlForm, setWlForm]             = useState({ firstName:'', lastName:'', email:'', club:'', role:'', category:'' })
-  const [wlSent, setWlSent]             = useState(false)
-  const [wlLoading, setWlLoading]       = useState(false)
-  const [wlError, setWlError]           = useState('')
-  const [wlFocused, setWlFocused]       = useState(null)
 
-  /* ── Envoi waitlist → Google Sheets ── */
-  const handleWaitlist = async (e) => {
-    e.preventDefault()
-    setWlLoading(true); setWlError('')
-    const payload = {
-      sheet: 'Waitlist',
-      firstName: wlForm.firstName,
-      lastName:  wlForm.lastName,
-      email:     wlForm.email,
-      club:      wlForm.club,
-      role:      wlForm.role,
-      category:  wlForm.category,
-      date:      new Date().toISOString(),
-    }
-    try {
-      await fetch(SHEETS_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
-    } catch {
-      // no-cors → opaque response, peut throw sur redirect Google — données passent quand même
-    }
-    setWlSent(true)
-    setWlLoading(false)
-  }
 
   /* ── Envoi contact → Google Sheets ── */
   const handleContact = async (e) => {
@@ -878,7 +796,7 @@ export default function LandingPage() {
         </Link>
 
         <div className="nav-links" style={{ display: 'flex', gap: 28, alignItems: 'center' }}>
-          {[['#features',t.navFeatures],['/tarifs',t.navPricing],['#waitlist',t.navEarlyAccess],['/blog/',t.navBlog]].map(([h,l]) => (
+          {[['#features',t.navFeatures],['/tarifs',t.navPricing],['/blog/',t.navBlog]].map(([h,l]) => (
             <a key={h} href={h} style={{ fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.65)', textDecoration: 'none', transition: 'color .15s' }}
               onMouseEnter={e => e.currentTarget.style.color = G.gold}
               onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.65)'}>{l}</a>
@@ -897,7 +815,7 @@ export default function LandingPage() {
           <span style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.08em', color: 'rgba(255,255,255,0.75)' }}>{lang}</span>
         </button>
 
-        <a href="#waitlist" className="nav-cta-d" style={{ ...btnPrimary, padding: '9px 20px', fontSize: 14, textDecoration:'none' }}
+        <a href="#contact" className="nav-cta-d" style={{ ...btnPrimary, padding: '9px 20px', fontSize: 14, textDecoration:'none' }}
           onMouseEnter={e => e.currentTarget.style.background = G.goldD}
           onMouseLeave={e => e.currentTarget.style.background = G.gold}>
           {t.navCta}
@@ -918,7 +836,7 @@ export default function LandingPage() {
 
       {menuOpen && (
         <div style={{ position: 'fixed', top: 60, left: 0, right: 0, zIndex: 199, background: G.ink, borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '16px 24px 20px', display: 'flex', flexDirection: 'column' }}>
-          {[['#features',t.navFeatures],['/tarifs',t.navPricing],['#waitlist',t.navEarlyAccess],['/blog/',t.navBlog]].map(([h,l]) => (
+          {[['#features',t.navFeatures],['/tarifs',t.navPricing],['/blog/',t.navBlog]].map(([h,l]) => (
             <a key={h} href={h} onClick={() => setMenuOpen(false)} style={{ fontSize: 15, fontWeight: 500, color: 'rgba(255,255,255,0.75)', textDecoration: 'none', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>{l}</a>
           ))}
           <div style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
@@ -930,7 +848,7 @@ export default function LandingPage() {
               <span style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.08em', color: 'rgba(255,255,255,0.75)' }}>{lang}</span>
             </button>
           </div>
-          <a href="#waitlist" onClick={() => setMenuOpen(false)} style={{ ...btnPrimary, marginTop: 12, justifyContent: 'center', textDecoration:'none' }}>{t.navCta} →</a>
+          <a href="#contact" onClick={() => setMenuOpen(false)} style={{ ...btnPrimary, marginTop: 12, justifyContent: 'center', textDecoration:'none' }}>{t.navCta} →</a>
         </div>
       )}
 
@@ -949,7 +867,7 @@ export default function LandingPage() {
               {t.heroSub}
             </p>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', opacity: 0, animation: 'heroUp .5s .45s forwards' }}>
-              <a href="#waitlist" style={{ ...btnPrimary, textDecoration:'none' }}
+              <a href="#contact" style={{ ...btnPrimary, textDecoration:'none' }}
                 onMouseEnter={e => e.currentTarget.style.background = G.goldD}
                 onMouseLeave={e => e.currentTarget.style.background = G.gold}>
                 {t.heroCta1}
@@ -1267,7 +1185,7 @@ export default function LandingPage() {
                     <strong style={{ color: G.ink, fontWeight: 600 }}>{t.rapportPdf}</strong> {t.rapportPdfSub}
                   </div>
                 </div>
-                <a href="#waitlist" style={{ ...btnPrimary, padding: '8px 18px', fontSize: 12, borderRadius: 4, flexShrink: 0, textDecoration:'none' }}
+                <a href="#contact" style={{ ...btnPrimary, padding: '8px 18px', fontSize: 12, borderRadius: 4, flexShrink: 0, textDecoration:'none' }}
                   onMouseEnter={e => e.currentTarget.style.background = G.goldD}
                   onMouseLeave={e => e.currentTarget.style.background = G.gold}>
                   {t.rapportCta}
@@ -1281,118 +1199,6 @@ export default function LandingPage() {
       {/* ══ PRICING → /tarifs ══════════════════════════ */}
       {/* Section retirée de la landing — page dédiée /tarifs */}
 
-      {/* ══ WAITLIST ═══════════════════════════════════ */}
-      <div id="waitlist" style={{ background: G.ink }}>
-        <div className="wrap-inner" style={{ maxWidth: 1200, margin: '0 auto', padding: '96px 48px' }}>
-          <Reveal>
-            <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ width: 18, height: 1.5, background: G.gold }}/>{t.wlLabel}
-            </div>
-            <h2 className="sec-h2" style={{ fontFamily: G.display, fontSize: 'clamp(34px,4vw,54px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.white, marginBottom: 16 }}>
-              {t.wlTitle1}<br/><span style={{ color: G.gold }}>{t.wlTitle2}</span>
-            </h2>
-            <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.55)', lineHeight: 1.65, maxWidth: 560, marginBottom: 16 }}>
-              {t.wlSub1}<strong style={{ color: G.gold }}>{t.wlSub1Bold}</strong>{t.wlSub2}
-            </p>
-            <div style={{ display: 'flex', gap: 24, marginBottom: 48, flexWrap: 'wrap' }}>
-              {[['⚡',t.wlPerk1],['🤝',t.wlPerk2],['🏷️',t.wlPerk3]].map(([icon, label]) => (
-                <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: 'rgba(255,255,255,0.45)' }}>
-                  <span>{icon}</span><span>{label}</span>
-                </div>
-              ))}
-            </div>
-          </Reveal>
-
-          {wlSent ? (
-            <div style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, padding: '48px 32px', textAlign: 'center', maxWidth: 520 }}>
-              <div style={{ fontFamily: G.display, fontSize: 30, fontWeight: 800, textTransform: 'uppercase', color: G.white, marginBottom: 12 }}>
-                {t.wlSentTitle} <span style={{ color: G.gold }}>✓</span>
-              </div>
-              <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>
-                {t.wlSentSub}
-              </p>
-            </div>
-          ) : (
-            <Reveal delay={0.1}>
-              <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.12)', borderTop: `3px solid ${G.gold}`, borderRadius: 8, padding: '40px 40px', maxWidth: 760, boxShadow: '0 8px 40px rgba(0,0,0,0.30)' }}>
-                <div style={{ fontFamily: G.display, fontSize: 20, fontWeight: 800, textTransform: 'uppercase', color: G.white, marginBottom: 28 }}>
-                  {t.wlFormTitle}
-                </div>
-
-                {wlError && (
-                  <div style={{ marginBottom: 20, padding: '12px 16px', background: 'rgba(220,38,38,0.06)', border: '1px solid rgba(220,38,38,0.2)', borderRadius: 4 }}>
-                    <p style={{ fontFamily: G.mono, fontSize: 11, color: G.red, margin: 0 }}>{wlError}</p>
-                  </div>
-                )}
-
-                <form onSubmit={handleWaitlist}>
-                  <div className="wl-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '0 32px' }}>
-                    <div style={inputLineDark(wlFocused==='firstName')}>
-                      <label htmlFor="wl-firstName" style={labelStDark}>{t.wlFirstName}</label>
-                      <input id="wl-firstName" type="text" required value={wlForm.firstName} onChange={e => setWlForm({...wlForm, firstName: e.target.value})}
-                        placeholder="" style={inputStDark}
-                        onFocus={() => setWlFocused('firstName')} onBlur={() => setWlFocused(null)} />
-                    </div>
-                    <div style={inputLineDark(wlFocused==='lastName')}>
-                      <label htmlFor="wl-lastName" style={labelStDark}>{t.wlLastName}</label>
-                      <input id="wl-lastName" type="text" required value={wlForm.lastName} onChange={e => setWlForm({...wlForm, lastName: e.target.value})}
-                        placeholder="" style={inputStDark}
-                        onFocus={() => setWlFocused('lastName')} onBlur={() => setWlFocused(null)} />
-                    </div>
-                    <div style={{ ...inputLine(wlFocused==='email'), gridColumn: '1 / 3' }}>
-                      <label htmlFor="wl-email" style={labelStDark}>{t.wlEmail}</label>
-                      <input id="wl-email" type="email" required value={wlForm.email} onChange={e => setWlForm({...wlForm, email: e.target.value})}
-                        placeholder="" style={inputStDark}
-                        onFocus={() => setWlFocused('email')} onBlur={() => setWlFocused(null)} />
-                    </div>
-                    <div style={{ ...inputLine(wlFocused==='club'), gridColumn: '1 / 3' }}>
-                      <label htmlFor="wl-club" style={labelStDark}>{t.wlClub}</label>
-                      <input id="wl-club" type="text" required value={wlForm.club} onChange={e => setWlForm({...wlForm, club: e.target.value})}
-                        placeholder="" style={inputStDark}
-                        onFocus={() => setWlFocused('club')} onBlur={() => setWlFocused(null)} />
-                    </div>
-                    <div style={{ ...inputLineDark(wlFocused==='role'), marginBottom: 32 }}>
-                      <label htmlFor="wl-role" style={labelStDark}>{t.wlRole}</label>
-                      <div className="select-wrapper">
-                        <select id="wl-role" required value={wlForm.role} onChange={e => setWlForm({...wlForm, role: e.target.value})}
-                          style={{ ...inputStDark, color: wlForm.role ? G.white : 'rgba(255,255,255,0.55)', cursor:'pointer', appearance:'none', WebkitAppearance:'none', paddingRight: 20 }}
-                          onFocus={() => setWlFocused('role')} onBlur={() => setWlFocused(null)}>
-                          <option value="" disabled style={{ color: '#888', background: '#1a1917' }}>{t.wlRoleChoose}</option>
-                          {t.wlRoleOptions.map(r => (
-                            <option key={r} style={{ background: '#1a1917', color: '#fff' }}>{r}</option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                    <div style={{ ...inputLineDark(wlFocused==='category'), marginBottom: 32 }}>
-                      <label htmlFor="wl-category" style={labelStDark}>{t.wlCategory}</label>
-                      <div className="select-wrapper">
-                        <select id="wl-category" required value={wlForm.category} onChange={e => setWlForm({...wlForm, category: e.target.value})}
-                          style={{ ...inputStDark, color: wlForm.category ? G.white : 'rgba(255,255,255,0.55)', cursor:'pointer', appearance:'none', WebkitAppearance:'none', paddingRight: 20 }}
-                          onFocus={() => setWlFocused('category')} onBlur={() => setWlFocused(null)}>
-                          <option value="" disabled style={{ color: '#888', background: '#1a1917' }}>{t.wlCatChoose}</option>
-                          {['U14','U15','U16','U17','U18','U19','Séniors'].map(c => (
-                            <option key={c} style={{ background: '#1a1917', color: '#fff' }}>{c}</option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-
-                  <button type="submit" disabled={wlLoading} style={{
-                    ...btnPrimary, fontSize: 15, padding: '14px 32px',
-                    opacity: wlLoading ? .6 : 1, cursor: wlLoading ? 'not-allowed' : 'pointer',
-                  }}
-                    onMouseEnter={e => { if(!wlLoading) e.currentTarget.style.background = G.goldD }}
-                    onMouseLeave={e => { if(!wlLoading) e.currentTarget.style.background = G.gold }}>
-                    {wlLoading ? t.wlSubmitting : t.wlSubmit}
-                  </button>
-                </form>
-              </div>
-            </Reveal>
-          )}
-        </div>
-      </div>
 
       {/* ══ CONTACT ════════════════════════════════════ */}
       <div id="contact" style={{ maxWidth: 1200, margin: '0 auto' }}>
@@ -1459,7 +1265,7 @@ export default function LandingPage() {
 
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-start', flexShrink: 0 }}>
-          <a href="#waitlist" style={{ ...btnPrimary, fontSize: 16, padding: '16px 36px', textDecoration:'none' }}
+          <a href="#contact" style={{ ...btnPrimary, fontSize: 16, padding: '16px 36px', textDecoration:'none' }}
             onMouseEnter={e => e.currentTarget.style.background = G.goldD}
             onMouseLeave={e => e.currentTarget.style.background = G.gold}>
             {t.ctaCta}
@@ -1501,7 +1307,7 @@ export default function LandingPage() {
             </div>
           </div>
           {[
-            { title:t.footProduit, links:[['#features',t.footFeatures],['/tarifs',t.footPricing],['#rapport',t.footRapport],['#waitlist',t.footEarly]] },
+            { title:t.footProduit, links:[['#features',t.footFeatures],['/tarifs',t.footPricing],['#rapport',t.footRapport]] },
             { title:t.footEntreprise, links:[['#contact',t.footContact],['mailto:contact@insightball.com',t.footSupport],['/a-propos','À propos'],['/blog/',t.footBlog]] },
             { title:t.footLegal, links:[['/mentions-legales',t.footMentions],['/cgv',t.footCGV],['/confidentialite',t.footConf],['/cookies',t.footCookies]] },
           ].map(col => (
