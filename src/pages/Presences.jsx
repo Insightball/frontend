@@ -47,7 +47,8 @@ const today = () => {
    COMPOSANT PRINCIPAL
 ═══════════════════════════════════════════════ */
 export default function Presences() {
-  const { user, token } = useAuth()
+  const { user } = useAuth()
+  const token = localStorage.getItem('insightball_token')
   const [view, setView] = useState('pointage') // pointage | calendrier | classement
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
