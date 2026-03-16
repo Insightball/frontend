@@ -21,20 +21,6 @@ const STATUTS = [
   { value: 'injured',  label: 'Blessé',   color: '#f97316', bg: 'rgba(249,115,22,0.08)' },
 ]
 
-const MOTIFS = [
-  { value: 'non_justifiee', label: 'Non justifiée' },
-  { value: 'scolaire',      label: 'Scolaire' },
-  { value: 'blessure',      label: 'Blessure' },
-  { value: 'familiale',     label: 'Familiale' },
-  { value: 'selection',     label: 'Sélection' },
-  { value: 'autre',         label: 'Autre' },
-]
-
-const THEMES_SEANCE = [
-  'pressing', 'construction', 'transition_off', 'transition_def',
-  'entre_lignes', 'cote_fort', 'finition', 'bloc', 'cpa_off', 'physique',
-]
-
 const JOURS = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam']
 const MOIS_LABELS = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
 
@@ -56,7 +42,6 @@ export default function Presences() {
   // Pointage
   const [players, setPlayers] = useState([])
   const [sessionDate, setSessionDate] = useState(today())
-  const [sessionTheme, setSessionTheme] = useState('')
   const [sessionType, setSessionType] = useState('entrainement')
   const [attendance, setAttendance] = useState({}) // { player_id: { status, absence_reason } }
   const [currentSession, setCurrentSession] = useState(null)
@@ -141,7 +126,6 @@ export default function Presences() {
         body: JSON.stringify({
           date: sessionDate,
           session_type: sessionType,
-          theme: sessionTheme || null,
           category: user?.managed_category || 'Seniors',
         })
       })
@@ -188,13 +172,6 @@ export default function Presences() {
       return { ...prev, [playerId]: { status, absence_reason: null } }
     })
     setSaved(false)
-  }
-
-  const setMotif = (playerId, reason) => {
-    setAttendance(prev => ({
-      ...prev,
-      [playerId]: { ...prev[playerId], absence_reason: reason }
-    }))
   }
 
   /* ── Tout cocher présent ── */
@@ -279,14 +256,6 @@ export default function Presences() {
                     <option value="autre">Autre</option>
                   </select>
                 </div>
-                <div style={{ flex: 1, minWidth: 140 }}>
-                  <label style={{ fontFamily: T.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: T.muted, display: 'block', marginBottom: 4 }}>Thème (optionnel)</label>
-                  <select value={sessionTheme} onChange={e => setSessionTheme(e.target.value)}
-                    style={{ width: '100%', padding: '8px 10px', border: `1px solid ${T.rule}`, borderRadius: 6, fontSize: 14, fontFamily: T.body, color: T.ink, background: T.bg }}>
-                    <option value="">—</option>
-                    {THEMES_SEANCE.map(t => <option key={t} value={t}>{t.replace(/_/g, ' ')}</option>)}
-                  </select>
-                </div>
               </div>
             </div>
 
@@ -348,15 +317,6 @@ export default function Presences() {
                           </button>
                         ))}
                       </div>
-
-                      {/* Motif d'absence si absent */}
-                      {currentStatus === 'absent' && (
-                        <select value={att?.absence_reason || ''} onChange={e => setMotif(p.id, e.target.value)}
-                          style={{ fontFamily: T.mono, fontSize: 9, padding: '4px 6px', border: `1px solid ${T.rule}`, borderRadius: 4, color: T.ink, background: T.bg, flexShrink: 0 }}>
-                          <option value="">Motif...</option>
-                          {MOTIFS.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
-                        </select>
-                      )}
                     </div>
                   )
                 })}
@@ -420,7 +380,8 @@ export default function Presences() {
                   ))}
 
                   {calDays.map(day => {
-                    const d = new Date(day.date)
+                    const parts = day.date.split('-')
+                    const dayNum = parseInt(parts[2], 10)
                     const isToday = day.date === today()
                     const hasSession = day.has_session
 
@@ -433,7 +394,7 @@ export default function Presences() {
                         transition: 'all .12s',
                       }}>
                         <div style={{ fontFamily: T.display, fontSize: 16, fontWeight: 700, color: hasSession ? T.green : isToday ? T.gold : T.ink }}>
-                          {d.getDate()}
+                          {dayNum}
                         </div>
                         {hasSession && (
                           <div style={{ fontFamily: T.mono, fontSize: 8, color: T.green, marginTop: 2 }}>
@@ -458,7 +419,7 @@ export default function Presences() {
                   }}>
                     <div>
                       <span style={{ fontFamily: T.display, fontSize: 14, fontWeight: 700, color: T.ink }}>
-                        {new Date(s.date).toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })}
+                        {new Date(s.date + 'T12:00:00').toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })}
                       </span>
                       {s.theme && (
                         <span style={{ fontFamily: T.mono, fontSize: 9, letterSpacing: '.06em', color: T.gold, marginLeft: 8, padding: '2px 6px', background: T.goldBg, border: `1px solid ${T.goldBdr}`, borderRadius: 3 }}>
