@@ -15,10 +15,10 @@ const safeJson = async (res) => {
 }
 
 const STATUTS = [
-  { value: 'present',  label: 'Présent',  color: T.green,  bg: T.greenBg },
-  { value: 'absent',   label: 'Absent',   color: T.red,    bg: T.redBg },
-  { value: 'excused',  label: 'Excusé',   color: T.gold,   bg: T.goldBg },
-  { value: 'injured',  label: 'Blessé',   color: '#f97316', bg: 'rgba(249,115,22,0.08)' },
+  { value: 'present',  label: 'Présent', short: 'P',  color: T.green,  bg: T.greenBg },
+  { value: 'absent',   label: 'Absent',  short: 'A',  color: T.red,    bg: T.redBg },
+  { value: 'excused',  label: 'Excusé',  short: 'E',  color: T.gold,   bg: T.goldBg },
+  { value: 'injured',  label: 'Blessé',  short: 'B',  color: '#f97316', bg: 'rgba(249,115,22,0.08)' },
 ]
 
 const JOURS = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam']
@@ -38,6 +38,13 @@ export default function Presences() {
   const [view, setView] = useState('pointage') // pointage | calendrier | classement
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   // Pointage
   const [players, setPlayers] = useState([])
@@ -95,20 +102,16 @@ export default function Presences() {
     }
   }, [token, calMonth, calYear])
 
-  /* ── Charger le classement ── */
+  /* ── Charger le classement (1 seule requête) ── */
   const loadRanking = useCallback(async () => {
-    if (!players.length) return
-    const stats = []
-    for (const p of players) {
-      try {
-        const res = await fetch(`${API}/training-sessions/player/${p.id}/stats`, { headers })
-        const data = await safeJson(res)
-        if (data) stats.push({ ...p, ...data })
-      } catch {}
+    try {
+      const res = await fetch(`${API}/training-sessions/ranking`, { headers })
+      const data = await safeJson(res)
+      if (Array.isArray(data)) setRanking(data)
+    } catch (e) {
+      console.error('Erreur chargement classement:', e)
     }
-    stats.sort((a, b) => (b.attendance_rate || 0) - (a.attendance_rate || 0))
-    setRanking(stats)
-  }, [token, players])
+  }, [token])
 
   useEffect(() => { loadPlayers() }, [loadPlayers])
   useEffect(() => { if (view === 'calendrier') { loadCalendar(); loadSessions() } }, [view, loadCalendar, loadSessions])
@@ -213,20 +216,20 @@ export default function Presences() {
 
   return (
     <DashboardLayout>
-      <div style={{ padding: '24px 28px', maxWidth: 900, margin: '0 auto' }}>
+      <div style={{ padding: isMobile ? '16px 12px' : '24px 28px', maxWidth: 900, margin: '0 auto' }}>
 
         {/* Titre + onglets */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
-          <h1 style={{ fontFamily: T.display, fontSize: 28, fontWeight: 800, color: T.ink, letterSpacing: '.02em', textTransform: 'uppercase', margin: 0 }}>
+          <h1 style={{ fontFamily: T.display, fontSize: isMobile ? 22 : 28, fontWeight: 800, color: T.ink, letterSpacing: '.02em', textTransform: 'uppercase', margin: 0 }}>
             Présences
           </h1>
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div style={{ display: 'flex', gap: 6 }}>
             {[
               { key: 'pointage', label: 'Pointage' },
               { key: 'calendrier', label: 'Calendrier' },
               { key: 'classement', label: 'Classement' },
             ].map(t => (
-              <button key={t.key} style={tabS(view === t.key)} onClick={() => setView(t.key)}>
+              <button key={t.key} style={{ ...tabS(view === t.key), fontSize: isMobile ? 9 : 11, padding: isMobile ? '6px 10px' : '8px 16px' }} onClick={() => setView(t.key)}>
                 {t.label}
               </button>
             ))}
@@ -240,8 +243,8 @@ export default function Presences() {
             {/* Config séance */}
             <div style={cardS}>
               <div style={headerS}>Nouvelle séance</div>
-              <div style={{ padding: 16, display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'flex-end' }}>
-                <div style={{ flex: 1, minWidth: 140 }}>
+              <div style={{ padding: isMobile ? 12 : 16, display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'flex-end' }}>
+                <div style={{ flex: 1, minWidth: isMobile ? '100%' : 140 }}>
                   <label style={{ fontFamily: T.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: T.muted, display: 'block', marginBottom: 4 }}>Date</label>
                   <input type="date" value={sessionDate} onChange={e => setSessionDate(e.target.value)}
                     style={{ width: '100%', padding: '8px 10px', border: `1px solid ${T.rule}`, borderRadius: 6, fontSize: 14, fontFamily: T.body, color: T.ink, background: T.bg }} />
@@ -274,14 +277,15 @@ export default function Presences() {
 
                   return (
                     <div key={p.id} style={{
-                      display: 'flex', alignItems: 'center', gap: 12,
-                      padding: '10px 16px',
+                      display: 'flex', alignItems: 'center', gap: isMobile ? 8 : 12,
+                      padding: isMobile ? '8px 12px' : '10px 16px',
                       borderBottom: `1px solid ${T.rule}`,
                       background: currentStatus === 'present' ? T.greenBg : currentStatus === 'absent' ? T.redBg : 'transparent',
                       transition: 'background .15s',
+                      flexWrap: isMobile ? 'wrap' : 'nowrap',
                     }}>
                       {/* Numéro + nom */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, minWidth: isMobile ? '100%' : 0 }}>
                         <div style={{
                           width: 28, height: 28, borderRadius: 4,
                           background: T.goldBg, border: `1px solid ${T.goldBdr}`,
@@ -292,7 +296,7 @@ export default function Presences() {
                         </div>
                         <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           <span style={{ fontSize: 14, fontWeight: 500, color: T.ink }}>{p.name}</span>
-                          {p.position && (
+                          {p.position && !isMobile && (
                             <span style={{ fontFamily: T.mono, fontSize: 9, letterSpacing: '.06em', color: T.muted, marginLeft: 6, padding: '1px 5px', background: T.bg, border: `1px solid ${T.rule}`, borderRadius: 3 }}>
                               {p.position}
                             </span>
@@ -301,19 +305,19 @@ export default function Presences() {
                       </div>
 
                       {/* Boutons statut */}
-                      <div style={{ display: 'flex', gap: 4, flexShrink: 0 }}>
+                      <div style={{ display: 'flex', gap: 4, flexShrink: 0, marginLeft: isMobile ? 'auto' : 0 }}>
                         {STATUTS.map(s => (
                           <button key={s.value} onClick={() => toggleStatus(p.id, s.value)}
                             style={{
-                              fontFamily: T.mono, fontSize: 8, fontWeight: 600,
+                              fontFamily: T.mono, fontSize: isMobile ? 9 : 8, fontWeight: 600,
                               letterSpacing: '.06em', textTransform: 'uppercase',
                               color: currentStatus === s.value ? '#fff' : s.color,
                               background: currentStatus === s.value ? s.color : s.bg,
                               border: `1px solid ${currentStatus === s.value ? s.color : 'transparent'}`,
-                              borderRadius: 4, padding: '5px 8px', cursor: 'pointer',
-                              transition: 'all .12s', minWidth: 52, textAlign: 'center',
+                              borderRadius: 4, padding: isMobile ? '6px 10px' : '5px 8px', cursor: 'pointer',
+                              transition: 'all .12s', minWidth: isMobile ? 36 : 52, textAlign: 'center',
                             }}>
-                            {s.label}
+                            {isMobile ? s.short : s.label}
                           </button>
                         ))}
                       </div>
@@ -449,11 +453,14 @@ export default function Presences() {
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ background: T.bg }}>
-                  {['#', 'Joueur', 'Séances', 'Présent', 'Taux', 'Série', 'Non just.'].map(h => (
+                  {(isMobile
+                    ? ['#', 'Joueur', 'Taux', 'Série']
+                    : ['#', 'Joueur', 'Séances', 'Présent', 'Taux', 'Série']
+                  ).map(h => (
                     <th key={h} style={{
                       fontFamily: T.mono, fontSize: 9, fontWeight: 600,
                       letterSpacing: '.08em', textTransform: 'uppercase',
-                      color: T.muted, padding: '8px 12px',
+                      color: T.muted, padding: isMobile ? '6px 8px' : '8px 12px',
                       textAlign: h === 'Joueur' ? 'left' : 'center',
                       borderBottom: `1px solid ${T.rule}`,
                     }}>{h}</th>
@@ -465,20 +472,24 @@ export default function Presences() {
                   <tr key={r.player_id || r.id} style={{ transition: 'background .12s' }}
                     onMouseEnter={e => e.currentTarget.style.background = T.goldBg}
                     onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                    <td style={{ fontFamily: T.display, fontSize: 16, fontWeight: 800, color: i < 3 ? T.gold : T.muted, padding: '8px 12px', textAlign: 'center', borderBottom: `1px solid ${T.rule}` }}>
+                    <td style={{ fontFamily: T.display, fontSize: 16, fontWeight: 800, color: i < 3 ? T.gold : T.muted, padding: isMobile ? '6px 8px' : '8px 12px', textAlign: 'center', borderBottom: `1px solid ${T.rule}` }}>
                       {i + 1}
                     </td>
-                    <td style={{ fontSize: 13, fontWeight: 500, color: T.ink, padding: '8px 12px', borderBottom: `1px solid ${T.rule}` }}>
+                    <td style={{ fontSize: 13, fontWeight: 500, color: T.ink, padding: isMobile ? '6px 8px' : '8px 12px', borderBottom: `1px solid ${T.rule}` }}>
                       {r.number && <span style={{ fontFamily: T.display, fontSize: 12, fontWeight: 700, color: T.gold, marginRight: 6 }}>{r.number}</span>}
                       {r.name}
                     </td>
-                    <td style={{ fontFamily: T.mono, fontSize: 12, color: T.ink, textAlign: 'center', padding: '8px 12px', borderBottom: `1px solid ${T.rule}` }}>
-                      {r.total_sessions || 0}
-                    </td>
-                    <td style={{ fontFamily: T.mono, fontSize: 12, color: T.green, textAlign: 'center', padding: '8px 12px', borderBottom: `1px solid ${T.rule}` }}>
-                      {r.present || 0}
-                    </td>
-                    <td style={{ textAlign: 'center', padding: '8px 12px', borderBottom: `1px solid ${T.rule}` }}>
+                    {!isMobile && (
+                      <td style={{ fontFamily: T.mono, fontSize: 12, color: T.ink, textAlign: 'center', padding: '8px 12px', borderBottom: `1px solid ${T.rule}` }}>
+                        {r.total_sessions || 0}
+                      </td>
+                    )}
+                    {!isMobile && (
+                      <td style={{ fontFamily: T.mono, fontSize: 12, color: T.green, textAlign: 'center', padding: '8px 12px', borderBottom: `1px solid ${T.rule}` }}>
+                        {r.present || 0}
+                      </td>
+                    )}
+                    <td style={{ textAlign: 'center', padding: isMobile ? '6px 8px' : '8px 12px', borderBottom: `1px solid ${T.rule}` }}>
                       <span style={{
                         fontFamily: T.mono, fontSize: 11, fontWeight: 600,
                         padding: '2px 8px', borderRadius: 4,
@@ -488,23 +499,14 @@ export default function Presences() {
                         {Math.round((r.attendance_rate || 0) * 100)}%
                       </span>
                     </td>
-                    <td style={{ fontFamily: T.mono, fontSize: 12, color: T.ink, textAlign: 'center', padding: '8px 12px', borderBottom: `1px solid ${T.rule}` }}>
+                    <td style={{ fontFamily: T.mono, fontSize: 12, color: T.ink, textAlign: 'center', padding: isMobile ? '6px 8px' : '8px 12px', borderBottom: `1px solid ${T.rule}` }}>
                       {r.current_streak || 0}
-                    </td>
-                    <td style={{ textAlign: 'center', padding: '8px 12px', borderBottom: `1px solid ${T.rule}` }}>
-                      {(r.absences_non_justifiees || 0) > 0 ? (
-                        <span style={{ fontFamily: T.mono, fontSize: 11, fontWeight: 600, color: T.red }}>
-                          {r.absences_non_justifiees}
-                        </span>
-                      ) : (
-                        <span style={{ fontFamily: T.mono, fontSize: 11, color: T.muted }}>0</span>
-                      )}
                     </td>
                   </tr>
                 ))}
                 {ranking.length === 0 && (
                   <tr>
-                    <td colSpan={7} style={{ padding: 32, textAlign: 'center', fontFamily: T.mono, fontSize: 12, color: T.muted }}>
+                    <td colSpan={isMobile ? 4 : 6} style={{ padding: 32, textAlign: 'center', fontFamily: T.mono, fontSize: 12, color: T.muted }}>
                       Aucune séance enregistrée. Commence par pointer une séance.
                     </td>
                   </tr>
