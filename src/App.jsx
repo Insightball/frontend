@@ -30,6 +30,7 @@ const ClubDashboard     = lazy(() => import('./pages/ClubDashboard'))
 const ClubInvite        = lazy(() => import('./pages/ClubInvite'))
 const PlayerProfile     = lazy(() => import('./pages/PlayerProfile'))
 const ProjetDeJeu       = lazy(() => import('./pages/ProjetDeJeu'))
+const Presences         = lazy(() => import('./pages/Presences'))
 const RegionPage        = lazy(() => import('./pages/RegionPage'))
 const APropos           = lazy(() => import('./pages/APropos'))
 const Tarifs            = lazy(() => import('./pages/Tarifs'))
@@ -119,6 +120,7 @@ function App() {
             <Route path="/dashboard/members"              element={<ProtectedRoute><ClubMembers /></ProtectedRoute>} />
             <Route path="/dashboard/settings"             element={<ProtectedRoute><SettingsRoute /></ProtectedRoute>} />
             <Route path="/dashboard/projet-de-jeu"        element={<ProtectedRoute><ProjetDeJeu /></ProtectedRoute>} />
+            <Route path="/dashboard/presences"            element={<ProtectedRoute><Presences /></ProtectedRoute>} />
           </Routes>
         </Suspense>
       </Router>
