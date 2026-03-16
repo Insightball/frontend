@@ -33,28 +33,35 @@ const LANG = {
     navBlog: 'Blog',
     navCta: 'Nous contacter',
     // Hero
-    heroTitle1: 'Ta vidéo.',
-    heroTitle2: 'Tes stats.',
-    heroTitle3: 'Ton match.',
-    heroSub: "Filme ton match. Reçois tes stats en moins d'une heure.",
+    heroTitle1: 'Tu filmes déjà',
+    heroTitle2: 'tes matchs.',
+    heroTitle3: 'Exploite-les.',
+    heroSub: "Insightball transforme chaque vidéo en statistiques claires pour ton staff et tes joueurs. En moins d'une heure.",
     heroSubBold: '',
     heroSubEnd: '',
     heroCta1: 'Demander une démo →',
     heroCta2: 'Voir un exemple',
+    // Process intégré hero
+    heroStep1Title: 'Filme',
+    heroStep1Desc: 'Téléphone, tablette ou caméra',
+    heroStep2Title: 'Upload',
+    heroStep2Desc: 'Dépose ta vidéo en quelques clics',
+    heroStep3Title: 'Reçois',
+    heroStep3Desc: 'Stats de tes joueurs en moins d\'1h',
     // Features
     featLabel: 'Fonctionnalités',
     featTitle1: 'Ce que tu obtiens',
     featTitle2: 'après chaque match.',
-    featSub: 'Tout ce dont tu as besoin pour analyser, comprendre et progresser. Prise en main immédiate, aucun matériel supplémentaire.',
+    featSub: 'Prise en main immédiate, aucun matériel supplémentaire. Tout est inclus.',
     feat1Title: 'Stats Collectives',
     feat1Desc: 'Comprends comment ton équipe joue, presse et défend. Match après match.',
-    feat1Items: ['Possession de balle','Nombre & % de passes réussies','Nombre & % de tirs réussis','Courbe de suivi des matchs','Distance totale parcourue','Heatmap collective'],
+    feat1Items: ['Possession de balle','Passes réussies','Tirs cadrés','Distance parcourue','Heatmap collective','Courbe de dynamique du match'],
     feat2Title: 'Stats Individuelles',
     feat2Desc: 'Une fiche par joueur. Évalue objectivement, identifie les axes de progression.',
-    feat2Items: ['Heatmap de position individuelle','Ballons touchés / perdus / gagnés','Nombre de tirs','Passes réussies / ratées','Distance totale parcourue','Heatmap individuelle'],
-    feat3Title: 'Rapport Complet',
+    feat2Items: ['Heatmap individuelle','Ballons touchés / perdus / gagnés','Tirs et passes détaillés','Distance parcourue','Zones d\'activité sur le terrain'],
+    feat3Title: 'Rapport & Export',
     feat3Desc: 'Un PDF pro exportable en un clic. À partager avec ton staff, tes joueurs, ta direction.',
-    feat3Items: ['Tableau de bord en ligne','Export PDF à partager','Graphiques & heatmaps inclus','Comparaison entre 2 joueurs'],
+    feat3Items: ['Dashboard interactif','Export PDF en 1 clic','Graphiques & heatmaps inclus','Suivi progression sur la saison'],
     // Social proof
     stat1Value: '40+', stat1Label: 'Métriques analysées', stat1Sub: 'par match',
     stat2Value: '< 1h', stat2Label: 'Temps de traitement', stat2Sub: 'rapport livré',
@@ -63,26 +70,7 @@ const LANG = {
     trust1: 'Séniors → U14 : toutes catégories couvertes',
     trust2: 'Prise en main immédiate',
     trust3: 'Adapté à tous les staffs, avec ou sans analyste',
-    // Process
-    processLabel: 'Comment ça marche',
-    processTitle1: 'Simple.',
-    processTitle2: 'Rapide.',
-    processTitle3: 'Précis.',
-    processSub: 'Tu filmes, on s\'occupe du reste.',
-    step1Title: 'Filme ton match',
-    step1Desc: 'Depuis ton téléphone, tablette ou caméra. MP4, MOV, AVI — tout format accepté.',
-    step2Title: 'Renseigne le match',
-    step2Desc: 'Équipes, composition, score. Deux minutes pour contextualiser ton analyse.',
-    step3Title: 'L\'analyse se lance',
-    step3Desc: 'Détection des joueurs, des actions, des zones de jeu. Ton rapport arrive en moins d\'une heure.',
-    step4Title: 'Reçois ton rapport',
-    step4Desc: 'Dashboard interactif + PDF prêt à imprimer ou partager. Livré directement.',
-    // Process card
-    pcTitle: 'Analyse en cours…',
-    pcLabel: 'Extraction des données',
-    pc1: 'Détection joueurs', pc2: 'Heatmaps', pc3: 'Calcul métriques', pc4: 'Génération rapport',
-    pc4Val: 'En cours…',
-    pcReady: 'Rapport prêt dans',
+    // Process (supprimé — intégré dans le hero)
     // Rapport
     rapportLabel: 'Exemple de rapport',
     rapportTitle1: "Vue d'ensemble",
@@ -126,7 +114,7 @@ const LANG = {
     clubFrom: 'À partir de',
     clubAdapted: 'Offre adaptée à la taille de ton club',
     clubVis: 'Visibilité',
-    clubVisDesc: "Une vue sur l'ensemble de tes équipes. Un seul écran, toutes les données.",
+    clubVisDesc: "Une vue sur l'ensemble de tes équipes. Un seul écran, toutes les stats.",
     clubItems: ['Nombre de matchs adapté à tes besoins','Multi-équipes & multi-utilisateurs','Vue consolidée du club','Comparaison inter-équipes','Suivi joueurs cross-équipes','Rapport direction mensuel PDF','Support prioritaire dédié'],
     clubDemo: 'Démo gratuite · Sans engagement · Sur mesure',
     clubCta: 'Demander un devis →',
@@ -149,7 +137,7 @@ const LANG = {
     cred1: 'Conçu et hébergé en France',
     cred2: 'Paiement sécurisé Stripe',
     cred3: 'Pensé par des passionnés de football',
-    cred4: 'Données livrées en moins d\'1h',
+    cred4: 'Stats livrées en moins d\'1h',
     // CTA band
     ctaTitle1: 'Prêt à analyser',
     ctaTitle2: 'ton prochain match ?',
@@ -194,28 +182,35 @@ const LANG = {
     navBlog: 'Blog',
     navCta: 'Contact us',
     // Hero
-    heroTitle1: 'Your video.',
-    heroTitle2: 'Your stats.',
-    heroTitle3: 'Your match.',
-    heroSub: "Film your match. Get your stats in under one hour.",
+    heroTitle1: 'You already film',
+    heroTitle2: 'your matches.',
+    heroTitle3: 'Now use them.',
+    heroSub: "Insightball turns every match video into clear stats for your staff and players. In under one hour.",
     heroSubBold: '',
     heroSubEnd: '',
     heroCta1: 'Request a demo →',
     heroCta2: 'See an example',
+    // Process intégré hero
+    heroStep1Title: 'Film',
+    heroStep1Desc: 'Phone, tablet or camera',
+    heroStep2Title: 'Upload',
+    heroStep2Desc: 'Drop your video in a few clicks',
+    heroStep3Title: 'Receive',
+    heroStep3Desc: 'Player stats in under 1 hour',
     // Features
     featLabel: 'Features',
     featTitle1: 'What you get',
     featTitle2: 'after every match.',
-    featSub: 'Everything you need to analyze, understand and improve. Instant setup, no extra equipment.',
+    featSub: 'Instant setup, no extra equipment. Everything included.',
     feat1Title: 'Team Stats',
     feat1Desc: 'Understand how your team plays, presses and defends. Match after match.',
-    feat1Items: ['Ball possession','Number & % of successful passes','Number & % of shots on target','Match-by-match tracking curve','Total distance covered','Team heatmap'],
+    feat1Items: ['Ball possession','Successful passes','Shots on target','Distance covered','Team heatmap','Match dynamics curve'],
     feat2Title: 'Player Stats',
     feat2Desc: 'A profile for every player. Evaluate objectively, identify areas for improvement.',
-    feat2Items: ['Individual position heatmap','Touches / lost / won balls','Number of shots','Successful / missed passes','Total distance covered','Individual heatmap'],
-    feat3Title: 'Full Report',
+    feat2Items: ['Individual heatmap','Touches / lost / won balls','Shots and passes breakdown','Distance covered','Activity zones on the pitch'],
+    feat3Title: 'Report & Export',
     feat3Desc: 'A professional PDF exportable in one click. Share with your staff, players, or board.',
-    feat3Items: ['Online dashboard','Shareable PDF export','Charts & heatmaps included','Head-to-head player comparison'],
+    feat3Items: ['Interactive dashboard','One-click PDF export','Charts & heatmaps included','Season-long progress tracking'],
     // Social proof
     stat1Value: '40+', stat1Label: 'Metrics analyzed', stat1Sub: 'per match',
     stat2Value: '< 1h', stat2Label: 'Processing time', stat2Sub: 'report delivered',
@@ -224,26 +219,7 @@ const LANG = {
     trust1: 'Senior → U14: all age groups covered',
     trust2: 'Instant setup',
     trust3: 'Built for every staff, with or without an analyst',
-    // Process
-    processLabel: 'How it works',
-    processTitle1: 'Simple.',
-    processTitle2: 'Fast.',
-    processTitle3: 'Precise.',
-    processSub: 'You film, we handle the rest.',
-    step1Title: 'Film your match',
-    step1Desc: 'From your phone, tablet or camera. MP4, MOV, AVI — any format accepted.',
-    step2Title: 'Enter match details',
-    step2Desc: 'Teams, lineup, score. Two minutes to set up your analysis.',
-    step3Title: 'Analysis kicks off',
-    step3Desc: 'Player detection, actions, zones of play. Your report arrives in under one hour.',
-    step4Title: 'Get your report',
-    step4Desc: 'Interactive dashboard + PDF ready to print or share. Delivered directly.',
-    // Process card
-    pcTitle: 'Analysis in progress…',
-    pcLabel: 'Data extraction',
-    pc1: 'Player detection', pc2: 'Heatmaps', pc3: 'Metrics calculation', pc4: 'Report generation',
-    pc4Val: 'In progress…',
-    pcReady: 'Report ready in',
+    // Process (supprimé — intégré dans le hero)
     // Rapport
     rapportLabel: 'Report example',
     rapportTitle1: 'Full overview',
@@ -687,8 +663,7 @@ export default function LandingPage() {
       .hero-grid    { grid-template-columns: 1fr !important; max-width: 640px !important; margin: 0 auto !important; }
       .hero-right   { display: none !important; }
       .feat-grid    { grid-template-columns: 1fr !important; }
-      .process-grid { grid-template-columns: 1fr !important; }
-      .process-card-sticky { display: none !important; }
+      .hero-process { flex-direction: column !important; }
       .rapport-grid { grid-template-columns: 1fr !important; }
       .price-grid   { grid-template-columns: 1fr !important; max-width: 480px !important; margin: 0 auto !important; }
       .cta-band     { flex-direction: column !important; align-items: flex-start !important; padding: 56px 32px !important; }
@@ -703,6 +678,7 @@ export default function LandingPage() {
       .nav-burger   { display: flex !important; }
       .hero-grid    { padding: 20px 20px 24px !important; min-height: unset !important; }
       .hero-title   { font-size: clamp(36px,10vw,58px) !important; }
+      .hero-process { flex-direction: column !important; }
       .sec-h2       { font-size: clamp(28px,7vw,42px) !important; }
       .wrap, .wrap-inner { padding: 56px 20px !important; }
       .cta-band     { padding: 56px 20px !important; }
@@ -853,7 +829,6 @@ export default function LandingPage() {
       )}
 
       <main>
-      {/* ══ HERO ═══════════════════════════════════════ */}
       {/* ══ HERO ══ */}
       <div style={{ paddingTop: 60 }}>
         <div className="hero-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', maxWidth: 1200, margin: '0 auto', padding: '100px 48px 60px', gap: 60, minHeight: '100vh' }}>
@@ -877,6 +852,24 @@ export default function LandingPage() {
                 onMouseLeave={e => { e.currentTarget.style.borderColor = G.border2; e.currentTarget.style.color = G.ink2 }}>
                 {t.heroCta2}
               </a>
+            </div>
+
+            {/* Process 3 étapes intégré */}
+            <div className="hero-process" style={{ display: 'flex', gap: 10, marginTop: 40, paddingTop: 32, borderTop: `1px solid ${G.border}`, opacity: 0, animation: 'heroUp .5s .55s forwards' }}>
+              {[
+                { n:'01', title: t.heroStep1Title, desc: t.heroStep1Desc, dark: false },
+                { n:'02', title: t.heroStep2Title, desc: t.heroStep2Desc, dark: true },
+                { n:'03', title: t.heroStep3Title, desc: t.heroStep3Desc, dark: false },
+              ].map(s => (
+                <div key={s.n} style={{
+                  flex: 1, padding: '16px 14px', borderRadius: 6,
+                  background: s.dark ? G.ink : G.off,
+                }}>
+                  <div style={{ fontFamily: G.display, fontSize: 28, fontWeight: 800, lineHeight: 1, color: s.dark ? G.gold : G.border2, marginBottom: 6 }}>{s.n}</div>
+                  <div style={{ fontFamily: G.display, fontSize: 15, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.03em', color: s.dark ? G.gold : G.ink, marginBottom: 4 }}>{s.title}</div>
+                  <div style={{ fontSize: 12, color: s.dark ? 'rgba(255,255,255,0.55)' : G.muted, lineHeight: 1.5 }}>{s.desc}</div>
+                </div>
+              ))}
             </div>
           </div>
           <div className="hero-right" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, animation: 'heroUp .6s .3s forwards' }}>
@@ -973,82 +966,6 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* ══ PROCESS ════════════════════════════════════ */}
-      <div id="process" style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <div className="wrap-inner" style={{ padding: '96px 48px' }}>
-          <div className="process-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'start' }}>
-            <div>
-              <Reveal>
-                <div style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.16em', textTransform: 'uppercase', color: G.gold, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ width: 18, height: 1.5, background: G.gold }}/>{t.processLabel}
-                </div>
-                <h2 className="sec-h2" style={{ fontFamily: G.display, fontSize: 'clamp(34px,4vw,54px)', fontWeight: 800, lineHeight: .95, letterSpacing: '-.01em', textTransform: 'uppercase', color: G.ink, marginBottom: 16 }}>
-                  {t.processTitle1}<br/><span style={{ color: G.gold }}>{t.processTitle2}</span><br/>{t.processTitle3}
-                </h2>
-                <p style={{ fontSize: 17, color: G.muted, lineHeight: 1.65, maxWidth: 440, marginBottom: 36 }}>
-                  {t.processSub}
-                </p>
-              </Reveal>
-              {[
-                { n:'01', title:t.step1Title, desc:t.step1Desc, dark: false },
-                { n:'02', title:t.step2Title, desc:t.step2Desc, dark: true },
-                { n:'03', title:t.step3Title, desc:t.step3Desc, dark: false },
-                { n:'04', title:t.step4Title, desc:t.step4Desc, dark: true },
-              ].map((s, i) => (
-                <Reveal key={s.n} delay={i * 0.1}>
-                  <div style={{
-                    display: 'flex', gap: 20, padding: '28px 24px',
-                    background: s.dark ? G.ink : G.white,
-                    borderBottom: `1px solid ${s.dark ? 'rgba(255,255,255,0.08)' : G.border}`,
-                    borderTop: i===0 ? `1px solid ${G.border}` : 'none',
-                    transition: 'transform .15s', cursor: 'default',
-                    borderRadius: i===0 ? '4px 4px 0 0' : i===3 ? '0 0 4px 4px' : 0,
-                  }}>
-                    <div style={{
-                      fontFamily: G.display, fontSize: 48, fontWeight: 800, lineHeight: 1,
-                      color: s.dark ? G.gold : G.border2,
-                      flexShrink: 0, width: 52,
-                    }}>{s.n}</div>
-                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                      <h3 style={{ fontFamily: G.display, fontSize: 20, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.03em', color: s.dark ? G.gold : G.ink, marginBottom: 6 }}>{s.title}</h3>
-                      <p style={{ fontSize: 14, color: s.dark ? 'rgba(255,255,255,0.55)' : G.muted, lineHeight: 1.6 }}>{s.desc}</p>
-                    </div>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-
-            {/* Sticky card */}
-            <div className="process-card-sticky" style={{ position: 'sticky', top: 80 }}>
-              <Reveal>
-                <div style={{ background: G.white, border: `1px solid ${G.border}`, borderRadius: 8, boxShadow: '0 2px 16px rgba(0,0,0,0.07)', overflow: 'hidden' }}>
-                  <div style={{ background: G.off, borderBottom: `1px solid ${G.border}`, padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 6 }}>
-                    {['#f87171','#fbbf24','#4ade80'].map(c => <span key={c} style={{ width: 8, height: 8, borderRadius: '50%', background: c }}/>)}
-                    <span style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, marginLeft: 8, letterSpacing: '.06em' }}>{t.pcTitle}</span>
-                  </div>
-                  <div style={{ padding: 18 }}>
-                    <div style={{ fontFamily: G.mono, fontSize: 9, fontWeight: 600, letterSpacing: '.14em', textTransform: 'uppercase', color: G.muted, marginBottom: 10 }}>{t.pcLabel}</div>
-                    {[[t.pc1,'100%',G.gold,100],[t.pc2,'87%',G.green,87],[t.pc3,'72%',G.border2,72],[t.pc4,t.pc4Val,G.gold,45]].map(([l,v,c,pct]) => (
-                      <div key={l} style={{ marginBottom: 10 }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: G.muted, marginBottom: 5 }}>
-                          <span>{l}</span><span style={{ fontWeight: 600, color: G.ink }}>{v}</span>
-                        </div>
-                        <div style={{ height: 5, background: G.border, borderRadius: 99, overflow: 'hidden' }}>
-                          <div style={{ height: '100%', width: `${pct}%`, background: c, borderRadius: 99 }}/>
-                        </div>
-                      </div>
-                    ))}
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: G.goldL, border: `1px solid ${G.goldLx}`, borderRadius: 4, padding: '12px 14px', marginTop: 12 }}>
-                      <span style={{ fontSize: 12, color: G.muted }}>{t.pcReady}</span>
-                      <span style={{ fontFamily: G.display, fontSize: 22, fontWeight: 800, color: G.gold }}>42 min</span>
-                    </div>
-                  </div>
-                </div>
-              </Reveal>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* ══ RAPPORT EXEMPLE ════════════════════════════ */}
       <div id="rapport" style={{ background: G.off }}>
@@ -1286,7 +1203,7 @@ export default function LandingPage() {
               </span>
             </div>
             <p style={{ fontFamily: G.mono, fontSize: 11, color: G.gold, marginBottom: 14, letterSpacing: '.04em' }}>
-              La data football pour tous
+              Du terrain à l'analyse.
             </p>
             <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
               {[
