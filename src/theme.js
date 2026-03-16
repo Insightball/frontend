@@ -67,6 +67,7 @@ export const statusConfig = {
 export const globalStyles = `
   ${FONTS}
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { overflow-x: hidden; width: 100%; }
   ::-webkit-scrollbar { width: 4px; height: 4px; background: transparent; }
   ::-webkit-scrollbar-thumb { background: rgba(26,25,22,0.12); }
   select, input { -webkit-appearance: none; }
