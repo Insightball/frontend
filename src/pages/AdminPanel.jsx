@@ -148,6 +148,7 @@ function UserDetailModal({ user, onClose, onToggleActive, onEditPlan }) {
             <Row label="Ville" value={user.profile_city} />
             <Row label="Diplôme" value={user.profile_diploma} />
             <Row label="Nb équipes" value={user.nb_teams} />
+            <Row label="Expérience" value={user.experience} />
             <Row label="Setup tournage" value={user.filming_setup} />
             <div style={{ marginTop: 28, display: 'flex', flexDirection: 'column', gap: 8 }}>
               <button onClick={() => { onEditPlan(user); onClose() }} style={{ padding: '11px', background: G.goldBg, border: `1px solid ${G.goldBdr}`, fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.gold, cursor: 'pointer' }}>

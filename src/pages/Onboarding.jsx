@@ -23,7 +23,8 @@ const STEPS = [
 
 const ROLES    = ['Éducateur', 'Entraîneur', 'Directeur Sportif', 'Analyste Vidéo']
 const LEVELS   = ['National', 'Régional', 'Départemental']
-const DIPLOMAS = ['CFI', 'DF', 'BMF', 'BEF', 'DES', 'BEPF']
+const DIPLOMAS = ['CFI', 'DF', 'BMF (UEFA B)', 'BEF (UEFA A)', 'DES', 'BEPF (UEFA PRO)']
+const EXPERIENCE = ['1 an', '2-5 ans', '+5 ans', '+10 ans']
 
 // Indicatifs pays avec drapeaux
 const COUNTRIES = [
@@ -84,7 +85,7 @@ export default function Onboarding() {
 
   // Step 1 — Profil (téléphone, ville, club et rôle déjà collectés au signup)
   const [profileData, setProfileData] = useState({
-    level: '', diploma: '',
+    diploma: '', experience: '',
     country: 'FR',
   })
 
@@ -116,9 +117,9 @@ export default function Onboarding() {
     setSaving(true); setError('')
     try {
       await api.patch('/account/profile', {
-        level: profileData.level,
         country: profileData.country,
         diploma: profileData.diploma,
+        experience: profileData.experience,
       })
     } catch (e) { console.warn('Profile save failed:', e) }
     finally { setSaving(false) }
@@ -243,6 +244,16 @@ export default function Onboarding() {
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                   {DIPLOMAS.map(d => (
                     <ChipBtn key={d} label={d} active={profileData.diploma === d} onClick={() => setProfileData(p => ({ ...p, diploma: p.diploma === d ? '' : d }))} />
+                  ))}
+                </div>
+              </div>
+
+              {/* Années d'expérience */}
+              <div>
+                <label style={labelStyle}>Années d'expérience <span style={{ color: 'rgba(245,242,235,0.2)' }}>(optionnel)</span></label>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {EXPERIENCE.map(e => (
+                    <ChipBtn key={e} label={e} active={profileData.experience === e} onClick={() => setProfileData(p => ({ ...p, experience: p.experience === e ? '' : e }))} />
                   ))}
                 </div>
               </div>
