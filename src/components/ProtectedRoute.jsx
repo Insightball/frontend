@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useEffect, useState, useRef } from 'react'
 import api from '../services/api'
@@ -97,6 +97,7 @@ function PendingApproval() {
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated, loading, user } = useAuth()
+  const location = useLocation()
   const [trialStatus, setTrialStatus] = useState(null)
   const [trialLoading, setTrialLoading] = useState(true)
   const fetchedRef = useRef(false)
@@ -164,8 +165,8 @@ function ProtectedRoute({ children }) {
     return <Navigate to="/login" replace />
   }
 
-  // Compte non approuvé — écran d'attente
-  if (user?.is_approved === false) {
+  // Compte non approuvé — écran d'attente (sauf onboarding)
+  if (user?.is_approved === false && location.pathname !== '/onboarding') {
     return <PendingApproval />
   }
 
