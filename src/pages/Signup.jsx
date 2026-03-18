@@ -47,8 +47,8 @@ export default function Signup() {
   })
 
   const fields = [
-    { label: 'Prénom', name: 'firstName', type: 'text', ph: 'Jean' },
-    { label: 'Nom', name: 'lastName', type: 'text', ph: 'Dupont' },
+    { label: 'Prénom', name: 'firstName', type: 'text', ph: '' },
+    { label: 'Nom', name: 'lastName', type: 'text', ph: '' },
     { label: 'Email', name: 'email', type: 'email', ph: 'votre@email.com' },
     { label: 'Mot de passe', name: 'password', type: 'password', ph: '••••••••', hint: '8 caractères minimum' },
     { label: 'Confirmer le mot de passe', name: 'confirmPassword', type: 'password', ph: '••••••••' },
