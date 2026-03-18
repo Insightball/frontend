@@ -531,7 +531,10 @@ export default function SubscriptionManagement({ onTrialStatusChange }) {
   const isExpired  = trialData?.access === 'expired'
   const hasSub     = sub?.active
   const isTrialing = sub?.status === 'trialing'
-  const alreadyTrialed = user?.trial_ends_at != null || trialData?.match_used === true || isExpired
+  // alreadyTrialed = le user a déjà eu un trial Stripe (pas juste un trial local post-approbation)
+  // Un user avec trial_ends_at mais sans stripe_subscription_id n'a PAS encore fait son trial Stripe
+  const hasStripeHistory = !!user?.stripe_subscription_id
+  const alreadyTrialed = (hasStripeHistory && user?.trial_ends_at != null) || trialData?.match_used === true || isExpired
 
   if (selectedPlan) {
     return (
