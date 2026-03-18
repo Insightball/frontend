@@ -425,6 +425,13 @@ function UsersSection() {
     else console.error('Erreur suppression', res.status)
   }
 
+  const restoreUser = async (user) => {
+    if (!window.confirm(`Restaurer le compte de ${user.name} (${user.email}) ? Il repassera en attente de validation.`)) return
+    const res = await fetch(`${API}/users/${user.id}/restore`, { method: 'PATCH', headers: authHeaders() })
+    if (res.ok) loadUsers()
+    else console.error('Erreur restauration', res.status)
+  }
+
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
@@ -475,11 +482,20 @@ function UsersSection() {
                   <td style={tdStyle}><StatusBadge active={u.is_active} deleted={!!u.deleted_at} /></td>
                   <td style={tdStyle} onClick={e => e.stopPropagation()}>
                     <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-                      <button onClick={() => setEditUser(u)} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '.08em', textTransform: 'uppercase', padding: '4px 10px', background: 'rgba(201,162,39,0.08)', color: '#c9a227', border: '1px solid rgba(201,162,39,0.3)', cursor: 'pointer' }}>Plan</button>
-                      <button onClick={() => toggleActive(u.id, u.is_active)} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '.08em', textTransform: 'uppercase', padding: '4px 10px', background: u.is_active ? 'rgba(239,68,68,0.08)' : 'rgba(34,197,94,0.08)', color: u.is_active ? '#ef4444' : '#22c55e', border: `1px solid ${u.is_active ? 'rgba(239,68,68,0.2)' : 'rgba(34,197,94,0.2)'}`, cursor: 'pointer' }}>
-                        {u.is_active ? 'Désact.' : 'Activer'}
-                      </button>
-                      <button onClick={() => deleteUser(u)} style={{ padding: '4px 8px', background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)', cursor: 'pointer', color: '#ef4444', fontSize: 13, lineHeight: 1 }}>×</button>
+                      {u.deleted_at ? (
+                        <>
+                          <button onClick={() => restoreUser(u)} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '.08em', textTransform: 'uppercase', padding: '4px 10px', background: 'rgba(34,197,94,0.08)', color: '#22c55e', border: '1px solid rgba(34,197,94,0.25)', cursor: 'pointer' }}>Restaurer</button>
+                          <button onClick={() => deleteUser(u)} style={{ padding: '4px 8px', background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)', cursor: 'pointer', color: '#ef4444', fontSize: 13, lineHeight: 1 }}>×</button>
+                        </>
+                      ) : (
+                        <>
+                          <button onClick={() => setEditUser(u)} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '.08em', textTransform: 'uppercase', padding: '4px 10px', background: 'rgba(201,162,39,0.08)', color: '#c9a227', border: '1px solid rgba(201,162,39,0.3)', cursor: 'pointer' }}>Plan</button>
+                          <button onClick={() => toggleActive(u.id, u.is_active)} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '.08em', textTransform: 'uppercase', padding: '4px 10px', background: u.is_active ? 'rgba(239,68,68,0.08)' : 'rgba(34,197,94,0.08)', color: u.is_active ? '#ef4444' : '#22c55e', border: `1px solid ${u.is_active ? 'rgba(239,68,68,0.2)' : 'rgba(34,197,94,0.2)'}`, cursor: 'pointer' }}>
+                            {u.is_active ? 'Désact.' : 'Activer'}
+                          </button>
+                          <button onClick={() => deleteUser(u)} style={{ padding: '4px 8px', background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)', cursor: 'pointer', color: '#ef4444', fontSize: 13, lineHeight: 1 }}>×</button>
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>
