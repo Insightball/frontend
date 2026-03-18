@@ -220,11 +220,7 @@ export default function DashboardHome() {
           backgroundImage: 'linear-gradient(rgba(201,162,39,1) 1px, transparent 1px), linear-gradient(90deg, rgba(201,162,39,1) 1px, transparent 1px)',
           backgroundSize: '36px 36px',
         }} />
-        <div style={{
-          position: 'absolute', right: -10, bottom: -16,
-          fontFamily: T.display, fontSize: 96, color: 'rgba(201,162,39,0.05)',
-          textTransform: 'uppercase', lineHeight: 1, pointerEvents: 'none', userSelect: 'none',
-        }}>DATA</div>
+
 
         <div style={{ position: 'relative', display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'flex-start' : 'flex-end', justifyContent: 'space-between', gap: isMobile ? 14 : 20 }}>
 
@@ -265,10 +261,10 @@ export default function DashboardHome() {
 
       {/* ── KPI STRIP ── */}
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 1, background: T.rule, marginBottom: 24 }}>
-        <KpiCard label="Matchs analysés"  value={completed}      sub="Ce mois"            accent delay={0}   />
-        <KpiCard label="En cours"         value={processing}     sub="En analyse"                delay={60}  />
-        <KpiCard label="Joueurs effectif" value={players.length} sub="Enregistrés"               delay={120} />
-        <KpiCard label="Matchs restants"  value={quotaLeft}      sub={`Plan ${userPlan}`}         delay={180} />
+        <KpiCard label="Matchs analysés"  value={completed}      sub="Ce mois"            accent delay={0}  />
+        <KpiCard label="En cours"         value={processing}     sub="En analyse"                delay={40} />
+        <KpiCard label="Joueurs effectif" value={players.length} sub="Enregistrés"               delay={80} />
+        <KpiCard label="Matchs restants"  value={quotaLeft}      sub={`Plan ${userPlan}`}         delay={120} />
       </div>
 
       {/* ── ÉVOLUTION ── */}
@@ -278,9 +274,9 @@ export default function DashboardHome() {
             <SectionHeader title="Évolution" />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(3,1fr)', gap: 1, background: T.rule }}>
-            <EvoCard label="Possession"      values={evoSeries.possession}    unit="%" decimals={0} delay={0}   />
-            <EvoCard label="Passes réussies" values={evoSeries.passAccuracy}  unit="%" decimals={0} delay={60}  />
-            <EvoCard label="Tirs cadrés"     values={evoSeries.shotsOnTarget} unit=""  decimals={0} delay={120} />
+            <EvoCard label="Possession"      values={evoSeries.possession}    unit="%" decimals={0} delay={0}  />
+            <EvoCard label="Passes réussies" values={evoSeries.passAccuracy}  unit="%" decimals={0} delay={40} />
+            <EvoCard label="Tirs cadrés"     values={evoSeries.shotsOnTarget} unit=""  decimals={0} delay={80} />
           </div>
         </div>
       )}

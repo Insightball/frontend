@@ -1,26 +1,73 @@
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import api from '../services/api'
 import TrialExpired from '../pages/TrialExpired'
 
 const G = { mono: "'JetBrains Mono', monospace", gold: '#c9a227', bg: '#0a0908' }
 
+// Cache global — persiste entre navigations dashboard sans re-fetch
+let _trialCache = { data: null, userId: null, subId: null, ts: 0 }
+const CACHE_TTL = 60_000 // 1 minute — suffisant, le trial ne change pas toutes les secondes
+
 function ProtectedRoute({ children }) {
   const { isAuthenticated, loading, user } = useAuth()
   const [trialStatus, setTrialStatus] = useState(null)
   const [trialLoading, setTrialLoading] = useState(true)
+  const fetchedRef = useRef(false)
 
   useEffect(() => {
     if (!isAuthenticated || loading) { setTrialLoading(false); return }
+
+    // Vérifier le cache — même user + même sub + pas expiré
+    const now = Date.now()
+    const cacheValid = (
+      _trialCache.data &&
+      _trialCache.userId === user?.id &&
+      _trialCache.subId === (user?.stripe_subscription_id || null) &&
+      (now - _trialCache.ts) < CACHE_TTL
+    )
+
+    if (cacheValid) {
+      setTrialStatus(_trialCache.data)
+      setTrialLoading(false)
+      return
+    }
+
+    // Pas de cache valide → fetch
+    if (fetchedRef.current) return
+    fetchedRef.current = true
     setTrialLoading(true)
+
     api.get('/subscription/trial-status')
-      .then(r => setTrialStatus(r.data))
-      .catch(() => setTrialStatus({ access: 'trial' })) // fallback permissif
+      .then(r => {
+        setTrialStatus(r.data)
+        _trialCache = {
+          data: r.data,
+          userId: user?.id,
+          subId: user?.stripe_subscription_id || null,
+          ts: Date.now(),
+        }
+      })
+      .catch(() => {
+        const fallback = { access: 'trial' }
+        setTrialStatus(fallback)
+        _trialCache = {
+          data: fallback,
+          userId: user?.id,
+          subId: user?.stripe_subscription_id || null,
+          ts: Date.now(),
+        }
+      })
       .finally(() => setTrialLoading(false))
   }, [isAuthenticated, loading, user?.stripe_subscription_id])
 
-  // Loader
+  // Reset ref quand la subscription change (pour forcer un re-fetch)
+  useEffect(() => {
+    fetchedRef.current = false
+  }, [user?.stripe_subscription_id])
+
+  // Loader — affiché uniquement si pas de cache (première visite)
   if (loading || trialLoading) {
     return (
       <div style={{

@@ -12,8 +12,19 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  // Initialisation instantanée depuis localStorage — pas de flash loader
+  const [user, setUser] = useState(() => {
+    try {
+      const stored = localStorage.getItem('insightball_user')
+      return stored ? JSON.parse(stored) : null
+    } catch { return null }
+  })
+  const [loading, setLoading] = useState(() => {
+    // Si on a un user en cache, pas besoin de bloquer le rendu
+    try {
+      return !localStorage.getItem('insightball_user')
+    } catch { return true }
+  })
 
   useEffect(() => {
     const initAuth = async () => {
@@ -22,9 +33,17 @@ export function AuthProvider({ children }) {
         if (token) {
           const userData = await authService.getCurrentUser()
           setUser(userData)
+          // Mettre à jour le cache local
+          localStorage.setItem('insightball_user', JSON.stringify(userData))
+        } else {
+          // Pas de token → nettoyer
+          setUser(null)
+          localStorage.removeItem('insightball_user')
         }
       } catch (error) {
+        // Token invalide → nettoyer tout
         authService.logout()
+        setUser(null)
       } finally {
         setLoading(false)
       }
@@ -62,6 +81,7 @@ export function AuthProvider({ children }) {
     try {
       const userData = await authService.getCurrentUser()
       setUser(userData)
+      localStorage.setItem('insightball_user', JSON.stringify(userData))
       return userData
     } catch (error) {
       console.error('refreshUser failed:', error)
