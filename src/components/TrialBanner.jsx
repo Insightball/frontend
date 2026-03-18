@@ -66,20 +66,6 @@ export default function TrialBanner() {
       ? 'Activer mon essai'
       : "S'abonner"
 
-  const mainMsg = isExpired
-    ? 'Essai terminé — active ton abonnement pour continuer'
-    : noSub && daysLeft > 2
-      ? `Essai gratuit · ${daysLeft} jour${daysLeft > 1 ? 's' : ''} restant${daysLeft > 1 ? 's' : ''} — active ton essai pour débloquer ton match offert`
-      : daysLeft === 0
-        ? "Dernier jour d'essai — expire aujourd'hui"
-        : `${daysLeft} jour${daysLeft > 1 ? 's' : ''} d'essai restant${daysLeft > 1 ? 's' : ''}`
-
-  const ctaLabel = isExpired
-    ? 'Choisir un plan'
-    : noSub
-      ? 'Activer mon essai'
-      : "S'abonner"
-
   return (
     <div style={{
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
