@@ -27,7 +27,7 @@ function useAdminFetch(endpoint) {
   const [error, setError] = useState(null)
   useEffect(() => {
     fetch(`${API}${endpoint}`, { headers: authHeaders() })
-      .then(r => { if (r.status === 403) throw new Error('403'); return r.json() })
+      .then(r => { if (!r.ok) throw new Error(String(r.status)); return r.json() })
       .then(setData).catch(setError).finally(() => setLoading(false))
   }, [endpoint])
   return { data, loading, error }
@@ -409,7 +409,10 @@ function UsersSection() {
     if (userStatus) params.append('user_status', userStatus)
     setLoading(true)
     fetch(`${API}/users?${params}`, { headers: authHeaders() })
-      .then(r => r.json()).then(setUsers).finally(() => setLoading(false))
+      .then(r => { if (!r.ok) throw new Error(String(r.status)); return r.json() })
+      .then(d => setUsers(Array.isArray(d) ? d : []))
+      .catch(() => setUsers([]))
+      .finally(() => setLoading(false))
   }
 
   useEffect(() => { loadUsers() }, [search, plan, userStatus])
