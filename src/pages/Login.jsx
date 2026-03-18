@@ -42,7 +42,20 @@ function Login() {
       await login(email, password)
       navigate('/dashboard')
     } catch (err) {
-      const msg = err?.response?.data?.detail || err?.message || 'Email ou mot de passe incorrect'
+      const raw = err?.response?.data?.detail || err?.message || ''
+      let msg
+      if (raw === 'ACCOUNT_PERMANENTLY_DELETED') {
+        msg = 'Ce compte a été définitivement supprimé.'
+      } else if (raw.startsWith('ACCOUNT_DELETED:')) {
+        const token = raw.split(':')[1]
+        if (token && token !== 'None') {
+          msg = 'Ton compte est en cours de suppression. Vérifie tes emails pour le récupérer.'
+        } else {
+          msg = 'Ce compte a été désactivé. Contacte le support à contact@insightball.com'
+        }
+      } else {
+        msg = raw || 'Email ou mot de passe incorrect'
+      }
       setError(msg)
       setLoading(false)
     }
