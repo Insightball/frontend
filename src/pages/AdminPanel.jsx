@@ -393,6 +393,7 @@ function DashboardSection() {
 function UsersSection() {
   const [search, setSearch] = useState('')
   const [plan, setPlan] = useState('')
+  const [userStatus, setUserStatus] = useState('')
   const [users, setUsers] = useState(null)
   const [loading, setLoading] = useState(true)
   const [showCreate, setShowCreate] = useState(false)
@@ -403,12 +404,13 @@ function UsersSection() {
     const params = new URLSearchParams()
     if (search) params.append('search', search)
     if (plan) params.append('plan', plan)
+    if (userStatus) params.append('user_status', userStatus)
     setLoading(true)
     fetch(`${API}/users?${params}`, { headers: authHeaders() })
       .then(r => r.json()).then(setUsers).finally(() => setLoading(false))
   }
 
-  useEffect(() => { loadUsers() }, [search, plan])
+  useEffect(() => { loadUsers() }, [search, plan, userStatus])
 
   const toggleActive = async (userId, current) => {
     await fetch(`${API}/users/${userId}/toggle-active`, { method: 'PATCH', headers: authHeaders() })
@@ -439,6 +441,11 @@ function UsersSection() {
           <option value="">Tous les plans</option>
           <option value="coach">Coach</option>
           <option value="club">Club</option>
+        </select>
+        <select value={userStatus} onChange={e => setUserStatus(e.target.value)} style={{ ...inputStyle, width: 160, cursor: 'pointer' }}>
+          <option value="">Actifs</option>
+          <option value="rejected">Rejetés</option>
+          <option value="all">Tous</option>
         </select>
       </div>
 
