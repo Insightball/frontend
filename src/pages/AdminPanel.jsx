@@ -747,14 +747,165 @@ function LoginsSection() {
 }
 
 
+// ─── Validations (comptes en attente) ────────────────────────────────────────
+
+function ValidationsSection() {
+  const [users, setUsers] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [actionLoading, setActionLoading] = useState(null)
+
+  const AUTH_API = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL.replace('/api', '')}/api/auth` : 'https://backend-pued.onrender.com/api/auth'
+
+  const loadPending = () => {
+    setLoading(true)
+    fetch(`${AUTH_API}/pending-users`, { headers: authHeaders() })
+      .then(r => r.json()).then(setUsers)
+      .catch(() => setUsers([]))
+      .finally(() => setLoading(false))
+  }
+
+  useEffect(() => { loadPending() }, [])
+
+  const handleApprove = async (userId, userName) => {
+    if (!window.confirm(`Approuver le compte de ${userName} ? Le trial 7 jours sera activé et un email sera envoyé.`)) return
+    setActionLoading(userId)
+    try {
+      const res = await fetch(`${AUTH_API}/approve/${userId}`, { method: 'POST', headers: authHeaders() })
+      if (res.ok) {
+        setUsers(prev => prev.filter(u => u.id !== userId))
+      } else {
+        const data = await res.json()
+        alert(data.detail || 'Erreur')
+      }
+    } catch { alert('Erreur réseau') }
+    finally { setActionLoading(null) }
+  }
+
+  const handleReject = async (userId, userName) => {
+    if (!window.confirm(`Rejeter le compte de ${userName} ? Le compte sera supprimé.`)) return
+    setActionLoading(userId)
+    try {
+      const res = await fetch(`${AUTH_API}/reject/${userId}`, { method: 'POST', headers: authHeaders() })
+      if (res.ok) {
+        setUsers(prev => prev.filter(u => u.id !== userId))
+      } else {
+        const data = await res.json()
+        alert(data.detail || 'Erreur')
+      }
+    } catch { alert('Erreur réseau') }
+    finally { setActionLoading(null) }
+  }
+
+  return (
+    <div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+        <h2 style={{ fontFamily: "'Anton', sans-serif", fontSize: 32, textTransform: 'uppercase', letterSpacing: '.03em', color: '#0f0f0d', margin: 0 }}>Validations</h2>
+        <button onClick={loadPending} style={{ padding: '8px 16px', background: G.goldBg, border: `1px solid ${G.goldBdr}`, fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.gold, cursor: 'pointer' }}>
+          Rafraîchir
+        </button>
+      </div>
+
+      {loading ? <Loader /> : !users || users.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: '60px 20px', background: '#faf8f4', border: `1px solid ${G.border}` }}>
+          <div style={{ fontSize: 36, marginBottom: 12 }}>✓</div>
+          <div style={{ fontFamily: G.display, fontSize: 22, textTransform: 'uppercase', color: '#0f0f0d', marginBottom: 8 }}>Aucun compte en attente</div>
+          <div style={{ fontFamily: G.mono, fontSize: 10, color: G.muted, letterSpacing: '.06em' }}>Tous les comptes ont été traités.</div>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: G.border }}>
+          {users.map(u => (
+            <div key={u.id} style={{ background: '#faf8f4', padding: '20px 24px', display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
+              {/* Infos principales */}
+              <div style={{ flex: 1, minWidth: 200 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+                  <span style={{ fontFamily: G.display, fontSize: 18, color: '#0f0f0d' }}>{u.name}</span>
+                  <PlanBadge plan={u.plan} />
+                </div>
+                <div style={{ fontFamily: G.mono, fontSize: 11, color: G.muted, marginBottom: 4 }}>{u.email}</div>
+                <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: 8 }}>
+                  {u.profile_role && (
+                    <span style={{ fontFamily: G.mono, fontSize: 9, color: '#0f0f0d', letterSpacing: '.04em' }}>
+                      <span style={{ color: G.gold, marginRight: 4 }}>Poste</span> {u.profile_role}
+                    </span>
+                  )}
+                  {u.profile_level && (
+                    <span style={{ fontFamily: G.mono, fontSize: 9, color: '#0f0f0d', letterSpacing: '.04em' }}>
+                      <span style={{ color: G.gold, marginRight: 4 }}>Niveau</span> {u.profile_level}
+                    </span>
+                  )}
+                  {u.profile_city && (
+                    <span style={{ fontFamily: G.mono, fontSize: 9, color: '#0f0f0d', letterSpacing: '.04em' }}>
+                      <span style={{ color: G.gold, marginRight: 4 }}>Ville</span> {u.profile_city}
+                    </span>
+                  )}
+                  {u.profile_diploma && (
+                    <span style={{ fontFamily: G.mono, fontSize: 9, color: '#0f0f0d', letterSpacing: '.04em' }}>
+                      <span style={{ color: G.gold, marginRight: 4 }}>Diplôme</span> {u.profile_diploma}
+                    </span>
+                  )}
+                  {u.club_name && (
+                    <span style={{ fontFamily: G.mono, fontSize: 9, color: '#0f0f0d', letterSpacing: '.04em' }}>
+                      <span style={{ color: G.gold, marginRight: 4 }}>Club</span> {u.club_name}
+                    </span>
+                  )}
+                </div>
+                <div style={{ fontFamily: G.mono, fontSize: 8, color: G.muted, marginTop: 8, letterSpacing: '.06em' }}>
+                  Inscrit le {formatDate(u.created_at)}
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+                <button
+                  onClick={() => handleApprove(u.id, u.name)}
+                  disabled={actionLoading === u.id}
+                  style={{
+                    padding: '10px 20px', background: actionLoading === u.id ? 'rgba(34,197,94,0.3)' : G.green,
+                    border: 'none', fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em',
+                    textTransform: 'uppercase', color: '#fff', fontWeight: 700,
+                    cursor: actionLoading === u.id ? 'not-allowed' : 'pointer',
+                    transition: 'background .15s',
+                  }}
+                  onMouseEnter={e => { if (actionLoading !== u.id) e.currentTarget.style.background = '#16a34a' }}
+                  onMouseLeave={e => { if (actionLoading !== u.id) e.currentTarget.style.background = G.green }}
+                >
+                  {actionLoading === u.id ? '...' : 'Approuver'}
+                </button>
+                <button
+                  onClick={() => handleReject(u.id, u.name)}
+                  disabled={actionLoading === u.id}
+                  style={{
+                    padding: '10px 16px', background: 'rgba(239,68,68,0.08)',
+                    border: `1px solid rgba(239,68,68,0.25)`,
+                    fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em',
+                    textTransform: 'uppercase', color: G.red,
+                    cursor: actionLoading === u.id ? 'not-allowed' : 'pointer',
+                    transition: 'all .15s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.15)' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.08)' }}
+                >
+                  Rejeter
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+
 // ─── App principale ───────────────────────────────────────────────────────────
 
 const SECTIONS = [
-  { id: 'dashboard',   label: '📊 Dashboard' },
-  { id: 'users',       label: '👥 Utilisateurs' },
-  { id: 'invitations', label: '📩 Invitations' },
-  { id: 'payments',    label: '💳 Paiements' },
-  { id: 'logins',      label: '🔐 Connexions' },
+  { id: 'dashboard',    label: '📊 Dashboard' },
+  { id: 'validations',  label: '✅ Validations' },
+  { id: 'users',        label: '👥 Utilisateurs' },
+  { id: 'invitations',  label: '📩 Invitations' },
+  { id: 'payments',     label: '💳 Paiements' },
+  { id: 'logins',       label: '🔐 Connexions' },
 ]
 
 export default function AdminPanel() {
@@ -800,6 +951,7 @@ export default function AdminPanel() {
 
       <main style={{ flex: 1, padding: 32, overflowX: 'auto' }}>
         {active === 'dashboard' && <DashboardSection />}
+        {active === 'validations' && <ValidationsSection />}
         {active === 'users'     && <UsersSection />}
         {active === 'invitations' && <InvitationsSection />}
         {active === 'payments'  && <PaymentsSection />}
