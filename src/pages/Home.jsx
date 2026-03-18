@@ -31,7 +31,7 @@ const LANG = {
     navFeatures: 'Fonctionnalités',
     navPricing: 'Tarifs',
     navBlog: 'Blog',
-    navCta: 'Nous contacter',
+    navCta: 'Essai gratuit',
     // Hero
     heroTitle1: 'Tu filmes déjà',
     heroTitle2: 'tes matchs.',
@@ -39,7 +39,7 @@ const LANG = {
     heroSub: "Insightball transforme chaque vidéo en statistiques claires pour ton staff et tes joueurs. En moins d'une heure.",
     heroSubBold: '',
     heroSubEnd: '',
-    heroCta1: 'Demander une démo →',
+    heroCta1: 'Essai gratuit →',
     heroCta2: 'Voir un exemple',
     // Process intégré hero
     heroStep1Title: 'Filme',
@@ -81,7 +81,7 @@ const LANG = {
     rapportCols: ['Joueur','Passes','Duels','Buts','Km'],
     rapportPdf: 'Rapport PDF prêt',
     rapportPdfSub: 'à être partagé.',
-    rapportCta: 'Nous contacter →',
+    rapportCta: 'Essai gratuit →',
     // Mockup rapport
     mockupTitle: 'Rapport de match',
     mockupHeatmapLabel: 'Heatmap collective',
@@ -141,7 +141,7 @@ const LANG = {
     // CTA band
     ctaTitle1: 'Prêt à analyser',
     ctaTitle2: 'ton prochain match ?',
-    ctaCta: 'Nous contacter →',
+    ctaCta: 'Essai gratuit →',
     // Footer
     footProduit: 'Produit',
     footEntreprise: 'Entreprise',
@@ -180,7 +180,7 @@ const LANG = {
     navFeatures: 'Features',
     navPricing: 'Pricing',
     navBlog: 'Blog',
-    navCta: 'Contact us',
+    navCta: 'Free trial',
     // Hero
     heroTitle1: 'You already film',
     heroTitle2: 'your matches.',
@@ -188,7 +188,7 @@ const LANG = {
     heroSub: "Insightball turns every match video into clear stats for your staff and players. In under one hour.",
     heroSubBold: '',
     heroSubEnd: '',
-    heroCta1: 'Request a demo →',
+    heroCta1: 'Free trial →',
     heroCta2: 'See an example',
     // Process intégré hero
     heroStep1Title: 'Film',
@@ -230,7 +230,7 @@ const LANG = {
     rapportCols: ['Player','Passes','Duels','Goals','Km'],
     rapportPdf: 'PDF report ready',
     rapportPdfSub: 'to share.',
-    rapportCta: 'Contact us →',
+    rapportCta: 'Free trial →',
     // Mockup rapport
     mockupTitle: 'Match report',
     mockupHeatmapLabel: 'Team heatmap',
@@ -290,7 +290,7 @@ const LANG = {
     // CTA band
     ctaTitle1: 'Ready to analyze',
     ctaTitle2: 'your next match?',
-    ctaCta: 'Contact us →',
+    ctaCta: 'Free trial →',
     // Footer
     footProduit: 'Product',
     footEntreprise: 'Company',
@@ -674,7 +674,7 @@ export default function LandingPage() {
       .stat-grid    { grid-template-columns: repeat(2, 1fr) !important; }
     }
     @media (max-width: 768px) {
-      .nav-links, .nav-cta-d, .nav-lang { display: none !important; }
+      .nav-links, .nav-cta-d, .nav-lang, .nav-auth { display: none !important; }
       .nav-burger   { display: flex !important; }
       .hero-grid    { padding: 20px 20px 24px !important; min-height: unset !important; }
       .hero-title   { font-size: clamp(36px,10vw,58px) !important; }
@@ -791,11 +791,18 @@ export default function LandingPage() {
           <span style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.08em', color: 'rgba(255,255,255,0.75)' }}>{lang}</span>
         </button>
 
-        <a href="#contact" className="nav-cta-d" style={{ ...btnPrimary, padding: '9px 20px', fontSize: 14, textDecoration:'none' }}
-          onMouseEnter={e => e.currentTarget.style.background = G.goldD}
-          onMouseLeave={e => e.currentTarget.style.background = G.gold}>
-          {t.navCta}
-        </a>
+        <div className="nav-auth" style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+          <Link to="/login" style={{ fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.65)', textDecoration: 'none', transition: 'color .15s', fontFamily: G.body }}
+            onMouseEnter={e => e.currentTarget.style.color = G.gold}
+            onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.65)'}>
+            Connexion
+          </Link>
+          <Link to="/signup" className="nav-cta-d" style={{ ...btnPrimary, padding: '9px 20px', fontSize: 14, textDecoration:'none' }}
+            onMouseEnter={e => e.currentTarget.style.background = G.goldD}
+            onMouseLeave={e => e.currentTarget.style.background = G.gold}>
+            Essai gratuit →
+          </Link>
+        </div>
 
         <button className="nav-burger" onClick={() => setMenuOpen(o => !o)}
           aria-label="Menu de navigation"
@@ -824,7 +831,8 @@ export default function LandingPage() {
               <span style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.08em', color: 'rgba(255,255,255,0.75)' }}>{lang}</span>
             </button>
           </div>
-          <a href="#contact" onClick={() => setMenuOpen(false)} style={{ ...btnPrimary, marginTop: 12, justifyContent: 'center', textDecoration:'none' }}>{t.navCta} →</a>
+          <Link to="/login" onClick={() => setMenuOpen(false)} style={{ fontSize: 15, fontWeight: 500, color: 'rgba(255,255,255,0.75)', textDecoration: 'none', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Connexion</Link>
+          <Link to="/signup" onClick={() => setMenuOpen(false)} style={{ ...btnPrimary, marginTop: 12, justifyContent: 'center', textDecoration:'none' }}>Essai gratuit →</Link>
         </div>
       )}
 
@@ -842,11 +850,11 @@ export default function LandingPage() {
               {t.heroSub}
             </p>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', opacity: 0, animation: 'heroUp .5s .45s forwards' }}>
-              <a href="#contact" style={{ ...btnPrimary, textDecoration:'none' }}
+              <Link to="/signup" style={{ ...btnPrimary, textDecoration:'none' }}
                 onMouseEnter={e => e.currentTarget.style.background = G.goldD}
                 onMouseLeave={e => e.currentTarget.style.background = G.gold}>
                 {t.heroCta1}
-              </a>
+              </Link>
               <a href="#rapport" style={btnOutline}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = G.ink; e.currentTarget.style.color = G.ink }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = G.border2; e.currentTarget.style.color = G.ink2 }}>
@@ -1102,11 +1110,11 @@ export default function LandingPage() {
                     <strong style={{ color: G.ink, fontWeight: 600 }}>{t.rapportPdf}</strong> {t.rapportPdfSub}
                   </div>
                 </div>
-                <a href="#contact" style={{ ...btnPrimary, padding: '8px 18px', fontSize: 12, borderRadius: 4, flexShrink: 0, textDecoration:'none' }}
+                <Link to="/signup" style={{ ...btnPrimary, padding: '8px 18px', fontSize: 12, borderRadius: 4, flexShrink: 0, textDecoration:'none' }}
                   onMouseEnter={e => e.currentTarget.style.background = G.goldD}
                   onMouseLeave={e => e.currentTarget.style.background = G.gold}>
                   {t.rapportCta}
-                </a>
+                </Link>
               </div>
             </div>
           </Reveal>
@@ -1182,11 +1190,11 @@ export default function LandingPage() {
 
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-start', flexShrink: 0 }}>
-          <a href="#contact" style={{ ...btnPrimary, fontSize: 16, padding: '16px 36px', textDecoration:'none' }}
+          <Link to="/signup" style={{ ...btnPrimary, fontSize: 16, padding: '16px 36px', textDecoration:'none' }}
             onMouseEnter={e => e.currentTarget.style.background = G.goldD}
             onMouseLeave={e => e.currentTarget.style.background = G.gold}>
             {t.ctaCta}
-          </a>
+          </Link>
         </div>
       </div>
 
