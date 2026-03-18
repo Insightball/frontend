@@ -42,7 +42,8 @@ function formatDate(d) {
   return new Date(d).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
 
-function StatusBadge({ active }) {
+function StatusBadge({ active, deleted }) {
+  if (deleted) return <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', padding: '3px 10px', background: 'rgba(239,68,68,0.1)', color: G.red, border: '1px solid rgba(239,68,68,0.25)' }}>Rejeté</span>
   return <span style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', padding: '3px 10px', background: active ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)', color: active ? G.green : G.red, border: `1px solid ${active ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.25)'}` }}>{active ? 'Actif' : 'Inactif'}</span>
 }
 
@@ -131,7 +132,7 @@ function UserDetailModal({ user, onClose, onToggleActive, onEditPlan }) {
             <Row label="Plan" value={<PlanBadge plan={user.plan} />} />
             <Row label="Club" value={user.club_name} />
             <Row label="Rôle système" value={user.role} />
-            <Row label="Statut" value={<StatusBadge active={user.is_active} />} />
+            <Row label="Statut" value={<StatusBadge active={user.is_active} deleted={!!user.deleted_at} />} />
             <Row label="Superadmin" value={user.is_superadmin ? '✓ Oui' : 'Non'} highlight={user.is_superadmin} />
             <Row label="Inscrit le" value={formatDate(user.created_at)} />
             <Row label="Dernière co." value={formatDate(user.last_login)} />
@@ -471,7 +472,7 @@ function UsersSection() {
                   <td style={{ ...tdStyle, fontSize: 10 }}>{u.profile_city || '—'}</td>
                   <td style={{ ...tdStyle, fontSize: 10 }}>{formatDate(u.created_at)}</td>
                   <td style={{ ...tdStyle, fontSize: 10 }}>{u.last_login ? formatDate(u.last_login) : '—'}</td>
-                  <td style={tdStyle}><StatusBadge active={u.is_active} /></td>
+                  <td style={tdStyle}><StatusBadge active={u.is_active} deleted={!!u.deleted_at} /></td>
                   <td style={tdStyle} onClick={e => e.stopPropagation()}>
                     <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
                       <button onClick={() => setEditUser(u)} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '.08em', textTransform: 'uppercase', padding: '4px 10px', background: 'rgba(201,162,39,0.08)', color: '#c9a227', border: '1px solid rgba(201,162,39,0.3)', cursor: 'pointer' }}>Plan</button>
