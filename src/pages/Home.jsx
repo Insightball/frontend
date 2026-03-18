@@ -817,8 +817,15 @@ export default function LandingPage() {
         </button>
       </nav>
 
-      {menuOpen && (
-        <div style={{ position: 'fixed', top: 60, left: 0, right: 0, zIndex: 199, background: G.ink, borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '16px 24px 20px', display: 'flex', flexDirection: 'column' }}>
+      <div style={{
+        position: 'fixed', top: 60, left: 0, right: 0, zIndex: 199,
+        background: G.ink, borderBottom: '1px solid rgba(255,255,255,0.08)',
+        padding: '16px 24px 20px', display: 'flex', flexDirection: 'column',
+        transform: menuOpen ? 'translateY(0)' : 'translateY(-110%)',
+        opacity: menuOpen ? 1 : 0,
+        pointerEvents: menuOpen ? 'auto' : 'none',
+        transition: 'transform .25s ease, opacity .2s ease',
+      }}>
           {[['#features',t.navFeatures],['/tarifs',t.navPricing],['/blog/',t.navBlog]].map(([h,l]) => (
             <a key={h} href={h} onClick={() => setMenuOpen(false)} style={{ fontSize: 15, fontWeight: 500, color: 'rgba(255,255,255,0.75)', textDecoration: 'none', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>{l}</a>
           ))}
@@ -834,7 +841,6 @@ export default function LandingPage() {
           <Link to="/login" onClick={() => setMenuOpen(false)} style={{ fontSize: 15, fontWeight: 500, color: 'rgba(255,255,255,0.75)', textDecoration: 'none', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>{lang === 'FR' ? 'Connexion' : 'Log in'}</Link>
           <Link to="/signup" onClick={() => setMenuOpen(false)} style={{ ...btnPrimary, marginTop: 12, justifyContent: 'center', textDecoration:'none' }}>{t.navCta} →</Link>
         </div>
-      )}
 
       <main>
       {/* ══ HERO ══ */}
