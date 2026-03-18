@@ -44,7 +44,7 @@ function DashboardLayout({ children }) {
   }
   navigation.push({ name: 'Paramètres', href: '/dashboard/settings', icon: Settings })
 
-  const handleLogout = () => { logout(); navigate('/x-portal-7f2a/login') }
+  const handleLogout = () => { logout(); navigate('/login') }
 
   const initials = user?.name
     ? user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)

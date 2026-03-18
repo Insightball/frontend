@@ -103,11 +103,11 @@ function Login() {
             INSIGHT<span style={{ color: G.gold }}>BALL</span>
           </span>
         </Link>
-        <Link to="/x-portal-7f2a/signup" style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.16em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.60)', textDecoration: 'none', transition: 'color .15s' }}
+        <Link to="/signup" style={{ fontFamily: G.mono, fontSize: 9, letterSpacing: '.16em', textTransform: 'uppercase', color: 'rgba(245,242,235,0.60)', textDecoration: 'none', transition: 'color .15s' }}
           onMouseEnter={e => e.target.style.color = G.gold}
           onMouseLeave={e => e.target.style.color = 'rgba(245,242,235,0.60)'}
         >
-          Créer un compte →
+          Créer un compte
         </Link>
       </header>
 
@@ -155,7 +155,7 @@ function Login() {
                         </button>
                         <button type="submit" disabled={forgotLoading}
                           style={{ flex: 2, padding: '11px', background: G.gold, border: 'none', fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase', color: G.ink, fontWeight: 700, cursor: 'pointer' }}>
-                          {forgotLoading ? 'Envoi...' : 'Envoyer le lien →'}
+                          {forgotLoading ? 'Envoi...' : 'Envoyer le lien'}
                         </button>
                       </div>
                     </form>
@@ -185,7 +185,7 @@ function Login() {
             {welcomeClub && (
               <div style={{ marginBottom: 24, padding: '12px 16px', background: 'rgba(201,162,39,0.08)', borderLeft: `2px solid ${G.gold}` }}>
                 <p style={{ fontFamily: G.mono, fontSize: 11, color: G.gold, margin: 0, letterSpacing: '.04em', lineHeight: 1.6 }}>
-                  Abonnement Club activé avec succès ! Connectez-vous pour accéder à votre dashboard.
+                  Abonnement Club activé avec succès. Connectez-vous pour accéder à votre dashboard.
                 </p>
               </div>
             )}
@@ -250,7 +250,7 @@ function Login() {
             <div style={{ marginTop: 28, paddingTop: 22, borderTop: '1px solid rgba(255,255,255,0.06)', textAlign: 'center' }}>
               <p style={{ fontFamily: G.mono, fontSize: 10, letterSpacing: '.08em', color: 'rgba(245,242,235,0.55)', margin: 0 }}>
                 Pas encore de compte ?{' '}
-                <Link to="/x-portal-7f2a/signup" style={{ color: G.gold, textDecoration: 'none', fontWeight: 700 }}>Créer un compte</Link>
+                <Link to="/signup" style={{ color: G.gold, textDecoration: 'none', fontWeight: 700 }}>Créer un compte</Link>
               </p>
             </div>
           </div>

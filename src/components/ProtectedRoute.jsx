@@ -3,12 +3,97 @@ import { useAuth } from '../context/AuthContext'
 import { useEffect, useState, useRef } from 'react'
 import api from '../services/api'
 import TrialExpired from '../pages/TrialExpired'
+import { T } from '../theme'
 
-const G = { mono: "'JetBrains Mono', monospace", gold: '#c9a227', bg: '#0a0908' }
+const G = { mono: "'JetBrains Mono', monospace", display: "'Anton', sans-serif", gold: '#c9a227', bg: '#0a0908' }
 
 // Cache global — persiste entre navigations dashboard sans re-fetch
 let _trialCache = { data: null, userId: null, subId: null, ts: 0 }
-const CACHE_TTL = 60_000 // 1 minute — suffisant, le trial ne change pas toutes les secondes
+const CACHE_TTL = 60_000
+
+function PendingApproval() {
+  const { logout } = useAuth()
+  return (
+    <div style={{
+      minHeight: '100vh', background: T.bg,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      padding: '40px 20px',
+    }}>
+      <div style={{ maxWidth: 440, textAlign: 'center' }}>
+        <div style={{ marginBottom: 32 }}>
+          <img src="/logo.svg" alt="Insightball" style={{ width: 36, height: 36, marginBottom: 12 }} />
+          <div style={{ fontFamily: G.display, fontSize: 18, letterSpacing: '.08em', color: T.ink }}>
+            INSIGHT<span style={{ color: G.gold }}>BALL</span>
+          </div>
+        </div>
+
+        <div style={{
+          background: T.surface, border: `1px solid ${T.rule}`,
+          borderTop: `2px solid ${G.gold}`, padding: '40px 32px',
+        }}>
+          <div style={{
+            width: 56, height: 56, margin: '0 auto 20px',
+            background: T.goldBg, border: `1px solid ${T.goldBdr}`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <span style={{ fontSize: 28 }}>⏳</span>
+          </div>
+
+          <div style={{
+            fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em',
+            textTransform: 'uppercase', color: G.gold, marginBottom: 12,
+          }}>
+            Validation en cours
+          </div>
+
+          <h1 style={{
+            fontFamily: G.display, fontSize: 32, textTransform: 'uppercase',
+            lineHeight: .92, letterSpacing: '.02em', color: T.ink, margin: '0 0 16px',
+          }}>
+            Ton compte est<br /><span style={{ color: G.gold }}>en attente.</span>
+          </h1>
+
+          <p style={{
+            fontFamily: G.mono, fontSize: 12, color: T.muted,
+            lineHeight: 1.7, letterSpacing: '.03em', margin: '0 0 28px',
+          }}>
+            Merci pour ton inscription. Nous vérifions ton profil pour garantir la qualité de la communauté Insightball. Tu recevras un email dès que ton accès sera activé.
+          </p>
+
+          <div style={{
+            background: T.goldBg, border: `1px solid ${T.goldBdr}`,
+            borderLeft: `3px solid ${G.gold}`, padding: '14px 18px',
+            textAlign: 'left', marginBottom: 24,
+          }}>
+            <p style={{ fontFamily: G.mono, fontSize: 10, color: T.ink, margin: 0, lineHeight: 1.6 }}>
+              <span style={{ color: G.gold, fontWeight: 700 }}>En attendant</span> — tu peux compléter ton profil dans l'onboarding. Tout sera prêt quand ton compte sera validé.
+            </p>
+          </div>
+
+          <button onClick={() => { logout(); window.location.href = '/login' }} style={{
+            padding: '10px 20px', background: 'transparent',
+            border: `1px solid ${T.rule}`, color: T.muted,
+            fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em',
+            textTransform: 'uppercase', cursor: 'pointer',
+            transition: 'all .15s',
+          }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = T.goldBdr; e.currentTarget.style.color = G.gold }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = T.rule; e.currentTarget.style.color = T.muted }}
+          >
+            Se déconnecter
+          </button>
+        </div>
+
+        <p style={{
+          fontFamily: G.mono, fontSize: 9, color: T.muted,
+          marginTop: 20, letterSpacing: '.04em',
+        }}>
+          Une question ? <a href="mailto:contact@insightball.com" style={{ color: G.gold, textDecoration: 'none' }}>contact@insightball.com</a>
+        </p>
+      </div>
+    </div>
+  )
+}
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated, loading, user } = useAuth()
@@ -19,7 +104,6 @@ function ProtectedRoute({ children }) {
   useEffect(() => {
     if (!isAuthenticated || loading) { setTrialLoading(false); return }
 
-    // Vérifier le cache — même user + même sub + pas expiré
     const now = Date.now()
     const cacheValid = (
       _trialCache.data &&
@@ -34,7 +118,6 @@ function ProtectedRoute({ children }) {
       return
     }
 
-    // Pas de cache valide → fetch
     if (fetchedRef.current) return
     fetchedRef.current = true
     setTrialLoading(true)
@@ -42,32 +125,19 @@ function ProtectedRoute({ children }) {
     api.get('/subscription/trial-status')
       .then(r => {
         setTrialStatus(r.data)
-        _trialCache = {
-          data: r.data,
-          userId: user?.id,
-          subId: user?.stripe_subscription_id || null,
-          ts: Date.now(),
-        }
+        _trialCache = { data: r.data, userId: user?.id, subId: user?.stripe_subscription_id || null, ts: Date.now() }
       })
       .catch(() => {
         const fallback = { access: 'trial' }
         setTrialStatus(fallback)
-        _trialCache = {
-          data: fallback,
-          userId: user?.id,
-          subId: user?.stripe_subscription_id || null,
-          ts: Date.now(),
-        }
+        _trialCache = { data: fallback, userId: user?.id, subId: user?.stripe_subscription_id || null, ts: Date.now() }
       })
       .finally(() => setTrialLoading(false))
   }, [isAuthenticated, loading, user?.stripe_subscription_id])
 
-  // Reset ref quand la subscription change (pour forcer un re-fetch)
-  useEffect(() => {
-    fetchedRef.current = false
-  }, [user?.stripe_subscription_id])
+  useEffect(() => { fetchedRef.current = false }, [user?.stripe_subscription_id])
 
-  // Loader — affiché uniquement si pas de cache (première visite)
+  // Loader
   if (loading || trialLoading) {
     return (
       <div style={{
@@ -89,13 +159,17 @@ function ProtectedRoute({ children }) {
     )
   }
 
-  // Non connecté → login
+  // Non connecté
   if (!isAuthenticated) {
-    return <Navigate to="/x-portal-7f2a/login" replace />
+    return <Navigate to="/login" replace />
   }
 
-  // Trial expiré OU sub annulée (user qui a déjà eu un trial mais n'a plus de sub active)
-  // On ne bloque PAS les nouveaux users sans trial (pas encore de trial_ends_at)
+  // Compte non approuvé — écran d'attente
+  if (user?.is_approved === false) {
+    return <PendingApproval />
+  }
+
+  // Trial expiré OU sub annulée
   const isExpiredOrCanceled = (
     trialStatus?.access === 'expired' ||
     (trialStatus?.access === 'no_trial' && user?.trial_ends_at != null)
@@ -112,7 +186,6 @@ function ProtectedRoute({ children }) {
     )
   }
 
-  // Accès complet (trial actif ou abonné)
   return children
 }
 

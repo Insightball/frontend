@@ -70,11 +70,9 @@ function App() {
             {/* Landing */}
             <Route path="/" element={<Home />} />
 
-            {/* Auth */}
-            <Route path="/x-portal-7f2a/login"  element={<Login />} />
-            <Route path="/x-portal-7f2a/signup" element={<Signup />} />
-            <Route path="/login"  element={<Navigate to="/" replace />} />
-            <Route path="/signup" element={<Navigate to="/" replace />} />
+            {/* Auth — URLs publiques */}
+            <Route path="/login"  element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
 
             {/* Onboarding */}
             <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
@@ -88,9 +86,9 @@ function App() {
             <Route path="/recover"        element={<RecoverAccount />} />
 
             {/* Demo / Plans / Admin */}
-            <Route path="/demo"                element={<Dashboard />} />
-            <Route path="/x-portal-7f2a/plans" element={<SubscriptionPlans />} />
-            <Route path="/admin"               element={<AdminPanel />} />
+            <Route path="/demo"   element={<Dashboard />} />
+            <Route path="/plans"  element={<SubscriptionPlans />} />
+            <Route path="/admin"  element={<AdminPanel />} />
 
             {/* Pages légales */}
             <Route path="/mentions-legales" element={<MentionsLegales />} />
