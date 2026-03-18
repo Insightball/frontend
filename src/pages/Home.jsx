@@ -31,7 +31,7 @@ const LANG = {
     navFeatures: 'Fonctionnalités',
     navPricing: 'Tarifs',
     navBlog: 'Blog',
-    navCta: 'Essai gratuit',
+    navCta: 'Créer mon compte',
     // Hero
     heroTitle1: 'Tu filmes déjà',
     heroTitle2: 'tes matchs.',
@@ -39,7 +39,7 @@ const LANG = {
     heroSub: "Insightball transforme chaque vidéo en statistiques claires pour ton staff et tes joueurs. En moins d'une heure.",
     heroSubBold: '',
     heroSubEnd: '',
-    heroCta1: 'Essai gratuit →',
+    heroCta1: 'Analyser mon premier match →',
     heroCta2: 'Voir un exemple',
     // Process intégré hero
     heroStep1Title: 'Filme',
@@ -81,7 +81,7 @@ const LANG = {
     rapportCols: ['Joueur','Passes','Duels','Buts','Km'],
     rapportPdf: 'Rapport PDF prêt',
     rapportPdfSub: 'à être partagé.',
-    rapportCta: 'Essai gratuit →',
+    rapportCta: 'Créer mon compte →',
     // Mockup rapport
     mockupTitle: 'Rapport de match',
     mockupHeatmapLabel: 'Heatmap collective',
@@ -141,7 +141,7 @@ const LANG = {
     // CTA band
     ctaTitle1: 'Prêt à analyser',
     ctaTitle2: 'ton prochain match ?',
-    ctaCta: 'Essai gratuit →',
+    ctaCta: 'Analyser mon premier match →',
     // Footer
     footProduit: 'Produit',
     footEntreprise: 'Entreprise',
@@ -180,7 +180,7 @@ const LANG = {
     navFeatures: 'Features',
     navPricing: 'Pricing',
     navBlog: 'Blog',
-    navCta: 'Free trial',
+    navCta: 'Create my account',
     // Hero
     heroTitle1: 'You already film',
     heroTitle2: 'your matches.',
@@ -188,7 +188,7 @@ const LANG = {
     heroSub: "Insightball turns every match video into clear stats for your staff and players. In under one hour.",
     heroSubBold: '',
     heroSubEnd: '',
-    heroCta1: 'Free trial →',
+    heroCta1: 'Analyze my first match →',
     heroCta2: 'See an example',
     // Process intégré hero
     heroStep1Title: 'Film',
@@ -230,7 +230,7 @@ const LANG = {
     rapportCols: ['Player','Passes','Duels','Goals','Km'],
     rapportPdf: 'PDF report ready',
     rapportPdfSub: 'to share.',
-    rapportCta: 'Free trial →',
+    rapportCta: 'Create my account →',
     // Mockup rapport
     mockupTitle: 'Match report',
     mockupHeatmapLabel: 'Team heatmap',
@@ -290,7 +290,7 @@ const LANG = {
     // CTA band
     ctaTitle1: 'Ready to analyze',
     ctaTitle2: 'your next match?',
-    ctaCta: 'Free trial →',
+    ctaCta: 'Analyze my first match →',
     // Footer
     footProduit: 'Product',
     footEntreprise: 'Company',
@@ -795,12 +795,12 @@ export default function LandingPage() {
           <Link to="/login" style={{ fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.65)', textDecoration: 'none', transition: 'color .15s', fontFamily: G.body }}
             onMouseEnter={e => e.currentTarget.style.color = G.gold}
             onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.65)'}>
-            Connexion
+            {lang === 'FR' ? 'Connexion' : 'Log in'}
           </Link>
           <Link to="/signup" className="nav-cta-d" style={{ ...btnPrimary, padding: '9px 20px', fontSize: 14, textDecoration:'none' }}
             onMouseEnter={e => e.currentTarget.style.background = G.goldD}
             onMouseLeave={e => e.currentTarget.style.background = G.gold}>
-            Essai gratuit →
+            {t.navCta} →
           </Link>
         </div>
 
@@ -831,8 +831,8 @@ export default function LandingPage() {
               <span style={{ fontFamily: G.mono, fontSize: 11, fontWeight: 600, letterSpacing: '.08em', color: 'rgba(255,255,255,0.75)' }}>{lang}</span>
             </button>
           </div>
-          <Link to="/login" onClick={() => setMenuOpen(false)} style={{ fontSize: 15, fontWeight: 500, color: 'rgba(255,255,255,0.75)', textDecoration: 'none', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Connexion</Link>
-          <Link to="/signup" onClick={() => setMenuOpen(false)} style={{ ...btnPrimary, marginTop: 12, justifyContent: 'center', textDecoration:'none' }}>Essai gratuit →</Link>
+          <Link to="/login" onClick={() => setMenuOpen(false)} style={{ fontSize: 15, fontWeight: 500, color: 'rgba(255,255,255,0.75)', textDecoration: 'none', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>{lang === 'FR' ? 'Connexion' : 'Log in'}</Link>
+          <Link to="/signup" onClick={() => setMenuOpen(false)} style={{ ...btnPrimary, marginTop: 12, justifyContent: 'center', textDecoration:'none' }}>{t.navCta} →</Link>
         </div>
       )}
 
