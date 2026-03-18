@@ -82,10 +82,10 @@ export default function Onboarding() {
   const [saving, setSaving] = useState(false)
   const [error, setError]   = useState('')
 
-  // Step 1 — Profil
+  // Step 1 — Profil (téléphone, ville et club déjà collectés au signup)
   const [profileData, setProfileData] = useState({
     role: '', level: '', diploma: '',
-    dialCode: 'FR', phone: '', city: '', country: 'FR',
+    country: 'FR',
   })
 
   // Step 2 — Club
@@ -109,21 +109,17 @@ export default function Onboarding() {
     )
   }
 
-  const selectedCountry = COUNTRIES.find(c => c.code === profileData.dialCode) || COUNTRIES[0]
+  const selectedCountry = COUNTRIES.find(c => c.code === profileData.country) || COUNTRIES[0]
 
   /* ── Handlers ── */
   const handleSaveProfile = async () => {
     if (!profileData.role) { setError('Poste requis'); return }
-    if (!profileData.phone.trim()) { setError('Téléphone requis'); return }
-    if (!profileData.city.trim()) { setError('Ville requise'); return }
     setSaving(true); setError('')
     try {
       await api.patch('/account/profile', {
         role: profileData.role,
         level: profileData.level,
-        phone: `${selectedCountry.dial} ${profileData.phone}`,
-        city: profileData.city,
-        country: profileData.dialCode,
+        country: profileData.country,
         diploma: profileData.diploma,
       })
     } catch (e) { console.warn('Profile save failed:', e) }
@@ -263,64 +259,19 @@ export default function Onboarding() {
                 </div>
               </div>
 
-              {/* Téléphone avec indicatif */}
+              {/* Pays */}
               <div>
-                <label style={labelStyle}>Téléphone *</label>
-                <div style={{ display: 'flex', gap: 0 }}>
-                  {/* Sélecteur pays */}
-                  <select
-                    value={profileData.dialCode}
-                    onChange={e => setProfileData(p => ({ ...p, dialCode: e.target.value }))}
-                    style={{
-                      background: 'rgba(255,255,255,0.04)', border: `1px solid ${G.border}`,
-                      borderRight: 'none', padding: '12px 10px', color: G.text,
-                      fontFamily: G.mono, fontSize: 12, outline: 'none', cursor: 'pointer',
-                      minWidth: 90, flexShrink: 0,
-                    }}
-                  >
-                    {COUNTRIES.map(c => (
-                      <option key={c.code} value={c.code}>{c.flag} {c.dial}</option>
-                    ))}
-                  </select>
-                  {/* Numéro */}
-                  <input
-                    value={profileData.phone}
-                    onChange={e => setProfileData(p => ({ ...p, phone: e.target.value }))}
-                    placeholder="6 00 00 00 00"
-                    type="tel"
-                    style={{ ...inputStyle(), flex: 1, borderRadius: 0 }}
-                    onFocus={e => e.target.style.borderColor = G.goldBdr}
-                    onBlur={e => e.target.style.borderColor = G.border}
-                  />
-                </div>
-              </div>
-
-              {/* Ville + Pays */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                <div>
-                  <label style={labelStyle}>Ville *</label>
-                  <input
-                    value={profileData.city}
-                    onChange={e => setProfileData(p => ({ ...p, city: e.target.value }))}
-                    placeholder="Lyon"
-                    style={inputStyle()}
-                    onFocus={e => e.target.style.borderColor = G.goldBdr}
-                    onBlur={e => e.target.style.borderColor = G.border}
-                  />
-                </div>
-                <div>
-                  <label style={labelStyle}>Pays *</label>
-                  <select
-                    value={profileData.country}
-                    onChange={e => setProfileData(p => ({ ...p, country: e.target.value, dialCode: e.target.value }))}
-                    style={{ ...inputStyle(), cursor: 'pointer' }}
-                  >
-                    {COUNTRIES.filter(c => c.code !== 'OTHER').map(c => (
-                      <option key={c.code} value={c.code}>{c.flag} {c.label}</option>
-                    ))}
-                    <option value="OTHER">🌍 Autre</option>
-                  </select>
-                </div>
+                <label style={labelStyle}>Pays *</label>
+                <select
+                  value={profileData.country}
+                  onChange={e => setProfileData(p => ({ ...p, country: e.target.value }))}
+                  style={{ ...inputStyle(), cursor: 'pointer' }}
+                >
+                  {COUNTRIES.filter(c => c.code !== 'OTHER').map(c => (
+                    <option key={c.code} value={c.code}>{c.flag} {c.label}</option>
+                  ))}
+                  <option value="OTHER">🌍 Autre</option>
+                </select>
               </div>
             </div>
 

@@ -19,10 +19,18 @@ function PendingApproval() {
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       padding: '40px 20px',
     }}>
+      <style>{`
+        @keyframes logoFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+        @keyframes logoPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.7; } }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+      `}</style>
       <div style={{ maxWidth: 440, textAlign: 'center' }}>
         <div style={{ marginBottom: 32 }}>
-          <img src="/logo.svg" alt="Insightball" style={{ width: 36, height: 36, marginBottom: 12 }} />
-          <div style={{ fontFamily: G.display, fontSize: 18, letterSpacing: '.08em', color: '#f5f2eb' }}>
+          <img src="/logo.svg" alt="Insightball" style={{
+            width: 72, height: 72, marginBottom: 16,
+            animation: 'logoFloat 3s ease-in-out infinite, logoPulse 3s ease-in-out infinite',
+          }} />
+          <div style={{ fontFamily: G.display, fontSize: 22, letterSpacing: '.08em', color: '#f5f2eb' }}>
             INSIGHT<span style={{ color: G.gold }}>BALL</span>
           </div>
         </div>
@@ -30,15 +38,8 @@ function PendingApproval() {
         <div style={{
           background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)',
           borderTop: `2px solid ${G.gold}`, padding: '40px 32px',
+          animation: 'fadeIn .5s ease forwards',
         }}>
-          <div style={{
-            width: 56, height: 56, margin: '0 auto 20px',
-            background: 'rgba(201,162,39,0.08)', border: '1px solid rgba(201,162,39,0.2)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            <span style={{ fontSize: 28 }}>⏳</span>
-          </div>
-
           <div style={{
             fontFamily: G.mono, fontSize: 9, letterSpacing: '.18em',
             textTransform: 'uppercase', color: G.gold, marginBottom: 12,
@@ -60,28 +61,33 @@ function PendingApproval() {
             Merci pour ton inscription. Nous vérifions ton profil pour garantir la qualité de la communauté Insightball. Tu recevras un email dès que ton accès sera activé.
           </p>
 
-          <div style={{
-            background: 'rgba(201,162,39,0.06)', border: '1px solid rgba(201,162,39,0.18)',
-            borderLeft: `3px solid ${G.gold}`, padding: '14px 18px',
-            textAlign: 'left', marginBottom: 24,
-          }}>
-            <p style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(245,242,235,0.7)', margin: 0, lineHeight: 1.6 }}>
-              <span style={{ color: G.gold, fontWeight: 700 }}>En attendant</span> — tu peux compléter ton profil dans l'onboarding. Tout sera prêt quand ton compte sera validé.
-            </p>
-          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <button onClick={() => { window.location.href = '/onboarding' }} style={{
+              padding: '12px 24px', background: G.gold,
+              color: '#0a0908', border: 'none',
+              fontFamily: G.mono, fontSize: 10, letterSpacing: '.14em',
+              textTransform: 'uppercase', fontWeight: 700, cursor: 'pointer',
+              transition: 'opacity .15s',
+            }}
+              onMouseEnter={e => e.currentTarget.style.opacity = '.85'}
+              onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+            >
+              Compléter mon profil →
+            </button>
 
-          <button onClick={() => { logout(); window.location.href = '/login' }} style={{
-            padding: '10px 20px', background: 'transparent',
-            border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(245,242,235,0.45)',
-            fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em',
-            textTransform: 'uppercase', cursor: 'pointer',
-            transition: 'all .15s',
-          }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(201,162,39,0.3)'; e.currentTarget.style.color = G.gold }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = 'rgba(245,242,235,0.45)' }}
-          >
-            Se déconnecter
-          </button>
+            <button onClick={() => { logout(); window.location.href = '/login' }} style={{
+              padding: '10px 20px', background: 'transparent',
+              border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(245,242,235,0.45)',
+              fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em',
+              textTransform: 'uppercase', cursor: 'pointer',
+              transition: 'all .15s',
+            }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(201,162,39,0.3)'; e.currentTarget.style.color = G.gold }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = 'rgba(245,242,235,0.45)' }}
+            >
+              Se déconnecter
+            </button>
+          </div>
         </div>
 
         <p style={{
