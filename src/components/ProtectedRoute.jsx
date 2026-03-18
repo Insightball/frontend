@@ -15,25 +15,25 @@ function PendingApproval() {
   const { logout } = useAuth()
   return (
     <div style={{
-      minHeight: '100vh', background: T.bg,
+      minHeight: '100vh', background: G.bg,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       padding: '40px 20px',
     }}>
       <div style={{ maxWidth: 440, textAlign: 'center' }}>
         <div style={{ marginBottom: 32 }}>
           <img src="/logo.svg" alt="Insightball" style={{ width: 36, height: 36, marginBottom: 12 }} />
-          <div style={{ fontFamily: G.display, fontSize: 18, letterSpacing: '.08em', color: T.ink }}>
+          <div style={{ fontFamily: G.display, fontSize: 18, letterSpacing: '.08em', color: '#f5f2eb' }}>
             INSIGHT<span style={{ color: G.gold }}>BALL</span>
           </div>
         </div>
 
         <div style={{
-          background: T.surface, border: `1px solid ${T.rule}`,
+          background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)',
           borderTop: `2px solid ${G.gold}`, padding: '40px 32px',
         }}>
           <div style={{
             width: 56, height: 56, margin: '0 auto 20px',
-            background: T.goldBg, border: `1px solid ${T.goldBdr}`,
+            background: 'rgba(201,162,39,0.08)', border: '1px solid rgba(201,162,39,0.2)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
             <span style={{ fontSize: 28 }}>⏳</span>
@@ -48,44 +48,44 @@ function PendingApproval() {
 
           <h1 style={{
             fontFamily: G.display, fontSize: 32, textTransform: 'uppercase',
-            lineHeight: .92, letterSpacing: '.02em', color: T.ink, margin: '0 0 16px',
+            lineHeight: .92, letterSpacing: '.02em', color: '#f5f2eb', margin: '0 0 16px',
           }}>
             Ton compte est<br /><span style={{ color: G.gold }}>en attente.</span>
           </h1>
 
           <p style={{
-            fontFamily: G.mono, fontSize: 12, color: T.muted,
+            fontFamily: G.mono, fontSize: 12, color: 'rgba(245,242,235,0.55)',
             lineHeight: 1.7, letterSpacing: '.03em', margin: '0 0 28px',
           }}>
             Merci pour ton inscription. Nous vérifions ton profil pour garantir la qualité de la communauté Insightball. Tu recevras un email dès que ton accès sera activé.
           </p>
 
           <div style={{
-            background: T.goldBg, border: `1px solid ${T.goldBdr}`,
+            background: 'rgba(201,162,39,0.06)', border: '1px solid rgba(201,162,39,0.18)',
             borderLeft: `3px solid ${G.gold}`, padding: '14px 18px',
             textAlign: 'left', marginBottom: 24,
           }}>
-            <p style={{ fontFamily: G.mono, fontSize: 10, color: T.ink, margin: 0, lineHeight: 1.6 }}>
+            <p style={{ fontFamily: G.mono, fontSize: 10, color: 'rgba(245,242,235,0.7)', margin: 0, lineHeight: 1.6 }}>
               <span style={{ color: G.gold, fontWeight: 700 }}>En attendant</span> — tu peux compléter ton profil dans l'onboarding. Tout sera prêt quand ton compte sera validé.
             </p>
           </div>
 
           <button onClick={() => { logout(); window.location.href = '/login' }} style={{
             padding: '10px 20px', background: 'transparent',
-            border: `1px solid ${T.rule}`, color: T.muted,
+            border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(245,242,235,0.45)',
             fontFamily: G.mono, fontSize: 9, letterSpacing: '.12em',
             textTransform: 'uppercase', cursor: 'pointer',
             transition: 'all .15s',
           }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = T.goldBdr; e.currentTarget.style.color = G.gold }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = T.rule; e.currentTarget.style.color = T.muted }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(201,162,39,0.3)'; e.currentTarget.style.color = G.gold }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = 'rgba(245,242,235,0.45)' }}
           >
             Se déconnecter
           </button>
         </div>
 
         <p style={{
-          fontFamily: G.mono, fontSize: 9, color: T.muted,
+          fontFamily: G.mono, fontSize: 9, color: 'rgba(245,242,235,0.3)',
           marginTop: 20, letterSpacing: '.04em',
         }}>
           Une question ? <a href="mailto:contact@insightball.com" style={{ color: G.gold, textDecoration: 'none' }}>contact@insightball.com</a>
