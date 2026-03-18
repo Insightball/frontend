@@ -17,20 +17,26 @@ const G = {
 export default function Signup() {
   const navigate = useNavigate()
   const { signup } = useAuth()
-  const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', password: '', confirmPassword: '' })
+  const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', phone: '', clubName: '', city: '', password: '', confirmPassword: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [focused, setFocused] = useState(null)
+
+  const cleanPhone = (v) => v.replace(/[^0-9+\s\-().]/g, '')
 
   const handleSubmit = async (e) => {
     e.preventDefault(); setError('')
     if (formData.password !== formData.confirmPassword) { setError('Les mots de passe ne correspondent pas'); return }
     if (formData.password.length < 8) { setError('Le mot de passe doit contenir au moins 8 caractères'); return }
     if (!formData.firstName.trim() || !formData.lastName.trim()) { setError('Prénom et nom requis'); return }
+    const phoneDigits = formData.phone.replace(/\D/g, '')
+    if (phoneDigits.length < 10) { setError('Numéro de téléphone invalide (10 chiffres minimum)'); return }
+    if (!formData.clubName.trim()) { setError('Nom du club requis'); return }
+    if (!formData.city.trim()) { setError('Ville requise'); return }
     setLoading(true)
     try {
       const fullName = `${formData.firstName.trim()} ${formData.lastName.trim()}`
-      await signup({ name: fullName, email: formData.email, password: formData.password, plan: 'COACH' })
+      await signup({ name: fullName, email: formData.email, password: formData.password, plan: 'COACH', phone: formData.phone.trim(), club_name: formData.clubName.trim(), city: formData.city.trim() })
       navigate('/onboarding')
     } catch (err) {
       const msg = err?.response?.data?.detail || err?.message || 'Une erreur est survenue.'
@@ -50,6 +56,9 @@ export default function Signup() {
     { label: 'Prénom', name: 'firstName', type: 'text', ph: '' },
     { label: 'Nom', name: 'lastName', type: 'text', ph: '' },
     { label: 'Email', name: 'email', type: 'email', ph: 'votre@email.com' },
+    { label: 'Téléphone', name: 'phone', type: 'tel', ph: '06 12 34 56 78' },
+    { label: 'Nom du club', name: 'clubName', type: 'text', ph: '' },
+    { label: 'Ville', name: 'city', type: 'text', ph: '' },
     { label: 'Mot de passe', name: 'password', type: 'password', ph: '••••••••', hint: '8 caractères minimum' },
     { label: 'Confirmer le mot de passe', name: 'confirmPassword', type: 'password', ph: '••••••••' },
   ]
@@ -107,7 +116,10 @@ export default function Signup() {
                 <div key={f.name} style={{ marginBottom: 24 }}>
                   <label style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.22em', textTransform: 'uppercase', color: G.muted, display: 'block', marginBottom: 6 }}>{f.label}</label>
                   <input type={f.type} value={formData[f.name]}
-                    onChange={e => setFormData({ ...formData, [f.name]: e.target.value })}
+                    onChange={e => {
+                      const val = f.name === 'phone' ? cleanPhone(e.target.value) : e.target.value
+                      setFormData({ ...formData, [f.name]: val })
+                    }}
                     placeholder={f.ph} required style={iStyle(f.name)}
                     onFocus={() => setFocused(f.name)} onBlur={() => setFocused(null)} />
                   {f.hint && <p style={{ fontFamily: G.mono, fontSize: 8, color: 'rgba(245,242,235,0.25)', margin: '4px 0 0', letterSpacing: '.06em' }}>{f.hint}</p>}
