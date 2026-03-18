@@ -142,9 +142,12 @@ function UserDetailModal({ user, onClose, onToggleActive, onEditPlan }) {
             <div style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>— Profil</div>
             <Row label="Poste" value={user.profile_role} highlight={!!user.profile_role} />
             <Row label="Niveau équipe" value={user.profile_level} />
+            <Row label="Catégorie" value={user.team_category} />
             <Row label="Téléphone" value={user.profile_phone} />
             <Row label="Ville" value={user.profile_city} />
             <Row label="Diplôme" value={user.profile_diploma} />
+            <Row label="Nb équipes" value={user.nb_teams} />
+            <Row label="Setup tournage" value={user.filming_setup} />
             <div style={{ marginTop: 28, display: 'flex', flexDirection: 'column', gap: 8 }}>
               <button onClick={() => { onEditPlan(user); onClose() }} style={{ padding: '11px', background: G.goldBg, border: `1px solid ${G.goldBdr}`, fontFamily: G.mono, fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: G.gold, cursor: 'pointer' }}>
                 Modifier le plan →
