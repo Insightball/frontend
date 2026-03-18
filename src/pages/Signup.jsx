@@ -17,7 +17,7 @@ const G = {
 export default function Signup() {
   const navigate = useNavigate()
   const { signup } = useAuth()
-  const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', phone: '', clubName: '', city: '', password: '', confirmPassword: '' })
+  const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', phone: '', role: '', clubName: '', city: '', password: '', confirmPassword: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [focused, setFocused] = useState(null)
@@ -32,11 +32,12 @@ export default function Signup() {
     const phoneDigits = formData.phone.replace(/\D/g, '')
     if (phoneDigits.length < 10) { setError('Numéro de téléphone invalide (10 chiffres minimum)'); return }
     if (!formData.clubName.trim()) { setError('Nom du club requis'); return }
+    if (!formData.role) { setError('Poste requis'); return }
     if (!formData.city.trim()) { setError('Ville requise'); return }
     setLoading(true)
     try {
       const fullName = `${formData.firstName.trim()} ${formData.lastName.trim()}`
-      await signup({ name: fullName, email: formData.email, password: formData.password, plan: 'COACH', phone: formData.phone.trim(), club_name: formData.clubName.trim(), city: formData.city.trim() })
+      await signup({ name: fullName, email: formData.email, password: formData.password, plan: 'COACH', phone: formData.phone.trim(), club_name: formData.clubName.trim(), city: formData.city.trim(), role: formData.role })
       navigate('/onboarding')
     } catch (err) {
       const msg = err?.response?.data?.detail || err?.message || 'Une erreur est survenue.'
@@ -57,6 +58,7 @@ export default function Signup() {
     { label: 'Nom', name: 'lastName', type: 'text', ph: '' },
     { label: 'Email', name: 'email', type: 'email', ph: 'votre@email.com' },
     { label: 'Téléphone', name: 'phone', type: 'tel', ph: '06 12 34 56 78' },
+    { label: 'Poste', name: 'role', type: 'select', options: ['Éducateur', 'Entraîneur', 'Directeur Sportif', 'Analyste Vidéo'] },
     { label: 'Nom du club', name: 'clubName', type: 'text', ph: '' },
     { label: 'Ville', name: 'city', type: 'text', ph: '' },
     { label: 'Mot de passe', name: 'password', type: 'password', ph: '••••••••', hint: '8 caractères minimum' },
@@ -115,13 +117,23 @@ export default function Signup() {
               {fields.map(f => (
                 <div key={f.name} style={{ marginBottom: 24 }}>
                   <label style={{ fontFamily: G.mono, fontSize: 8, letterSpacing: '.22em', textTransform: 'uppercase', color: G.muted, display: 'block', marginBottom: 6 }}>{f.label}</label>
-                  <input type={f.type} value={formData[f.name]}
-                    onChange={e => {
-                      const val = f.name === 'phone' ? cleanPhone(e.target.value) : e.target.value
-                      setFormData({ ...formData, [f.name]: val })
-                    }}
-                    placeholder={f.ph} required style={iStyle(f.name)}
-                    onFocus={() => setFocused(f.name)} onBlur={() => setFocused(null)} />
+                  {f.type === 'select' ? (
+                    <select value={formData[f.name]}
+                      onChange={e => setFormData({ ...formData, [f.name]: e.target.value })}
+                      required style={{ ...iStyle(f.name), cursor: 'pointer', appearance: 'none', backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'10\' height=\'6\' viewBox=\'0 0 10 6\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M1 1l4 4 4-4\' stroke=\'%23c9a227\' stroke-width=\'1.5\' fill=\'none\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 4px center' }}
+                      onFocus={() => setFocused(f.name)} onBlur={() => setFocused(null)}>
+                      <option value="" disabled style={{ color: 'rgba(245,242,235,0.18)' }}>Sélectionner</option>
+                      {f.options.map(o => <option key={o} value={o} style={{ background: '#0a0908', color: '#f5f2eb' }}>{o}</option>)}
+                    </select>
+                  ) : (
+                    <input type={f.type} value={formData[f.name]}
+                      onChange={e => {
+                        const val = f.name === 'phone' ? cleanPhone(e.target.value) : e.target.value
+                        setFormData({ ...formData, [f.name]: val })
+                      }}
+                      placeholder={f.ph} required style={iStyle(f.name)}
+                      onFocus={() => setFocused(f.name)} onBlur={() => setFocused(null)} />
+                  )}
                   {f.hint && <p style={{ fontFamily: G.mono, fontSize: 8, color: 'rgba(245,242,235,0.25)', margin: '4px 0 0', letterSpacing: '.06em' }}>{f.hint}</p>}
                 </div>
               ))}

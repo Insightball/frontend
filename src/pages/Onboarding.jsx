@@ -82,9 +82,9 @@ export default function Onboarding() {
   const [saving, setSaving] = useState(false)
   const [error, setError]   = useState('')
 
-  // Step 1 — Profil (téléphone, ville et club déjà collectés au signup)
+  // Step 1 — Profil (téléphone, ville, club et rôle déjà collectés au signup)
   const [profileData, setProfileData] = useState({
-    role: '', level: '', diploma: '',
+    level: '', diploma: '',
     country: 'FR',
   })
 
@@ -113,11 +113,9 @@ export default function Onboarding() {
 
   /* ── Handlers ── */
   const handleSaveProfile = async () => {
-    if (!profileData.role) { setError('Poste requis'); return }
     setSaving(true); setError('')
     try {
       await api.patch('/account/profile', {
-        role: profileData.role,
         level: profileData.level,
         country: profileData.country,
         diploma: profileData.diploma,
@@ -239,16 +237,6 @@ export default function Onboarding() {
             {error && <ErrBox msg={error} onClose={() => setError('')} />}
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-              {/* Rôle */}
-              <div>
-                <label style={labelStyle}>Votre rôle *</label>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                  {ROLES.map(r => (
-                    <ChipBtn key={r} label={r} active={profileData.role === r} onClick={() => setProfileData(p => ({ ...p, role: r }))} />
-                  ))}
-                </div>
-              </div>
-
               {/* Diplôme optionnel */}
               <div>
                 <label style={labelStyle}>Diplôme <span style={{ color: 'rgba(245,242,235,0.2)' }}>(optionnel)</span></label>
